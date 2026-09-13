@@ -1,0 +1,10 @@
+{
+  "items": [
+    { "label": "L'arena", "href": "/l-arena" },
+    { "label": "Softair", "href": "/softair" },
+    { "label": "Corso", "href": "/corso-softair" },
+    { "label": "Gruppi & eventi", "href": "/teambuilding" },
+    { "label": "Paintball", "href": "/paintball" },
+    { "label": "Contatti", "href": "/contatti" }
+  ]
+}

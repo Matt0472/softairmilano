@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 import settings from '../data/settings.json';
+import Header from '../components/organisms/Header.astro';
+import Footer from '../components/organisms/Footer.astro';
 
 interface Props {
   title: string;
@@ -41,6 +43,11 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
-    <slot />
+    <a href="#main" class="skip-link">Salta al contenuto</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>

@@ -29,3 +29,73 @@ content:
       - { name: rangerUrl, label: "Link arena outdoor (Ranger Softair)", type: string }
       - { name: ticketinghubId, label: "ID script TicketingHub (prenotazioni)", type: string }
       - { name: gaMeasurementId, label: "ID Google Analytics (GA4)", type: string }
+
+  - name: navigation
+    label: Menu di navigazione
+    type: file
+    path: src/data/navigation.json
+    fields:
+      - name: items
+        label: Voci del menu
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Etichetta, type: string }
+          - { name: href, label: Link, type: string }
+
+  - name: home
+    label: Home
+    type: file
+    path: src/data/home.json
+    fields:
+      - name: hero
+        label: Hero
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string }
+          - { name: title, label: Titolo, type: string }
+          - { name: subtitle, label: Sottotitolo, type: text }
+          - name: ctaPrimary
+            label: Bottone principale
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string }
+          - name: ctaSecondary
+            label: Bottone secondario
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string }
+      - { name: intro, label: Introduzione attività, type: text }
+      - name: activities
+        label: Attività
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Titolo, type: string }
+          - { name: desc, label: Descrizione, type: text }
+          - { name: href, label: Link, type: string }
+      - name: occasions
+        label: Occasioni
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Titolo, type: string }
+          - { name: desc, label: Descrizione, type: text }
+          - { name: href, label: Link, type: string }
+      - name: rangerTeaser
+        label: Rimando arena outdoor (Ranger)
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string }
+          - { name: text, label: Testo, type: text }
+          - { name: label, label: Testo bottone, type: string }
+      - name: finalCta
+        label: CTA finale
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string }
+          - { name: subtitle, label: Sottotitolo, type: text }
+          - { name: label, label: Testo bottone, type: string }
+          - { name: href, label: Link, type: string }

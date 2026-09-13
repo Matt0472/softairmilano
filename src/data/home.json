@@ -1,0 +1,32 @@
+{
+  "hero": {
+    "eyebrow": "Arena indoor · Milano",
+    "title": "Diventa protagonista di un film d'azione",
+    "subtitle": "Il campo di softair al coperto più grande di Milano: un villaggio militare di circa 1.500 mq, tra edifici e torrette. Missioni, adrenalina, squadra.",
+    "ctaPrimary": { "label": "Prenota la tua partita", "href": "#prenota" },
+    "ctaSecondary": { "label": "Scopri l'arena", "href": "/l-arena" }
+  },
+  "intro": "Un'arena indoor pensata nei minimi dettagli, per vivere ogni missione come in un film. Scegli come giocare.",
+  "activities": [
+    { "title": "Softair", "desc": "Partite a missioni nell'arena indoor. Per esperti e principianti.", "href": "/softair" },
+    { "title": "Tiro dinamico", "desc": "Metti alla prova mira e riflessi in un percorso dedicato.", "href": "/tiro-dinamico" },
+    { "title": "Arcotag", "desc": "Frecce soft e adrenalina in sicurezza: divertente per tutti.", "href": "/arcotag" }
+  ],
+  "occasions": [
+    { "title": "Team building", "desc": "Rafforza la squadra con una sfida diversa dal solito.", "href": "/teambuilding" },
+    { "title": "Feste di compleanno", "desc": "Un compleanno alternativo ed emozionante.", "href": "/festa-di-compleanno" },
+    { "title": "Addio al celibato/nubilato", "desc": "Un ricordo di gruppo indimenticabile.", "href": "/addio-al-celibato-nubilato" },
+    { "title": "Corso softair", "desc": "Impara tecniche e sicurezza con i nostri istruttori.", "href": "/corso-softair" }
+  ],
+  "rangerTeaser": {
+    "title": "Preferisci giocare all'aperto?",
+    "text": "Scopri Ranger Softair Milano, la nostra arena boschiva outdoor: oltre 12.000 mq immersi nel verde.",
+    "label": "Vai a Ranger Softair"
+  },
+  "finalCta": {
+    "title": "Pronto a scendere in campo?",
+    "subtitle": "Prenota la tua sessione di softair a Milano.",
+    "label": "Prenota ora",
+    "href": "#prenota"
+  }
+}

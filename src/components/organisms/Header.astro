@@ -1,0 +1,88 @@
+---
+import navigation from '../../data/navigation.json';
+import Button from '../atoms/Button.astro';
+
+const { items } = navigation;
+---
+
+<header class="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
+  <div class="shell flex items-center justify-between gap-4 py-3">
+    <a
+      href="/"
+      class="font-display text-lg font-bold uppercase tracking-wide text-foreground"
+    >
+      SoftAir<span class="text-accent">Milano</span>
+    </a>
+
+    <nav class="hidden items-center gap-6 md:flex" aria-label="Principale">
+      {
+        items.map((it) => (
+          <a
+            href={it.href}
+            class="text-sm text-muted transition-colors hover:text-foreground"
+          >
+            {it.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hidden md:block">
+      <Button href="#prenota" variant="primary">Prenota</Button>
+    </div>
+
+    <button
+      id="menu-toggle"
+      class="inline-flex items-center justify-center rounded-md border border-border p-2 text-foreground md:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Apri il menu"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <nav
+    id="mobile-menu"
+    class="mobile-menu shell gap-1 pb-4"
+    data-open="false"
+    aria-label="Principale (mobile)"
+  >
+    {
+      items.map((it) => (
+        <a
+          href={it.href}
+          class="border-b border-border py-3 text-foreground"
+        >
+          {it.label}
+        </a>
+      ))
+    }
+    <div class="pt-4">
+      <Button href="#prenota" variant="primary" class="w-full">Prenota</Button>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      menu.setAttribute('data-open', String(open));
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
+    };
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  }
+</script>

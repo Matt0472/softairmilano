@@ -83,3 +83,49 @@
     }
   }
 }
+
+@layer components {
+  /* Centered content container with adaptive gutters. */
+  .shell {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* Skip-to-content link (accessibility). */
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 100;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: top 0.2s var(--ease-out-expo);
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+
+  /* Mobile menu: reliable show/hide via data-open, always hidden from md up. */
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+  }
+  .mobile-menu[data-open='true'] {
+    display: flex;
+  }
+  @media (min-width: 768px) {
+    .mobile-menu {
+      display: none !important;
+    }
+  }
+}
