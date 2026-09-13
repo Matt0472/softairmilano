@@ -83,6 +83,8 @@ _redirects      eventuali redirect (Cloudflare Pages)
 
 ## Comandi
 
+Richiede **Node ≥ 22** (Astro 7) — versione fissata in `.nvmrc` (`nvm use`).
+
 ```bash
 npm run dev       # sviluppo locale
 npm run build     # build statica di produzione

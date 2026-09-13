@@ -1,0 +1,6 @@
+# STAGING — il sito non è ancora live: nessuna indicizzazione.
+# Al go-live questo file va sostituito con la versione di produzione
+# (Allow + AI crawler + riga Sitemap). Vedi docs/geo-e-indicizzazione.md.
+# NB: non nominare qui il percorso del manuale cliente (robots.txt è pubblico).
+User-agent: *
+Disallow: /

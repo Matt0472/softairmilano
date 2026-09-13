@@ -1,0 +1,85 @@
+/* Fonts (self-hosted via @fontsource) */
+@import '@fontsource-variable/inter';
+@import '@fontsource/oswald/500.css';
+@import '@fontsource/oswald/600.css';
+@import '@fontsource/oswald/700.css';
+
+@import "tailwindcss";
+
+/*
+  Design tokens — single source of truth. Mirror of
+  design-system/softair-milano/MASTER.md. No "magic values" outside this file.
+  Dark-first tactical palette; amber accent; Oswald display + Inter body.
+*/
+@theme {
+  /* Colors */
+  --color-background: #0e1114;
+  --color-surface: #161a1f;
+  --color-surface-2: #1e242b;
+  --color-foreground: #eceef1;
+  --color-muted: #a6aeb8;
+  --color-border: #2a313a;
+  --color-accent: #f5a524;
+  --color-accent-hover: #ffb53d;
+  --color-on-accent: #0e1114;
+  --color-steel: #5b6b7a;
+  --color-success: #34c759;
+  --color-danger: #e5484d;
+
+  /* Typography */
+  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
+  --font-display: "Oswald", system-ui, sans-serif;
+
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+
+  /* Shadows (subtle on dark) */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 0.45);
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  /* Respect reduced-motion globally (art-direction requirement). */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

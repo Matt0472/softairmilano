@@ -1,0 +1,31 @@
+# Configurazione Pages CMS (https://pagescms.org)
+# Accesso su https://app.pagescms.org (account GitHub o collaboratore invitato).
+# Convenzione: chiavi in inglese, label in italiano; contenuti in src/data/*.json.
+# Ogni contenuto del sito deve essere editabile da qui (vedi CLAUDE.md).
+
+settings:
+  commit:
+    # Ogni salvataggio riporta nome ed email di chi modifica.
+    identity: user
+
+media:
+  input: public/uploads
+  output: /uploads
+
+content:
+  - name: settings
+    label: Impostazioni generali
+    type: file
+    path: src/data/settings.json
+    fields:
+      - { name: siteName, label: Nome sito, type: string }
+      - { name: siteUrl, label: URL del sito, type: string }
+      - { name: defaultDescription, label: Descrizione SEO predefinita, type: text }
+      - { name: defaultOgImage, label: Immagine social predefinita, type: image }
+      - { name: phone, label: Telefono, type: string }
+      - { name: whatsapp, label: WhatsApp, type: string }
+      - { name: email, label: Email, type: string }
+      - { name: address, label: Indirizzo, type: text }
+      - { name: rangerUrl, label: "Link arena outdoor (Ranger Softair)", type: string }
+      - { name: ticketinghubId, label: "ID script TicketingHub (prenotazioni)", type: string }
+      - { name: gaMeasurementId, label: "ID Google Analytics (GA4)", type: string }

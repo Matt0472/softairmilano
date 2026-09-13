@@ -1,0 +1,46 @@
+---
+import '../styles/global.css';
+import settings from '../data/settings.json';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title,
+  description = settings.defaultDescription,
+  image = settings.defaultOgImage,
+} = Astro.props;
+
+// Indexing gate: the whole site stays noindex until go-live. The production
+// build sets PUBLIC_SITE_INDEXABLE=true to allow indexing. See
+// docs/geo-e-indicizzazione.md.
+const indexable = import.meta.env.PUBLIC_SITE_INDEXABLE === 'true';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = image ? new URL(image, Astro.site) : undefined;
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    <meta
+      name="robots"
+      content={indexable ? 'index, follow' : 'noindex, nofollow'}
+    />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="website" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
