@@ -36,11 +36,11 @@ Stile **specifico di questo sito** (ogni progetto avrà il suo). Guida il design
 - **Coerenza / token**: colori, spaziature, raggi, ombre e tipografia definiti **in un unico posto** (Tailwind v4 `@theme` / CSS custom properties) e riusati; gli atomi consumano solo token; **nessun valore magico** (hex/px) sparso nel codice.
 - **Contrasto su dark/foto**: dark-first → testo primario ≥4.5:1, secondario ≥3:1; testo sopra le immagini con scrim/overlay dove serve (verifica `accessibility-auditor`).
 
-### Impatto visivo Home — feedback (rev. 13 set 2026, DA REALIZZARE)
+### Impatto visivo — TUTTO IL SITO (feedback rev. 13 set 2026, DA REALIZZARE)
 
-La prima versione della Home è risultata **poco d'impatto**: troppo scarna, pochi elementi visivi, poco richiamo al softair; anche l'**hero è spento/vuoto**. **Colori e contrasti approvati** — manca tutto il resto.
+L'impatto visivo **"wow" deve essere su OGNI pagina**, non solo in Home (la Home è la più forte, ma **tutte** devono emozionare — 404 inclusa). La prima Home è risultata **poco d'impatto**: troppo scarna, pochi elementi visivi, poco richiamo al softair; hero **spento/vuoto**. **Colori e contrasti approvati** — manca tutto il resto.
 
-Obiettivo dichiarato dal cliente: **"wow", scenico, emozionante** — chi guarda deve pensare *"ho voglia di giocare a softair"*.
+Obiettivo del cliente: **scenico, emozionante** — chi guarda, su qualunque pagina, deve pensare *"ho voglia di giocare a softair"*.
 
 Da aggiungere:
 - **Hero molto più ricco e vivo**: scena d'azione, non solo testo su gradiente.
@@ -191,6 +191,10 @@ Le pagine legali devono riflettere sia TicketingHub sia GA.
 
 ---
 
+## Pagina 404 (not found)
+
+Pagina 404 **curata e on-brand**, con lo **stesso impatto visivo** del resto del sito (scenica, non una pagina di errore spoglia): messaggio chiaro e nel tono, e **vie d'uscita utili** — link alla Home, alle pagine principali e **CTA Prenota**. Naturalmente non indicizzata. Contenuto editabile da CMS (`notfound.json`).
+
 ## Manuale cliente
 Manuale d'uso riservato (come da `CLAUDE.md`): sorgente `docs/manuale-cliente.html`, generato in `public/<path-riservato>/`, indice scrollspy, sincronizzato con le sezioni reali. Si scrive insieme al sito.
 
@@ -198,7 +202,7 @@ Manuale d'uso riservato (come da `CLAUDE.md`): sorgente `docs/manuale-cliente.ht
 
 ## Modello dati (Pages CMS)
 
-**File singoli** (`src/data/`): `settings`, `navigation`, `home`, `arena`, `activity-softair`, `activity-tiro-dinamico`, `activity-arcotag`, `course`, `teambuilding`, `birthdays`, `bachelor-party`, `events`, `paintball`, `gift-voucher`, `contact`, `packages`, `faq`, `gallery`, `testimonials`.
+**File singoli** (`src/data/`): `settings`, `navigation`, `home`, `arena`, `activity-softair`, `activity-tiro-dinamico`, `activity-arcotag`, `course`, `teambuilding`, `birthdays`, `bachelor-party`, `events`, `paintball`, `gift-voucher`, `contact`, `packages`, `faq`, `gallery`, `testimonials`, `notfound`.
 **Collezioni**: `blog/` (articoli), `experiences/` (scenari), `pages/` (pagine libere a blocchi — page builder del cliente).
 **Media**: `public/uploads/`.
 
