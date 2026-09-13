@@ -14,12 +14,12 @@ const { items } = navigation;
       SoftAir<span class="text-accent">Milano</span>
     </a>
 
-    <nav class="hidden items-center gap-6 md:flex" aria-label="Principale">
+    <nav class="hidden items-center gap-6 lg:flex" aria-label="Principale">
       {
         items.map((it) => (
           <a
             href={it.href}
-            class="text-sm text-muted transition-colors hover:text-foreground"
+            class="py-2 text-sm text-muted transition-colors hover:text-foreground"
           >
             {it.label}
           </a>
@@ -27,13 +27,13 @@ const { items } = navigation;
       }
     </nav>
 
-    <div class="hidden md:block">
+    <div class="hidden lg:block">
       <Button href="#prenota" variant="primary">Prenota</Button>
     </div>
 
     <button
       id="menu-toggle"
-      class="inline-flex items-center justify-center rounded-md border border-border p-2 text-foreground md:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border border-border text-foreground lg:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       aria-expanded="false"
       aria-controls="mobile-menu"
       aria-label="Apri il menu"
@@ -81,7 +81,10 @@ const { items } = navigation;
       setOpen(toggle.getAttribute('aria-expanded') !== 'true');
     });
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
     });
     menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
   }

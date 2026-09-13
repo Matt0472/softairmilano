@@ -8,7 +8,7 @@ const year = new Date().getFullYear();
 
 <footer class="mt-24 border-t border-border bg-surface">
   <div class="shell grid gap-10 py-14 md:grid-cols-4">
-    <div>
+    <div class="min-w-0">
       <div class="font-display text-lg font-bold uppercase tracking-wide text-foreground">
         SoftAir<span class="text-accent">Milano</span>
       </div>
@@ -17,8 +17,8 @@ const year = new Date().getFullYear();
       </p>
     </div>
 
-    <div>
-      <h4 class="text-xs uppercase tracking-wider text-muted">Menu</h4>
+    <div class="min-w-0">
+      <h3 class="text-xs uppercase tracking-wider text-muted">Menu</h3>
       <ul class="mt-4 flex flex-col gap-2">
         {
           items.map((it) => (
@@ -32,17 +32,17 @@ const year = new Date().getFullYear();
       </ul>
     </div>
 
-    <div>
-      <h4 class="text-xs uppercase tracking-wider text-muted">Contatti</h4>
+    <div class="min-w-0">
+      <h3 class="text-xs uppercase tracking-wider text-muted">Contatti</h3>
       <ul class="mt-4 flex flex-col gap-2 text-sm text-foreground">
-        {settings.email && <li><a href={`mailto:${settings.email}`} class="transition-colors hover:text-accent">{settings.email}</a></li>}
-        {settings.phone && <li><a href={`tel:${settings.phone}`} class="transition-colors hover:text-accent">{settings.phone}</a></li>}
-        {settings.address && <li class="text-muted">{settings.address}</li>}
+        {settings.email && <li><a href={`mailto:${settings.email}`} class="break-words transition-colors hover:text-accent">{settings.email}</a></li>}
+        {settings.phone && <li><a href={`tel:${settings.phone}`} class="break-words transition-colors hover:text-accent">{settings.phone}</a></li>}
+        {settings.address && <li class="break-words text-muted">{settings.address}</li>}
       </ul>
     </div>
 
-    <div>
-      <h4 class="text-xs uppercase tracking-wider text-muted">Anche all'aperto</h4>
+    <div class="min-w-0">
+      <h3 class="text-xs uppercase tracking-wider text-muted">Anche all'aperto</h3>
       <a
         href={settings.rangerUrl}
         target="_blank"
@@ -51,6 +51,7 @@ const year = new Date().getFullYear();
       >
         Ranger Softair Milano
         <span aria-hidden="true">→</span>
+        <span class="sr-only">(si apre in una nuova scheda)</span>
       </a>
       <p class="mt-2 text-sm text-muted">La nostra arena boschiva outdoor.</p>
     </div>

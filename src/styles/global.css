@@ -1,6 +1,5 @@
 /* Fonts (self-hosted via @fontsource) */
 @import '@fontsource-variable/inter';
-@import '@fontsource/oswald/500.css';
 @import '@fontsource/oswald/600.css';
 @import '@fontsource/oswald/700.css';
 
@@ -18,7 +17,7 @@
   --color-surface-2: #1e242b;
   --color-foreground: #eceef1;
   --color-muted: #a6aeb8;
-  --color-border: #2a313a;
+  --color-border: #3a434e;
   --color-accent: #f5a524;
   --color-accent-hover: #ffb53d;
   --color-on-accent: #0e1114;
@@ -71,6 +70,13 @@
     color: var(--color-on-accent);
   }
 
+  /* Consistent, visible focus for links across the site. */
+  a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
   /* Respect reduced-motion globally (art-direction requirement). */
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -115,7 +121,7 @@
     top: 1rem;
   }
 
-  /* Mobile menu: reliable show/hide via data-open, always hidden from md up. */
+  /* Mobile menu: reliable show/hide via data-open, always hidden from lg up. */
   .mobile-menu {
     display: none;
     flex-direction: column;
@@ -123,7 +129,7 @@
   .mobile-menu[data-open='true'] {
     display: flex;
   }
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     .mobile-menu {
       display: none !important;
     }

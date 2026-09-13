@@ -36,6 +36,22 @@ Stile **specifico di questo sito** (ogni progetto avrà il suo). Guida il design
 - **Coerenza / token**: colori, spaziature, raggi, ombre e tipografia definiti **in un unico posto** (Tailwind v4 `@theme` / CSS custom properties) e riusati; gli atomi consumano solo token; **nessun valore magico** (hex/px) sparso nel codice.
 - **Contrasto su dark/foto**: dark-first → testo primario ≥4.5:1, secondario ≥3:1; testo sopra le immagini con scrim/overlay dove serve (verifica `accessibility-auditor`).
 
+### Impatto visivo Home — feedback (rev. 13 set 2026, DA REALIZZARE)
+
+La prima versione della Home è risultata **poco d'impatto**: troppo scarna, pochi elementi visivi, poco richiamo al softair; anche l'**hero è spento/vuoto**. **Colori e contrasti approvati** — manca tutto il resto.
+
+Obiettivo dichiarato dal cliente: **"wow", scenico, emozionante** — chi guarda deve pensare *"ho voglia di giocare a softair"*.
+
+Da aggiungere:
+- **Hero molto più ricco e vivo**: scena d'azione, non solo testo su gradiente.
+- **Personaggi**: es. un giocatore che **corre col fucile in mano**.
+- **Elementi che "si montano da soli"** con animazione: fucili che si assemblano, granate, gear tattico.
+- Più **elementi visivi** lungo tutta la pagina, coerenti col tema.
+
+Vincoli invariati: LCP protetto (contenuto hero leggibile subito, si animano gli elementi *attorno*), `prefers-reduced-motion` → statico, performance ≥95.
+
+Nota operativa: servono **asset visivi** — illustrazioni/immagini di personaggi e **animazioni** (SVG o Lottie) per il "montaggio" del gear. Da definire la fonte (illustrazione custom / foto reali / motion). Punto aperto: **come procedere** lo decide il cliente.
+
 ## Elementi globali (presenti su tutte le pagine)
 
 - **Header / menu**: logo + voci di navigazione + bottone **Prenota**. Voci menu (label) editabili via CMS.

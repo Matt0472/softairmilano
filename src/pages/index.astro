@@ -5,10 +5,10 @@ import Card from '../components/molecules/Card.astro';
 import home from '../data/home.json';
 import settings from '../data/settings.json';
 
-const { hero, intro, activities, occasions, rangerTeaser, finalCta } = home;
+const { title, hero, intro, activities, occasions, rangerTeaser, finalCta } = home;
 ---
 
-<BaseLayout title="SoftAir Milano — Arena indoor di softair a Milano">
+<BaseLayout title={title}>
   <!-- HERO -->
   <section class="relative overflow-hidden border-b border-border">
     <div

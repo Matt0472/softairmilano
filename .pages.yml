@@ -48,6 +48,7 @@ content:
     type: file
     path: src/data/home.json
     fields:
+      - { name: title, label: Titolo pagina (SEO), type: string }
       - name: hero
         label: Hero
         type: object

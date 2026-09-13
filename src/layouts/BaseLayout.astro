@@ -21,7 +21,22 @@ const {
 // docs/geo-e-indicizzazione.md.
 const indexable = import.meta.env.PUBLIC_SITE_INDEXABLE === 'true';
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = image ? new URL(image, Astro.site) : undefined;
+const ogImage = image ? new URL(image, Astro.site).toString() : undefined;
+
+// Structured data (LocalBusiness). Values come from settings.json (CMS-editable);
+// optional fields are emitted only when present.
+const businessLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsActivityLocation',
+  name: settings.siteName,
+  url: settings.siteUrl,
+  description: settings.defaultDescription,
+  ...(ogImage ? { image: ogImage } : {}),
+  ...(settings.email ? { email: settings.email } : {}),
+  ...(settings.phone ? { telephone: settings.phone } : {}),
+  ...(settings.address ? { address: settings.address } : {}),
+  ...(settings.rangerUrl ? { sameAs: [settings.rangerUrl] } : {}),
+};
 ---
 
 <!doctype html>
@@ -36,16 +51,31 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
       name="robots"
       content={indexable ? 'index, follow' : 'noindex, nofollow'}
     />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0e1114" />
+
+    <!-- Open Graph -->
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={settings.siteName} />
+    <meta property="og:locale" content="it_IT" />
     {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:alt" content={settings.siteName} />}
+
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <script type="application/ld+json" set:html={JSON.stringify(businessLd)} />
   </head>
   <body>
     <a href="#main" class="skip-link">Salta al contenuto</a>
     <Header />
-    <main id="main">
+    <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer />
