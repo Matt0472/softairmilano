@@ -13,7 +13,8 @@
     "proof": "4,9 / 5 · oltre 500 recensioni"
   },
   "video": {
-    "youtubeId": "Zithahc6f0o",
+    "videoSrc": "https://pub-03634caa58304887b733482b0c916e61.r2.dev/softairmilano-home.mp4",
+    "poster": "/uploads/video-poster.jpg",
     "eyebrow": "Il video",
     "title": "Guarda l'azione",
     "text": "Un minuto dentro l'arena: squadre, missioni, adrenalina.",

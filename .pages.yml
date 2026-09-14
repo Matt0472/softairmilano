@@ -85,11 +85,13 @@ content:
         label: Video (sotto l'hero)
         type: object
         fields:
-          - { name: youtubeId, label: "ID video YouTube", type: string }
+          - { name: videoSrc, label: "URL video (Cloudflare R2, .mp4)", type: string }
+          - { name: poster, label: "Immagine poster (anteprima)", type: image }
           - { name: eyebrow, label: Sopratitolo, type: string }
           - { name: title, label: Titolo, type: string }
           - { name: text, label: Testo, type: text }
           - { name: soundLabel, label: "Testo bottone audio", type: string }
+          - { name: youtubeLabel, label: "Etichetta badge YouTube (vuoto = handle automatico)", type: string }
           - name: cta
             label: Bottone
             type: object

@@ -1,30 +1,31 @@
 ---
 // "Guarda l'azione" — split video section (copy + framed HUD video), placed
-// after the arena section. YouTube embed with the chrome cleaned up + an
-// interaction blocker.
-// PLAN: the real video will be self-hosted on Cloudflare R2 (same as the
-// campo-di-zucche project) and replace this iframe with a native <video>
-// (muted autoplay loop playsinline) — same layout, no YouTube chrome at all.
-// NOTE: while on YouTube, this third party must load only after cookie consent.
+// after the arena section. Native self-hosted <video> (muted autoplay loop
+// playsinline) — the file lives on Cloudflare R2 (same as campo-di-zucche),
+// so there is no third-party chrome and nothing to gate behind cookie consent.
+// The `videoSrc`/`poster` are CMS fields: swapping the R2 URL is a content edit.
+
+import settings from '../../data/settings.json';
 
 interface Cta { label: string; href: string; }
 interface Props {
-  youtubeId: string;
+  videoSrc: string;
+  poster?: string;
   eyebrow?: string;
   title?: string;
   text?: string;
   soundLabel?: string;
+  youtubeLabel?: string;
   cta?: Cta;
 }
 
-const { youtubeId, eyebrow, title, text, soundLabel = 'Attiva audio', cta } = Astro.props;
+const { videoSrc, poster, eyebrow, title, text, soundLabel = 'Attiva audio', youtubeLabel, cta } = Astro.props;
 
-const params = new URLSearchParams({
-  autoplay: '1', mute: '1', loop: '1', playlist: youtubeId,
-  controls: '0', rel: '0', modestbranding: '1', playsinline: '1',
-  iv_load_policy: '3', disablekb: '1', fs: '0', enablejsapi: '1',
-});
-const src = `https://www.youtube-nocookie.com/embed/${youtubeId}?${params.toString()}`;
+// Persistent YouTube watermark: URL from settings (single source of truth),
+// label optionally overridden from the CMS, otherwise derived from the handle URL.
+const youtubeUrl = settings.social?.youtube ?? '';
+const derivedHandle = youtubeUrl.split('/').filter(Boolean).pop() ?? '';
+const youtubeText = youtubeLabel || (derivedHandle.startsWith('@') ? derivedHandle : 'YouTube');
 ---
 
 <section class="vsec" aria-label={title ?? 'Video'}>
@@ -38,15 +39,18 @@ const src = `https://www.youtube-nocookie.com/embed/${youtubeId}?${params.toStri
 
     <figure class="vsec__stage">
       <div class="vsec__ratio">
-        <iframe
-          class="vsec__iframe"
-          src={src}
-          title={title ?? 'Video'}
-          loading="lazy"
-          allow="autoplay; encrypted-media; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-        <div class="vsec__block" aria-hidden="true"></div>
+        <video
+          class="vsec__video"
+          src={videoSrc}
+          poster={poster}
+          muted
+          loop
+          playsinline
+          autoplay
+          preload="metadata"
+          aria-label={title ?? 'Video'}
+          data-video
+        ></video>
         <div class="vsec__scrim" aria-hidden="true"></div>
 
         <div class="vsec__hud" aria-hidden="true">
@@ -55,6 +59,22 @@ const src = `https://www.youtube-nocookie.com/embed/${youtubeId}?${params.toStri
           <span class="rec"><span class="dot"></span>REC · CAM 01</span>
           <span class="scan"></span>
         </div>
+
+        {youtubeUrl && (
+          <a
+            class="vsec__yt"
+            href={youtubeUrl}
+            target="_blank"
+            rel="noopener"
+            aria-label={`Canale YouTube ${settings.siteName} (si apre in una nuova scheda)`}
+          >
+            <svg class="vsec__yt-logo" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path fill="#FF0000" d="M23 7.2a2.8 2.8 0 0 0-2-2C19.3 4.8 12 4.8 12 4.8s-7.3 0-9 .4a2.8 2.8 0 0 0-2 2A29 29 0 0 0 .6 12 29 29 0 0 0 1 16.8a2.8 2.8 0 0 0 2 2c1.7.4 9 .4 9 .4s7.3 0 9-.4a2.8 2.8 0 0 0 2-2 29 29 0 0 0 .4-4.8A29 29 0 0 0 23 7.2z"></path>
+              <path fill="#fff" d="M9.75 15.02 15.5 11.75 9.75 8.48z"></path>
+            </svg>
+            <span class="vsec__yt-name">{youtubeText}</span>
+          </a>
+        )}
 
         <button class="vsec__sound" type="button" data-sound>🔊 {soundLabel}</button>
       </div>
@@ -82,13 +102,7 @@ const src = `https://www.youtube-nocookie.com/embed/${youtubeId}?${params.toStri
 
   .vsec__stage { margin: 0; }
   .vsec__ratio { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 14px; background: #000; border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent); }
-  /* Cover the frame + a little scale so YouTube's edge chrome stays cropped. */
-  .vsec__iframe {
-    position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; border: 0;
-    transform: translate(-50%, -50%) scale(1.12);
-  }
-  /* Blocks YouTube hover/click chrome so the frame stays clean. */
-  .vsec__block { position: absolute; inset: 0; z-index: 2; }
+  .vsec__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .vsec__scrim {
     position: absolute; inset: 0; z-index: 3; pointer-events: none;
     background:
@@ -112,6 +126,13 @@ const src = `https://www.youtube-nocookie.com/embed/${youtubeId}?${params.toStri
   .vsec__sound:hover { border-color: var(--color-accent); color: var(--color-accent); }
   .vsec__sound:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
+  /* Persistent, clickable YouTube watermark — mirrors the sound button. */
+  .vsec__yt { position: absolute; left: 14px; bottom: 12px; z-index: 5; display: inline-flex; align-items: center; gap: 8px; font-size: 12px; letter-spacing: 0.02em; text-decoration: none; color: var(--color-foreground); background: color-mix(in srgb, var(--color-background) 60%, transparent); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 999px; padding: 6px 12px 6px 10px; backdrop-filter: blur(4px); transition: color 0.18s, border-color 0.18s; }
+  .vsec__yt-logo { display: block; flex: none; }
+  .vsec__yt-name { font-weight: 500; }
+  .vsec__yt:hover { border-color: var(--color-accent); color: var(--color-accent); }
+  .vsec__yt:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
   /* Phones: stack — copy first, then the video (DOM order). */
   @media (max-width: 780px) {
     .vsec__inner { grid-template-columns: 1fr; }
@@ -124,14 +145,12 @@ const src = `https://www.youtube-nocookie.com/embed/${youtubeId}?${params.toStri
 </style>
 
 <script>
-  const yt = document.querySelector<HTMLIFrameElement>('.vsec__iframe');
+  const video = document.querySelector<HTMLVideoElement>('.vsec__video[data-video]');
   const sound = document.querySelector<HTMLButtonElement>('.vsec__sound[data-sound]');
-  let muted = true;
-  const cmd = (func: string) => yt?.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
   sound?.addEventListener('click', () => {
-    muted = !muted;
-    cmd(muted ? 'mute' : 'unMute');
-    cmd('playVideo');
-    sound.textContent = muted ? '🔊 Attiva audio' : '🔇 Disattiva audio';
+    if (!video) return;
+    video.muted = !video.muted;
+    void video.play();
+    sound.textContent = video.muted ? '🔊 Attiva audio' : '🔇 Disattiva audio';
   });
 </script>
