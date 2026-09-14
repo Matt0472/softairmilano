@@ -2,7 +2,7 @@
 import navigation from '../../data/navigation.json';
 import settings from '../../data/settings.json';
 
-const { items, footerLinks = [] } = navigation;
+const { items } = navigation;
 const social = settings.social ?? {};
 const year = new Date().getFullYear();
 ---
@@ -63,15 +63,6 @@ const year = new Date().getFullYear();
       <ul class="mt-4 flex flex-col gap-2">
         {
           items.map((it) => (
-            <li>
-              <a href={it.href} class="text-sm text-foreground transition-colors hover:text-accent">
-                {it.label}
-              </a>
-            </li>
-          ))
-        }
-        {
-          footerLinks.map((it) => (
             <li>
               <a href={it.href} class="text-sm text-foreground transition-colors hover:text-accent">
                 {it.label}

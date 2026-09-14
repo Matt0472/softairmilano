@@ -50,13 +50,6 @@ content:
         fields:
           - { name: label, label: Etichetta, type: string }
           - { name: href, label: Link, type: string }
-      - name: footerLinks
-        label: Link extra nel footer (non nel menu in alto)
-        type: object
-        list: true
-        fields:
-          - { name: label, label: Etichetta, type: string }
-          - { name: href, label: Link, type: string }
 
   - name: home
     label: Home

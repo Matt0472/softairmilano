@@ -4,9 +4,7 @@
     { "label": "Softair", "href": "/softair" },
     { "label": "Corso", "href": "/corso-softair" },
     { "label": "Gruppi & eventi", "href": "/teambuilding" },
+    { "label": "Softair VS Paintball", "href": "/paintball" },
     { "label": "Contatti", "href": "/contatti" }
-  ],
-  "footerLinks": [
-    { "label": "Paintball VS Softair", "href": "/paintball" }
   ]
 }
