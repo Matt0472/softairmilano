@@ -8,11 +8,14 @@ const { items } = navigation;
 {/* Floating nav overlaid on the full-bleed hero (no classic top bar). */}
 <header class="pointer-events-none absolute inset-x-0 top-0 z-50">
   <div class="shell pointer-events-auto flex items-center justify-between gap-4 py-5">
-    <a
-      href="/"
-      class="font-display text-lg font-bold uppercase tracking-wide text-foreground [text-shadow:0_1px_12px_rgba(0,0,0,0.65)]"
-    >
-      SoftAir<span class="text-accent">Milano</span>
+    <a href="/" class="inline-flex items-center [filter:drop-shadow(0_1px_10px_rgba(0,0,0,0.6))]">
+      <img
+        src="/logo/logo-white.png"
+        alt="SoftAir Milano"
+        width="343"
+        height="339"
+        class="h-12 w-auto"
+      />
     </a>
 
     {/* Desktop: pill nav */}

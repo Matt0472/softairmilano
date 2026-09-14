@@ -2,19 +2,60 @@
 import navigation from '../../data/navigation.json';
 import settings from '../../data/settings.json';
 
-const { items } = navigation;
+const { items, footerLinks = [] } = navigation;
+const social = settings.social ?? {};
 const year = new Date().getFullYear();
 ---
 
 <footer class="mt-24 border-t border-border bg-surface">
   <div class="shell grid gap-10 py-14 md:grid-cols-4">
     <div class="min-w-0">
-      <div class="font-display text-lg font-bold uppercase tracking-wide text-foreground">
-        SoftAir<span class="text-accent">Milano</span>
-      </div>
+      <a href="/" class="inline-block" aria-label="SoftAir Milano — home">
+        <img
+          src="/logo/logo-white.png"
+          alt="SoftAir Milano"
+          width="343"
+          height="339"
+          class="h-14 w-auto"
+        />
+      </a>
       <p class="mt-3 max-w-xs text-sm text-muted">
         Arena indoor di softair a Milano. Missioni, adrenalina, squadra.
       </p>
+
+      <div class="mt-4 -ml-2 flex items-center gap-1">
+        {social.instagram && (
+          <a href={social.instagram} target="_blank" rel="noopener" aria-label="Instagram" class="inline-flex p-2 text-muted transition-colors hover:text-accent">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <circle cx="12" cy="12" r="4"></circle>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </a>
+        )}
+        {social.facebook && (
+          <a href={social.facebook} target="_blank" rel="noopener" aria-label="Facebook" class="inline-flex p-2 text-muted transition-colors hover:text-accent">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+            </svg>
+          </a>
+        )}
+        {social.youtube && (
+          <a href={social.youtube} target="_blank" rel="noopener" aria-label="YouTube" class="inline-flex p-2 text-muted transition-colors hover:text-accent">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+              <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none"></polygon>
+            </svg>
+          </a>
+        )}
+        {social.tiktok && (
+          <a href={social.tiktok} target="_blank" rel="noopener" aria-label="TikTok" class="inline-flex p-2 text-muted transition-colors hover:text-accent">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path>
+            </svg>
+          </a>
+        )}
+      </div>
     </div>
 
     <div class="min-w-0">
@@ -22,6 +63,15 @@ const year = new Date().getFullYear();
       <ul class="mt-4 flex flex-col gap-2">
         {
           items.map((it) => (
+            <li>
+              <a href={it.href} class="text-sm text-foreground transition-colors hover:text-accent">
+                {it.label}
+              </a>
+            </li>
+          ))
+        }
+        {
+          footerLinks.map((it) => (
             <li>
               <a href={it.href} class="text-sm text-foreground transition-colors hover:text-accent">
                 {it.label}
@@ -58,9 +108,33 @@ const year = new Date().getFullYear();
   </div>
 
   <div class="border-t border-border">
-    <div class="shell flex flex-wrap items-center justify-between gap-4 py-5 text-xs text-muted">
-      <span>© {year} SoftAir Milano</span>
-      <nav class="flex gap-4" aria-label="Note legali">
+    <div class="shell grid gap-4 py-5 text-center text-xs text-muted md:grid-cols-3 md:items-center md:text-left">
+      <span class="md:justify-self-start">© {year} SoftAir Milano</span>
+      <span class="inline-flex items-center justify-center gap-1 md:justify-self-center">
+          Made with
+          <svg
+            viewBox="0 0 24 24"
+            width="13"
+            height="13"
+            fill="currentColor"
+            class="text-accent"
+            role="img"
+            aria-label="cuore"
+          >
+            <path d="M12 21s-6.7-4.35-9.5-8.28C.9 10.3 1.6 6.9 4.3 5.6c1.9-.9 4.1-.3 5.3 1.3L12 9l2.4-2.1c1.2-1.6 3.4-2.2 5.3-1.3 2.7 1.3 3.4 4.7 1.8 7.12C18.7 16.65 12 21 12 21z"></path>
+          </svg>
+          by
+          <a
+            href="https://mapped-dev.it"
+            target="_blank"
+            rel="noopener"
+            class="font-medium text-foreground transition-colors hover:text-accent"
+          >
+            Mattia Pedone
+          </a>
+        </span>
+
+      <nav class="flex justify-center gap-4 md:justify-self-end" aria-label="Note legali">
         <a href="/privacy" class="transition-colors hover:text-foreground">Privacy</a>
         <a href="/cookie" class="transition-colors hover:text-foreground">Cookie</a>
         <a href="/termini" class="transition-colors hover:text-foreground">Termini</a>

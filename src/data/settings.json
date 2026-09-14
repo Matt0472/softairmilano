@@ -9,5 +9,11 @@
   "address": "",
   "rangerUrl": "https://www.rangersoftairmilano.it/",
   "ticketinghubId": "",
-  "gaMeasurementId": ""
+  "gaMeasurementId": "",
+  "social": {
+    "instagram": "https://www.instagram.com/softair.milano",
+    "facebook": "https://www.facebook.com/softairmilano.it",
+    "youtube": "https://www.youtube.com/@softairmilano4590",
+    "tiktok": "https://www.tiktok.com/@softair.milano"
+  }
 }

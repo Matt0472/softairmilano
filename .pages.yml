@@ -29,6 +29,14 @@ content:
       - { name: rangerUrl, label: "Link arena outdoor (Ranger Softair)", type: string }
       - { name: ticketinghubId, label: "ID script TicketingHub (prenotazioni)", type: string }
       - { name: gaMeasurementId, label: "ID Google Analytics (GA4)", type: string }
+      - name: social
+        label: Social (URL dei profili)
+        type: object
+        fields:
+          - { name: instagram, label: Instagram, type: string }
+          - { name: facebook, label: Facebook, type: string }
+          - { name: youtube, label: YouTube, type: string }
+          - { name: tiktok, label: TikTok, type: string }
 
   - name: navigation
     label: Menu di navigazione
@@ -37,6 +45,13 @@ content:
     fields:
       - name: items
         label: Voci del menu
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Etichetta, type: string }
+          - { name: href, label: Link, type: string }
+      - name: footerLinks
+        label: Link extra nel footer (non nel menu in alto)
         type: object
         list: true
         fields:
