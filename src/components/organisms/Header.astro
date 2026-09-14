@@ -1,21 +1,19 @@
 ---
 import navigation from '../../data/navigation.json';
-import Button from '../atoms/Button.astro';
 
 const { items } = navigation;
+
+// Active-page detection (normalise trailing slashes).
+const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isActive = (href: string): boolean =>
+  href === '/' ? current === '/' : current === href || current.startsWith(href + '/');
 ---
 
 {/* Floating nav overlaid on the full-bleed hero (no classic top bar). */}
 <header class="pointer-events-none absolute inset-x-0 top-0 z-50">
   <div class="shell pointer-events-auto flex items-center justify-between gap-4 py-5">
     <a href="/" class="inline-flex items-center [filter:drop-shadow(0_1px_10px_rgba(0,0,0,0.6))]">
-      <img
-        src="/logo/logo-white.png"
-        alt="SoftAir Milano"
-        width="343"
-        height="339"
-        class="h-12 w-auto"
-      />
+      <img src="/logo/logo-white.png" alt="SoftAir Milano" width="343" height="339" class="h-12 w-auto" />
     </a>
 
     {/* Desktop: pill nav */}
@@ -27,19 +25,32 @@ const { items } = navigation;
         items.map((it) => (
           <a
             href={it.href}
-            class="rounded-full px-4 py-2 text-sm text-muted transition-colors hover:bg-white/5 hover:text-accent"
+            aria-current={isActive(it.href) ? 'page' : undefined}
+            class:list={[
+              'flex items-center gap-1.5 rounded-full px-4 py-2 text-sm transition-colors',
+              isActive(it.href) ? 'text-accent' : 'text-muted hover:bg-white/5 hover:text-accent',
+            ]}
           >
             {it.label}
+            {isActive(it.href) && (
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="8" r="6" />
+                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+              </svg>
+            )}
           </a>
         ))
       }
     </nav>
 
-    <div class="hidden lg:block">
-      <Button href="#prenota" variant="primary">Prenota</Button>
-    </div>
+    <a
+      href="#prenota"
+      class="hidden rounded-md bg-accent px-5 py-2.5 font-display text-sm font-semibold uppercase tracking-wide text-on-accent transition-colors hover:bg-accent-hover lg:inline-flex"
+    >
+      Prenota
+    </a>
 
-    {/* Mobile: floating pill toggle (not a classic bordered hamburger) */}
+    {/* Mobile: floating pill toggle */}
     <button
       id="menu-toggle"
       class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/10 bg-background/60 px-4 font-display text-sm uppercase tracking-wide text-foreground backdrop-blur-md lg:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
@@ -56,29 +67,56 @@ const { items } = navigation;
     </button>
   </div>
 
-  {/* Mobile: floating panel */}
+  {/* Mobile: full-screen overlay menu */}
   <nav
     id="mobile-menu"
-    class="mobile-menu shell pointer-events-auto pt-2 lg:hidden"
+    class="mobile-menu pointer-events-auto fixed inset-0 z-[70] bg-background/98 backdrop-blur-md lg:hidden"
     data-open="false"
-    aria-label="Principale (mobile)"
+    aria-label="Menu"
   >
-    <div class="rounded-2xl border border-white/10 bg-background/95 p-3 shadow-md backdrop-blur-md">
+    <div class="shell flex items-center justify-between py-5">
+      <img src="/logo/logo-white.png" alt="SoftAir Milano" width="343" height="339" class="h-11 w-auto" />
+      <button
+        id="menu-close"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        aria-label="Chiudi il menu"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="flex flex-1 flex-col items-center justify-center gap-1 px-6">
       {
         items.map((it) => (
           <a
             href={it.href}
-            class="block rounded-xl px-4 py-3 text-foreground transition-colors hover:bg-white/5 hover:text-accent"
+            aria-current={isActive(it.href) ? 'page' : undefined}
+            class:list={[
+              'flex items-center gap-2.5 py-3 font-display text-2xl uppercase tracking-wide transition-colors',
+              isActive(it.href) ? 'text-accent' : 'text-foreground hover:text-accent',
+            ]}
           >
             {it.label}
+            {isActive(it.href) && (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="8" r="6" />
+                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+              </svg>
+            )}
           </a>
         ))
       }
+    </div>
+
+    <div class="shell pb-10">
       <a
         href="#prenota"
-        class="mt-2 block rounded-md bg-accent px-5 py-3 text-center font-display text-sm font-semibold uppercase tracking-wide text-on-accent transition-colors hover:bg-accent-hover"
+        class="block rounded-md bg-accent px-5 py-3.5 text-center font-display text-base font-semibold uppercase tracking-wide text-on-accent transition-colors hover:bg-accent-hover"
       >
-        Prenota
+        Prenota la tua partita
       </a>
     </div>
   </nav>
@@ -86,21 +124,21 @@ const { items } = navigation;
 
 <script>
   const toggle = document.getElementById('menu-toggle');
+  const closeBtn = document.getElementById('menu-close');
   const menu = document.getElementById('mobile-menu');
   if (toggle && menu) {
     const setOpen = (open: boolean) => {
       menu.setAttribute('data-open', String(open));
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
+      document.body.style.overflow = open ? 'hidden' : '';
+      if (open) closeBtn?.focus();
+      else toggle.focus();
     };
-    toggle.addEventListener('click', () => {
-      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-    });
+    toggle.addEventListener('click', () => setOpen(menu.getAttribute('data-open') !== 'true'));
+    closeBtn?.addEventListener('click', () => setOpen(false));
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-        setOpen(false);
-        toggle.focus();
-      }
+      if (e.key === 'Escape' && menu.getAttribute('data-open') === 'true') setOpen(false);
     });
     menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
   }

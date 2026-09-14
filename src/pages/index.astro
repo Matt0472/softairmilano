@@ -3,15 +3,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/atoms/Button.astro';
 import Card from '../components/molecules/Card.astro';
 import Hero from '../components/organisms/Hero.astro';
+import ArenaIntro from '../components/organisms/ArenaIntro.astro';
 import home from '../data/home.json';
 import settings from '../data/settings.json';
 
-const { title, hero, intro, activities, occasions, rangerTeaser, finalCta } = home;
+const { title, hero, arena, intro, activities, occasions, rangerTeaser, finalCta } = home;
 ---
 
 <BaseLayout title={title}>
   <!-- HERO -->
   <Hero {...hero} />
+
+  <!-- L'ARENA IN BREVE -->
+  <ArenaIntro {...arena} />
 
   <!-- ATTIVITÀ -->
   <section class="shell py-16 md:py-20">

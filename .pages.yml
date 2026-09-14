@@ -88,6 +88,37 @@ content:
               - { name: href, label: Link, type: string }
           - { name: hudTag, label: "Etichetta HUD (piccola scritta tattica)", type: string }
           - { name: proof, label: "Riga recensioni (opzionale)", type: string }
+      - name: arena
+        label: "L'arena (sezione in breve)"
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string }
+          - { name: title, label: Titolo, type: string }
+          - { name: text, label: Testo, type: text }
+          - name: stat
+            label: Numero in evidenza
+            type: object
+            fields:
+              - { name: value, label: Valore, type: string }
+              - { name: unit, label: "Unità / descrizione", type: string }
+          - name: features
+            label: Caratteristiche
+            type: object
+            list: true
+            fields:
+              - name: icon
+                label: Icona
+                type: select
+                options:
+                  values: [hangar, roof, umbrella, bulb, floodlight, moon, cycle, layout, wrench, speaker, equalizer, note]
+              - { name: title, label: Titolo, type: string }
+              - { name: text, label: Testo, type: text }
+          - name: cta
+            label: 'Bottone "Leggi di più"'
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string }
       - { name: intro, label: Introduzione attività, type: text }
       - name: activities
         label: Attività

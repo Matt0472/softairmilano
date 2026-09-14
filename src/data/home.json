@@ -12,6 +12,19 @@
     "hudTag": "IND · 1.500 M² · CQB",
     "proof": "4,9 / 5 · oltre 300 recensioni"
   },
+  "arena": {
+    "eyebrow": "Il campo di gioco",
+    "title": "L'arena",
+    "text": "L'arena indoor di softair più grande di Milano: un villaggio militare al coperto dove ogni partita sembra una scena d'azione.",
+    "stat": { "value": "1.500", "unit": "m² al coperto" },
+    "features": [
+      { "icon": "hangar", "title": "Al coperto", "text": "Si gioca tutto l'anno, anche quando piove." },
+      { "icon": "floodlight", "title": "Illuminato", "text": "Partite adrenaliniche anche in notturna." },
+      { "icon": "cycle", "title": "Sempre nuova", "text": "Gli scenari vengono riconfigurati di continuo." },
+      { "icon": "equalizer", "title": "Musica immersiva", "text": "Colonna sonora a tutto volume: porta la tua chiavetta USB." }
+    ],
+    "cta": { "label": "Leggi di più sull'arena", "href": "/l-arena" }
+  },
   "intro": "Un'arena indoor pensata nei minimi dettagli, per vivere ogni missione come in un film. Scegli come giocare.",
   "activities": [
     { "title": "Softair", "desc": "Partite a missioni nell'arena indoor. Per esperti e principianti.", "href": "/softair" },
