@@ -53,6 +53,8 @@
     font-family: var(--font-sans);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    /* Defense-in-depth: full-bleed decorative layers can never scroll the page. */
+    overflow-x: clip;
   }
 
   h1,

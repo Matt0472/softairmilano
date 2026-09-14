@@ -4,9 +4,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "npm run immagini && astro dev",
+    "build": "npm run immagini && astro build",
     "preview": "astro preview",
+    "immagini": "node scripts/ottimizza-immagini.mjs",
     "astro": "astro"
   },
   "dependencies": {

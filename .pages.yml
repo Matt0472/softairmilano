@@ -53,6 +53,9 @@ content:
         label: Hero
         type: object
         fields:
+          - { name: image, label: "Immagine (desktop, 16:9)", type: image }
+          - { name: imageMobile, label: "Immagine (mobile, 9:16)", type: image }
+          - { name: imageAlt, label: "Testo alternativo immagine (accessibilità/SEO)", type: string }
           - { name: eyebrow, label: Sopratitolo, type: string }
           - { name: title, label: Titolo, type: string }
           - { name: subtitle, label: Sottotitolo, type: text }
@@ -68,6 +71,8 @@ content:
             fields:
               - { name: label, label: Testo, type: string }
               - { name: href, label: Link, type: string }
+          - { name: hudTag, label: "Etichetta HUD (piccola scritta tattica)", type: string }
+          - { name: proof, label: "Riga recensioni (opzionale)", type: string }
       - { name: intro, label: Introduzione attività, type: text }
       - name: activities
         label: Attività

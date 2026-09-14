@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/atoms/Button.astro';
 import Card from '../components/molecules/Card.astro';
+import Hero from '../components/organisms/Hero.astro';
 import home from '../data/home.json';
 import settings from '../data/settings.json';
 
@@ -10,27 +11,7 @@ const { title, hero, intro, activities, occasions, rangerTeaser, finalCta } = ho
 
 <BaseLayout title={title}>
   <!-- HERO -->
-  <section class="relative overflow-hidden border-b border-border">
-    <div
-      aria-hidden="true"
-      class="pointer-events-none absolute inset-0 -z-10"
-      style="background: radial-gradient(120% 130% at 85% 0%, #232a33 0%, var(--color-surface) 45%, var(--color-background) 100%);"
-    >
-    </div>
-    <div class="shell max-w-3xl py-20 md:py-28">
-      <p class="font-display text-sm uppercase tracking-[0.22em] text-accent">
-        {hero.eyebrow}
-      </p>
-      <h1 class="mt-4 text-balance font-display text-4xl font-bold uppercase leading-[1.05] md:text-6xl">
-        {hero.title}
-      </h1>
-      <p class="mt-5 max-w-xl text-lg text-muted">{hero.subtitle}</p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <Button href={hero.ctaPrimary.href} variant="primary">{hero.ctaPrimary.label}</Button>
-        <Button href={hero.ctaSecondary.href} variant="secondary">{hero.ctaSecondary.label}</Button>
-      </div>
-    </div>
-  </section>
+  <Hero {...hero} />
 
   <!-- ATTIVITÀ -->
   <section class="shell py-16 md:py-20">

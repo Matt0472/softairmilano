@@ -28,7 +28,7 @@ Regola pratica: **se è contenuto → sta nel CMS; se è struttura → sta nel c
 - **GitHub** — repository del codice (owner `Matt0472`)
 - **TicketingHub** — widget JS per le prenotazioni
 - **Google Analytics 4** — analytics, caricato **solo dopo consenso** (Consent Mode v2, IP anonimizzato); Measurement ID come campo CMS. *(opzionale: Cloudflare Web Analytics, cookieless)*
-- Librerie di contorno (usare solo se servono): **motion** (Framer Motion vanilla), **lenis** (smooth scroll), **vanilla-cookieconsent** (banner + policy, gestione fatta a mano), **@fontsource** (font self-hosted), **sharp** (dev, ottimizzazione immagini in build)
+- Librerie di contorno (usare solo se servono): **anime.js** (motore di animazione, MIT — SVG draw, stagger, tipografia cinetica), **lenis** (smooth scroll), **vanilla-cookieconsent** (banner + policy, gestione fatta a mano), **@fontsource** (font self-hosted), **sharp** (dev, ottimizzazione immagini in build)
 
 ## Hosting e deploy
 

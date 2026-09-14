@@ -1,11 +1,16 @@
 {
   "title": "SoftAir Milano — Arena indoor di softair a Milano",
   "hero": {
+    "image": "/uploads/hero-mira.jpeg",
+    "imageMobile": "/uploads/hero-mira-mobile.jpeg",
+    "imageAlt": "Giocatore di softair in tenuta tattica che prende la mira nella luce di un'arena indoor.",
     "eyebrow": "Arena indoor · Milano",
     "title": "Diventa protagonista di un film d'azione",
     "subtitle": "Il campo di softair al coperto più grande di Milano: un villaggio militare di circa 1.500 mq, tra edifici e torrette. Missioni, adrenalina, squadra.",
     "ctaPrimary": { "label": "Prenota la tua partita", "href": "#prenota" },
-    "ctaSecondary": { "label": "Scopri l'arena", "href": "/l-arena" }
+    "ctaSecondary": { "label": "Scopri l'arena", "href": "/l-arena" },
+    "hudTag": "IND · 1.500 M² · CQB",
+    "proof": "4,9 / 5 · oltre 300 recensioni"
   },
   "intro": "Un'arena indoor pensata nei minimi dettagli, per vivere ogni missione come in un film. Scegli come giocare.",
   "activities": [
