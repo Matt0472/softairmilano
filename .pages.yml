@@ -88,6 +88,21 @@ content:
               - { name: href, label: Link, type: string }
           - { name: hudTag, label: "Etichetta HUD (piccola scritta tattica)", type: string }
           - { name: proof, label: "Riga recensioni (opzionale)", type: string }
+      - name: video
+        label: Video (sotto l'hero)
+        type: object
+        fields:
+          - { name: youtubeId, label: "ID video YouTube", type: string }
+          - { name: eyebrow, label: Sopratitolo, type: string }
+          - { name: title, label: Titolo, type: string }
+          - { name: text, label: Testo, type: text }
+          - { name: soundLabel, label: "Testo bottone audio", type: string }
+          - name: cta
+            label: Bottone
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string }
       - name: arena
         label: "L'arena (sezione in breve)"
         type: object

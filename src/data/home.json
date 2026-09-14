@@ -10,7 +10,15 @@
     "ctaPrimary": { "label": "Prenota la tua partita", "href": "#prenota" },
     "ctaSecondary": { "label": "Scopri l'arena", "href": "/l-arena" },
     "hudTag": "IND · 1.500 M² · CQB",
-    "proof": "4,9 / 5 · oltre 300 recensioni"
+    "proof": "4,9 / 5 · oltre 500 recensioni"
+  },
+  "video": {
+    "youtubeId": "Zithahc6f0o",
+    "eyebrow": "Il video",
+    "title": "Guarda l'azione",
+    "text": "Un minuto dentro l'arena: squadre, missioni, adrenalina.",
+    "soundLabel": "Attiva audio",
+    "cta": { "label": "Prenota la tua partita", "href": "#prenota" }
   },
   "arena": {
     "eyebrow": "Il campo di gioco",

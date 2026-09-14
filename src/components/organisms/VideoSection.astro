@@ -1,0 +1,137 @@
+---
+// "Guarda l'azione" — split video section (copy + framed HUD video), placed
+// after the arena section. YouTube embed with the chrome cleaned up + an
+// interaction blocker.
+// PLAN: the real video will be self-hosted on Cloudflare R2 (same as the
+// campo-di-zucche project) and replace this iframe with a native <video>
+// (muted autoplay loop playsinline) — same layout, no YouTube chrome at all.
+// NOTE: while on YouTube, this third party must load only after cookie consent.
+
+interface Cta { label: string; href: string; }
+interface Props {
+  youtubeId: string;
+  eyebrow?: string;
+  title?: string;
+  text?: string;
+  soundLabel?: string;
+  cta?: Cta;
+}
+
+const { youtubeId, eyebrow, title, text, soundLabel = 'Attiva audio', cta } = Astro.props;
+
+const params = new URLSearchParams({
+  autoplay: '1', mute: '1', loop: '1', playlist: youtubeId,
+  controls: '0', rel: '0', modestbranding: '1', playsinline: '1',
+  iv_load_policy: '3', disablekb: '1', fs: '0', enablejsapi: '1',
+});
+const src = `https://www.youtube-nocookie.com/embed/${youtubeId}?${params.toString()}`;
+---
+
+<section class="vsec" aria-label={title ?? 'Video'}>
+  <div class="vsec__inner">
+    <div class="vsec__copy">
+      {eyebrow && <p class="vsec__eyebrow">{eyebrow}</p>}
+      {title && <h2 class="vsec__title">{title}</h2>}
+      {text && <p class="vsec__text">{text}</p>}
+      {cta && <a class="vsec__cta" href={cta.href}>{cta.label}</a>}
+    </div>
+
+    <figure class="vsec__stage">
+      <div class="vsec__ratio">
+        <iframe
+          class="vsec__iframe"
+          src={src}
+          title={title ?? 'Video'}
+          loading="lazy"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+        <div class="vsec__block" aria-hidden="true"></div>
+        <div class="vsec__scrim" aria-hidden="true"></div>
+
+        <div class="vsec__hud" aria-hidden="true">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <span class="rec"><span class="dot"></span>REC · CAM 01</span>
+          <span class="scan"></span>
+        </div>
+
+        <button class="vsec__sound" type="button" data-sound>🔊 {soundLabel}</button>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .vsec { padding-block: clamp(3rem, 7vw, 5.5rem); }
+  .vsec__inner {
+    max-width: 1520px; margin-inline: auto;
+    padding-inline: 1.25rem;
+    display: grid; gap: clamp(1.75rem, 4vw, 3.5rem);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.7fr); align-items: center;
+  }
+  @media (min-width: 768px) { .vsec__inner { padding-inline: 2rem; } }
+
+  .vsec__eyebrow { margin: 0 0 1rem; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.26em; color: var(--color-accent); font-size: 0.8rem; display: flex; align-items: center; gap: 0.7rem; }
+  .vsec__eyebrow::before { content: ""; width: 30px; height: 2px; background: var(--color-accent); }
+  .vsec__title { margin: 0; font-family: var(--font-display); text-transform: uppercase; font-weight: 700; line-height: 1; letter-spacing: 0.01em; font-size: clamp(2rem, 4.5vw, 3.2rem); }
+  .vsec__text { margin: 1.1rem 0 0; max-width: 42ch; color: var(--color-muted); line-height: 1.55; font-size: clamp(1rem, 1.6vw, 1.12rem); }
+  .vsec__cta { display: inline-flex; margin-top: 1.75rem; background: var(--color-accent); color: var(--color-on-accent); font-family: var(--font-display); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; padding: 0.8rem 1.5rem; border-radius: var(--radius-md); text-decoration: none; transition: background 0.18s; }
+  .vsec__cta:hover { background: var(--color-accent-hover); }
+  .vsec__cta:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+  .vsec__stage { margin: 0; }
+  .vsec__ratio { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 14px; background: #000; border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent); }
+  /* Cover the frame + a little scale so YouTube's edge chrome stays cropped. */
+  .vsec__iframe {
+    position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; border: 0;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+  /* Blocks YouTube hover/click chrome so the frame stays clean. */
+  .vsec__block { position: absolute; inset: 0; z-index: 2; }
+  .vsec__scrim {
+    position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    background:
+      linear-gradient(0deg, color-mix(in srgb, var(--color-background) 70%, transparent) 0%, transparent 24%),
+      linear-gradient(180deg, color-mix(in srgb, var(--color-background) 55%, transparent) 0%, transparent 18%);
+  }
+
+  .vsec__hud { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+  .corner { position: absolute; width: 18px; height: 18px; border: 2px solid var(--color-accent); }
+  .corner.tl { left: 12px; top: 12px; border-right: 0; border-bottom: 0; }
+  .corner.tr { right: 12px; top: 12px; border-left: 0; border-bottom: 0; }
+  .corner.bl { left: 12px; bottom: 12px; border-right: 0; border-top: 0; }
+  .corner.br { right: 12px; bottom: 12px; border-left: 0; border-top: 0; }
+  .rec { position: absolute; left: 16px; top: 14px; font-family: var(--font-display); font-size: 12px; letter-spacing: 0.16em; color: var(--color-accent); display: flex; align-items: center; gap: 7px; }
+  .rec .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-danger); box-shadow: 0 0 8px var(--color-danger); animation: vrec 1.4s ease-in-out infinite; }
+  .scan { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-accent) 60%, transparent), transparent); mix-blend-mode: screen; animation: vscan 5s linear infinite; }
+  @keyframes vrec { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  @keyframes vscan { 0% { top: 4%; } 100% { top: 96%; } }
+
+  .vsec__sound { position: absolute; right: 14px; bottom: 12px; z-index: 5; cursor: pointer; font-size: 12px; letter-spacing: 0.04em; color: var(--color-foreground); background: color-mix(in srgb, var(--color-background) 60%, transparent); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 999px; padding: 8px 14px; backdrop-filter: blur(4px); transition: color 0.18s, border-color 0.18s; }
+  .vsec__sound:hover { border-color: var(--color-accent); color: var(--color-accent); }
+  .vsec__sound:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+  /* Phones: stack — copy first, then the video (DOM order). */
+  @media (max-width: 780px) {
+    .vsec__inner { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rec .dot { animation: none; }
+    .scan { display: none; }
+  }
+</style>
+
+<script>
+  const yt = document.querySelector<HTMLIFrameElement>('.vsec__iframe');
+  const sound = document.querySelector<HTMLButtonElement>('.vsec__sound[data-sound]');
+  let muted = true;
+  const cmd = (func: string) => yt?.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
+  sound?.addEventListener('click', () => {
+    muted = !muted;
+    cmd(muted ? 'mute' : 'unMute');
+    cmd('playVideo');
+    sound.textContent = muted ? '🔊 Attiva audio' : '🔇 Disattiva audio';
+  });
+</script>

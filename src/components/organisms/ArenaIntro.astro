@@ -106,19 +106,26 @@ const ICONS: Record<string, string> = {
     mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 75%);
   }
 
-  /* Centred with `left` (no translate) so the animation is a pure in-place spin. */
+  /* Fixed size + margin-based centering (no translate), so it spins in place and
+     looks identical regardless of the content width. */
   .arena-block .radar {
-    position: absolute; left: -25%; top: -30%; width: 150%; aspect-ratio: 1;
+    position: absolute; left: 50%; top: -30%; margin-left: -900px;
+    width: 1800px; height: 1800px;
     transform-origin: center; z-index: 0; pointer-events: none; opacity: 0.9;
     border-radius: 50%; will-change: transform;
     background: conic-gradient(from 0deg, transparent 0deg,
       color-mix(in srgb, var(--color-accent) 22%, transparent) 26deg, transparent 40deg);
-    animation: aRadar 5.5s linear infinite; animation-play-state: paused;
+    animation: aRadar 8s linear infinite; animation-play-state: paused;
   }
   .arena-block.in-view .radar { animation-play-state: running; }
   @keyframes aRadar { from { transform: rotate(0); } to { transform: rotate(360deg); } }
   @media (max-width: 640px) {
-    .arena-block .radar { left: -80%; top: -12%; width: 260%; }
+    /* The stacked cards make the section tall → a big radar centred both ways so
+       the sweep reaches every card. */
+    .arena-block .radar {
+      width: 1600px; height: 1600px;
+      left: 50%; top: 50%; margin-left: -800px; margin-top: -800px;
+    }
   }
 
   .arena-block .scan {
