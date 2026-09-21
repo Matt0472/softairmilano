@@ -40,8 +40,9 @@
       "title": "Softair",
       "desc": "Il cuore dell'arena: partite a missioni in un villaggio militare al coperto. Per veterani e per chi imbraccia un'arma softair per la prima volta.",
       "pills": ["Dai 12 anni", "A squadre", "Principianti ok"],
-      "image": "/uploads/scena-softair.jpeg",
-      "imageAlt": "Giocatore di softair in tenuta tattica nell'arena indoor.",
+      "image": "/uploads/att-softair.jpeg",
+      "imageMobile": "/uploads/att-softair-mobile.jpeg",
+      "imageAlt": "Squadra di softair in tenuta tattica schierata lungo un muro dell'arena indoor.",
       "href": "/softair"
     },
     {
@@ -57,6 +58,7 @@
       "desc": "Archi e frecce con punta morbida: adrenalina in totale sicurezza, spettacolare e per tutti.",
       "pills": ["Dai 10 anni", "Soft e sicuro", "A squadre"],
       "image": "/uploads/att-arcotag.jpeg",
+      "imageMobile": "/uploads/att-arcotag-mobile.jpeg",
       "imageAlt": "Giocatori di arcotag con archi e frecce soft dietro i bunker.",
       "href": "/arcotag"
     },
@@ -65,7 +67,8 @@
       "desc": "Battaglie con dardi in gommapiuma: scatenate e sicurissime, l'ideale per i più piccoli e per le feste.",
       "pills": ["Bambini", "Super sicuro", "Feste"],
       "image": "/uploads/att-nerf.jpeg",
-      "imageAlt": "Bambini che giocano a Nerf con blaster e dardi in gommapiuma.",
+      "imageMobile": "/uploads/att-nerf-mobile.jpeg",
+      "imageAlt": "Giocatori con maschera protettiva e blaster Nerf nell'arena indoor.",
       "href": "/nerf"
     }
   ],
