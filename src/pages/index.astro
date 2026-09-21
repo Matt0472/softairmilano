@@ -5,6 +5,7 @@ import Card from '../components/molecules/Card.astro';
 import Hero from '../components/organisms/Hero.astro';
 import VideoSection from '../components/organisms/VideoSection.astro';
 import ArenaIntro from '../components/organisms/ArenaIntro.astro';
+import ActivitiesStory from '../components/organisms/ActivitiesStory.astro';
 import home from '../data/home.json';
 import settings from '../data/settings.json';
 
@@ -21,14 +22,8 @@ const { title, hero, video, arena, intro, activities, occasions, rangerTeaser, f
   <!-- VIDEO -->
   <VideoSection {...video} />
 
-  <!-- ATTIVITÀ -->
-  <section class="shell py-16 md:py-20">
-    <h2 class="font-display text-2xl uppercase md:text-3xl">Le attività</h2>
-    <p class="mt-2 max-w-2xl text-muted">{intro}</p>
-    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {activities.map((a) => <Card title={a.title} description={a.desc} href={a.href} />)}
-    </div>
-  </section>
+  <!-- ATTIVITÀ (scrolling story, streaming militare) -->
+  <ActivitiesStory title="Le attività" intro={intro} items={activities} />
 
   <!-- OCCASIONI -->
   <section class="border-t border-border">

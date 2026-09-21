@@ -36,10 +36,38 @@
   },
   "intro": "Un'arena indoor pensata nei minimi dettagli, per vivere ogni missione come in un film. Scegli come giocare.",
   "activities": [
-    { "title": "Softair", "desc": "Partite a missioni nell'arena indoor. Per esperti e principianti.", "href": "/softair" },
-    { "title": "Tiro dinamico", "desc": "Metti alla prova mira e riflessi in un percorso dedicato.", "href": "/tiro-dinamico" },
-    { "title": "Arcotag", "desc": "Frecce soft e adrenalina in sicurezza: divertente per tutti.", "href": "/arcotag" },
-    { "title": "Nerf", "desc": "Battaglie con dardi in gommapiuma: sicurissime e scatenate, perfette per i più piccoli.", "href": "/nerf" }
+    {
+      "title": "Softair",
+      "desc": "Il cuore dell'arena: partite a missioni in un villaggio militare al coperto. Per veterani e per chi imbraccia un'arma softair per la prima volta.",
+      "pills": ["Dai 12 anni", "A squadre", "Principianti ok"],
+      "image": "/uploads/scena-softair.jpeg",
+      "imageAlt": "Giocatore di softair in tenuta tattica nell'arena indoor.",
+      "href": "/softair"
+    },
+    {
+      "title": "Tiro dinamico",
+      "desc": "Precisione e riflessi contro il tempo: un percorso a bersagli dove conta la mira lucida sotto pressione.",
+      "pills": ["Precisione", "A punti", "Riflessi"],
+      "image": "/uploads/att-tiro-dinamico.jpeg",
+      "imageAlt": "Giocatore su un percorso di tiro dinamico con bersagli.",
+      "href": "/tiro-dinamico"
+    },
+    {
+      "title": "Arcotag",
+      "desc": "Archi e frecce con punta morbida: adrenalina in totale sicurezza, spettacolare e per tutti.",
+      "pills": ["Dai 10 anni", "Soft e sicuro", "A squadre"],
+      "image": "/uploads/att-arcotag.jpeg",
+      "imageAlt": "Giocatori di arcotag con archi e frecce soft dietro i bunker.",
+      "href": "/arcotag"
+    },
+    {
+      "title": "Nerf",
+      "desc": "Battaglie con dardi in gommapiuma: scatenate e sicurissime, l'ideale per i più piccoli e per le feste.",
+      "pills": ["Bambini", "Super sicuro", "Feste"],
+      "image": "/uploads/att-nerf.jpeg",
+      "imageAlt": "Bambini che giocano a Nerf con blaster e dardi in gommapiuma.",
+      "href": "/nerf"
+    }
   ],
   "occasions": [
     { "title": "Team building", "desc": "Rafforza la squadra con una sfida diversa dal solito.", "href": "/teambuilding" },

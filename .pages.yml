@@ -137,6 +137,9 @@ content:
         fields:
           - { name: title, label: Titolo, type: string }
           - { name: desc, label: Descrizione, type: text }
+          - { name: pills, label: "Etichette (età, modalità…)", type: string, list: true }
+          - { name: image, label: Immagine, type: image }
+          - { name: imageAlt, label: "Testo alternativo immagine", type: string }
           - { name: href, label: Link, type: string }
       - name: occasions
         label: Occasioni
