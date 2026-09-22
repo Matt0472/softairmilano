@@ -7,8 +7,10 @@
 //   • A tall track pins the stage; the scroll drives: lid opens → replica rises, rolls upright
 //     and spins → magazine flies in and clicks → 3/4 aim → shot (bolt cycles, muzzle flash,
 //     tracer, recoil). Last stretch = free mode: the replica follows the pointer, click fires.
-//   • prefers-reduced-motion → one static assembled frame, no pinning. No WebGL / save-data →
-//     the 3D is skipped and the copy stands on the branded glow.
+//   • prefers-reduced-motion → one static assembled frame, no pinning.
+//   • No WebGL / save-data / load error / low FPS (watchdog) → data-state="off": the WebGL is
+//     skipped (or torn down) and a pre-rendered still of the final scene (STILL_IMAGE, rendered
+//     from this very component) stands in, no pinning.
 // Copy and CTA come from home.json via Pages CMS; the mandatory CC BY model credits are
 // rendered site-wide in the Footer (settings.json → credits3d).
 // The models themselves are structure: swap paths below only from code.
@@ -24,6 +26,7 @@ const { beats, cta, fireHint } = Astro.props;
 
 const RIFLE_MODEL = '/models/cobra.glb';
 const CASE_MODEL = '/models/case.glb';
+const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback frame (transparent WebP)
 ---
 
 <section class="unbox" data-unbox data-rifle={RIFLE_MODEL} data-case={CASE_MODEL} data-beat="0" data-state="idle" aria-label="Apri la partita">
@@ -31,6 +34,7 @@ const CASE_MODEL = '/models/case.glb';
     <div class="unbox__stage" data-stage>
       <div class="unbox__glow" aria-hidden="true"></div>
       <canvas class="unbox__canvas" data-canvas aria-hidden="true"></canvas>
+      <img class="unbox__still" src={STILL_IMAGE} alt="" loading="lazy" decoding="async" width="1600" height="909" />
       <div class="unbox__vignette" aria-hidden="true"></div>
 
       <div class="unbox__copy shell">
@@ -63,6 +67,9 @@ const CASE_MODEL = '/models/case.glb';
   .unbox[data-state="off"] .unbox__track { height: auto; }
   .unbox[data-state="off"] .unbox__stage { position: relative; }
   .unbox[data-state="off"] .unbox__hint, .unbox[data-state="off"] .unbox__progress, .unbox[data-state="off"] .unbox__fire, .unbox[data-state="off"] .unbox__canvas { display: none; }
+  .unbox__still { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; display: none; pointer-events: none; }
+  .unbox[data-state="off"] .unbox__still { display: block; }
+  @media (max-width: 820px) { .unbox__still { object-fit: contain; object-position: 50% 30%; transform: scale(1.15); } }
 
   .unbox__glow { position: absolute; inset: 0;
     background:
@@ -107,7 +114,8 @@ const CASE_MODEL = '/models/case.glb';
     .unbox__copy { inset: auto 0 clamp(4.5rem, 9svh, 6rem) 0; }
     .unbox__beats { height: clamp(10rem, 24svh, 13rem); }
     .unbox__vignette { background: linear-gradient(to top, var(--ink) 0%, rgb(14 17 20 / .7) 40%, transparent 65%); }
-    .unbox__hint, .unbox__fire { right: clamp(1rem, 4vw, 3rem); }
+    /* Narrow screens: hints sit centred above the progress dashes instead of beside them. */
+    .unbox__hint, .unbox__fire { right: auto; left: 50%; transform: translateX(-50%); bottom: 2.6rem; white-space: nowrap; }
   }
   @media (prefers-reduced-motion: reduce) {
     .unbox__track { height: 100svh; }
@@ -168,6 +176,10 @@ const CASE_MODEL = '/models/case.glb';
     root.dataset.state = 'loading';
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    // Low-end devices: if the first measured seconds run below ~28 fps, tear the WebGL down and
+    // fall back to the pre-rendered still (data-state="off").
+    let alive = true;
+    const degrade = (why: string) => { alive = false; console.info(`Unboxing3D: static fallback (${why})`); renderer.dispose(); root.dataset.state = 'off'; };
     renderer.setPixelRatio(Math.min(devicePixelRatio, isMobile ? 1.25 : 1.75));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
@@ -332,8 +344,14 @@ const CASE_MODEL = '/models/case.glb';
       magGroup.quaternion.copy(qMagFlat).slerp(qIdentity, uCarry);
       // Camera: wide on the case, then the replica becomes the hero (case stays low in frame).
       const uc = inOut(span(t, T.riseStart + 0.2, T.riseEnd));
-      camTarget.set(0, 0.30 + (0.66 - 0.30) * uc, 0);
-      camPos.set(0.9 - 0.55 * uc + cur.x * 0.04 * free, 1.25 - 0.4 * uc + cur.y * -0.03 * free, 3.6 - 1.35 * uc);
+      // Portrait screens: pull the camera back so the case (then the replica) fits the width,
+      // and look lower so the scene sits in the upper half, clear of the copy.
+      const halfTan = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect;
+      const fitDist = ((CASE_LEN / 0.92) * (1 - uc) + (1 / 0.8) * uc) / (2 * halfTan);
+      const dist = Math.max(3.6 - 1.35 * uc, fitDist);
+      const portrait = camera.aspect < 1 ? Math.min(1, (1 - camera.aspect) / 0.4) : 0;
+      camTarget.set(0, 0.30 + (0.66 - 0.30) * uc - 0.32 * portrait, 0);
+      camPos.set(0.9 - 0.55 * uc + cur.x * 0.04 * free, 1.25 - 0.4 * uc + cur.y * -0.03 * free - 0.2 * portrait, dist);
       const shake = landShake + recoil * 0.018;
       camPos.x += (Math.random() - 0.5) * shake; camPos.y += (Math.random() - 0.5) * shake;
       camera.position.copy(camPos); camera.lookAt(camTarget);
@@ -353,9 +371,19 @@ const CASE_MODEL = '/models/case.glb';
     let visible = true, hidden = document.hidden;
     new IntersectionObserver(([en]) => { visible = en.isIntersecting; }, { threshold: 0 }).observe(stage);
     document.addEventListener('visibilitychange', () => { hidden = document.hidden; });
+    let fpsFrames = 0, fpsWindowStart = 0, fpsWindows = 0;
     const loop = (nowMs: number) => {
+      if (!alive) return;
       requestAnimationFrame(loop);
-      if (!visible || hidden) return;
+      if (!visible || hidden) { fpsWindowStart = 0; fpsFrames = 0; return; }
+      // FPS watchdog: skip the first (warm-up) window, judge the next two.
+      if (!fpsWindowStart) fpsWindowStart = nowMs;
+      fpsFrames++;
+      if (nowMs - fpsWindowStart >= 1000) {
+        const fps = fpsFrames * 1000 / (nowMs - fpsWindowStart);
+        fpsWindows++; fpsFrames = 0; fpsWindowStart = nowMs;
+        if (fpsWindows > 1 && fpsWindows <= 3 && fps < 28) { degrade(`${Math.round(fps)} fps`); return; }
+      }
       const now = nowMs / 1000;
       // Landing intro (case drop) runs on the clock once the section enters the viewport;
       // from then on the timeline follows the scroll.

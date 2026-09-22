@@ -29,10 +29,10 @@ const { title, hero, unboxing, video, arena, intro, activities, occasions, range
   <!-- ATTIVITÀ (scrolling story, streaming militare) -->
   <ActivitiesStory title="Le attività" intro={intro} items={activities} />
 
-  <!-- OCCASIONI -->
+  <!-- OCCASIONI — TEMP "(DA COMPLETARE)" markers below flag sections still to be redesigned -->
   <section class="border-t border-border">
     <div class="shell py-16 md:py-20">
-      <h2 class="font-display text-2xl uppercase md:text-3xl">Occasioni</h2>
+      <h2 class="font-display text-2xl uppercase md:text-3xl">Occasioni <span class="text-base font-sans font-normal normal-case text-muted">(DA COMPLETARE)</span></h2>
       <p class="mt-2 max-w-2xl text-muted">
         Non solo partite: il posto giusto per gruppi, feste e formazione.
       </p>
@@ -46,7 +46,7 @@ const { title, hero, unboxing, video, arena, intro, activities, occasions, range
   <section class="shell py-8 md:py-12">
     <div class="flex flex-col gap-6 rounded-lg border border-border bg-surface p-8 md:flex-row md:items-center md:justify-between">
       <div>
-        <h2 class="font-display text-2xl uppercase">{rangerTeaser.title}</h2>
+        <h2 class="font-display text-2xl uppercase">{rangerTeaser.title} <span class="text-base font-sans font-normal normal-case text-muted">(DA COMPLETARE)</span></h2>
         <p class="mt-2 max-w-xl text-muted">{rangerTeaser.text}</p>
       </div>
       <div class="shrink-0">
@@ -59,7 +59,7 @@ const { title, hero, unboxing, video, arena, intro, activities, occasions, range
 
   <!-- CTA FINALE -->
   <section class="shell py-20 text-center">
-    <h2 class="font-display text-3xl uppercase md:text-4xl">{finalCta.title}</h2>
+    <h2 class="font-display text-3xl uppercase md:text-4xl">{finalCta.title} <span class="text-base font-sans font-normal normal-case text-muted">(DA COMPLETARE)</span></h2>
     <p class="mt-3 text-muted">{finalCta.subtitle}</p>
     <div class="mt-6 flex justify-center">
       <Button href={finalCta.href} variant="primary">{finalCta.label}</Button>
