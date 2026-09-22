@@ -139,7 +139,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     .acts-story .scene__cta { margin-top: 1rem; padding: 0.75rem 1.25rem; font-size: 0.95rem; justify-self: start; }
     /* Progress dashes become a small "tape counter" over the image, top-right
        (indicator only on touch: too thin to be a useful tap target). */
-    .acts-story .as__dots { left: auto; right: 1.25rem; top: calc(5.25rem + env(safe-area-inset-top, 0px)); bottom: auto; transform: none; gap: 6px; pointer-events: none; }
+    .acts-story .as__dots { display: none; } /* mobile: no progress dashes (client request) */
     .acts-story .as__dot { width: 22px; height: 3px; }
   }
   /* Short phones: tighten the copy so the image keeps a decent share. */
