@@ -16,10 +16,10 @@ const year = new Date().getFullYear();
     <div class="flex min-w-0 flex-col items-center text-center md:items-start md:text-left">
       <a href="/" class="inline-block" aria-label="SoftAir Milano — home">
         <img
-          src="/logo/logo-white.png"
+          src="/logo/logo-white-120.webp"
           alt="SoftAir Milano"
-          width="343"
-          height="339"
+          width="121"
+          height="120"
           class="h-14 w-auto"
         />
       </a>
@@ -105,13 +105,13 @@ const year = new Date().getFullYear();
           {credits3d.items.map((c, i) => (
             <>
               {i > 0 && <span aria-hidden="true"> · </span>}
-              <a href={c.url} target="_blank" rel="noopener" class="underline decoration-muted/40 underline-offset-2 transition-colors hover:text-foreground">“{c.title}” di {c.author}</a>
+              <a href={c.url} target="_blank" rel="noopener nofollow" class="underline decoration-muted/40 underline-offset-2 transition-colors hover:text-foreground">“{c.title}” di {c.author}<span class="sr-only"> (si apre in una nuova scheda)</span></a>
             </>
           ))}
           {credits3d.licenseLabel && credits3d.licenseUrl && (
             <>
               <span aria-hidden="true"> · </span>
-              <a href={credits3d.licenseUrl} target="_blank" rel="noopener" class="underline decoration-muted/40 underline-offset-2 transition-colors hover:text-foreground">{credits3d.licenseLabel}</a>
+              <a href={credits3d.licenseUrl} target="_blank" rel="noopener nofollow" class="underline decoration-muted/40 underline-offset-2 transition-colors hover:text-foreground">{credits3d.licenseLabel}<span class="sr-only"> (si apre in una nuova scheda)</span></a>
             </>
           )}
         </p>

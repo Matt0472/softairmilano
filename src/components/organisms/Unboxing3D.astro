@@ -26,10 +26,11 @@ const { beats, cta, fireHint } = Astro.props;
 
 const RIFLE_MODEL = '/models/cobra.glb';
 const CASE_MODEL = '/models/case.glb';
+const CASE_MODEL_MOBILE = '/models/case-mobile.glb'; // same mesh, 512px textures
 const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback frame (transparent WebP)
 ---
 
-<section class="unbox" data-unbox data-rifle={RIFLE_MODEL} data-case={CASE_MODEL} data-beat="0" data-state="idle" aria-label="Apri la partita">
+<section class="unbox" data-unbox data-rifle={RIFLE_MODEL} data-case={CASE_MODEL} data-case-mobile={CASE_MODEL_MOBILE} data-beat="0" data-state="idle" aria-label="Apri la partita">
   <div class="unbox__track" data-track>
     <div class="unbox__stage" data-stage>
       <div class="unbox__glow" aria-hidden="true"></div>
@@ -40,7 +41,7 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
       <div class="unbox__copy shell">
         <div class="unbox__beats">
           {beats.map((b, i) => (
-            <div class="unbox__beat" data-i={i}>
+            <div class="unbox__beat" data-i={i} aria-hidden={i === 0 ? 'false' : 'true'}>
               <p class="unbox__eyebrow">{b.eyebrow}</p>
               <h2 class="unbox__title">{b.title}</h2>
               <p class="unbox__text">{b.text}</p>
@@ -153,11 +154,21 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
     const conn = (navigator as any).connection;
     const gl = document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl');
     if (!gl || conn?.saveData) { root.dataset.state = 'off'; return; }
-    // Lazy: the models start loading only when the section is within 1.5 viewports.
-    const io = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) { io.disconnect(); init(root).catch((err) => { console.error(err); root.dataset.state = 'off'; }); }
-    }, { rootMargin: '150% 0px 150% 0px' });
-    io.observe(root);
+    // Lazy, on real intent only: the models (~3.6 MB) start loading at the first user scroll,
+    // wheel, touch or key press — or immediately if the page opens already scrolled (deep link,
+    // reload). Never at first paint: the hero sits exactly one viewport above this section, so any
+    // viewport-based observer would fire on load and hurt LCP/TBT for people who never scroll.
+    let started = false;
+    const start = (e?: Event) => {
+      if (started) return;
+      if (e?.type === 'scroll' && scrollY <= 8) return; // resize/restore can emit a scroll event without real movement
+      started = true;
+      for (const ev of INTENT_EVENTS) removeEventListener(ev, start as EventListener);
+      init(root).catch((err) => { console.error(err); root.dataset.state = 'off'; });
+    };
+    const INTENT_EVENTS = ['scroll', 'wheel', 'touchstart', 'keydown'] as const;
+    if (scrollY > 8) start();
+    else for (const ev of INTENT_EVENTS) addEventListener(ev, start as EventListener, { passive: true });
   }
 
   async function init(root: HTMLElement) {
@@ -171,6 +182,7 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
     const stage = root.querySelector<HTMLElement>('[data-stage]')!;
     const track = root.querySelector<HTMLElement>('[data-track]')!;
     const bars = [...root.querySelectorAll<HTMLElement>('.unbox__progress i')];
+    const beatEls = [...root.querySelectorAll<HTMLElement>('.unbox__beat')];
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobile = matchMedia('(max-width: 820px)').matches;
     root.dataset.state = 'loading';
@@ -188,14 +200,12 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
     renderer.shadowMap.type = THREE.PCFShadowMap;
 
     const scene = new THREE.Scene();
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environmentIntensity = 0.5;
 
     // Lights — moderate amber key with shadows (the replica is black metal and would read as
     // gold otherwise), a neutral key, cool fill, white rim.
     const key = new THREE.DirectionalLight(0xf5a524, 1.6); key.position.set(2.2, 3.2, 2.0); key.castShadow = true;
-    key.shadow.mapSize.set(1024, 1024); key.shadow.bias = -0.0005; key.shadow.normalBias = 0.02;
+    key.shadow.mapSize.set(isMobile ? 512 : 1024, isMobile ? 512 : 1024); key.shadow.bias = -0.0005; key.shadow.normalBias = 0.02;
     Object.assign(key.shadow.camera, { left: -1.6, right: 1.6, top: 1.6, bottom: -1.6, near: 0.5, far: 9 });
     scene.add(key);
     const keyWhite = new THREE.DirectionalLight(0xffffff, 1.4); keyWhite.position.set(2.0, 3.0, 2.4); scene.add(keyWhite);
@@ -217,7 +227,11 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
     const muzzle = new THREE.Vector3(0, 0, 0.5);
 
     const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
-    const [rifleGltf, caseGltf] = await Promise.all([loader.loadAsync(root.dataset.rifle!), loader.loadAsync(root.dataset.case!)]);
+    const caseUrl = (isMobile && root.dataset.caseMobile) || root.dataset.case!;
+    const [rifleGltf, caseGltf] = await Promise.all([loader.loadAsync(root.dataset.rifle!), loader.loadAsync(caseUrl)]);
+    // Yield between heavy phases so the main thread never blocks for long while the user scrolls.
+    const breathe = () => new Promise<void>((r) => setTimeout(r, 0));
+    await breathe();
     const prep = (o: THREE.Object3D) => { o.updateWorldMatrix(true, true); const list: THREE.Mesh[] = []; o.traverse((m: any) => { if (m.isMesh) { list.push(m); m.castShadow = true; m.receiveShadow = true; } }); return list; };
 
     // ---- Case: lid (+ its foam) hinged at the back top edge of the base; base bottom on the floor.
@@ -235,6 +249,7 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
     caseRoot.userData.baseY = caseRoot.position.y;
     caseTopY = (baseBox.max.y - baseBox.min.y) * sc;
 
+    await breathe();
     // ---- Rifle: named parts into world-aligned groups; normalised to unit length, centred on the body.
     for (const m of prep(rifleGltf.scene)) {
       if (/^Shell_Dispenser/.test(m.name)) { m.visible = false; continue; } // two stray floating bits in the source model
@@ -251,6 +266,12 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
     const bBox = new THREE.Box3().setFromObject(barrelMesh ?? bodyGroup);
     const bCenter = bBox.getCenter(new THREE.Vector3());
     muzzle.set(bCenter.x, bCenter.y, bBox.max.z).sub(rCenter).multiplyScalar(s);
+    await breathe();
+    scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+    await breathe();
+    // Compile shaders off the critical path where the driver allows it (KHR_parallel_shader_compile).
+    camera.position.set(0.9, 1.25, 3.6); camera.lookAt(0, 0.3, 0);
+    try { await renderer.compileAsync(scene, camera); } catch { /* fall back to lazy compile on first render */ }
     root.dataset.state = 'ready';
 
     const resize = () => { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
@@ -357,7 +378,7 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
       camera.position.copy(camPos); camera.lookAt(camTarget);
       // Copy beats, progress bars, glow.
       const idx = t < T.riseStart - 0.2 ? 0 : t < T.turnEnd ? 1 : 2;
-      if (root.dataset.beat !== String(idx)) root.dataset.beat = String(idx);
+      if (root.dataset.beat !== String(idx)) { root.dataset.beat = String(idx); beatEls.forEach((el, i) => el.setAttribute('aria-hidden', String(i !== idx))); }
       bars.forEach((b, i) => b.style.setProperty('--fill', String(clamp01(p * 3 - i))));
       root.style.setProperty('--gx', `${cur.x * 40}px`); root.style.setProperty('--gy', `${cur.y * 30}px`);
       // One shot when the aim completes; scrolling back before the turn re-arms it.
