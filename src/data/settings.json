@@ -15,5 +15,22 @@
     "facebook": "https://www.facebook.com/softairmilano.it",
     "youtube": "https://www.youtube.com/@softairmilano4590",
     "tiktok": "https://www.tiktok.com/@softair.milano"
+  },
+  "credits3d": {
+    "label": "Modelli 3D:",
+    "items": [
+      {
+        "title": "Cobra Assault Rifle",
+        "author": "Rakshaan",
+        "url": "https://sketchfab.com/3d-models/cobra-assault-rifle-15c06188b5fa4567a093ff696fa10da1"
+      },
+      {
+        "title": "Rifle Case Box",
+        "author": "Neslihan Çakmak",
+        "url": "https://sketchfab.com/3d-models/rifle-case-box-ebdd9b11c84c4842b90087b5a43e3f28"
+      }
+    ],
+    "licenseLabel": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
   }
 }

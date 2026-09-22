@@ -4,6 +4,10 @@ import settings from '../../data/settings.json';
 
 const { items } = navigation;
 const social = settings.social ?? {};
+// CC BY attribution for the 3D models used on the site (mandatory; editable via Pages CMS).
+interface Credit3D { title: string; author: string; url: string }
+interface Credits3D { label?: string; items?: Credit3D[]; licenseLabel?: string; licenseUrl?: string }
+const credits3d = (settings as { credits3d?: Credits3D }).credits3d;
 const year = new Date().getFullYear();
 ---
 
@@ -131,5 +135,22 @@ const year = new Date().getFullYear();
         <a href="/termini" class="transition-colors hover:text-foreground">Termini</a>
       </nav>
     </div>
+    {credits3d?.items && credits3d.items.length > 0 && (
+      <p class="shell pb-5 text-center text-[0.68rem] leading-relaxed text-muted/80 md:text-left">
+        {credits3d.label && <span>{credits3d.label} </span>}
+        {credits3d.items.map((c, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true"> · </span>}
+            <a href={c.url} target="_blank" rel="noopener" class="underline decoration-muted/40 underline-offset-2 transition-colors hover:text-foreground">“{c.title}” di {c.author}</a>
+          </>
+        ))}
+        {credits3d.licenseLabel && credits3d.licenseUrl && (
+          <>
+            <span aria-hidden="true"> · </span>
+            <a href={credits3d.licenseUrl} target="_blank" rel="noopener" class="underline decoration-muted/40 underline-offset-2 transition-colors hover:text-foreground">{credits3d.licenseLabel}</a>
+          </>
+        )}
+      </p>
+    )}
   </div>
 </footer>

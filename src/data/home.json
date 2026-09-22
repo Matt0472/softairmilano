@@ -7,10 +7,40 @@
     "eyebrow": "Arena indoor · Milano",
     "title": "Diventa protagonista di un film d'azione",
     "subtitle": "Il campo di softair al coperto più grande di Milano: un villaggio militare di circa 1.500 mq, tra edifici e torrette. Missioni, adrenalina, squadra.",
-    "ctaPrimary": { "label": "Prenota la tua partita", "href": "#prenota" },
-    "ctaSecondary": { "label": "Scopri l'arena", "href": "/l-arena" },
+    "ctaPrimary": {
+      "label": "Prenota la tua partita",
+      "href": "#prenota"
+    },
+    "ctaSecondary": {
+      "label": "Scopri l'arena",
+      "href": "/l-arena"
+    },
     "hudTag": "IND · 1.500 M² · CQB",
     "proof": "4,9 / 5 · oltre 500 recensioni"
+  },
+  "unboxing": {
+    "beats": [
+      {
+        "eyebrow": "Tutto incluso",
+        "title": "Apri la partita.",
+        "text": "Replica, caricatore, maschera: tutto compreso nel prezzo, tutto pronto al tuo arrivo."
+      },
+      {
+        "eyebrow": "Ogni dettaglio conta",
+        "title": "Prendi la replica.",
+        "text": "Fucili elettrici pronti all’uso, regolati e controllati prima di ogni sessione."
+      },
+      {
+        "eyebrow": "Sei pronto",
+        "title": "Entra in arena.",
+        "text": "Scegli data e orario: la prenotazione richiede due minuti."
+      }
+    ],
+    "cta": {
+      "label": "Prenota la partita",
+      "href": "#prenota"
+    },
+    "fireHint": "Clicca per sparare"
   },
   "video": {
     "videoSrc": "https://pub-03634caa58304887b733482b0c916e61.r2.dev/softairmilano-home.mp4",
@@ -19,27 +49,56 @@
     "title": "Guarda l'azione",
     "text": "Un minuto dentro l'arena: squadre, missioni, adrenalina.",
     "soundLabel": "Attiva audio",
-    "cta": { "label": "Prenota la tua partita", "href": "#prenota" }
+    "cta": {
+      "label": "Prenota la tua partita",
+      "href": "#prenota"
+    }
   },
   "arena": {
     "eyebrow": "Il campo di gioco",
     "title": "L'arena",
     "text": "L'arena indoor di softair più grande di Milano: un villaggio militare al coperto dove ogni partita sembra una scena d'azione.",
-    "stat": { "value": "1.500", "unit": "m² al coperto" },
+    "stat": {
+      "value": "1.500",
+      "unit": "m² al coperto"
+    },
     "features": [
-      { "icon": "hangar", "title": "Al coperto", "text": "Si gioca tutto l'anno, anche quando piove." },
-      { "icon": "floodlight", "title": "Illuminato", "text": "Partite adrenaliniche anche in notturna." },
-      { "icon": "cycle", "title": "Sempre nuova", "text": "Gli scenari vengono riconfigurati di continuo." },
-      { "icon": "equalizer", "title": "Musica immersiva", "text": "Colonna sonora a tutto volume: porta la tua chiavetta USB." }
+      {
+        "icon": "hangar",
+        "title": "Al coperto",
+        "text": "Si gioca tutto l'anno, anche quando piove."
+      },
+      {
+        "icon": "floodlight",
+        "title": "Illuminato",
+        "text": "Partite adrenaliniche anche in notturna."
+      },
+      {
+        "icon": "cycle",
+        "title": "Sempre nuova",
+        "text": "Gli scenari vengono riconfigurati di continuo."
+      },
+      {
+        "icon": "equalizer",
+        "title": "Musica immersiva",
+        "text": "Colonna sonora a tutto volume: porta la tua chiavetta USB."
+      }
     ],
-    "cta": { "label": "Leggi di più sull'arena", "href": "/l-arena" }
+    "cta": {
+      "label": "Leggi di più sull'arena",
+      "href": "/l-arena"
+    }
   },
   "intro": "Un'arena indoor pensata nei minimi dettagli, per vivere ogni missione come in un film. Scegli come giocare.",
   "activities": [
     {
       "title": "Softair",
       "desc": "Il cuore dell'arena: partite a missioni in un villaggio militare al coperto. Per veterani e per chi imbraccia un'arma softair per la prima volta.",
-      "pills": ["Dai 12 anni", "A squadre", "Principianti ok"],
+      "pills": [
+        "Dai 12 anni",
+        "A squadre",
+        "Principianti ok"
+      ],
       "image": "/uploads/att-softair.jpeg",
       "imageMobile": "/uploads/att-softair-mobile.jpeg",
       "imageAlt": "Squadra di softair in tenuta tattica schierata lungo un muro dell'arena indoor.",
@@ -48,15 +107,24 @@
     {
       "title": "Tiro dinamico",
       "desc": "Precisione e riflessi contro il tempo: un percorso a bersagli dove conta la mira lucida sotto pressione.",
-      "pills": ["Precisione", "A punti", "Riflessi"],
-      "image": "/uploads/att-tiro-dinamico.jpeg",
-      "imageAlt": "Giocatore su un percorso di tiro dinamico con bersagli.",
+      "pills": [
+        "Precisione",
+        "A punti",
+        "Riflessi"
+      ],
+      "image": "/uploads/att-tiro-dinamico-casetta.jpeg",
+      "imageMobile": "/uploads/att-tiro-dinamico-mobile.jpeg",
+      "imageAlt": "Giocatore in tenuta tattica sulla soglia di una casetta di legno con rete mimetica, in un percorso di tiro dinamico con bersagli in fondo alla corsia.",
       "href": "/tiro-dinamico"
     },
     {
       "title": "Arcotag",
       "desc": "Archi e frecce con punta morbida: adrenalina in totale sicurezza, spettacolare e per tutti.",
-      "pills": ["Dai 10 anni", "Soft e sicuro", "A squadre"],
+      "pills": [
+        "Dai 10 anni",
+        "Soft e sicuro",
+        "A squadre"
+      ],
       "image": "/uploads/att-arcotag.jpeg",
       "imageMobile": "/uploads/att-arcotag-mobile.jpeg",
       "imageAlt": "Giocatori di arcotag con archi e frecce soft dietro i bunker.",
@@ -65,7 +133,11 @@
     {
       "title": "Nerf",
       "desc": "Battaglie con dardi in gommapiuma: scatenate e sicurissime, l'ideale per i più piccoli e per le feste.",
-      "pills": ["Bambini", "Super sicuro", "Feste"],
+      "pills": [
+        "Bambini",
+        "Super sicuro",
+        "Feste"
+      ],
       "image": "/uploads/att-nerf.jpeg",
       "imageMobile": "/uploads/att-nerf-mobile.jpeg",
       "imageAlt": "Giocatori con maschera protettiva e blaster Nerf nell'arena indoor.",
@@ -73,10 +145,26 @@
     }
   ],
   "occasions": [
-    { "title": "Team building", "desc": "Rafforza la squadra con una sfida diversa dal solito.", "href": "/teambuilding" },
-    { "title": "Feste di compleanno", "desc": "Un compleanno alternativo ed emozionante.", "href": "/festa-di-compleanno" },
-    { "title": "Addio al celibato/nubilato", "desc": "Un ricordo di gruppo indimenticabile.", "href": "/addio-al-celibato-nubilato" },
-    { "title": "Corso softair", "desc": "Impara tecniche e sicurezza con i nostri istruttori.", "href": "/corso-softair" }
+    {
+      "title": "Team building",
+      "desc": "Rafforza la squadra con una sfida diversa dal solito.",
+      "href": "/teambuilding"
+    },
+    {
+      "title": "Feste di compleanno",
+      "desc": "Un compleanno alternativo ed emozionante.",
+      "href": "/festa-di-compleanno"
+    },
+    {
+      "title": "Addio al celibato/nubilato",
+      "desc": "Un ricordo di gruppo indimenticabile.",
+      "href": "/addio-al-celibato-nubilato"
+    },
+    {
+      "title": "Corso softair",
+      "desc": "Impara tecniche e sicurezza con i nostri istruttori.",
+      "href": "/corso-softair"
+    }
   ],
   "rangerTeaser": {
     "title": "Preferisci giocare all'aperto?",

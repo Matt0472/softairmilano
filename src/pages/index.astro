@@ -5,16 +5,20 @@ import Card from '../components/molecules/Card.astro';
 import Hero from '../components/organisms/Hero.astro';
 import VideoSection from '../components/organisms/VideoSection.astro';
 import ArenaIntro from '../components/organisms/ArenaIntro.astro';
+import Unboxing3D from '../components/organisms/Unboxing3D.astro';
 import ActivitiesStory from '../components/organisms/ActivitiesStory.astro';
 import home from '../data/home.json';
 import settings from '../data/settings.json';
 
-const { title, hero, video, arena, intro, activities, occasions, rangerTeaser, finalCta } = home;
+const { title, hero, unboxing, video, arena, intro, activities, occasions, rangerTeaser, finalCta } = home;
 ---
 
 <BaseLayout title={title}>
   <!-- HERO -->
   <Hero {...hero} />
+
+  <!-- "APRI LA PARTITA" — 3D unboxing, scroll-driven (models load lazily) -->
+  <Unboxing3D {...unboxing} />
 
   <!-- L'ARENA IN BREVE -->
   <ArenaIntro {...arena} />

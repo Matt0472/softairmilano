@@ -29,6 +29,21 @@ content:
       - { name: rangerUrl, label: "Link arena outdoor (Ranger Softair)", type: string }
       - { name: ticketinghubId, label: "ID script TicketingHub (prenotazioni)", type: string }
       - { name: gaMeasurementId, label: "ID Google Analytics (GA4)", type: string }
+      - name: credits3d
+        label: "Crediti modelli 3D nel footer (obbligatori: licenza CC BY, non rimuovere)"
+        type: object
+        fields:
+          - { name: label, label: Etichetta, type: string }
+          - name: items
+            label: Modelli
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Titolo del modello, type: string }
+              - { name: author, label: Autore, type: string }
+              - { name: url, label: Link alla fonte, type: string }
+          - { name: licenseLabel, label: Nome licenza, type: string }
+          - { name: licenseUrl, label: Link licenza, type: string }
       - name: social
         label: Social (URL dei profili)
         type: object
@@ -81,6 +96,25 @@ content:
               - { name: href, label: Link, type: string }
           - { name: hudTag, label: "Etichetta HUD (piccola scritta tattica)", type: string }
           - { name: proof, label: "Riga recensioni (opzionale)", type: string }
+      - name: unboxing
+        label: "Sezione 3D «Apri la partita» (sotto l'hero)"
+        type: object
+        fields:
+          - name: beats
+            label: "Testi delle tre fasi (cambiano scorrendo)"
+            type: object
+            list: true
+            fields:
+              - { name: eyebrow, label: Occhiello, type: string }
+              - { name: title, label: Titolo, type: string }
+              - { name: text, label: Testo, type: text }
+          - name: cta
+            label: Bottone
+            type: object
+            fields:
+              - { name: label, label: Testo bottone, type: string }
+              - { name: href, label: Link, type: string }
+          - { name: fireHint, label: "Suggerimento finale (es. «Clicca per sparare»)", type: string }
       - name: video
         label: Video (sotto l'hero)
         type: object
@@ -139,7 +173,7 @@ content:
           - { name: desc, label: Descrizione, type: text }
           - { name: pills, label: "Etichette (età, modalità…)", type: string, list: true }
           - { name: image, label: "Immagine (desktop)", type: image }
-          - { name: imageMobile, label: "Immagine (mobile, verticale) — opzionale", type: image }
+          - { name: imageMobile, label: "Immagine (mobile, verticale 4:5, soggetto al centro) — opzionale", type: image }
           - { name: imageAlt, label: "Testo alternativo immagine", type: string }
           - { name: href, label: Link, type: string }
       - name: occasions

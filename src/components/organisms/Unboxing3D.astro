@@ -1,0 +1,373 @@
+---
+// Unboxing3D — "Apri la partita": scroll-driven 3D section placed right below the hero.
+// Two glTF props with named parts (public/models, prepared with scripts/prepare-model-3d.mjs):
+// a rifle case (base, lid, foam) and a replica (body, magazine, bolt).
+//   • Models load lazily when the section is within ~1.5 viewports.
+//   • The closed case drops in (time-based) the moment the section enters the viewport.
+//   • A tall track pins the stage; the scroll drives: lid opens → replica rises, rolls upright
+//     and spins → magazine flies in and clicks → 3/4 aim → shot (bolt cycles, muzzle flash,
+//     tracer, recoil). Last stretch = free mode: the replica follows the pointer, click fires.
+//   • prefers-reduced-motion → one static assembled frame, no pinning. No WebGL / save-data →
+//     the 3D is skipped and the copy stands on the branded glow.
+// Copy and CTA come from home.json via Pages CMS; the mandatory CC BY model credits are
+// rendered site-wide in the Footer (settings.json → credits3d).
+// The models themselves are structure: swap paths below only from code.
+import Button from '../atoms/Button.astro';
+
+interface Beat { eyebrow: string; title: string; text: string }
+interface Props {
+  beats: Beat[];
+  cta: { label: string; href: string };
+  fireHint?: string;
+}
+const { beats, cta, fireHint } = Astro.props;
+
+const RIFLE_MODEL = '/models/cobra.glb';
+const CASE_MODEL = '/models/case.glb';
+---
+
+<section class="unbox" data-unbox data-rifle={RIFLE_MODEL} data-case={CASE_MODEL} data-beat="0" data-state="idle" aria-label="Apri la partita">
+  <div class="unbox__track" data-track>
+    <div class="unbox__stage" data-stage>
+      <div class="unbox__glow" aria-hidden="true"></div>
+      <canvas class="unbox__canvas" data-canvas aria-hidden="true"></canvas>
+      <div class="unbox__vignette" aria-hidden="true"></div>
+
+      <div class="unbox__copy shell">
+        <div class="unbox__beats">
+          {beats.map((b, i) => (
+            <div class="unbox__beat" data-i={i}>
+              <p class="unbox__eyebrow">{b.eyebrow}</p>
+              <h2 class="unbox__title">{b.title}</h2>
+              <p class="unbox__text">{b.text}</p>
+            </div>
+          ))}
+        </div>
+        <div class="unbox__cta"><Button href={cta.href}>{cta.label}</Button></div>
+      </div>
+
+      <div class="unbox__progress" aria-hidden="true">
+        {beats.map((_, i) => <i data-i={i}></i>)}
+      </div>
+      <p class="unbox__hint" aria-hidden="true">Scorri <span>&darr;</span></p>
+      {fireHint && <p class="unbox__fire" aria-hidden="true">{fireHint}</p>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .unbox { --ink: var(--color-background); --amber: var(--color-accent); position: relative; background: var(--ink); border-top: 1px solid var(--color-border); }
+  .unbox__track { height: 300vh; }
+  .unbox__stage { position: sticky; top: 0; height: 100svh; min-height: 560px; overflow: hidden; }
+  /* No 3D (unsupported / save-data / failed load): a plain full-height section, no pinning. */
+  .unbox[data-state="off"] .unbox__track { height: auto; }
+  .unbox[data-state="off"] .unbox__stage { position: relative; }
+  .unbox[data-state="off"] .unbox__hint, .unbox[data-state="off"] .unbox__progress, .unbox[data-state="off"] .unbox__fire, .unbox[data-state="off"] .unbox__canvas { display: none; }
+
+  .unbox__glow { position: absolute; inset: 0;
+    background:
+      radial-gradient(46% 40% at calc(50% + var(--gx, 0px)) calc(52% + var(--gy, 0px)), rgb(245 165 36 / 0.20), transparent 70%),
+      radial-gradient(70% 55% at 50% 100%, rgb(91 107 122 / 0.16), transparent 75%); }
+  .unbox__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity .8s var(--ease-out-expo); }
+  .unbox[data-state="ready"] .unbox__canvas { opacity: 1; }
+  .unbox__vignette { position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to top, var(--ink) 0%, rgb(14 17 20 / 0.5) 22%, transparent 48%),
+                linear-gradient(to right, rgb(14 17 20 / 0.65) 0%, transparent 45%); }
+
+  .unbox__copy { position: absolute; inset: auto 0 clamp(4rem, 10svh, 7rem) 0; pointer-events: none; }
+  .unbox__beats { position: relative; height: clamp(11rem, 26svh, 15rem); margin-bottom: 1.25rem; }
+  .unbox__beat { position: absolute; left: 0; right: 0; bottom: 0; max-width: 36rem; opacity: 0; transform: translateY(18px); transition: opacity .7s var(--ease-out-expo), transform .7s var(--ease-out-expo); }
+  .unbox[data-beat="0"] .unbox__beat[data-i="0"], .unbox[data-beat="1"] .unbox__beat[data-i="1"], .unbox[data-beat="2"] .unbox__beat[data-i="2"] { opacity: 1; transform: none; }
+  .unbox__eyebrow { margin: 0; font-family: var(--font-display); text-transform: uppercase; letter-spacing: .26em; font-size: .78rem; color: var(--amber); display: flex; align-items: center; gap: .75rem; }
+  .unbox__eyebrow::before { content: ""; width: 34px; height: 2px; background: var(--amber); }
+  .unbox__title { margin: .6rem 0 0; font-family: var(--font-display); font-weight: 700; text-transform: uppercase; line-height: .95; font-size: clamp(2.8rem, 7.5vw, 6.2rem); letter-spacing: -0.01em; text-shadow: 0 2px 24px rgb(0 0 0 / .5); }
+  .unbox__text { margin: 1rem 0 0; max-width: 34rem; color: var(--color-muted); font-size: clamp(1rem, 1.5vw, 1.15rem); line-height: 1.55; }
+  .unbox__cta { position: relative; pointer-events: auto; }
+
+  .unbox__progress { position: absolute; left: 50%; bottom: 1.4rem; transform: translateX(-50%); display: flex; gap: .5rem; }
+  .unbox__progress i { width: 28px; height: 2px; background: rgb(255 255 255 / .18); border-radius: 2px; overflow: hidden; position: relative; }
+  .unbox__progress i::after { content: ""; position: absolute; inset: 0; background: var(--amber); transform-origin: left; transform: scaleX(var(--fill, 0)); }
+  .unbox__hint, .unbox__fire { position: absolute; right: clamp(5rem, 8vw, 7rem); bottom: 1.1rem; margin: 0; font-family: var(--font-display); text-transform: uppercase; letter-spacing: .2em; font-size: .7rem; opacity: 0; transition: opacity .4s; }
+  .unbox__hint { color: var(--color-muted); }
+  .unbox__hint span { display: inline-block; animation: unbox-bob 1.6s ease-in-out infinite; }
+  .unbox[data-state="ready"][data-beat="0"] .unbox__hint { opacity: 1; }
+  @keyframes unbox-bob { 50% { transform: translateY(4px); } }
+  .unbox__fire { color: var(--amber); }
+  .unbox[data-beat="2"] .unbox__fire { opacity: 1; }
+  .unbox[data-beat="2"] .unbox__canvas { cursor: crosshair; }
+
+  .unbox__stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+    background: radial-gradient(50% 45% at 50% 45%, rgb(255 196 106 / .35), transparent 70%); }
+  .unbox.is-shot .unbox__stage::after { animation: unbox-flash .32s ease-out; }
+  .unbox.is-shot .unbox__glow { animation: unbox-glow-kick .5s ease-out; }
+  @keyframes unbox-flash { 0% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes unbox-glow-kick { 0% { filter: brightness(2.2); } 100% { filter: brightness(1); } }
+
+  @media (max-width: 820px) {
+    .unbox__copy { inset: auto 0 clamp(4.5rem, 9svh, 6rem) 0; }
+    .unbox__beats { height: clamp(10rem, 24svh, 13rem); }
+    .unbox__vignette { background: linear-gradient(to top, var(--ink) 0%, rgb(14 17 20 / .7) 40%, transparent 65%); }
+    .unbox__hint, .unbox__fire { right: clamp(1rem, 4vw, 3rem); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .unbox__track { height: 100svh; }
+    .unbox__hint, .unbox__progress, .unbox__fire { display: none; }
+    .unbox__beat { transition: none; }
+  }
+</style>
+
+<script>
+  // three.js (~150 KB gz) is imported dynamically inside init(): the home page's critical
+  // JS stays tiny and the library only downloads when the section is about to be seen.
+  type ThreeNS = typeof import('three');
+
+  const section = document.querySelector<HTMLElement>('[data-unbox]');
+  if (section) boot(section);
+
+  // ---- Timeline (virtual seconds; the case drop runs on the clock, the rest maps onto the scroll)
+  const T = {
+    fallStart: 0.15, fallEnd: 1.0,          // case drops in and lands
+    lidStart: 1.3, lidEnd: 2.2,             // lid swings open
+    riseStart: 2.5, riseEnd: 4.1,           // replica lifts, rolls upright, full spin
+    magStart: 4.1, magEnd: 4.75,            // magazine flies in and clicks
+    turnStart: 4.85, turnEnd: 5.7,          // turns to a 3/4 aim
+    fire: 5.85, end: 5.9,                   // shot; the track ends here
+  };
+  const CASE_LEN = 1.9;   // case length in replica-lengths (replica = 1 unit)
+  const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+  const span = (t: number, a: number, b: number) => clamp01((t - a) / (b - a));
+  const inOut = (u: number) => u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+  const outCubic = (u: number) => 1 - Math.pow(1 - u, 3);
+  const outBack = (u: number, s = 1.2) => 1 + (s + 1) * Math.pow(u - 1, 3) + s * Math.pow(u - 1, 2);
+  const inCubic = (u: number) => u * u * u;
+
+  function boot(root: HTMLElement) {
+    const conn = (navigator as any).connection;
+    const gl = document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl');
+    if (!gl || conn?.saveData) { root.dataset.state = 'off'; return; }
+    // Lazy: the models start loading only when the section is within 1.5 viewports.
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { io.disconnect(); init(root).catch((err) => { console.error(err); root.dataset.state = 'off'; }); }
+    }, { rootMargin: '150% 0px 150% 0px' });
+    io.observe(root);
+  }
+
+  async function init(root: HTMLElement) {
+    const [THREE, { GLTFLoader }, { MeshoptDecoder }, { RoomEnvironment }] = await Promise.all([
+      import('three') as Promise<ThreeNS>,
+      import('three/examples/jsm/loaders/GLTFLoader.js'),
+      import('three/examples/jsm/libs/meshopt_decoder.module.js'),
+      import('three/examples/jsm/environments/RoomEnvironment.js'),
+    ]);
+    const canvas = root.querySelector<HTMLCanvasElement>('[data-canvas]')!;
+    const stage = root.querySelector<HTMLElement>('[data-stage]')!;
+    const track = root.querySelector<HTMLElement>('[data-track]')!;
+    const bars = [...root.querySelectorAll<HTMLElement>('.unbox__progress i')];
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = matchMedia('(max-width: 820px)').matches;
+    root.dataset.state = 'loading';
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, isMobile ? 1.25 : 1.75));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
+
+    const scene = new THREE.Scene();
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.5;
+
+    // Lights — moderate amber key with shadows (the replica is black metal and would read as
+    // gold otherwise), a neutral key, cool fill, white rim.
+    const key = new THREE.DirectionalLight(0xf5a524, 1.6); key.position.set(2.2, 3.2, 2.0); key.castShadow = true;
+    key.shadow.mapSize.set(1024, 1024); key.shadow.bias = -0.0005; key.shadow.normalBias = 0.02;
+    Object.assign(key.shadow.camera, { left: -1.6, right: 1.6, top: 1.6, bottom: -1.6, near: 0.5, far: 9 });
+    scene.add(key);
+    const keyWhite = new THREE.DirectionalLight(0xffffff, 1.4); keyWhite.position.set(2.0, 3.0, 2.4); scene.add(keyWhite);
+    const fill = new THREE.DirectionalLight(0x5b6b7a, 1.3); fill.position.set(-3, 1.2, 2); scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xffffff, 1.8); rim.position.set(-1, 2.5, -3); scene.add(rim);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), new THREE.ShadowMaterial({ opacity: 0.5 }));
+    floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 100);
+    const caseRoot = new THREE.Group(); const lidGroup = new THREE.Group(); const caseBody = new THREE.Group();
+    caseRoot.add(lidGroup, caseBody); scene.add(caseRoot);
+    const rifle = new THREE.Group(); const rifleRoot = new THREE.Group();
+    const bodyGroup = new THREE.Group(), magGroup = new THREE.Group(), boltGroup = new THREE.Group();
+    rifleRoot.add(bodyGroup, magGroup, boltGroup); rifle.add(rifleRoot);
+    const cargo = new THREE.Group(); cargo.add(rifle); scene.add(cargo); // mirrors the case motion while the replica is inside
+
+    let closedAngle = 1.3, caseTopY = 0.2, U = 1;
+    const magHome = new THREE.Vector3();
+    const muzzle = new THREE.Vector3(0, 0, 0.5);
+
+    const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
+    const [rifleGltf, caseGltf] = await Promise.all([loader.loadAsync(root.dataset.rifle!), loader.loadAsync(root.dataset.case!)]);
+    const prep = (o: THREE.Object3D) => { o.updateWorldMatrix(true, true); const list: THREE.Mesh[] = []; o.traverse((m: any) => { if (m.isMesh) { list.push(m); m.castShadow = true; m.receiveShadow = true; } }); return list; };
+
+    // ---- Case: lid (+ its foam) hinged at the back top edge of the base; base bottom on the floor.
+    // GLTFLoader strips reserved characters from node names: "foam_mesh.01_foam_0" → "foam_mesh01_foam_0".
+    for (const m of prep(caseGltf.scene)) (/^(lid_mesh|foam_mesh[._]?01)/.test(m.name) ? lidGroup : caseBody).attach(m);
+    const baseBox = new THREE.Box3().setFromObject(caseBody), lidBox = new THREE.Box3().setFromObject(lidGroup);
+    const hinge = new THREE.Vector3(0, baseBox.max.y, (baseBox.min.z + lidBox.min.z) / 2);
+    lidGroup.position.copy(hinge); lidGroup.children.forEach((c) => c.position.sub(hinge));
+    const lc = lidBox.getCenter(new THREE.Vector3());
+    closedAngle = Math.PI / 2 - Math.atan2(lc.z - hinge.z, lc.y - hinge.y);
+    const sc = CASE_LEN / baseBox.getSize(new THREE.Vector3()).x;
+    caseRoot.scale.setScalar(sc);
+    const bc = baseBox.getCenter(new THREE.Vector3());
+    caseRoot.position.set(-bc.x * sc, -baseBox.min.y * sc, -bc.z * sc);
+    caseRoot.userData.baseY = caseRoot.position.y;
+    caseTopY = (baseBox.max.y - baseBox.min.y) * sc;
+
+    // ---- Rifle: named parts into world-aligned groups; normalised to unit length, centred on the body.
+    for (const m of prep(rifleGltf.scene)) {
+      if (/^Shell_Dispenser/.test(m.name)) { m.visible = false; continue; } // two stray floating bits in the source model
+      (/^(Magazine|Shell|Bullet)/.test(m.name) ? magGroup : /^Bolt/.test(m.name) ? boltGroup : bodyGroup).attach(m);
+    }
+    const rBox = new THREE.Box3().setFromObject(bodyGroup); // body only: the detached magazine would skew the centre
+    const rSize = rBox.getSize(new THREE.Vector3()), rCenter = rBox.getCenter(new THREE.Vector3());
+    U = rSize.z; // raw length; the barrel points +Z
+    const s = 1 / U;
+    rifleRoot.scale.setScalar(s); rifleRoot.position.copy(rCenter).multiplyScalar(-s);
+    magHome.copy(new THREE.Box3().setFromObject(magGroup).getCenter(new THREE.Vector3()));
+    magGroup.position.copy(magHome); magGroup.children.forEach((c) => c.position.sub(magHome)); // pivots around its own centre
+    const barrelMesh = bodyGroup.children.find((c) => /^Barrel/.test(c.name));
+    const bBox = new THREE.Box3().setFromObject(barrelMesh ?? bodyGroup);
+    const bCenter = bBox.getCenter(new THREE.Vector3());
+    muzzle.set(bCenter.x, bCenter.y, bBox.max.z).sub(rCenter).multiplyScalar(s);
+    root.dataset.state = 'ready';
+
+    const resize = () => { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
+    resize(); addEventListener('resize', resize);
+
+    const target = { x: 0, y: 0 }, cur = { x: 0, y: 0 };
+    if (!isMobile && !reduced) addEventListener('pointermove', (e) => { target.x = (e.clientX / innerWidth - 0.5) * 2; target.y = (e.clientY / innerHeight - 0.5) * 2; }, { passive: true });
+
+    // ---- Shot FX (flash sprite + point light + tracer + recoil + bolt cycle + CSS flash)
+    const flashTex = (() => {
+      const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d')!;
+      const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+      r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.25, 'rgba(255,196,106,0.9)'); r.addColorStop(0.6, 'rgba(245,165,36,0.35)'); r.addColorStop(1, 'rgba(245,165,36,0)');
+      g.fillStyle = r; g.fillRect(0, 0, 128, 128); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+    })();
+    const flash = new THREE.Sprite(new THREE.SpriteMaterial({ map: flashTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true })); flash.visible = false; scene.add(flash);
+    const flashLight = new THREE.PointLight(0xffb040, 0, 2.5, 2); scene.add(flashLight);
+    const tracer = new THREE.Mesh(new THREE.CapsuleGeometry(0.005, 0.10, 3, 8).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xffc46a, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false }));
+    tracer.visible = false; scene.add(tracer);
+    const barrelDir = new THREE.Vector3(), muzzleW = new THREE.Vector3();
+    let shotAt = -10, lastShot = -10, autoFired = false;
+    const fire = (now: number) => {
+      if (now - lastShot < 0.22) return;
+      lastShot = shotAt = now;
+      rifle.updateMatrixWorld(true);
+      muzzleW.copy(muzzle).applyMatrix4(rifle.matrixWorld);
+      barrelDir.set(0, 0, 1).applyQuaternion(rifle.quaternion).normalize();
+      flash.position.copy(muzzleW).addScaledVector(barrelDir, 0.02); flash.scale.setScalar(0.2 + Math.random() * 0.1);
+      (flash.material as THREE.SpriteMaterial).rotation = Math.random() * Math.PI * 2;
+      flashLight.position.copy(muzzleW).addScaledVector(barrelDir, 0.03);
+      tracer.position.copy(muzzleW); tracer.quaternion.copy(rifle.quaternion);
+      root.classList.remove('is-shot'); void root.offsetWidth; root.classList.add('is-shot');
+    };
+    const updateFx = (now: number) => {
+      const age = now - shotAt; const recoil = age < 0 ? 0 : Math.exp(-age * 7);
+      flash.visible = age >= 0 && age < 0.09; (flash.material as THREE.SpriteMaterial).opacity = 1 - age / 0.09;
+      flashLight.intensity = age < 0 ? 0 : Math.max(0, 9 * (1 - age / 0.14));
+      // The tracer flies ~1.4 units and fades before it can reach the camera.
+      tracer.visible = age >= 0 && age < 0.45;
+      if (tracer.visible) { tracer.position.copy(muzzleW).addScaledVector(barrelDir, age * 3.2); (tracer.material as THREE.MeshBasicMaterial).opacity = Math.pow(1 - age / 0.45, 1.5); }
+      // Bolt cycles back and forth in ~130 ms (rifle-local −Z is rearwards).
+      boltGroup.position.z = age >= 0 && age < 0.13 ? -Math.sin((age / 0.13) * Math.PI) * 0.045 * U : 0;
+      return recoil;
+    };
+
+    const progress = () => { const r = track.getBoundingClientRect(); return clamp01(-r.top / Math.max(1, r.height - innerHeight)); };
+    if (!reduced) canvas.addEventListener('pointerdown', () => { if (progress() > 0.9) fire(performance.now() / 1000); });
+
+    // ---- Choreography
+    let introStart: number | null = null; // set when the section actually enters the viewport
+    let landShake = 0, landedAt = -1;
+    const camPos = new THREE.Vector3(), camTarget = new THREE.Vector3();
+    const qIdentity = new THREE.Quaternion();
+    const qMagFlat = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2); // flat, thin side up
+    const pose = (t: number, recoil: number, now: number, p: number) => {
+      // Case: fall with gravity, one small bounce, settle level.
+      const uf = span(t, T.fallStart, T.fallEnd);
+      let y = 2.6 * (1 - uf * uf);
+      if (uf >= 1) { const b = t - T.fallEnd; if (landedAt < 0) landedAt = t; y = b < 0.26 ? Math.sin((b / 0.26) * Math.PI) * 0.05 : 0; }
+      caseRoot.position.y = y + caseRoot.userData.baseY;
+      caseRoot.rotation.z = 0.10 * (1 - uf); caseRoot.rotation.x = -0.06 * (1 - uf);
+      landShake = landedAt >= 0 ? Math.exp(-(t - landedAt) * 6) * 0.035 : 0;
+      // Lid.
+      const ul = span(t, T.lidStart, T.lidEnd);
+      lidGroup.rotation.x = closedAngle * (1 - outBack(ul, 0.9));
+      // Rifle: in the case (flat, on its side) → rises, rolls upright, one full spin → 3/4 aim.
+      const ur = inOut(span(t, T.riseStart, T.riseEnd));
+      const inCaseY = caseTopY - 0.01;
+      const yawStart = Math.PI / 2, yawSpin = yawStart + Math.PI * 2;
+      const ut = inOut(span(t, T.turnStart, T.turnEnd));
+      const yawAim = yawSpin - 0.62; // never head-on: flash and tracer stay in frame
+      const free = clamp01((p - 0.9) / 0.1); // last 10% of the track: pointer aim + click to fire
+      const idle = Math.sin(now * 0.9) * 0.015 * free;
+      rifle.position.set(0, inCaseY + (0.74 - inCaseY) * ur + idle, 0);
+      cargo.position.set(0, (caseRoot.position.y - caseRoot.userData.baseY) * (1 - ur), 0);
+      cargo.rotation.set(caseRoot.rotation.x * (1 - ur), 0, caseRoot.rotation.z * (1 - ur));
+      const roll = (Math.PI / 2) * (1 - outCubic(clamp01(ur / 0.6)));
+      const yaw = yawStart + (yawSpin - yawStart) * ur + (yawAim - yawSpin) * ut + cur.x * 0.28 * free;
+      const pitch = -0.10 * ut + cur.y * 0.16 * free + recoil * 0.05;
+      rifle.rotation.set(pitch, yaw, roll, 'YXZ');
+      rifle.position.add(new THREE.Vector3(0, -0.06 * (1 - ur), 0).applyQuaternion(rifle.quaternion)); // room for the flat magazine
+      if (recoil > 0.001) rifle.position.addScaledVector(barrelDir, -0.04 * recoil);
+      // Magazine: flat beside the stock in the case → hangs below the well during the spin → clicks in.
+      const um = span(t, T.magStart, T.magEnd);
+      const uCarry = clamp01((ur - 0.35) / 0.4);
+      const flatPos = new THREE.Vector3(0, 0.222 * U, -0.62 * U);
+      const hangPos = magHome.clone().add(new THREE.Vector3(0, -0.12 * U, 0)), inPos = magHome.clone().add(new THREE.Vector3(0, 0.14 * U, 0));
+      const pos = flatPos.clone().lerp(hangPos, uCarry).lerp(inPos, inCubic(um));
+      if (um > 0.85) pos.y += Math.sin((um - 0.85) / 0.15 * Math.PI) * 0.012 * U; // the click: tiny overshoot
+      magGroup.position.copy(pos);
+      magGroup.quaternion.copy(qMagFlat).slerp(qIdentity, uCarry);
+      // Camera: wide on the case, then the replica becomes the hero (case stays low in frame).
+      const uc = inOut(span(t, T.riseStart + 0.2, T.riseEnd));
+      camTarget.set(0, 0.30 + (0.66 - 0.30) * uc, 0);
+      camPos.set(0.9 - 0.55 * uc + cur.x * 0.04 * free, 1.25 - 0.4 * uc + cur.y * -0.03 * free, 3.6 - 1.35 * uc);
+      const shake = landShake + recoil * 0.018;
+      camPos.x += (Math.random() - 0.5) * shake; camPos.y += (Math.random() - 0.5) * shake;
+      camera.position.copy(camPos); camera.lookAt(camTarget);
+      // Copy beats, progress bars, glow.
+      const idx = t < T.riseStart - 0.2 ? 0 : t < T.turnEnd ? 1 : 2;
+      if (root.dataset.beat !== String(idx)) root.dataset.beat = String(idx);
+      bars.forEach((b, i) => b.style.setProperty('--fill', String(clamp01(p * 3 - i))));
+      root.style.setProperty('--gx', `${cur.x * 40}px`); root.style.setProperty('--gy', `${cur.y * 30}px`);
+      // One shot when the aim completes; scrolling back before the turn re-arms it.
+      if (t >= T.fire && !autoFired && !reduced) { autoFired = true; fire(now); }
+      if (t < T.turnStart) autoFired = false;
+    };
+
+    if (reduced) { pose(T.end + 1, 0, 0, 1); renderer.render(scene, camera); addEventListener('resize', () => { resize(); renderer.render(scene, camera); }); return; }
+
+    // Render only while the stage is on screen and the tab is visible.
+    let visible = true, hidden = document.hidden;
+    new IntersectionObserver(([en]) => { visible = en.isIntersecting; }, { threshold: 0 }).observe(stage);
+    document.addEventListener('visibilitychange', () => { hidden = document.hidden; });
+    const loop = (nowMs: number) => {
+      requestAnimationFrame(loop);
+      if (!visible || hidden) return;
+      const now = nowMs / 1000;
+      // Landing intro (case drop) runs on the clock once the section enters the viewport;
+      // from then on the timeline follows the scroll.
+      const p = progress();
+      if (introStart === null && track.getBoundingClientRect().top < innerHeight * 0.6) introStart = now;
+      const intro = introStart === null ? 0 : Math.min(now - introStart, T.lidStart);
+      const t = intro < T.lidStart ? intro : T.lidStart + p * (T.end - T.lidStart);
+      cur.x += (target.x - cur.x) * 0.06; cur.y += (target.y - cur.y) * 0.06;
+      const recoil = updateFx(now);
+      pose(t, recoil, now, p);
+      renderer.render(scene, camera);
+    };
+    requestAnimationFrame(loop);
+  }
+</script>
