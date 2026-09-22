@@ -40,7 +40,8 @@
       "label": "Prenota la partita",
       "href": "#prenota"
     },
-    "fireHint": "Clicca per sparare"
+    "fireHint": "Clicca per sparare",
+    "scrollHint": "Scorri"
   },
   "video": {
     "videoSrc": "https://pub-03634caa58304887b733482b0c916e61.r2.dev/softairmilano-home.mp4",

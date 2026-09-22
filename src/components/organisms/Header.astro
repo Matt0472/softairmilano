@@ -132,6 +132,9 @@ const isActive = (href: string): boolean =>
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
       document.body.style.overflow = open ? 'hidden' : '';
+      // Focus containment: while the overlay is open, the rest of the page is inert so Tab never
+      // lands on links hidden behind the panel (WCAG 2.4.7 / 2.4.3).
+      for (const el of document.querySelectorAll<HTMLElement>('main, footer, header > .shell')) el.toggleAttribute('inert', open);
       if (open) closeBtn?.focus();
       else toggle.focus();
     };

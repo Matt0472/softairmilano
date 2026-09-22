@@ -115,6 +115,7 @@ content:
               - { name: label, label: Testo bottone, type: string }
               - { name: href, label: Link, type: string }
           - { name: fireHint, label: "Suggerimento finale (es. «Clicca per sparare»)", type: string }
+          - { name: scrollHint, label: "Suggerimento iniziale (es. «Scorri»)", type: string }
       - name: video
         label: Video (sotto l'hero)
         type: object

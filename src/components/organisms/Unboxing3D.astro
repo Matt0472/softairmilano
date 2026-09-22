@@ -21,8 +21,9 @@ interface Props {
   beats: Beat[];
   cta: { label: string; href: string };
   fireHint?: string;
+  scrollHint?: string;
 }
-const { beats, cta, fireHint } = Astro.props;
+const { beats, cta, fireHint, scrollHint = 'Scorri' } = Astro.props;
 
 const RIFLE_MODEL = '/models/cobra.glb';
 const CASE_MODEL = '/models/case.glb';
@@ -54,7 +55,7 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
       <div class="unbox__progress" aria-hidden="true">
         {beats.map((_, i) => <i data-i={i}></i>)}
       </div>
-      <p class="unbox__hint" aria-hidden="true">Scorri <span>&darr;</span></p>
+      <p class="unbox__hint" aria-hidden="true">{scrollHint} <span>&darr;</span></p>
       {fireHint && <p class="unbox__fire" aria-hidden="true">{fireHint}</p>}
     </div>
   </div>
@@ -95,7 +96,7 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
   .unbox__progress { position: absolute; left: 50%; bottom: 1.4rem; transform: translateX(-50%); display: flex; gap: .5rem; }
   .unbox__progress i { width: 28px; height: 2px; background: rgb(255 255 255 / .18); border-radius: 2px; overflow: hidden; position: relative; }
   .unbox__progress i::after { content: ""; position: absolute; inset: 0; background: var(--amber); transform-origin: left; transform: scaleX(var(--fill, 0)); }
-  .unbox__hint, .unbox__fire { position: absolute; right: clamp(5rem, 8vw, 7rem); bottom: 1.1rem; margin: 0; font-family: var(--font-display); text-transform: uppercase; letter-spacing: .2em; font-size: .7rem; opacity: 0; transition: opacity .4s; }
+  .unbox__hint, .unbox__fire { position: absolute; right: clamp(5.5rem, 9vw, 7.5rem); bottom: 1.1rem; margin: 0; font-family: var(--font-display); text-transform: uppercase; letter-spacing: .2em; font-size: .7rem; opacity: 0; transition: opacity .4s; }
   .unbox__hint { color: var(--color-muted); }
   .unbox__hint span { display: inline-block; animation: unbox-bob 1.6s ease-in-out infinite; }
   .unbox[data-state="ready"][data-beat="0"] .unbox__hint { opacity: 1; }
@@ -117,6 +118,13 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
     .unbox__vignette { background: linear-gradient(to top, var(--ink) 0%, rgb(14 17 20 / .7) 40%, transparent 65%); }
     /* Narrow screens: hints sit centred above the progress dashes instead of beside them. */
     .unbox__hint, .unbox__fire { right: auto; left: 50%; transform: translateX(-50%); bottom: 2.6rem; white-space: nowrap; }
+  }
+  /* Short viewports (phone in landscape, small windows): a pinned 560px stage would hide the CTA
+     below the fold, so the section never pins there (the JS also picks the static still). */
+  @media (max-height: 560px) {
+    .unbox__track { height: auto; }
+    .unbox__stage { position: relative; height: 100svh; min-height: 0; }
+    .unbox__hint, .unbox__progress, .unbox__fire { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .unbox__track { height: 100svh; }
@@ -153,7 +161,8 @@ const STILL_IMAGE = '/models/unboxing-still.webp'; // pre-rendered fallback fram
   function boot(root: HTMLElement) {
     const conn = (navigator as any).connection;
     const gl = document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl');
-    if (!gl || conn?.saveData) { root.dataset.state = 'off'; return; }
+    // Too short to pin (landscape phones, small windows) → the pre-rendered still, no WebGL.
+    if (!gl || conn?.saveData || matchMedia('(max-height: 560px)').matches) { root.dataset.state = 'off'; return; }
     // Lazy, on real intent only: the models (~3.6 MB) start loading at the first user scroll,
     // wheel, touch or key press — or immediately if the page opens already scrolled (deep link,
     // reload). Never at first paint: the hero sits exactly one viewport above this section, so any
