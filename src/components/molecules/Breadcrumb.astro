@@ -1,0 +1,76 @@
+---
+// Visible breadcrumb trail. The page builds the BreadcrumbList JSON-LD from the
+// same items, so the two never diverge. The last item is the current page: it
+// stays a link so `aria-current` marks a real target (WAI-ARIA breadcrumb pattern).
+
+import Icon from '../atoms/Icon.astro';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  items: Crumb[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+const last = items.length - 1;
+---
+
+<nav class:list={['crumbs', className]} aria-label="Percorso di navigazione">
+  <ol class="crumbs__list">
+    {items.map((c, i) => {
+      const isCurrent = i === last;
+      return (
+        <li class="crumbs__item">
+          {c.href ? (
+            <a
+              class:list={['crumbs__link', isCurrent && 'crumbs__current']}
+              href={c.href}
+              aria-current={isCurrent ? 'page' : undefined}
+            >
+              {c.label}
+            </a>
+          ) : (
+            <span class:list={['crumbs__text', isCurrent && 'crumbs__current']}>{c.label}</span>
+          )}
+          {!isCurrent && <Icon name="chevronRight" size={14} class="crumbs__sep" />}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<style is:global>
+  .crumbs__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+  }
+  .crumbs__item { display: inline-flex; align-items: center; }
+  /* 44×44 hit area even for a short label like "Home" (RESP-04); the inline
+     padding keeps the focus ring clear of the text. */
+  .crumbs__link,
+  .crumbs__text {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: 0.375rem;
+  }
+  .crumbs__link {
+    color: var(--color-foreground);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .crumbs__link:hover { color: var(--color-accent-hover); }
+  .crumbs__current { color: var(--color-muted); }
+  .crumbs__sep { margin-inline: 0.125rem; color: var(--color-steel); flex: none; }
+</style>

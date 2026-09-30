@@ -22,11 +22,30 @@ content:
       - { name: siteUrl, label: URL del sito, type: string }
       - { name: defaultDescription, label: Descrizione SEO predefinita, type: text }
       - { name: defaultOgImage, label: Immagine social predefinita, type: image }
+      - { name: footerTagline, label: Frase sotto il logo nel footer, type: string }
       - { name: phone, label: Telefono, type: string }
       - { name: whatsapp, label: WhatsApp, type: string }
       - { name: email, label: Email, type: string }
       - { name: address, label: Indirizzo, type: text }
+      - name: postalAddress
+        label: Indirizzo per Google (campi separati)
+        type: object
+        fields:
+          - { name: streetAddress, label: "Via e numero", type: string }
+          - { name: postalCode, label: CAP, type: string }
+          - { name: addressLocality, label: Comune, type: string }
+          - { name: addressRegion, label: "Provincia (sigla)", type: string }
+          - { name: addressCountry, label: "Paese (sigla, es. IT)", type: string }
+      - { name: openingHours, label: Orari, type: string, description: "Es. Tutti i giorni dalle 10:00 alle 24:00, solo su prenotazione" }
+      - { name: directions, label: Come arrivare, type: string, description: "Parcheggio, mezzi pubblici: una riga breve" }
       - { name: rangerUrl, label: "Link arena outdoor (Ranger Softair)", type: string }
+      - name: footerRanger
+        label: Colonna arena outdoor nel footer
+        type: object
+        fields:
+          - { name: title, label: Titolo colonna, type: string }
+          - { name: label, label: Testo del link, type: string }
+          - { name: text, label: Descrizione, type: string }
       - { name: ticketinghubId, label: "ID script TicketingHub (prenotazioni)", type: string }
       - { name: gaMeasurementId, label: "ID Google Analytics (GA4)", type: string }
       - name: social
@@ -49,7 +68,22 @@ content:
         list: true
         fields:
           - { name: label, label: Etichetta, type: string }
-          - { name: href, label: Link, type: string }
+          - { name: href, label: Link, type: string, description: "Lascia vuoto se la voce apre un sottomenu" }
+          - name: children
+            label: Sottomenu (es. le attività)
+            type: object
+            list: true
+            fields:
+              - { name: label, label: Etichetta, type: string }
+              - { name: href, label: Link, type: string }
+              - { name: badge, label: "Badge (es. Il più richiesto)", type: string, description: "Facoltativo: brevissimo" }
+              - { name: desc, label: Descrizione di una riga, type: string, description: "Visibile solo nel menu a tendina da computer" }
+      - name: cta
+        label: Bottone Prenota del menu
+        type: object
+        fields:
+          - { name: label, label: Testo, type: string }
+          - { name: href, label: Link, type: string, description: "Es. #prenota: porta alla sezione Prenota della pagina" }
 
   - name: home
     label: Home
@@ -69,6 +103,7 @@ content:
           - { name: subtitle, label: Sottotitolo, type: text }
           - name: ctaPrimary
             label: Bottone principale
+            description: "Compare anche sotto i prezzi"
             type: object
             fields:
               - { name: label, label: Testo, type: string }
@@ -165,3 +200,349 @@ content:
           - { name: subtitle, label: Sottotitolo, type: text }
           - { name: label, label: Testo bottone, type: string }
           - { name: href, label: Link, type: string }
+
+  - name: testimonials
+    label: Recensioni
+    type: file
+    path: src/data/testimonials.json
+    fields:
+      - name: rating
+        label: Valutazione complessiva
+        type: object
+        fields:
+          - { name: label, label: "Giudizio (es. Eccellente)", type: string }
+          - { name: value, label: "Voto medio (es. 4.9)", type: number, options: { min: 1, max: 5, step: 0.1 }, description: "Se vuoto, le stelle non compaiono" }
+          - { name: count, label: Numero di recensioni, type: string }
+          - { name: source, label: "Fonte (es. recensioni su Google)", type: string }
+          - { name: url, label: Link alla pagina delle recensioni, type: string }
+      - name: items
+        label: Recensioni
+        type: object
+        list: true
+        fields:
+          - { name: author, label: Autore, type: string }
+          - { name: text, label: Testo (breve, al massimo 3 righe), type: text }
+
+  - name: activities
+    label: Attività (pagine)
+    type: collection
+    path: src/data/activities
+    format: json
+    filename:
+      template: "{primary}.json"
+      field: create
+    view:
+      primary: name
+    fields:
+      - { name: name, label: Nome attività, type: string, required: true, description: "Alla creazione diventa l'indirizzo della pagina (es. arcotag → /arcotag); cambiarlo dopo non cambia l'indirizzo. Nomi riservati: paintball, contatti e le altre pagine del menu" }
+      - name: seo
+        label: SEO e anteprima social
+        type: object
+        fields:
+          - { name: title, label: Titolo della pagina (Google), type: string, description: "Circa 60 caratteri", required: true }
+          - { name: description, label: Descrizione (Google), type: text, description: "Circa 155 caratteri" }
+          - { name: image, label: Immagine per i social, type: image }
+          - { name: imageAlt, label: Testo alternativo immagine social, type: string, description: "Se vuoto si usa quello dell'apertura" }
+      - name: hero
+        label: Apertura
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string }
+          - { name: title, label: "Titolo principale (H1)", type: string, required: true }
+          - { name: subtitle, label: Sottotitolo (massimo 20 parole), type: text }
+          - { name: image, label: "Immagine (desktop, 16:9)", type: image, required: true }
+          - { name: imageMobile, label: "Immagine (mobile, verticale)", type: image }
+          - { name: imageAlt, label: Testo alternativo immagine, type: string, required: true }
+          - name: ctaPrimary
+            label: Bottone principale
+            description: "Compare anche sotto i prezzi"
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string }
+          - name: ctaSecondary
+            label: Bottone secondario
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string }
+      - name: facts
+        label: Dati chiave (sotto il titolo)
+        type: object
+        list: true
+        fields:
+          - { name: value, label: "Valore (es. 6–25)", type: string }
+          - { name: label, label: "Etichetta (es. giocatori)", type: string }
+      - name: intro
+        label: In breve
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - name: points
+            label: Punti forti
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Titolo, type: string }
+              - { name: text, label: Testo, type: text }
+      - name: evening
+        label: La vostra serata
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string }
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - name: steps
+            label: Passaggi
+            type: object
+            list: true
+            fields:
+              - { name: time, label: "Momento (es. 60 minuti)", type: string, description: "Se vuoto, compare il numero del passaggio" }
+              - { name: title, label: Titolo, type: string }
+              - { name: text, label: Testo, type: text }
+      - name: howto
+        label: Come si gioca
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - { name: includedTitle, label: Titolo elenco incluso, type: string }
+          - { name: included, label: Cosa è incluso, type: string, list: true }
+          - { name: image, label: "Immagine (verticale, 4:5)", type: image }
+          - { name: imageAlt, label: Testo alternativo immagine, type: string }
+      - name: audiences
+        label: Per chi è
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - name: items
+            label: Occasioni
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Titolo, type: string }
+              - { name: text, label: Testo, type: text }
+              - { name: href, label: Link (facoltativo), type: string }
+              - { name: featured, label: In evidenza, type: boolean, description: "Una sola occasione in evidenza" }
+      - name: pricing
+        label: Prezzi
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - name: tiers
+            label: Fasce di prezzo
+            type: object
+            list: true
+            fields:
+              - { name: label, label: Nome, type: string }
+              - { name: when, label: "Quando / per chi", type: string }
+              - { name: price, label: "Prezzo (solo il numero)", type: string }
+              - { name: unit, label: "Unità (es. € a persona)", type: string }
+              - { name: note, label: Nota, type: string }
+              - { name: badge, label: "Badge (facoltativo, es. Serata tra amici)", type: string, description: "Mette in risalto la fascia: meglio una sola" }
+          - { name: notes, label: Note sotto i prezzi, type: string, list: true }
+      - name: reviews
+        label: Recensioni
+        type: object
+        fields:
+          - { name: title, label: "Titolo (le recensioni si modificano in «Recensioni»)", type: string, description: "Se vuoto, la sezione non compare" }
+      - name: faq
+        label: Domande frequenti
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - name: items
+            label: Domande
+            type: object
+            list: true
+            fields:
+              - { name: q, label: Domanda, type: string }
+              - { name: a, label: Risposta, type: text }
+      - name: related
+        label: Altre attività
+        description: "Le schede mostrate sono le attività di Home › Attività (tranne questa)"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+      - name: cta
+        label: Prenota (fondo pagina)
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+
+  - name: paintball
+    label: Softair VS Paintball
+    type: file
+    path: src/data/paintball.json
+    fields:
+      - name: seo
+        label: SEO e anteprima social
+        type: object
+        fields:
+          - { name: title, label: Titolo della pagina (Google), type: string, description: "Circa 60 caratteri", required: true }
+          - { name: description, label: Descrizione (Google), type: text, description: "Circa 155 caratteri" }
+          - { name: image, label: Immagine per i social, type: image }
+          - { name: imageAlt, label: Testo alternativo immagine social, type: string, description: "Se vuoto si usa quello dell'apertura" }
+      - name: hero
+        label: Apertura
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string }
+          - { name: title, label: "Titolo principale (H1)", type: string, required: true }
+          - { name: subtitle, label: Sottotitolo (massimo 20 parole), type: text }
+          - { name: image, label: "Immagine (desktop, 16:9)", type: image, required: true }
+          - { name: imageMobile, label: "Immagine (mobile, verticale)", type: image }
+          - { name: imageAlt, label: Testo alternativo immagine, type: string, required: true }
+          - name: ctaPrimary
+            label: Bottone principale
+            description: "Compare anche sotto i prezzi"
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string }
+          - name: ctaSecondary
+            label: Bottone secondario
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string }
+      - name: intro
+        label: In breve
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - name: points
+            label: Punti forti
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Titolo, type: string }
+              - { name: text, label: Testo, type: text }
+      - name: comparison
+        label: Confronto softair / paintball
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string }
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - { name: softairLabel, label: Nome colonna softair, type: string }
+          - { name: paintballLabel, label: Nome colonna paintball, type: string }
+          - name: rows
+            label: Righe del confronto
+            type: object
+            list: true
+            fields:
+              - { name: topic, label: Tema, type: string }
+              - { name: softair, label: Softair, type: string }
+              - { name: paintball, label: Paintball, type: string }
+      - name: impact
+        label: Fa più male?
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - { name: note, label: Nota sotto il disegno, type: string }
+          - name: softair
+            label: Pallino softair
+            type: object
+            fields:
+              - { name: name, label: Nome, type: string }
+              - { name: diameterMm, label: Diametro in mm (per il disegno in proporzione), type: number, options: { min: 1 }, description: "Solo il numero. Se vuoto, le sfere non vengono disegnate" }
+              - { name: mass, label: Peso, type: string }
+              - { name: energy, label: Energia, type: string }
+              - { name: feel, label: Come si sente, type: string }
+          - name: paintball
+            label: Sfera paintball
+            type: object
+            fields:
+              - { name: name, label: Nome, type: string }
+              - { name: diameterMm, label: Diametro in mm (per il disegno in proporzione), type: number, options: { min: 1 }, description: "Solo il numero. Se vuoto, le sfere non vengono disegnate" }
+              - { name: mass, label: Peso, type: string }
+              - { name: energy, label: Energia, type: string }
+              - { name: feel, label: Come si sente, type: string }
+      - name: arena
+        label: Cosa trovi da noi
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - { name: image, label: Immagine (foto reale dell'arena), type: image }
+          - { name: imageAlt, label: Testo alternativo immagine, type: string }
+          - { name: missionsTitle, label: Titolo elenco missioni, type: string }
+          - name: missions
+            label: Missioni
+            type: object
+            list: true
+            fields:
+              - { name: name, label: Nome, type: string }
+              - { name: text, label: Descrizione, type: string }
+      - name: firstTime
+        label: La prima volta
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - name: steps
+            label: Passaggi
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Titolo, type: string }
+              - { name: text, label: Testo, type: text }
+          - { name: includedTitle, label: Titolo elenco incluso, type: string }
+          - { name: included, label: Cosa è incluso, type: string, list: true }
+          - { name: note, label: Nota, type: string }
+      - name: pricing
+        label: Prezzi
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - name: tiers
+            label: Fasce di prezzo
+            type: object
+            list: true
+            fields:
+              - { name: label, label: Nome, type: string }
+              - { name: when, label: "Quando / per chi", type: string }
+              - { name: price, label: "Prezzo (solo il numero)", type: string }
+              - { name: unit, label: "Unità (es. € a persona)", type: string }
+              - { name: note, label: Nota, type: string }
+              - { name: badge, label: "Badge (facoltativo, es. Serata tra amici)", type: string, description: "Mette in risalto la fascia: meglio una sola" }
+          - { name: notes, label: Note sotto i prezzi, type: string, list: true }
+      - name: reviews
+        label: Recensioni
+        type: object
+        fields:
+          - { name: title, label: "Titolo (le recensioni si modificano in «Recensioni»)", type: string, description: "Se vuoto, la sezione non compare" }
+      - name: faq
+        label: Domande frequenti
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - name: items
+            label: Domande
+            type: object
+            list: true
+            fields:
+              - { name: q, label: Domanda, type: string }
+              - { name: a, label: Risposta, type: text }
+      - name: alternative
+        label: Alternativa (arcotag)
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - { name: label, label: Testo del link, type: string }
+          - { name: href, label: Link, type: string }
+          - { name: image, label: "Immagine (orizzontale)", type: image }
+          - { name: imageAlt, label: Testo alternativo immagine, type: string }
+      - name: cta
+        label: Prenota (fondo pagina)
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }

@@ -32,7 +32,8 @@ template) sta nell'agente `design-specialist`; i **valori** stanno in `src/style
 
 ## Movimento
 
-- **DES-08** — Il movimento ha uno scopo; si usano gli easing e le durate dei token. **Il contenuto
+- **DES-08** — Il movimento ha uno scopo; si usano gli easing e le durate dei token (`--ease-out-expo`,
+  `--duration-fast/base/slow`). **Il contenuto
   dell'hero che fa da LCP non si anima**: si animano gli elementi secondari. Con
   `prefers-reduced-motion` il sito è **statico pieno**.
 
@@ -41,6 +42,11 @@ template) sta nell'agente `design-specialist`; i **valori** stanno in `src/style
 - **DES-09** — Il testo sopra le foto è sempre leggibile, con text-shadow e gradiente leggero; il
   cliente non vuole scrim pesanti che anneriscono l'immagine. Su mobile si usano **immagini verticali
   dedicate** con il soggetto nel terzo alto; mai `object-fit: contain` con le bande (letterbox).
+
+## Componenti
+
+- **DES-11** — Gli **accordion** (FAQ e simili) sono **esclusivi**: aprire una voce chiude le altre, mai
+  più di una aperta alla volta.
 
 ## Decisioni del cliente — non riproporre
 

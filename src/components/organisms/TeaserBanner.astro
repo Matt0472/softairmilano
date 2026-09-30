@@ -1,0 +1,176 @@
+---
+// Cross-sell banner ("Nel gruppo qualcuno non se la sente? Provate l'arcotag").
+// A cinematic panel: the photo fills the right side and dissolves into the
+// surface under the copy. The whole panel is one link (the button stretches
+// over it), so there is a single, clearly named target. Focus ring and press sit
+// on the panel: a transform on the button or its column would make it the
+// containing block of the stretched area and shrink the target mid-click.
+
+import Picture from '../atoms/Picture.astro';
+import Button from '../atoms/Button.astro';
+import Icon from '../atoms/Icon.astro';
+
+interface Props {
+  title: string;
+  text?: string;
+  label?: string;
+  href?: string;
+  image?: string;
+  imageMobile?: string;
+  imageAlt?: string;
+  headingId?: string;
+}
+
+const { title, text, label, href, image, imageMobile, imageAlt = '', headingId = 'teaser-title' } = Astro.props;
+const hasTitle = !!title?.trim();
+const hasLink = !!label?.trim() && !!href?.trim();
+---
+
+{(hasTitle || hasLink) && (
+  <section class="teaser" aria-labelledby={hasTitle ? headingId : undefined}>
+    <div class="shell" data-reveal>
+      <div class:list={['teaser__panel', !image && 'teaser__panel--plain', hasLink && 'teaser__panel--link']}>
+        {image && (
+          <div class="teaser__media">
+            <Picture
+              src={image}
+              srcMobile={imageMobile}
+              alt={imageAlt}
+              sizes="(max-width: 767px) calc(100vw - 2.5rem), (max-width: 1520px) 58vw, 900px"
+              class="teaser__img"
+            />
+          </div>
+        )}
+        <div class="teaser__copy">
+          {hasTitle && <h2 class="teaser__title" id={headingId}>{title}</h2>}
+          {text?.trim() && <p class="teaser__text">{text}</p>}
+          {hasLink && (
+            <Button href={href} variant="secondary" class="teaser__link">
+              {label}
+              <Icon name="arrowRight" size={18} />
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .teaser {
+    --accent: var(--color-accent);
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+
+  .teaser__panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: clamp(20rem, 32vw, 26rem);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .teaser__panel--plain { grid-template-columns: minmax(0, 1fr); }
+
+  .teaser__media {
+    position: absolute;
+    inset: 0 0 0 38%;
+    z-index: -1;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 38%);
+    mask-image: linear-gradient(90deg, transparent 0%, black 38%);
+  }
+  .teaser__media picture,
+  .teaser__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .teaser__img {
+    object-fit: cover;
+    object-position: 50% 40%;
+    transition: transform calc(var(--duration-slow) * 2.5) var(--ease-out-expo);
+  }
+
+  .teaser__copy {
+    align-self: center;
+    padding: clamp(1.75rem, 5vw, 3.5rem);
+  }
+  .teaser__title {
+    margin: 0;
+    max-width: 18ch;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.85rem, 3.8vw, 2.9rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  .teaser__text {
+    margin: 1rem 0 0;
+    max-width: 44ch;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.5vw, 1.08rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  /* The secondary Button, sized for the panel; the atom keeps its colours and hover. */
+  .teaser__link {
+    gap: 0.6rem;
+    min-height: 48px;
+    margin-top: 1.6rem;
+    padding-inline: 1.4rem;
+    transition:
+      border-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  .teaser__link svg { transition: transform var(--duration-slow) var(--ease-out-expo); }
+  /* Stretched link: the whole panel is the target. */
+  .teaser__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: var(--radius-lg);
+  }
+
+  .teaser__panel--link { transition: transform var(--duration-fast) var(--ease-out-expo); }
+  .teaser__panel--link:active { transform: translateY(1px) scale(0.99); }
+
+  /* Keyboard: the ring goes round the panel (the real target) and the hover states follow. */
+  .teaser__panel:has(.teaser__link:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  @supports selector(:has(*)) {
+    .teaser__link:focus-visible { outline: none; }
+  }
+  .teaser__link:focus-visible { border-color: var(--accent); color: var(--accent); }
+  .teaser__link:focus-visible svg { transform: translateX(4px); }
+  .teaser__panel:has(.teaser__link:focus-visible) .teaser__img { transform: scale(1.04); }
+  @media (hover: hover) {
+    .teaser__panel--link:hover .teaser__link svg { transform: translateX(4px); }
+    .teaser__panel--link:hover .teaser__img { transform: scale(1.04); }
+  }
+
+  @media (max-width: 767px) {
+    .teaser__panel { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+    .teaser__media {
+      position: relative;
+      inset: auto;
+      aspect-ratio: 16 / 10;
+      -webkit-mask-image: linear-gradient(0deg, transparent 0%, black 45%);
+      mask-image: linear-gradient(0deg, transparent 0%, black 45%);
+    }
+    .teaser__copy { padding-top: 0; margin-top: -1.5rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .teaser__panel--link:hover .teaser__img,
+    .teaser__panel:has(.teaser__link:focus-visible) .teaser__img { transform: none; }
+  }
+</style>

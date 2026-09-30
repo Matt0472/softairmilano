@@ -1,0 +1,341 @@
+---
+// "Fa più male…?": the question, the one-line answer as a large lead, then the
+// two projectiles drawn in true proportion on one shared scale (--mm), so 6 mm
+// vs 17 mm is exact at every width. The spheres are drawn only when both
+// diameters are valid numbers; otherwise the figures stay as text.
+
+import LeadText from '../molecules/LeadText.astro';
+
+interface Projectile {
+  name?: string;
+  diameterMm?: number | string | null;
+  mass?: string;
+  energy?: string;
+  feel?: string;
+}
+interface Props {
+  title: string;
+  text?: string;
+  note?: string;
+  softair?: Projectile;
+  paintball?: Projectile;
+  headingId?: string;
+}
+
+const { title, text, note, softair = {}, paintball = {}, headingId = 'impact-title' } = Astro.props;
+
+// A cleared or mistyped CMS field must never break the build: anything but a positive number is "no size".
+const toMm = (v: Projectile['diameterMm']): number | null => {
+  const n = typeof v === 'string' ? parseFloat(v.replace(',', '.')) : v;
+  return typeof n === 'number' && Number.isFinite(n) && n > 0 ? n : null;
+};
+const balls = [
+  { ...softair, side: 's', d: toMm(softair.diameterMm) },
+  { ...paintball, side: 'p', d: toMm(paintball.diameterMm) },
+];
+const drawn = balls.every((b) => b.d !== null);
+const maxD = drawn ? Math.max(...balls.map((b) => b.d as number)) : 0;
+const mm = (n: number): string => n.toLocaleString('it-IT');
+const hasTitle = !!title?.trim();
+---
+
+<section class="impact" aria-labelledby={hasTitle ? headingId : undefined}>
+  <div class="shell">
+    <div class="impact__head">
+      {hasTitle && <h2 class="impact__title" id={headingId} data-reveal>{title}</h2>}
+      {text?.trim() && (
+        <div data-reveal style="--i: 1">
+          <LeadText text={text} class="impact__lead" />
+        </div>
+      )}
+    </div>
+
+    <figure
+      class="impact__fig"
+      data-inview={drawn ? '' : undefined}
+      style={drawn ? `--dmax: ${maxD}` : undefined}
+    >
+      <div class="impact__stage">
+        {balls.map((b) => (
+          <div class={`impact__item impact__item--${b.side}`} style={drawn ? `--d: ${b.d}` : undefined}>
+            {drawn && (
+              <>
+                <div class="impact__well" aria-hidden="true">
+                  <span class="impact__shadow"></span>
+                  <span class="impact__drop"><span class="impact__ball"></span></span>
+                </div>
+                <div class="impact__dim" aria-hidden="true">
+                  <span class="impact__dim-line"></span>
+                </div>
+              </>
+            )}
+            {b.d !== null && (
+              <p class="impact__size">
+                <span aria-hidden="true">Ø</span><span class="sr-only">diametro</span> {mm(b.d)} mm
+              </p>
+            )}
+            {b.name && <p class="impact__name">{b.name}</p>}
+            {(b.mass || b.energy) && (
+              <p class="impact__spec">
+                {b.mass && <span>{b.mass}</span>}
+                {b.energy && <span>{b.energy}</span>}
+              </p>
+            )}
+            {b.feel && <p class="impact__feel">{b.feel}</p>}
+          </div>
+        ))}
+      </div>
+      {note && <figcaption class="impact__note">{note}</figcaption>}
+    </figure>
+  </div>
+</section>
+
+<style is:global>
+  .impact {
+    --accent: var(--color-accent);
+    --steel: var(--color-steel);
+    --ink: var(--color-background);
+    /* One millimetre on screen: the preferred shared scale of both spheres. */
+    --mm: clamp(8px, 1.05vw + 4px, 15px);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  .impact__head { max-width: 54rem; margin-inline: auto; text-align: center; }
+  .impact__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3.6vw, 2.5rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    color: var(--color-muted);
+    text-wrap: balance;
+  }
+  /* The answer is the focal point: bigger than the question. */
+  .impact__lead { margin-top: 0.75rem; }
+  .impact__lead .lead__first {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(3rem, 9vw, 6.5rem);
+    line-height: 1.12;
+    letter-spacing: 0.005em;
+  }
+  .impact__lead[data-long] .lead__first { font-size: clamp(1.6rem, 3.6vw, 2.6rem); }
+  .impact__lead .lead__rest { margin: 1.5rem auto 0; max-width: 58ch; }
+
+  .impact__fig {
+    overflow: hidden;
+    margin: clamp(2.5rem, 6vw, 4.5rem) auto 0;
+    max-width: 62rem;
+    padding: clamp(1.75rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2.25rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(90% 70% at 50% 100%, var(--color-surface-2) 0%, var(--color-surface) 70%);
+  }
+  .impact__stage {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1rem, 4vw, 3rem);
+    text-align: center;
+  }
+  .impact__item {
+    /* The two columns are equal, so capping the scale to what fits one column keeps it shared:
+       on the narrowest phones the biggest sphere shrinks instead of overflowing. */
+    container-type: inline-size;
+    --u: min(var(--mm), 92cqi / var(--dmax));
+    /* Both spheres fall from the same height, clipped by the panel's top edge. */
+    --fall: calc(var(--dmax) * var(--u) * -1.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Every well is as tall as the biggest sphere, so both rest on one floor. */
+  .impact__well {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    height: calc(var(--dmax) * var(--u));
+    border-bottom: 1px solid color-mix(in srgb, var(--color-foreground) 22%, transparent);
+  }
+  .impact__drop { display: block; }
+  .impact__ball {
+    display: block;
+    width: calc(var(--d) * var(--u));
+    height: calc(var(--d) * var(--u));
+    border-radius: 50%;
+    transform-origin: 50% 100%;
+  }
+  .impact__item--s .impact__ball {
+    background: radial-gradient(circle at 34% 30%,
+      color-mix(in srgb, var(--accent) 22%, white) 0 9%,
+      var(--accent) 46%,
+      color-mix(in srgb, var(--accent) 50%, var(--ink)) 100%);
+  }
+  /* Paintball: steel shell with a seam, the neutral side of the page. */
+  .impact__item--p .impact__ball {
+    position: relative;
+    background: radial-gradient(circle at 34% 30%,
+      color-mix(in srgb, var(--steel) 30%, white) 0 7%,
+      color-mix(in srgb, var(--steel) 80%, var(--color-foreground)) 26%,
+      var(--steel) 55%,
+      color-mix(in srgb, var(--steel) 40%, var(--ink)) 100%);
+  }
+  .impact__item--p .impact__ball::after {
+    content: "";
+    position: absolute;
+    left: 3%;
+    right: 3%;
+    top: 46%;
+    height: 12%;
+    border-radius: 50%;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 55%, transparent);
+  }
+  .impact__shadow {
+    position: absolute;
+    left: 50%;
+    bottom: -3px;
+    width: calc(var(--d) * var(--u) * 1.15);
+    height: 8px;
+    margin-left: calc(var(--d) * var(--u) * -0.575);
+    border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--ink) 85%, transparent), transparent);
+  }
+
+  /* Dimension line exactly one diameter long, with end ticks. */
+  .impact__dim {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0.9rem;
+  }
+  .impact__dim-line {
+    position: relative;
+    display: block;
+    width: calc(var(--d) * var(--u));
+    height: 11px;
+    transform-origin: center;
+  }
+  .impact__dim-line::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 5px;
+    height: 1px;
+    background: currentColor;
+  }
+  .impact__dim-line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-inline: 1px solid currentColor;
+  }
+  .impact__item--s .impact__dim { color: var(--accent); }
+  .impact__item--p .impact__dim { color: var(--color-muted); }
+
+  .impact__size {
+    margin: 0.5rem 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+  }
+  .impact__item--s .impact__size { color: var(--accent); }
+  .impact__item--p .impact__size { color: var(--color-muted); }
+
+  .impact__name {
+    margin: 1.1rem 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(1.35rem, 2.6vw, 2rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+  .impact__spec {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 0.8rem 0 0;
+  }
+  .impact__spec span {
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--color-foreground);
+  }
+  .impact__feel {
+    margin: 0.9rem 0 0;
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    color: var(--color-muted);
+  }
+  .impact__note {
+    margin: clamp(1.75rem, 3vw, 2.25rem) 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+
+  /* Entrance: drop, land, then measure. */
+  .impact__fig.is-armed .impact__drop { opacity: 0; transform: translate3d(0, var(--fall), 0); }
+  .impact__fig.is-armed .impact__shadow { opacity: 0; transform: scaleX(0.3); }
+  .impact__fig.is-armed .impact__dim-line { transform: scaleX(0); }
+  /* Near-symmetric curve: the bounce timing lives in the keyframes, the easing must not bend it. */
+  .impact__fig.is-armed.is-in .impact__drop { animation: impact-drop-light 0.95s cubic-bezier(0.33, 0, 0.67, 1) 0.1s both; }
+  /* Pure ease-in: gravity accelerates the heavy ball until it hits the floor, no slowing down. */
+  .impact__fig.is-armed.is-in .impact__item--p .impact__drop { animation: impact-drop-heavy 0.8s cubic-bezier(0.55, 0, 1, 0.45) 0.35s both; }
+  .impact__fig.is-armed.is-in .impact__item--p .impact__ball { animation: impact-squash 0.5s var(--ease-out-expo) 1.15s both; }
+  .impact__fig.is-armed.is-in .impact__shadow {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.5s var(--ease-out-expo) 0.5s, transform 0.6s var(--ease-out-expo) 0.5s;
+  }
+  .impact__fig.is-armed.is-in .impact__dim-line {
+    transform: none;
+    transition: transform 0.7s var(--ease-out-expo) 1.35s;
+  }
+  /* A light pellet bounces twice; the heavy ball lands and stays. */
+  @keyframes impact-drop-light {
+    0% { opacity: 0; transform: translate3d(0, var(--fall), 0); }
+    12% { opacity: 1; }
+    45% { transform: none; }
+    62% { transform: translate3d(0, -55%, 0); }
+    78% { transform: none; }
+    88% { transform: translate3d(0, -14%, 0); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes impact-drop-heavy {
+    0% { opacity: 0; transform: translate3d(0, var(--fall), 0); }
+    20% { opacity: 1; }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes impact-squash {
+    0% { transform: scale(1.12, 0.84); }
+    45% { transform: scale(0.97, 1.03); }
+    100% { transform: none; }
+  }
+
+  @media (max-width: 599px) {
+    .impact__fig { padding-inline: 0.75rem; }
+    .impact__spec span { font-size: 0.8rem; padding: 0.25rem 0.6rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .impact__fig.is-armed .impact__drop,
+    .impact__fig.is-armed .impact__shadow,
+    .impact__fig.is-armed .impact__dim-line { opacity: 1; transform: none; animation: none; }
+    .impact__fig.is-armed.is-in .impact__ball { animation: none; }
+  }
+</style>

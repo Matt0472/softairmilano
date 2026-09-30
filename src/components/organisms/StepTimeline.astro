@@ -1,0 +1,255 @@
+---
+// Step-by-step timeline ("La vostra serata", "La prima volta"): the rail draws
+// itself node by node as the section enters and ends in an arrowhead ("the night
+// goes on"). Steps without a time label show their order instead.
+
+import SectionHead from '../molecules/SectionHead.astro';
+
+interface Step {
+  time?: string;
+  title: string;
+  text: string;
+}
+interface Props {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+  steps: Step[];
+  id?: string;
+  headingId?: string;
+}
+
+const { eyebrow, title, text, steps, id, headingId = 'steps-title' } = Astro.props;
+const list = (steps ?? []).filter((s) => s?.title?.trim());
+const last = list.length - 1;
+const pad = (n: number) => String(n + 1).padStart(2, '0');
+const hasTitle = !!title?.trim();
+---
+
+{list.length > 0 && (
+  <section class="tl" id={id} aria-labelledby={hasTitle ? headingId : undefined}>
+    <div class="shell">
+      <SectionHead eyebrow={eyebrow} title={title} text={text} id={headingId} />
+
+      <ol class="tl__steps" data-inview style={`--n: ${list.length}`}>
+        {list.map((s, i) => (
+          <li class="tl__step" style={`--i: ${i}`}>
+            {s.time ? (
+              <p class="tl__time">{s.time}</p>
+            ) : (
+              <p class="tl__time tl__time--num" aria-hidden="true">{pad(i)}</p>
+            )}
+            <div class="tl__track" aria-hidden="true">
+              <span class="tl__seg"></span>
+              {i === last && (
+                <svg class="tl__head" viewBox="0 0 12 12" width="12" height="12">
+                  <path d="M3 1.5 8.5 6 3 10.5"></path>
+                </svg>
+              )}
+              <span class="tl__node"></span>
+            </div>
+            <h3 class="tl__title">{s.title}</h3>
+            {s.text?.trim() && <p class="tl__text">{s.text}</p>}
+          </li>
+        ))}
+      </ol>
+
+      {Astro.slots.has('default') && (
+        <div class="tl__aside" data-reveal>
+          <slot />
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .tl {
+    --accent: var(--color-accent);
+    /* Entrance beat: node i lights at i × step. */
+    --step: 0.42s;
+    /* The last segment stops short of its column, so the arrowhead reads as "and on". */
+    --tail: 22%;
+    position: relative;
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+    background: var(--color-surface);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .tl__steps {
+    list-style: none;
+    margin: clamp(2.5rem, 6vw, 4.5rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr));
+  }
+  .tl__step {
+    position: relative;
+    padding-right: clamp(1.25rem, 3vw, 3rem);
+  }
+
+  .tl__time {
+    margin: 0 0 1.1rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+  }
+  .tl__time--num { letter-spacing: 0.08em; font-size: clamp(1.4rem, 2.2vw, 1.9rem); line-height: 1; }
+
+  /* Rail: an unlit hairline, the lit segment, the node on top. */
+  .tl__track {
+    position: relative;
+    height: 18px;
+    margin-bottom: 1.5rem;
+  }
+  .tl__track::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--color-border);
+  }
+  .tl__step:last-child .tl__track::before { right: var(--tail); }
+  .tl__seg {
+    position: absolute;
+    left: 9px;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    background: var(--accent);
+    transform-origin: left center;
+  }
+  .tl__step:last-child .tl__seg {
+    right: var(--tail);
+    background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 35%, transparent));
+  }
+  .tl__head {
+    position: absolute;
+    top: 50%;
+    right: calc(var(--tail) - 7px);
+    margin-top: -6px;
+    fill: none;
+    stroke: color-mix(in srgb, var(--accent) 70%, transparent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .tl__node {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--color-surface);
+  }
+  .tl__node::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .tl__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.45rem, 2.4vw, 2.05rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+  }
+  .tl__text {
+    margin: 0.7rem 0 0;
+    max-width: 34ch;
+    color: var(--color-muted);
+    font-size: 0.99rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .tl__aside { margin-top: clamp(2.5rem, 5vw, 3.75rem); }
+
+  /* Entrance (only when armed below the fold): node i lights at i × step, its
+     segment then runs to the next node, copy rises with it. */
+  .tl__steps.is-armed .tl__seg { transform: var(--seg-off, scaleX(0)); }
+  .tl__steps.is-armed .tl__node::after { transform: scale(0); }
+  .tl__steps.is-armed .tl__head { opacity: 0; }
+  .tl__steps.is-armed :is(.tl__time, .tl__title, .tl__text) {
+    opacity: 0;
+    transform: translate3d(0, 0.9rem, 0);
+  }
+  .tl__steps.is-armed.is-in .tl__seg {
+    transform: none;
+    transition: transform 0.6s var(--ease-out-expo) calc(var(--i) * var(--step) + 0.12s);
+  }
+  .tl__steps.is-armed.is-in .tl__node::after {
+    transform: none;
+    transition: transform var(--duration-slow) var(--ease-out-expo) calc(var(--i) * var(--step));
+  }
+  .tl__steps.is-armed.is-in .tl__head {
+    opacity: 1;
+    transition: opacity var(--duration-slow) var(--ease-out-expo) calc(var(--i) * var(--step) + 0.45s);
+  }
+  .tl__steps.is-armed.is-in :is(.tl__time, .tl__title, .tl__text) {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.7s var(--ease-out-expo) calc(var(--i) * var(--step) + 0.05s),
+      transform 0.8s var(--ease-out-expo) calc(var(--i) * var(--step) + 0.05s);
+  }
+
+  /* Below 900px the rail runs down the left edge. */
+  @media (max-width: 899px) {
+    .tl__steps { grid-template-columns: minmax(0, 1fr); }
+    .tl__step {
+      --seg-off: scaleY(0);
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      column-gap: 1.1rem;
+      padding: 0 0 2.1rem;
+    }
+    .tl__step:last-child { padding-bottom: 0; }
+    .tl__track {
+      grid-column: 1;
+      grid-row: 1 / span 3;
+      height: auto;
+      margin: 0;
+    }
+    .tl__track::before { display: none; }
+    .tl__node { top: 0.1rem; }
+    .tl__seg {
+      left: 8px;
+      right: auto;
+      top: calc(0.1rem + 18px);
+      bottom: -0.1rem;
+      width: 2px;
+      height: auto;
+      margin: 0;
+      transform-origin: center top;
+    }
+    .tl__step:last-child .tl__seg,
+    .tl__head { display: none; }
+    .tl__time,
+    .tl__title,
+    .tl__text { grid-column: 2; }
+    .tl__time { margin: 0 0 0.45rem; line-height: 1.35rem; }
+    .tl__time--num { font-size: 1.15rem; }
+    .tl__text { max-width: 52ch; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tl__steps.is-armed .tl__seg,
+    .tl__steps.is-armed .tl__node::after,
+    .tl__steps.is-armed :is(.tl__time, .tl__title, .tl__text) { transform: none; opacity: 1; }
+    .tl__steps.is-armed .tl__head { opacity: 1; }
+  }
+</style>

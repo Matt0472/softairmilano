@@ -1,0 +1,31 @@
+{
+  "rating": {
+    "label": "Eccellente",
+    "value": null,
+    "count": "347",
+    "source": "recensioni su Google",
+    "url": ""
+  },
+  "items": [
+    {
+      "author": "Joshua Fidone",
+      "text": "Grandi gli organizzatori che spiegano tutto nei minimi dettagli. Davvero ottimo per scaricare la tensione della settimana. Sicuramente ci tornerò."
+    },
+    {
+      "author": "Carla Riccardi",
+      "text": "Finalmente i nostri figli sono riusciti a fare questa esperienza a dir poco fantastica! Si sono divertiti tantissimo."
+    },
+    {
+      "author": "Francesco Zanaboni",
+      "text": "Esperienza top, personale coinvolgente."
+    },
+    {
+      "author": "Andrea Zanaboni",
+      "text": "Bell'arena, gioco divertentissimo!"
+    },
+    {
+      "author": "Mc",
+      "text": "Ci vado da anni ed è sempre divertente."
+    }
+  ]
+}

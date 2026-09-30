@@ -19,6 +19,7 @@
   src/pages/       rotte
   src/data/        contenuti JSON (Pages CMS)
   src/scripts/     script client condivisi
+  src/lib/         helper di build condivisi (TypeScript puro: niente DOM, niente contenuti)
   src/styles/      stili globali e token
   scripts/         script di build e di servizio
   docs/            documentazione e sorgenti (es. manuale cliente)
@@ -36,9 +37,12 @@
 
 - **CODE-06** — **Solo token.** Colori, font, raggi, ombre ed easing vengono da `@theme` in
   `src/styles/global.css`; i componenti usano i token (o un alias locale come `--accent`), **mai un hex
-  o un valore magico**. Un valore fisso voluto (es. il radar a dimensione fissa in px, che non deve
+  o un valore magico**. Le durate delle animazioni hanno i loro token (`--duration-fast`, `--duration-base`,
+  `--duration-slow`). Un valore fisso voluto (es. il radar a dimensione fissa in px, che non deve
   scalare con il contenitore) si commenta con il perché.
-- **CODE-07** — Animazioni solo su **`transform` e `opacity`**. Non combinare la proprietà `rotate` con
+- **CODE-07** — Animazioni solo su **`transform` e `opacity`**. Eccezioni ammesse: `stroke-dashoffset`
+  per le linee SVG che si disegnano (traiettorie, radar, icone tracciate) e `flex-grow` nella galleria a
+  fisarmonica di «Provate anche» (`ActivityLinks`, poche schede, scelta del cliente). Non combinare la proprietà `rotate` con
   un `transform: translate` sullo stesso elemento: l'ordine si inverte e l'elemento orbita invece di
   girare sul posto. Ogni animazione non essenziale si spegne con `prefers-reduced-motion` (`A11Y-07`).
 

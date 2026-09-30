@@ -1,0 +1,272 @@
+{
+  "seo": {
+    "title": "Paintball a Milano? Prova il softair | SoftAir Milano",
+    "description": "Cerchi il paintball a Milano? Prova il softair: niente vernice né lividi, repliche realistiche, arena al coperto di 1.500 m². Confronto e prezzi.",
+    "image": "/uploads/paintball-og.jpg",
+    "imageAlt": "Un giocatore di softair con la tenuta pulita accanto a un giocatore di paintball coperto di vernice."
+  },
+  "hero": {
+    "eyebrow": "Arena indoor · Settimo Milanese",
+    "title": "Cercavi il paintball a Milano? Prova il softair",
+    "subtitle": "Stessa adrenalina, zero vernice, niente paura dei lividi: missioni a squadre in un'arena al coperto di 1.500 m², attrezzatura inclusa.",
+    "image": "/uploads/paintball-hero.jpeg",
+    "imageMobile": "/uploads/paintball-hero-mobile.jpeg",
+    "imageAlt": "Un giocatore di softair in tenuta tattica pulita accanto a un giocatore di paintball coperto di macchie di vernice, in un'arena indoor.",
+    "ctaPrimary": {
+      "label": "Prenota",
+      "href": "#prenota"
+    },
+    "ctaSecondary": {
+      "label": "Guarda il confronto",
+      "href": "#confronto"
+    }
+  },
+  "intro": {
+    "title": "Softair o paintball: la differenza in breve",
+    "text": "Sono due giochi a squadre simili: cambia quello che si spara. Nel paintball sono sfere di vernice da circa 3 grammi, che macchiano e spesso lasciano lividi. Nel softair sono pallini di plastica da 6 mm e circa 0,2 grammi, sparati da repliche realistiche che per legge restano sotto 1 joule: fa meno male, non sporca e si gioca anche al chiuso. Per questo, per giocare a Milano in un'arena indoor, il softair è la scelta naturale.",
+    "points": [
+      {
+        "title": "Fa meno male",
+        "text": "Una puntura breve invece di una botta secca."
+      },
+      {
+        "title": "Non sporca",
+        "text": "Niente vernice sui vestiti, niente odori."
+      },
+      {
+        "title": "È più realistico",
+        "text": "Repliche fedeli di armi vere, colpo singolo o raffica."
+      },
+      {
+        "title": "Al coperto",
+        "text": "Si gioca tutto l'anno, con qualsiasi tempo."
+      }
+    ]
+  },
+  "comparison": {
+    "eyebrow": "",
+    "title": "Softair vs paintball, punto per punto",
+    "text": "Il paintball ha il suo fascino: il colpo si vede e il ritmo è frenetico. Ma se cercate un'esperienza di gruppo a Milano, al chiuso e adatta anche a chi non ha mai giocato, il softair vince quasi su tutto.",
+    "softairLabel": "Softair",
+    "paintballLabel": "Paintball",
+    "rows": [
+      {
+        "topic": "Cosa si spara",
+        "softair": "Pallini di plastica da 6 mm, circa 0,2 g",
+        "paintball": "Sfere di gelatina e vernice da circa 17 mm e 3 g"
+      },
+      {
+        "topic": "Quando si viene colpiti",
+        "softair": "Una puntura breve: dopo pochi minuti è già dimenticata",
+        "paintball": "Una botta secca: lividi ed ematomi non sono rari"
+      },
+      {
+        "topic": "Energia del colpo",
+        "softair": "Sotto 1 joule, per legge",
+        "paintball": "Tra 6 e 12 joule"
+      },
+      {
+        "topic": "Vestiti",
+        "softair": "Quelli di tutti i giorni: i pallini non sporcano",
+        "paintball": "Meglio vestiti da sacrificare: la vernice macchia"
+      },
+      {
+        "topic": "Al chiuso",
+        "softair": "Perfetto: niente vernice, niente cattivi odori",
+        "paintball": "Sconsigliato: la vernice lascia residui e odore"
+      },
+      {
+        "topic": "Maschera",
+        "softair": "Anche a griglia o in due pezzi: non si appanna",
+        "paintball": "Integrale con visiera: col fiatone si appanna"
+      },
+      {
+        "topic": "Munizioni",
+        "softair": "Economiche: 300 colpi inclusi, partite lunghe",
+        "paintball": "Costose e finiscono in fretta"
+      },
+      {
+        "topic": "Le armi",
+        "softair": "Repliche fedeli e bilanciate, colpo singolo o raffica",
+        "paintball": "Marcatori standard, pesanti sul retro"
+      },
+      {
+        "topic": "Meteo",
+        "softair": "Da noi si gioca al coperto, con pioggia o neve",
+        "paintball": "Quasi sempre all'aperto: dipende dal tempo"
+      },
+      {
+        "topic": "Come si capisce di essere colpiti",
+        "softair": "Lo dichiara chi è colpito: conta la lealtà",
+        "paintball": "Lo dice la macchia di vernice"
+      }
+    ]
+  },
+  "impact": {
+    "title": "Fa più male il paintball o il softair?",
+    "text": "Il paintball. Una sfera da paintball pesa circa 15 volte un pallino da softair e colpisce con molta più energia: è una botta secca che spesso lascia il segno. Il pallino da softair è una puntura breve, che dopo pochi minuti è già dimenticata.",
+    "note": "Le due sfere sono disegnate in proporzione tra loro.",
+    "softair": {
+      "name": "Softair",
+      "diameterMm": 6,
+      "mass": "0,2 g",
+      "energy": "< 1 J",
+      "feel": "Una puntura"
+    },
+    "paintball": {
+      "name": "Paintball",
+      "diameterMm": 17,
+      "mass": "3 g",
+      "energy": "6–12 J",
+      "feel": "Una botta secca"
+    }
+  },
+  "arena": {
+    "title": "Cosa trovate a Softair Milano",
+    "text": "Un villaggio militare al coperto di 1.500 m², con abitazioni, auto e torrette di vedetta, impianto audio ed effetti scenografici. Non un semplice sparatutto: missioni diverse una dopo l'altra, scelte in base al vostro gruppo e arbitrate dal nostro staff.",
+    "image": "/uploads/att-softair.jpeg",
+    "imageAlt": "Squadra di softair in tenuta tattica schierata lungo un muro dell'arena indoor di Softair Milano.",
+    "missionsTitle": "Alcune missioni",
+    "missions": [
+      {
+        "name": "The Last Flag",
+        "text": "Recuperate la bandiera della squadra avversaria."
+      },
+      {
+        "name": "Death Match",
+        "text": "Vince la squadra che elimina l'altra."
+      },
+      {
+        "name": "Highlander",
+        "text": "Tutti contro tutti: ne resterà soltanto uno."
+      },
+      {
+        "name": "VIP",
+        "text": "Scortate il testimone al punto sicuro senza che venga colpito."
+      },
+      {
+        "name": "Bomberman",
+        "text": "Disinnescate l'ordigno prima che scada il tempo."
+      },
+      {
+        "name": "Difesa del Bastione",
+        "text": "Resistete fino alla fine: il bastione non deve cadere."
+      }
+    ]
+  },
+  "firstTime": {
+    "title": "La prima volta? Ecco come funziona",
+    "steps": [
+      {
+        "title": "Prenotate",
+        "text": "Chiamateci o scriveteci con giorno, orario e numero di giocatori. Si gioca da 8 a 20: se siete meno di 8, vi uniamo a un altro gruppo."
+      },
+      {
+        "title": "Compilate i moduli",
+        "text": "I maggiorenni lo fanno online e ricevono un codice; i minorenni portano il modulo firmato da un genitore."
+      },
+      {
+        "title": "Briefing",
+        "text": "Lo staff vi consegna fucile, maschera e pettorina e spiega regole e sicurezza."
+      },
+      {
+        "title": "In campo",
+        "text": "1 ora e 45 minuti tra briefing e missioni, con 300 colpi inclusi e lo staff ad arbitrare."
+      }
+    ],
+    "includedTitle": "Tutto incluso per la prima volta",
+    "included": [
+      "Fucile softair",
+      "Maschera protettiva",
+      "Pettorina",
+      "300 colpi"
+    ],
+    "note": "Dai 12 anni compiuti."
+  },
+  "pricing": {
+    "title": "Quanto costa il softair",
+    "text": "Prezzi a persona. Alla prima volta si parte da Recluta: attrezzatura e 300 colpi inclusi.",
+    "tiers": [
+      {
+        "label": "Recluta",
+        "when": "Prima volta, attrezzatura inclusa",
+        "price": "35",
+        "unit": "€ a persona",
+        "note": "20 € il martedì pomeriggio",
+        "badge": "Per iniziare"
+      },
+      {
+        "label": "Maggiore",
+        "when": "Avete già giocato da noi (con tessera)",
+        "price": "20",
+        "unit": "€ a persona",
+        "note": "",
+        "badge": ""
+      },
+      {
+        "label": "Veterano",
+        "when": "Con la vostra attrezzatura",
+        "price": "15",
+        "unit": "€ a persona",
+        "note": "Pallini propri solo non bio, max 0,28 g",
+        "badge": ""
+      }
+    ],
+    "notes": [
+      "Ricarica da 300 colpi: 3 €.",
+      "Tessera Élite: al quinto timbro la partita è gratis."
+    ]
+  },
+  "reviews": {
+    "title": "Cosa dice chi ha giocato"
+  },
+  "faq": {
+    "title": "Softair e paintball: le domande più frequenti",
+    "items": [
+      {
+        "q": "Da voi si gioca a paintball?",
+        "a": "No: nella nostra arena di Milano si gioca a softair, oltre ad arcotag, tiro dinamico e nerf. Se cercavate il paintball, il softair vi dà la stessa adrenalina senza vernice e con molto meno dolore."
+      },
+      {
+        "q": "Qual è la differenza principale tra softair e paintball?",
+        "a": "Il softair punta su realismo e strategia, con repliche fedeli e pallini di plastica da 6 mm; il paintball è più immediato e usa sfere di vernice che macchiano."
+      },
+      {
+        "q": "Il softair fa male come il paintball?",
+        "a": "No. Un pallino da softair pesa circa 0,2 g contro i 3 g di una sfera da paintball e per legge resta sotto 1 joule: è una puntura breve, non una botta."
+      },
+      {
+        "q": "Il softair costa meno del paintball?",
+        "a": "In genere sì: i pallini costano poco e nella partita ne avete 300 inclusi, quindi si gioca più a lungo senza ricomprare munizioni."
+      },
+      {
+        "q": "Giocando a softair ci si sporca?",
+        "a": "No, i pallini non lasciano macchie: venite con vestiti comodi, meglio a maniche lunghe, e scarpe da ginnastica."
+      },
+      {
+        "q": "Posso giocare se non ho mai fatto né paintball né softair?",
+        "a": "Certo: vi diamo tutta l'attrezzatura, lo staff spiega regole e sicurezza e le missioni si scelgono in base all'esperienza del gruppo."
+      },
+      {
+        "q": "Da che età si gioca a softair?",
+        "a": "Dai 12 anni compiuti; i minorenni portano il modulo firmato da un genitore. Per i più piccoli c'è l'arcotag, dagli 8 anni."
+      },
+      {
+        "q": "Si gioca anche d'inverno o se piove?",
+        "a": "Sì, l'arena è al coperto. Non è riscaldata: d'inverno vestitevi a strati."
+      }
+    ]
+  },
+  "alternative": {
+    "title": "Nel gruppo qualcuno non se la sente?",
+    "text": "Provate l'arcotag: archi e frecce a punta morbida, dagli 8 anni, nella stessa arena. Perfetto per i gruppi misti e per i più piccoli.",
+    "label": "Scopri l'arcotag",
+    "href": "/arcotag",
+    "image": "/uploads/arcotag-hero.jpeg",
+    "imageAlt": "Due giocatori di arcotag con maschera protettiva tendono l'arco sopra una jeep con la rete, nell'arena indoor."
+  },
+  "cta": {
+    "title": "Pronti a provare il softair?",
+    "text": "Diteci giorno, orario e quanti siete: al resto pensiamo noi."
+  }
+}

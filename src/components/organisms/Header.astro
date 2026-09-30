@@ -1,148 +1,411 @@
 ---
 import navigation from '../../data/navigation.json';
+import settings from '../../data/settings.json';
+import Badge from '../atoms/Badge.astro';
+import Icon from '../atoms/Icon.astro';
+import type { NavItem } from '../../lib/nav';
 
-const { items } = navigation;
+// An entry the client left without a link and without sub-items would render a dead control: skip it.
+const items = (navigation.items as NavItem[])
+  .map((it) => ({ ...it, children: it.children?.filter((c) => c.label && c.href) }))
+  .filter((it) => it.label && (it.href || it.children?.length));
+const { cta } = navigation;
+const showCta = Boolean(cta?.label && cta?.href);
 
-// Active-page detection (normalise trailing slashes).
+// Active-page detection (normalise trailing slashes). A parent is active when one of its children is.
 const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const isActive = (href: string): boolean =>
-  href === '/' ? current === '/' : current === href || current.startsWith(href + '/');
+const isActive = (href?: string): boolean =>
+  !href ? false : href === '/' ? current === '/' : current === href || current.startsWith(href + '/');
+const isItemActive = (it: NavItem): boolean =>
+  it.children?.length ? it.children.some((c) => isActive(c.href)) : isActive(it.href);
+const ddId = (i: number) => `nav-dd-${i}`;
+
+// Desktop items are 44px tall (RESP-04); the tighter padding below 1280 keeps the pill on one line (RESP-09).
+const navItemClass = 'flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-sm transition-colors xl:px-4';
+const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
 ---
 
 {/* Floating nav overlaid on the full-bleed hero (no classic top bar). */}
 <header class="pointer-events-none absolute inset-x-0 top-0 z-50">
   <div class="shell pointer-events-auto flex items-center justify-between gap-4 py-5">
-    <a href="/" class="inline-flex items-center [filter:drop-shadow(0_1px_10px_rgba(0,0,0,0.6))]">
-      <img src="/logo/logo-white-120.webp" alt="SoftAir Milano" width="121" height="120" class="h-12 w-auto" />
+    <a href="/" class="inline-flex items-center [filter:drop-shadow(0_1px_10px_color-mix(in_srgb,var(--color-background)_60%,transparent))]">
+      <img src="/logo/logo-white-120.webp" alt={settings.siteName} width="121" height="120" class="h-12 w-auto" />
     </a>
 
     {/* Desktop: pill nav */}
     <nav
-      class="hidden items-center gap-1 rounded-full border border-white/10 bg-background/60 px-2 py-1.5 backdrop-blur-md lg:flex"
+      class="hidden items-center gap-0.5 rounded-full border border-foreground/10 bg-background/60 p-1 backdrop-blur-md lg:flex"
       aria-label="Principale"
     >
       {
-        items.map((it) => (
-          <a
-            href={it.href}
-            aria-current={isActive(it.href) ? 'page' : undefined}
-            class:list={[
-              'flex items-center gap-1.5 rounded-full px-4 py-2 text-sm transition-colors',
-              isActive(it.href) ? 'text-accent' : 'text-muted hover:bg-white/5 hover:text-accent',
-            ]}
-          >
-            {it.label}
-            {isActive(it.href) && (
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="8" r="6" />
-                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-              </svg>
-            )}
-          </a>
-        ))
+        items.map((it, i) =>
+          it.children?.length ? (
+            <div class="nav-dd relative" data-dd>
+              <button
+                type="button"
+                class:list={[
+                  navItemClass,
+                  'aria-expanded:bg-foreground/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+                  isItemActive(it) ? 'text-accent' : navIdleClass,
+                ]}
+                aria-expanded="false"
+                aria-controls={ddId(i)}
+                data-dd-toggle
+              >
+                {it.label}
+                {isItemActive(it) && <Icon name="award" size={15} />}
+                <Icon name="chevronDown" size={14} class="nav-dd__chevron" />
+              </button>
+
+              <div id={ddId(i)} class="nav-dd__panel">
+                <ul class="nav-dd__list">
+                  {it.children.map((c) => (
+                    <li>
+                      <a
+                        href={c.href}
+                        class="nav-dd__link"
+                        aria-current={isActive(c.href) ? 'page' : undefined}
+                        data-dd-link
+                      >
+                        <span class="nav-dd__row">
+                          <span class="nav-dd__label">{c.label}</span>
+                          {c.badge && <Badge>{c.badge}</Badge>}
+                        </span>
+                        {c.desc && <span class="nav-dd__desc">{c.desc}</span>}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <a
+              href={it.href}
+              aria-current={isActive(it.href) ? 'page' : undefined}
+              class:list={[navItemClass, isActive(it.href) ? 'text-accent' : navIdleClass]}
+            >
+              {it.label}
+              {isActive(it.href) && <Icon name="award" size={15} />}
+            </a>
+          )
+        )
       }
     </nav>
 
-    <a
-      href="#prenota"
-      class="hidden rounded-md bg-accent px-5 py-2.5 font-display text-sm font-semibold uppercase tracking-wide text-on-accent transition-colors hover:bg-accent-hover lg:inline-flex"
-    >
-      Prenota
-    </a>
+    {showCta && (
+      <a
+        href={cta.href}
+        class="hidden min-h-11 items-center rounded-md bg-accent px-5 font-display text-sm font-semibold uppercase tracking-wide whitespace-nowrap text-on-accent transition-colors hover:bg-accent-hover lg:inline-flex"
+      >
+        {cta.label}
+      </a>
+    )}
 
     {/* Mobile: floating pill toggle */}
     <button
       id="menu-toggle"
-      class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/10 bg-background/60 px-4 font-display text-sm uppercase tracking-wide text-foreground backdrop-blur-md lg:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      type="button"
+      class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-foreground/10 bg-background/60 px-4 font-display text-sm uppercase tracking-wide text-foreground backdrop-blur-md lg:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       aria-expanded="false"
       aria-controls="mobile-menu"
       aria-label="Apri il menu"
     >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
+      <Icon name="menu" size={20} />
       Menu
     </button>
   </div>
 
-  {/* Mobile: full-screen overlay menu */}
+  {/* Mobile: full-screen overlay menu. It scrolls natively on short phones, so Lenis leaves it alone. */}
   <nav
     id="mobile-menu"
-    class="mobile-menu pointer-events-auto fixed inset-0 z-[70] bg-background/98 backdrop-blur-md lg:hidden"
+    class="mobile-menu pointer-events-auto fixed inset-0 z-[70] overflow-y-auto overscroll-contain bg-background/98 backdrop-blur-md lg:hidden"
     data-open="false"
+    data-lenis-prevent
     aria-label="Menu"
   >
     <div class="shell flex items-center justify-between py-5">
-      <img src="/logo/logo-white-120.webp" alt="SoftAir Milano" width="121" height="120" class="h-11 w-auto" />
+      <img src="/logo/logo-white-120.webp" alt={settings.siteName} width="121" height="120" class="h-11 w-auto" />
       <button
         id="menu-close"
-        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        type="button"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-foreground/10 bg-foreground/5 text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         aria-label="Chiudi il menu"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <path d="M18 6 6 18"></path>
-          <path d="m6 6 12 12"></path>
-        </svg>
+        <Icon name="x" size={24} />
       </button>
     </div>
 
-    <div class="flex flex-1 flex-col items-center justify-center gap-1 px-6">
+    <div class="shell my-auto flex flex-col items-center gap-1 py-4">
       {
-        items.map((it) => (
-          <a
-            href={it.href}
-            aria-current={isActive(it.href) ? 'page' : undefined}
-            class:list={[
-              'flex items-center gap-2.5 py-3 font-display text-2xl uppercase tracking-wide transition-colors',
-              isActive(it.href) ? 'text-accent' : 'text-foreground hover:text-accent',
-            ]}
-          >
-            {it.label}
-            {isActive(it.href) && (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="8" r="6" />
-                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-              </svg>
-            )}
-          </a>
-        ))
+        items.map((it, i) =>
+          it.children?.length ? (
+            <div class="mm-group" role="group" aria-labelledby={`mm-group-${i}`}>
+              <p id={`mm-group-${i}`} class="mm-group__label">{it.label}</p>
+              <ul class="mm-group__grid">
+                {it.children.map((c) => (
+                  <li>
+                    <a href={c.href} class="mm-group__link" aria-current={isActive(c.href) ? 'page' : undefined}>
+                      <span class="mm-group__name">{c.label}</span>
+                      {c.badge && <Badge>{c.badge}</Badge>}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <a
+              href={it.href}
+              aria-current={isActive(it.href) ? 'page' : undefined}
+              class:list={[
+                'flex items-center gap-2.5 py-3 font-display text-2xl uppercase tracking-wide transition-colors',
+                isActive(it.href) ? 'text-accent' : 'text-foreground hover:text-accent',
+              ]}
+            >
+              {it.label}
+              {isActive(it.href) && <Icon name="award" size={20} />}
+            </a>
+          )
+        )
       }
     </div>
 
-    <div class="shell pb-10">
-      <a
-        href="#prenota"
-        class="block rounded-md bg-accent px-5 py-3.5 text-center font-display text-base font-semibold uppercase tracking-wide text-on-accent transition-colors hover:bg-accent-hover"
-      >
-        Prenota la tua partita
-      </a>
-    </div>
+    {showCta && (
+      <div class="shell pb-10">
+        <a
+          href={cta.href}
+          class="block rounded-md bg-accent px-5 py-3.5 text-center font-display text-base font-semibold uppercase tracking-wide text-on-accent transition-colors hover:bg-accent-hover"
+        >
+          {cta.label}
+        </a>
+      </div>
+    )}
   </nav>
 </header>
 
+<style is:global>
+  /* Desktop "Attività" dropdown: a disclosure (button + list of links), not an ARIA menu. The panel
+     is solid rather than blurred: a backdrop-filter nested inside the blurred pill cannot sample the page. */
+  .nav-dd__chevron { transition: transform var(--duration-base) var(--ease-out-expo); }
+  .nav-dd[data-open='true'] .nav-dd__chevron { transform: rotate(180deg); }
+
+  .nav-dd__panel {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    left: 0;
+    width: 21rem;
+    padding: 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--color-surface) 97%, transparent);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition:
+      opacity var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-base) var(--ease-out-expo),
+      visibility 0s linear var(--duration-base);
+  }
+  /* The client can reorder the menu: a dropdown in last place opens leftwards so it stays under the pill. */
+  .nav-dd:last-child .nav-dd__panel { left: auto; right: 0; }
+  /* Invisible bridge so the pointer can travel from the button to the panel without closing it. */
+  .nav-dd__panel::before { content: ''; position: absolute; inset: -0.75rem 0 100% 0; }
+  .nav-dd[data-open='true'] .nav-dd__panel {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-base) var(--ease-out-expo),
+      visibility 0s;
+  }
+
+  .nav-dd__list { display: grid; gap: 0.125rem; margin: 0; padding: 0; list-style: none; }
+  .nav-dd__link {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out-expo);
+  }
+  /* Hover and focus are shown by the background: the accent label is reserved for the current page. */
+  .nav-dd__link:hover,
+  .nav-dd__link:focus-visible { background: color-mix(in srgb, var(--color-foreground) 7%, transparent); }
+  .nav-dd__row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .nav-dd__label {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+  }
+  .nav-dd__link[aria-current='page'] .nav-dd__label { color: var(--color-accent); }
+  .nav-dd__desc { font-size: 0.8125rem; line-height: 1.4; color: var(--color-muted); }
+
+  /* Mobile menu: the activities as a compact 2×2 group, so the list stays short on small phones. */
+  .mm-group { width: 100%; max-width: 26rem; margin: 0.5rem 0 0.75rem; }
+  .mm-group__label {
+    margin: 0 0 0.6rem;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .mm-group__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+  .mm-group__grid > li { display: flex; }
+  .mm-group__link {
+    display: flex;
+    flex: 1;
+    min-height: 4.25rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--color-foreground) 3%, transparent);
+    text-decoration: none;
+    transition:
+      border-color var(--duration-fast) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .mm-group__link:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 50%, transparent);
+    background: color-mix(in srgb, var(--color-foreground) 5%, transparent);
+  }
+  .mm-group__name {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+  }
+  .mm-group__link[aria-current='page'] { border-color: var(--color-accent); }
+  .mm-group__link[aria-current='page'] .mm-group__name { color: var(--color-accent); }
+</style>
+
 <script>
+  const header = document.querySelector<HTMLElement>('body > header');
+
+  // Mobile full-screen menu: modal while open.
   const toggle = document.getElementById('menu-toggle');
   const closeBtn = document.getElementById('menu-close');
   const menu = document.getElementById('mobile-menu');
-  if (toggle && menu) {
-    const setOpen = (open: boolean) => {
-      menu.setAttribute('data-open', String(open));
+  if (header && toggle && menu) {
+    const bar = toggle.closest<HTMLElement>('.shell');
+    let inerted: HTMLElement[] = [];
+    const isOpen = () => menu.dataset.open === 'true';
+    const setOpen = (open: boolean, restoreFocus = true) => {
+      if (open === isOpen()) return;
+      menu.dataset.open = String(open);
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
       document.body.style.overflow = open ? 'hidden' : '';
-      // Focus containment: while the overlay is open, the rest of the page is inert so Tab never
-      // lands on links hidden behind the panel (WCAG 2.4.7 / 2.4.3).
-      for (const el of document.querySelectorAll<HTMLElement>('main, footer, header > .shell')) el.toggleAttribute('inert', open);
-      if (open) closeBtn?.focus();
-      else toggle.focus();
+      // overflow: hidden does not stop Lenis, which would keep scrolling the page behind the overlay.
+      const lenis = (window as any).__lenis;
+      if (open) lenis?.stop();
+      else lenis?.start();
+      // Everything outside the overlay (skip link, header bar, main, footer, back-to-top…) is inert, so Tab
+      // and screen readers stay inside. Only what the menu made inert is released again.
+      if (open) {
+        inerted = [...document.body.children, bar].filter(
+          (el): el is HTMLElement => el instanceof HTMLElement && el !== header && !(el instanceof HTMLScriptElement) && !el.inert,
+        );
+        for (const el of inerted) el.inert = true;
+        closeBtn?.focus();
+      } else {
+        for (const el of inerted) el.inert = false;
+        inerted = [];
+        if (restoreFocus) toggle.focus();
+      }
     };
-    toggle.addEventListener('click', () => setOpen(menu.getAttribute('data-open') !== 'true'));
+    toggle.addEventListener('click', () => setOpen(!isOpen()));
     closeBtn?.addEventListener('click', () => setOpen(false));
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && menu.getAttribute('data-open') === 'true') setOpen(false);
+      if (e.key === 'Escape' && isOpen()) setOpen(false);
     });
-    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    // Focus goes back to the menu button, unless the link leads to a section of this page (handled above).
+    for (const a of menu.querySelectorAll('a')) a.addEventListener('click', () => setOpen(false, !sectionFor(a)));
+    // The overlay is hidden from 1024px up: widening the window must not leave the page inert.
+    matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
+      if (e.matches) setOpen(false, false);
+    });
+  }
+
+  // Desktop dropdowns: click, hover (pointer devices only, with open/close delays) and keyboard.
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  for (const dd of document.querySelectorAll<HTMLElement>('[data-dd]')) {
+    const btn = dd.querySelector<HTMLButtonElement>('[data-dd-toggle]');
+    const links = [...dd.querySelectorAll<HTMLAnchorElement>('[data-dd-link]')];
+    if (!btn || !links.length) continue;
+    let timer: number | undefined;
+    // The click that usually follows a hover must not close the panel the hover has just opened.
+    let openedByHover = false;
+
+    const isOpen = () => dd.dataset.open === 'true';
+    const setOpen = (open: boolean) => {
+      window.clearTimeout(timer);
+      openedByHover = false;
+      dd.dataset.open = String(open);
+      btn.setAttribute('aria-expanded', String(open));
+    };
+    const focusLink = (i: number) => links[(i + links.length) % links.length].focus();
+
+    btn.addEventListener('click', () => {
+      if (openedByHover) openedByHover = false;
+      else setOpen(!isOpen());
+    });
+    btn.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      e.preventDefault();
+      // The panel handler below must not see this key too, or focus moves a second time.
+      e.stopPropagation();
+      setOpen(true);
+      focusLink(e.key === 'ArrowDown' ? 0 : -1);
+    });
+    dd.addEventListener('keydown', (e) => {
+      const i = links.indexOf(document.activeElement as HTMLAnchorElement);
+      if (!isOpen() || i < 0) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        focusLink(e.key === 'ArrowDown' ? i + 1 : i - 1);
+      } else if (e.key === 'Home' || e.key === 'End') {
+        e.preventDefault();
+        focusLink(e.key === 'Home' ? 0 : -1);
+      }
+    });
+    // Escape closes the panel wherever focus is, since hover alone can open it (WCAG 1.4.13).
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !isOpen()) return;
+      const hadFocus = dd.contains(document.activeElement);
+      setOpen(false);
+      if (hadFocus) btn.focus();
+    });
+    // Tabbing out of the dropdown closes it.
+    dd.addEventListener('focusout', (e) => {
+      if (!dd.contains(e.relatedTarget as Node | null)) setOpen(false);
+    });
+    if (canHover) {
+      dd.addEventListener('mouseenter', () => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          if (isOpen()) return;
+          setOpen(true);
+          openedByHover = true;
+        }, 80);
+      });
+      dd.addEventListener('mouseleave', () => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => setOpen(false), 220);
+      });
+    }
+    document.addEventListener('click', (e) => {
+      if (isOpen() && !dd.contains(e.target as Node)) setOpen(false);
+    });
   }
 </script>

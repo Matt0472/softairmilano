@@ -1,0 +1,120 @@
+---
+// Activity page template: one route per file in src/data/activities/ (a Pages
+// CMS collection), slug = file name. Every section renders only when its data is
+// present, so an activity can leave a block empty (CMS-10).
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/organisms/PageHero.astro';
+import AnswerBlock from '../components/organisms/AnswerBlock.astro';
+import StepTimeline from '../components/organisms/StepTimeline.astro';
+import SplitFeature from '../components/organisms/SplitFeature.astro';
+import AudienceGrid from '../components/organisms/AudienceGrid.astro';
+import PriceTiers from '../components/organisms/PriceTiers.astro';
+import Reviews from '../components/organisms/Reviews.astro';
+import FaqAccordion from '../components/organisms/FaqAccordion.astro';
+import ActivityLinks from '../components/organisms/ActivityLinks.astro';
+import BookingCta from '../components/organisms/BookingCta.astro';
+import IncludedList from '../components/molecules/IncludedList.astro';
+import Trajectory from '../components/molecules/Trajectory.astro';
+import Reveal from '../components/molecules/Reveal.astro';
+import home from '../data/home.json';
+import navigation from '../data/navigation.json';
+import { breadcrumbLd, faqLd } from '../lib/jsonld';
+import { flattenNav, type NavItem } from '../lib/nav';
+
+interface Cta { label: string; href: string }
+interface Activity {
+  name: string;
+  seo: { title: string; description?: string; image?: string; imageAlt?: string };
+  hero: {
+    eyebrow?: string;
+    title: string;
+    subtitle?: string;
+    image: string;
+    imageMobile?: string;
+    imageAlt: string;
+    ctaPrimary: Cta;
+    ctaSecondary?: Cta;
+  };
+  facts?: { value: string; label: string }[];
+  intro?: { title: string; text: string; points?: { title: string; text: string }[] };
+  evening?: { eyebrow?: string; title: string; text?: string; steps?: { time?: string; title: string; text: string }[] };
+  howto?: { title: string; text?: string; includedTitle?: string; included?: string[]; image: string; imageAlt: string };
+  audiences?: { title: string; items?: { title: string; text: string; href?: string; featured?: boolean }[] };
+  pricing?: {
+    title: string;
+    text?: string;
+    tiers?: { label: string; when?: string; price: string; unit?: string; note?: string; badge?: string }[];
+    notes?: string[];
+  };
+  reviews?: { title: string };
+  faq?: { title: string; items?: { q: string; a: string }[] };
+  related?: { title: string };
+  cta?: { title: string; text?: string };
+}
+
+export function getStaticPaths() {
+  const files = import.meta.glob<{ default: Activity }>('../data/activities/*.json', { eager: true });
+  return Object.entries(files).map(([file, mod]) => ({
+    params: { activity: file.split('/').pop()!.replace(/\.json$/, '') },
+    props: { data: mod.default },
+  }));
+}
+
+const { data } = Astro.props as { data: Activity };
+const { activity } = Astro.params;
+const path = `/${activity}`;
+
+// Hero signature per activity (structure, not content): arcotag flies an arrow.
+const signature: Record<string, 'trajectory'> = { arcotag: 'trajectory' };
+
+// A section renders only when the client filled it in: Pages CMS always saves the object, so
+// its title (and its list, where it has one) is what decides (CMS-10).
+const has = (v?: string) => typeof v === 'string' && v.trim().length > 0;
+const { intro, evening, howto, audiences, pricing, reviews, faq, related, cta } = data;
+
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: data.name, href: path },
+];
+// "Provate anche": the other activities, with the one-line description from the menu when there is one.
+const menuDesc = new Map(flattenNav(navigation.items as NavItem[]).map((n) => [n.href, 'desc' in n ? n.desc : undefined]));
+const relatedItems = home.activities
+  .filter((a) => a.href !== path)
+  .map((a) => ({ ...a, desc: menuDesc.get(a.href) || a.desc }));
+const faqItems = (faq?.items ?? []).filter((f) => f.q?.trim() && f.a?.trim());
+const faqData = faqLd(faqItems);
+const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])];
+---
+
+<BaseLayout title={data.seo.title} description={data.seo.description} image={data.seo.image} imageAlt={data.seo.imageAlt || data.hero.imageAlt} jsonLd={jsonLd}>
+  <PageHero {...data.hero} facts={data.facts} crumbs={crumbs}>
+    {signature[activity!] === 'trajectory' && <Trajectory slot="decor" />}
+  </PageHero>
+
+  {intro && has(intro.title) && has(intro.text) && <AnswerBlock {...intro} />}
+
+  {evening && has(evening.title) && !!evening.steps?.length && <StepTimeline {...evening} steps={evening.steps} id="serata" />}
+
+  {howto && has(howto.title) && has(howto.image) && (
+    <SplitFeature title={howto.title} text={howto.text} image={howto.image} imageAlt={howto.imageAlt} ratio="4 / 5">
+      {!!howto.included?.length && <IncludedList title={howto.includedTitle} items={howto.included} />}
+    </SplitFeature>
+  )}
+
+  {audiences && has(audiences.title) && !!audiences.items?.length && <AudienceGrid title={audiences.title} items={audiences.items} />}
+
+  {pricing && has(pricing.title) && !!pricing.tiers?.length && (
+    <PriceTiers title={pricing.title} text={pricing.text} tiers={pricing.tiers} notes={pricing.notes} cta={data.hero.ctaPrimary} />
+  )}
+
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
+
+  {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
+
+  {related && has(related.title) && <ActivityLinks title={related.title} items={relatedItems} />}
+
+  {cta && has(cta.title) && <BookingCta title={cta.title} text={cta.text} />}
+
+  <Reveal />
+</BaseLayout>

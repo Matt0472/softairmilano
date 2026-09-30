@@ -1,0 +1,223 @@
+---
+// Softair VS Paintball, point by point: a real table with explicit ARIA roles,
+// because the grid display drops native table semantics in some browsers.
+// Only the softair column carries the accent.
+
+import SectionHead from '../molecules/SectionHead.astro';
+
+interface Row {
+  topic: string;
+  softair: string;
+  paintball: string;
+}
+interface Props {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+  softairLabel: string;
+  paintballLabel: string;
+  rows: Row[];
+  id?: string;
+  headingId?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  text,
+  softairLabel,
+  paintballLabel,
+  rows,
+  id,
+  headingId = 'vs-title',
+} = Astro.props;
+const list = (rows ?? []).filter((r) => r?.topic?.trim());
+const hasTitle = !!title?.trim();
+---
+
+{list.length > 0 && (
+  <section class="vs" id={id} aria-labelledby={hasTitle ? headingId : undefined}>
+    <div class="shell">
+      <SectionHead eyebrow={eyebrow} title={title} text={text} id={headingId} />
+
+      <div class="vs__board" data-reveal>
+        <table class="vs__table" role="table" aria-labelledby={hasTitle ? headingId : undefined}>
+          <thead class="vs__thead" role="rowgroup">
+            <tr class="vs__row vs__row--head" role="row">
+              <td class="vs__corner" role="cell"></td>
+              <th class="vs__label vs__label--s" role="columnheader" scope="col">
+                <span class="vs__label-text">{softairLabel}</span>
+              </th>
+              <th class="vs__label vs__label--p" role="columnheader" scope="col">
+                <span class="vs__badge" aria-hidden="true">VS</span>
+                <span class="vs__label-text">{paintballLabel}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup">
+            {list.map((r) => (
+              <tr class="vs__row" role="row">
+                <th class="vs__topic" role="rowheader" scope="row">{r.topic}</th>
+                <td class="vs__cell vs__cell--s" role="cell">{r.softair}</td>
+                <td class="vs__cell vs__cell--p" role="cell">{r.paintball}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .vs {
+    --accent: var(--color-accent);
+    --steel: var(--color-steel);
+    --topic-w: minmax(9rem, 0.62fr);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  .vs__board { margin-top: clamp(2.5rem, 5vw, 3.75rem); }
+
+  .vs__table,
+  .vs__thead,
+  .vs__table tbody { display: block; }
+  .vs__table { width: 100%; border-collapse: collapse; }
+
+  .vs__row {
+    display: grid;
+    grid-template-columns: var(--topic-w) minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .vs__row > * {
+    display: block;
+    text-align: left;
+    padding: clamp(1rem, 1.8vw, 1.4rem) clamp(1rem, 2.2vw, 1.75rem);
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* Head: the two names, big; the VS badge straddles the split. */
+  .vs__row--head > * { border-top: 0; padding-block: clamp(1.25rem, 2.5vw, 1.9rem); }
+  .vs__label {
+    position: relative;
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(1.9rem, 4.4vw, 3.4rem);
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+  .vs__label--s {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 9%, var(--color-surface));
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: inset 0 3px 0 var(--accent);
+  }
+  .vs__label--p {
+    color: var(--color-muted);
+    padding-left: clamp(2.25rem, 4vw, 3.25rem);
+  }
+  .vs__badge {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: clamp(46px, 5vw, 62px);
+    height: clamp(46px, 5vw, 62px);
+    border-radius: 50%;
+    background: var(--color-background);
+    border: 2px solid var(--color-border);
+    color: var(--color-foreground);
+    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+    letter-spacing: 0.04em;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+  .vs__board.is-armed .vs__badge { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+  .vs__board.is-armed.is-in .vs__badge {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+    transition:
+      transform calc(var(--duration-slow) * 1.75) var(--ease-out-expo) 0.15s,
+      opacity var(--duration-base) var(--ease-out-expo) 0.15s;
+  }
+
+  .vs__topic {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.92rem;
+    letter-spacing: 0.1em;
+    line-height: 1.3;
+    color: var(--color-foreground);
+  }
+  .vs__cell {
+    font-size: clamp(0.97rem, 1.3vw, 1.06rem);
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+  .vs__cell--s {
+    color: var(--color-foreground);
+    background: color-mix(in srgb, var(--accent) 9%, var(--color-surface));
+    border-top-color: color-mix(in srgb, var(--accent) 16%, var(--color-border));
+  }
+  .vs__cell--p {
+    color: var(--color-muted);
+    padding-left: clamp(2.25rem, 4vw, 3.25rem);
+  }
+  .vs__row:last-child .vs__cell--s { border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+  .vs__row:last-child > * { border-bottom: 1px solid var(--color-border); }
+  .vs__row:last-child .vs__cell--s { border-bottom-color: transparent; }
+
+  /* Tablet: narrower topic column, same board. */
+  @media (max-width: 1023px) {
+    .vs { --topic-w: minmax(7.5rem, 0.5fr); }
+    .vs__topic { font-size: 0.82rem; }
+  }
+
+  /* Phones: topic on its own line, then the two answers side by side under a
+     sticky header that keeps "which side is which" in view. */
+  @media (max-width: 767px) {
+    .vs__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .vs__row > * { padding: 0.85rem 0.9rem; }
+    .vs__thead {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--color-background);
+      box-shadow: 0 1px 0 var(--color-border);
+    }
+    .vs__row--head > * { padding-block: 0.9rem; }
+    .vs__corner {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .vs__label { font-size: clamp(1.35rem, 6.4vw, 1.9rem); }
+    .vs__label--p,
+    .vs__cell--p { padding-left: 1.6rem; }
+    .vs__badge { width: 38px; height: 38px; font-size: 0.82rem; }
+    .vs__topic {
+      grid-column: 1 / -1;
+      padding: 1.4rem 0 0.6rem;
+      border-top: 0;
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      color: var(--color-muted);
+    }
+    .vs__cell { font-size: 0.93rem; line-height: 1.45; }
+    .vs__cell--s { border-radius: var(--radius-md) 0 0 var(--radius-md); border-top: 0; }
+    .vs__cell--p { border-top: 0; border-block: 1px solid var(--color-border); border-right: 1px solid var(--color-border); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+    .vs__row:last-child .vs__cell--s { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+    .vs__row:last-child > * { border-bottom: 0; }
+    .vs__row:last-child .vs__cell--p { border-bottom: 1px solid var(--color-border); }
+    .vs__row:last-child .vs__topic { border-bottom: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vs__board.is-armed .vs__badge { transform: translate(-50%, -50%); opacity: 1; }
+  }
+</style>

@@ -1,0 +1,218 @@
+{
+  "name": "Arcotag",
+  "seo": {
+    "title": "Arcotag Milano al coperto: serata tra amici | SoftAir Milano",
+    "description": "Arcotag a Milano in un'arena indoor di 1.500 m²: archi e frecce a punta morbida, squadre da 6 a 25, dagli 8 anni. La serata tra amici da prenotare.",
+    "image": "/uploads/arcotag-og.jpg",
+    "imageAlt": "Due giocatori di arcotag con maschera protettiva tendono l'arco nell'arena indoor di Softair Milano."
+  },
+  "hero": {
+    "eyebrow": "Arena indoor · Settimo Milanese",
+    "title": "Arcotag a Milano",
+    "subtitle": "Archi, frecce a punta morbida, due squadre e un'arena al coperto: la serata di gruppo che racconterete per settimane.",
+    "image": "/uploads/arcotag-hero.jpeg",
+    "imageMobile": "/uploads/arcotag-hero-mobile.jpeg",
+    "imageAlt": "Due giocatori di arcotag con maschera protettiva tendono l'arco sopra una jeep con la rete, nell'arena indoor di Softair Milano.",
+    "ctaPrimary": {
+      "label": "Prenota",
+      "href": "#prenota"
+    },
+    "ctaSecondary": {
+      "label": "Come funziona",
+      "href": "#serata"
+    }
+  },
+  "facts": [
+    {
+      "value": "6–25",
+      "label": "giocatori"
+    },
+    {
+      "value": "60 min",
+      "label": "di battaglia"
+    },
+    {
+      "value": "8+",
+      "label": "anni"
+    },
+    {
+      "value": "1.500 m²",
+      "label": "al coperto"
+    }
+  ],
+  "intro": {
+    "title": "Cos'è l'arcotag",
+    "text": "L'arcotag è una battaglia a squadre con archi e frecce a punta morbida: si colpiscono gli avversari per eliminarli, come nel softair, ma con l'arco. Gli archi hanno un sistema che rende facilissimo incoccare e tirare, quindi può giocare chiunque, anche chi non ha mai preso in mano un arco. Da noi si gioca a Settimo Milanese, alle porte di Milano, in un'arena indoor di 1.500 m², con missioni diverse una dopo l'altra.",
+    "points": [
+      {
+        "title": "Nessuna esperienza",
+        "text": "Il sistema degli archi rende semplice incoccare e scoccare: dopo il briefing sapete già giocare."
+      },
+      {
+        "title": "Frecce a punta morbida",
+        "text": "Le frecce non hanno punta: l'adrenalina è vera, i rischi no."
+      },
+      {
+        "title": "Si ride tantissimo",
+        "text": "Agguati, ritirate, frecce schivate all'ultimo: uno spettacolo da giocare e da guardare."
+      }
+    ]
+  },
+  "evening": {
+    "eyebrow": "Il vostro sabato sera",
+    "title": "La vostra serata, un passo alla volta",
+    "text": "Che siate in 6 o in 25, al resto pensiamo noi. Ecco come va una serata di arcotag.",
+    "steps": [
+      {
+        "time": "Arrivo",
+        "title": "Vi accogliamo",
+        "text": "Arrivate, lasciate le giacche e ritirate l'attrezzatura. I maggiorenni hanno già compilato il modulo online."
+      },
+      {
+        "time": "Briefing",
+        "title": "Regole e missioni",
+        "text": "Lo staff vi spiega come si usa l'arco, le regole e le missioni della serata."
+      },
+      {
+        "time": "60 minuti",
+        "title": "Battaglia",
+        "text": "Due squadre, i ripari, una missione dopo l'altra. Si corre, ci si copre, si tira: un'ora che vola."
+      },
+      {
+        "time": "+45 minuti",
+        "title": "Festa in saletta",
+        "text": "Se volete, la serata continua nella saletta: torta, rinfresco o catering, e tutte le frecce da raccontare."
+      }
+    ]
+  },
+  "howto": {
+    "title": "Come si gioca",
+    "text": "Due squadre si affrontano tra bunker e ripari: chi viene colpito da una freccia è eliminato, vince la squadra che resta in piedi o completa la missione. Le missioni cambiano durante la sessione, così nessuna partita è uguale all'altra.",
+    "includedTitle": "Tutto incluso",
+    "included": [
+      "Arco e frecce a punta morbida",
+      "Maschera protettiva",
+      "Briefing con lo staff",
+      "Arena al coperto, anche se piove"
+    ],
+    "image": "/uploads/arcotag-azione.jpeg",
+    "imageAlt": "Due arcieri con maschera protettiva mirano con l'arco dalla porta di una casetta di legno coperta da una rete mimetica."
+  },
+  "audiences": {
+    "title": "Perfetto per",
+    "items": [
+      {
+        "title": "Serata tra amici",
+        "text": "L'alternativa al solito aperitivo: un'ora di battaglia, poi a cena con qualcosa da raccontare.",
+        "href": "#prenota",
+        "featured": true
+      },
+      {
+        "title": "Compleanni",
+        "text": "Dagli 8 anni in su, con la saletta per la torta: la festa che ricordano i bambini e anche i grandi.",
+        "href": "/festa-di-compleanno",
+        "featured": false
+      },
+      {
+        "title": "Addio al celibato e al nubilato",
+        "text": "Lo sposo contro tutti, frecce morbide e nessun rischio per il grande giorno.",
+        "href": "/addio-al-celibato-nubilato",
+        "featured": false
+      },
+      {
+        "title": "Team building",
+        "text": "Fino a 20 persone, in arena o nella vostra location: strategia, comunicazione e risate.",
+        "href": "/teambuilding",
+        "featured": false
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Prezzi dell'arcotag a Milano",
+    "text": "Prezzo a persona, attrezzatura inclusa. Cambia in base al giorno e all'orario.",
+    "tiers": [
+      {
+        "label": "Pomeriggio",
+        "when": "Lun–ven, 14:00–17:30",
+        "price": "15",
+        "unit": "€ a persona",
+        "note": "",
+        "badge": ""
+      },
+      {
+        "label": "Sera",
+        "when": "Lun–gio, 17:30–20:30",
+        "price": "20",
+        "unit": "€ a persona",
+        "note": "",
+        "badge": "Serata tra amici"
+      },
+      {
+        "label": "Weekend",
+        "when": "Ven–dom",
+        "price": "25",
+        "unit": "€ a persona",
+        "note": "20 € a persona per gruppi di oltre 20",
+        "badge": ""
+      }
+    ],
+    "notes": [
+      "Prenotazione obbligatoria."
+    ]
+  },
+  "reviews": {
+    "title": "Cosa dice chi ha giocato"
+  },
+  "faq": {
+    "title": "Domande frequenti sull'arcotag",
+    "items": [
+      {
+        "q": "Da che età si può giocare ad arcotag?",
+        "a": "Dagli 8 anni compiuti. I minorenni portano il modulo firmato da un genitore."
+      },
+      {
+        "q": "Quanti giocatori servono?",
+        "a": "Si gioca da 6 a 25 persone: perfetto per una compagnia di amici, una festa di compleanno o un team di lavoro."
+      },
+      {
+        "q": "Quanto dura una partita?",
+        "a": "60 minuti di gioco. Se prenotate la saletta, avete altri 45 minuti per festeggiare."
+      },
+      {
+        "q": "Bisogna saper tirare con l'arco?",
+        "a": "No. Gli archi hanno un sistema che facilita l'incocco e il tiro: dopo il briefing può giocare chiunque."
+      },
+      {
+        "q": "Fa male essere colpiti?",
+        "a": "Le frecce non hanno punta e si gioca con la maschera protettiva: il colpo si sente, ma il gioco è pensato per divertirsi in sicurezza."
+      },
+      {
+        "q": "Cosa devo indossare?",
+        "a": "Maglietta a maniche lunghe o felpa, pantaloni lunghi e scarpe comode. L'arena non è riscaldata né climatizzata: d'inverno vestitevi a strati."
+      },
+      {
+        "q": "Si gioca anche se piove?",
+        "a": "Sì, l'arena è al coperto: si gioca tutto l'anno, con qualsiasi tempo."
+      },
+      {
+        "q": "Possiamo festeggiare un compleanno?",
+        "a": "Sì: dopo la partita potete usare la saletta per 45 minuti, portare la torta o chiedere il nostro catering."
+      },
+      {
+        "q": "Come si prenota?",
+        "a": "Chiamateci al 375 595 6805 o scriveteci a info@softairmilano.it indicando giorno, orario e numero di giocatori. La prenotazione è obbligatoria."
+      },
+      {
+        "q": "Dove si trova l'arena?",
+        "a": "In Via Melegnano 26 a Settimo Milanese, a pochi minuti da Milano: parcheggio facile e bus 433 dalla metro M1 Bisceglie."
+      }
+    ]
+  },
+  "related": {
+    "title": "Provate anche"
+  },
+  "cta": {
+    "title": "Prenotate la vostra battaglia",
+    "text": "Diteci giorno, orario e quanti siete: al resto pensiamo noi."
+  }
+}

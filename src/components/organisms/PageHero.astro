@@ -1,0 +1,402 @@
+---
+// Full-bleed hero for inner pages. The LCP element is the H1 or the lede (Chromium
+// ignores full-viewport images), so neither ever gets an entrance animation (DES-08).
+// An optional `decor` slot has its own grid area, so decoration never covers the copy.
+
+import Button from '../atoms/Button.astro';
+import Picture from '../atoms/Picture.astro';
+import Breadcrumb from '../molecules/Breadcrumb.astro';
+import FactStrip from '../molecules/FactStrip.astro';
+
+interface Cta {
+  label?: string;
+  href?: string;
+}
+interface Fact {
+  value: string;
+  label: string;
+}
+interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  /** Desktop image, served from /uploads. */
+  image: string;
+  /** Dedicated portrait crop for phones and portrait tablets (DES-09). */
+  imageMobile?: string;
+  imageAlt: string;
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  ctaPrimary?: Cta;
+  ctaSecondary?: Cta;
+  facts?: Fact[];
+  crumbs?: Crumb[];
+}
+
+const {
+  image,
+  imageMobile,
+  imageAlt,
+  eyebrow,
+  title,
+  subtitle,
+  ctaPrimary,
+  ctaSecondary,
+  facts = [],
+  crumbs = [],
+} = Astro.props;
+
+// Any portrait screen below desktop gets the vertical crop; a landscape phone keeps the wide photo.
+const portraitMedia = '(max-width: 1023px) and (orientation: portrait)';
+// A button emptied in the CMS disappears instead of rendering blank (CMS-10).
+const isComplete = (c?: Cta): c is Required<Cta> => Boolean(c?.label?.trim() && c?.href?.trim());
+const primary = isComplete(ctaPrimary) ? ctaPrimary : undefined;
+const secondary = isComplete(ctaSecondary) ? ctaSecondary : undefined;
+
+const hasDecor = Astro.slots.has('decor');
+// A question headline ("…? Prova il softair") shows its answer on its own line.
+const question = title.match(/^(.+?\?)\s+(.+)$/);
+// Long headlines get a smaller scale so they hold in 2–3 lines on desktop.
+const isLong = title.length > 28;
+---
+
+<section class:list={['phero', hasDecor && 'phero--decor']}>
+  {image && (
+    <Picture
+      src={image}
+      srcMobile={imageMobile}
+      alt={imageAlt}
+      mobileMedia={portraitMedia}
+      eager
+      class="phero__bg"
+    />
+  )}
+  <div class="phero__scrim" aria-hidden="true"></div>
+
+  <div class="phero__grid shell">
+    {crumbs.length > 0 && <Breadcrumb items={crumbs} class="phero__crumbs" />}
+
+    {hasDecor && (
+      <div class="phero__decor" aria-hidden="true">
+        <slot name="decor" />
+      </div>
+    )}
+
+    <div class="phero__content">
+      {eyebrow && <p class="phero__eyebrow">{eyebrow}</p>}
+      <h1 class:list={['phero__title', isLong && 'phero__title--long']}>
+        {question ? (
+          <>{question[1]} <span class="phero__answer">{question[2]}</span></>
+        ) : (
+          title
+        )}
+      </h1>
+      {subtitle && <p class="phero__lede">{subtitle}</p>}
+      {(primary || secondary) && (
+        <div class="phero__cta">
+          {primary && (
+            <Button href={primary.href} variant="primary" class="phero__btn">{primary.label}</Button>
+          )}
+          {secondary && (
+            <Button href={secondary.href} variant="secondary" class="phero__btn phero__btn--on-photo">
+              {secondary.label}
+            </Button>
+          )}
+        </div>
+      )}
+    </div>
+
+    {facts.length > 0 && <FactStrip facts={facts} class="phero__facts" />}
+  </div>
+</section>
+
+<style is:global>
+  .phero {
+    --accent: var(--color-accent);
+    --ink: var(--color-background);
+    /* Small text over the photo sits on this chip: at 82% ink even a white patch
+       behind it keeps muted text above 5:1 (A11Y-02). */
+    --chip: color-mix(in srgb, var(--ink) 82%, transparent);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--ink);
+  }
+
+  .phero picture,
+  .phero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .phero__bg {
+    object-fit: cover;
+    object-position: 50% 40%;
+  }
+  /* The vertical crop keeps its subject in the top third (DES-09). */
+  @media (max-width: 1023px) and (orientation: portrait) {
+    .phero__bg { object-position: 50% 30%; }
+  }
+
+  /* Only a light band under the floating header and a soft fade into the next
+     section: the copy carries its own gradient, so the photo stays full (DES-09). */
+  .phero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--ink) 62%, transparent) 0%,
+        transparent 24%),
+      linear-gradient(0deg,
+        color-mix(in srgb, var(--ink) 60%, transparent) 0%,
+        transparent 20%);
+  }
+
+  .phero__grid {
+    position: relative;
+    z-index: 2;
+    min-height: 100svh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: "crumbs" "decor" "content" "facts";
+    /* Room for the floating header (logo 48px + 20px padding each side). */
+    padding-top: 5.75rem;
+    padding-bottom: clamp(1.25rem, 3.5vw, 2.25rem);
+  }
+  .phero__crumbs {
+    grid-area: crumbs;
+    justify-self: start;
+    max-width: 100%;
+    padding-inline: 0.25rem;
+    border-radius: var(--radius-sm);
+    background: var(--chip);
+  }
+  /* The ring stays inside the chip, where its contrast is known. */
+  .phero__crumbs .crumbs__link:focus-visible { outline-offset: -2px; }
+
+  /* Decoration gets exactly the free space; a size container so its content
+     can bow out when that space is too small (short phones). */
+  .phero__decor {
+    grid-area: decor;
+    position: relative;
+    min-height: 0;
+    container-type: size;
+    pointer-events: none;
+  }
+  @container (max-height: 120px) {
+    .phero .phero__decor > * { display: none; }
+  }
+
+  .phero__content {
+    grid-area: content;
+    align-self: end;
+    position: relative;
+    max-width: 46rem;
+    padding-top: 1rem;
+  }
+  /* Legibility gradient anchored to the copy, not to the hero's height, so it
+     follows the text on any screen: it fades in above the eyebrow and deepens
+     just below the copy, where the small muted fact labels sit. It runs off the
+     left and bottom edges (24rem past the copy), which the hero clips. */
+  .phero__content::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -5rem -16rem -24rem -100vw;
+    pointer-events: none;
+    background: linear-gradient(180deg,
+      transparent 0,
+      color-mix(in srgb, var(--ink) 48%, transparent) 5rem,
+      color-mix(in srgb, var(--ink) 68%, transparent) 12rem,
+      color-mix(in srgb, var(--ink) 68%, transparent) calc(100% - 26rem),
+      color-mix(in srgb, var(--ink) 80%, transparent) calc(100% - 22rem));
+  }
+
+  .phero__eyebrow {
+    --track: 0.28em;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 0 1.1rem;
+    /* The trailing letter-spacing is taken off the right padding. */
+    padding: 0.45rem calc(0.75rem - var(--track)) 0.45rem 0.75rem;
+    border-radius: var(--radius-sm);
+    background: var(--chip);
+    font-family: var(--font-display);
+    font-size: clamp(0.75rem, 1.4vw, 0.85rem);
+    line-height: 1.3;
+    letter-spacing: var(--track);
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: var(--accent);
+  }
+  /* On the first line's cap centre, so it stays put if a long eyebrow wraps. */
+  .phero__eyebrow::before {
+    content: "";
+    position: relative;
+    top: -0.36em;
+    width: 16px;
+    height: 2px;
+    background: var(--accent);
+    flex: none;
+  }
+
+  /* Measures in em, not ch: the fallback font's "0" is narrower, so ch would
+     rewrap the copy when the web font lands (PERF-03). */
+  .phero__title {
+    margin: 0;
+    max-width: 8.8em;
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.94;
+    letter-spacing: 0.005em;
+    font-size: clamp(2.6rem, 8vw, 5.75rem);
+    text-wrap: balance;
+    text-shadow:
+      0 2px 20px color-mix(in srgb, var(--ink) 85%, transparent),
+      0 1px 3px color-mix(in srgb, var(--ink) 70%, transparent);
+  }
+  .phero__title--long {
+    max-width: 12.1em;
+    font-size: clamp(2.1rem, 5.4vw, 4.5rem);
+    line-height: 0.98;
+  }
+  .phero__answer {
+    display: block;
+    margin-top: 0.08em;
+    color: var(--accent);
+  }
+  /* Accent rule under the headline: a pseudo-element, so the H1 text itself never
+     animates. Hero choreography, longer than the UI duration tokens on purpose. */
+  .phero__title::after {
+    content: "";
+    display: block;
+    width: clamp(64px, 18vw, 160px);
+    height: 5px;
+    margin-top: 0.45rem;
+    background: var(--accent);
+    transform-origin: left;
+    animation: phero-wipe 0.7s var(--ease-out-expo) 0.35s both;
+  }
+  @keyframes phero-wipe { from { transform: scaleX(0); } }
+
+  /* Full foreground, not muted: over a photo it needs half the gradient to pass. */
+  .phero__lede {
+    margin: 1.4rem 0 0;
+    max-width: 29em;
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    line-height: 1.55;
+    color: var(--color-foreground);
+    text-wrap: pretty;
+    text-shadow: 0 1px 10px color-mix(in srgb, var(--ink) 84%, transparent);
+  }
+
+  /* Shrink-wrapped row: when the pair wraps, each button fills its own row, so
+     the primary is never the smaller one. */
+  .phero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    width: max-content;
+    max-width: 100%;
+    margin-top: 1.9rem;
+  }
+  .phero__btn {
+    flex: 1 1 auto;
+    min-height: 48px;
+    padding-inline: 1.6rem;
+    transition: background-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .phero__btn:active { transform: translateY(1px) scale(0.98); }
+  /* The secondary's label and its accent hover state never depend on the photo. */
+  .phero__btn--on-photo { background: var(--chip); }
+
+  .phero__facts {
+    grid-area: facts;
+    margin-top: clamp(1.75rem, 4vw, 3rem);
+  }
+
+  @media (min-width: 1024px) {
+    .phero--decor .phero__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        "crumbs crumbs"
+        ". decor"
+        "content decor"
+        "facts facts";
+      column-gap: clamp(1.5rem, 3vw, 3rem);
+    }
+    .phero--decor .phero__decor { margin-bottom: 0.5rem; }
+    /* Beside the copy the photo stays full: the gradient fades out to the right
+       (a mask, so only the alpha of the token matters). */
+    .phero__content::before {
+      mask-image: linear-gradient(90deg, var(--ink) calc(100% - 16rem), transparent);
+    }
+  }
+
+  /* 4:3 to 16:10 screens crop the photo hardest, and without a decor column the
+     copy would sit on a centred subject: anchor the photo left so the subject
+     moves right, and keep the copy in the left 40%. */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .phero:not(.phero--decor) .phero__bg { object-position: 0% 40%; }
+    .phero:not(.phero--decor) .phero__content { max-width: 40vw; }
+    .phero:not(.phero--decor) .phero__title--long { font-size: 4.2vw; }
+  }
+
+  @media (max-width: 767px) {
+    .phero__grid { padding-top: 5.5rem; }
+    .phero__decor { margin-block: 0.5rem; }
+    .phero__eyebrow { --track: 0.2em; }
+  }
+  /* Narrow phones: a little less padding keeps the CTA pair on one row longer. */
+  @media (max-width: 400px) {
+    .phero__btn { padding-inline: 1.1rem; }
+  }
+
+  /* Short phones: tighten the copy so the CTA stays above the fold. */
+  @media (max-width: 767px) and (max-height: 700px) {
+    .phero__eyebrow { margin-bottom: 0.8rem; }
+    .phero__title { font-size: clamp(2.2rem, 10vw, 2.6rem); }
+    .phero__title--long { font-size: clamp(1.85rem, 8.4vw, 2.1rem); }
+    .phero__lede { margin-top: 1rem; font-size: 0.95rem; }
+    .phero__cta { margin-top: 1.25rem; }
+    .phero__facts { margin-top: 1.25rem; }
+  }
+
+  /* Landscape phones: the headline goes wide and small, the lede to two lines, so
+     the primary CTA stays above the fold. After the short-phone rule on purpose. */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .phero__grid { padding-top: 4.75rem; }
+    .phero__content { padding-top: 0.5rem; }
+    .phero__eyebrow { margin-bottom: 0.6rem; }
+    .phero__title,
+    .phero__title--long {
+      max-width: none;
+      font-size: clamp(1.75rem, 8.5vh, 2.25rem);
+    }
+    .phero__title::after { height: 4px; margin-top: 0.3rem; }
+    .phero__lede {
+      max-width: 47em;
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+    .phero__cta { margin-top: 1rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .phero__title::after { animation: none; }
+  }
+</style>

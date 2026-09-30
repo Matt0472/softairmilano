@@ -1,0 +1,99 @@
+---
+// Responsive <picture> for a CMS upload. For the image and its optional dedicated mobile crop
+// (DES-09) it lists every WebP width that scripts/ottimizza-immagini.mjs actually wrote, so the
+// browser downloads roughly the pixels the slot shows (PERF-04); the original is the fallback.
+// `sizes` describes the slot: the default, the full viewport, is the safe upper bound, so a slot
+// narrower than the screen should pass its own. width/height carry each file's intrinsic ratio;
+// the parent still sizes the box (aspect-ratio or absolute fill). Only the hero passes `eager`.
+import { existsSync, readdirSync } from 'node:fs';
+import { join, parse } from 'node:path';
+import sharp from 'sharp';
+
+interface Props {
+  src: string;
+  srcMobile?: string;
+  alt: string;
+  mobileMedia?: string;
+  /** Rendered width of the slot, as in the `sizes` attribute. */
+  sizes?: string;
+  eager?: boolean;
+  class?: string;
+}
+
+const {
+  src,
+  srcMobile,
+  alt,
+  mobileMedia = '(max-width: 767px)',
+  sizes = '100vw',
+  eager = false,
+  class: className,
+} = Astro.props;
+
+interface WebpSet {
+  srcset: string;
+  width: number;
+  height: number;
+}
+
+const PUBLIC_DIR = join(process.cwd(), 'public');
+const VARIANT_DIR = '_img'; // same folder as VARIANT_DIR in scripts/ottimizza-immagini.mjs
+
+const toWebp = (p: string): string => p.replace(/\.(jpe?g|png)$/i, '.webp');
+
+// Widths of the `<name>-w<width>.webp` variants the optimizer wrote for one source.
+function widthsOf(name: string): number[] {
+  const dir = join(PUBLIC_DIR, VARIANT_DIR);
+  if (!existsSync(dir)) return [];
+  const prefix = `${name}-w`;
+  return readdirSync(dir)
+    .filter((file) => file.startsWith(prefix) && file.endsWith('.webp'))
+    .map((file) => Number(file.slice(prefix.length, -'.webp'.length)))
+    .filter(Number.isInteger)
+    .sort((a, b) => a - b);
+}
+
+// The capped .webp plus its narrower variants, or null when there is no WebP to offer (an SVG, an
+// external URL, an upload the optimizer has not processed): the <img> then serves the original.
+async function webpSet(path: string): Promise<WebpSet | null> {
+  const webp = toWebp(path);
+  const file = join(PUBLIC_DIR, webp);
+  if (!webp.startsWith('/') || !webp.endsWith('.webp') || !existsSync(file)) return null;
+  const { width, height } = await sharp(file).metadata();
+  const { name } = parse(webp);
+  const candidates = widthsOf(name)
+    .filter((w) => w < width)
+    .map((w) => `/${VARIANT_DIR}/${name}-w${w}.webp ${w}w`);
+  return { srcset: [...candidates, `${webp} ${width}w`].join(', '), width, height };
+}
+
+const main = await webpSet(src);
+const mobile = srcMobile ? await webpSet(srcMobile) : null;
+---
+
+<picture>
+  {mobile && (
+    <source
+      media={mobileMedia}
+      type="image/webp"
+      srcset={mobile.srcset}
+      sizes={sizes}
+      width={mobile.width}
+      height={mobile.height}
+    />
+  )}
+  {srcMobile && <source media={mobileMedia} srcset={srcMobile} />}
+  {main && (
+    <source type="image/webp" srcset={main.srcset} sizes={sizes} width={main.width} height={main.height} />
+  )}
+  <img
+    class={className}
+    src={src}
+    alt={alt}
+    width={main?.width}
+    height={main?.height}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : undefined}
+    decoding="async"
+  />
+</picture>

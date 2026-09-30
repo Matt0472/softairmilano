@@ -1,0 +1,95 @@
+---
+// "Tutto incluso" panel: a short checklist of what the price covers, with an
+// optional note. `layout="row"` spreads the items on one line from desktop up.
+
+import Icon from '../atoms/Icon.astro';
+
+interface Props {
+  title?: string;
+  items: string[];
+  note?: string;
+  layout?: 'stack' | 'row';
+  class?: string;
+}
+
+const { title, items, note, layout = 'stack', class: className } = Astro.props;
+const list = (items ?? []).filter((it) => typeof it === 'string' && it.trim());
+---
+
+{list.length > 0 && (
+  <div class:list={['incl', `incl--${layout}`, className]}>
+    {title?.trim() && <h3 class="incl__title">{title}</h3>}
+    <ul class="incl__list" role="list">
+      {list.map((it) => (
+        <li class="incl__item">
+          <span class="incl__check"><Icon name="check" size={14} /></span>
+          {it}
+        </li>
+      ))}
+    </ul>
+    {note?.trim() && <p class="incl__note">{note}</p>}
+  </div>
+)}
+
+<style is:global>
+  .incl {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--color-surface-2) 70%, transparent);
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+  }
+  .incl__title {
+    margin: 0 0 1.1rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+  }
+  .incl__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  }
+  .incl__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    font-size: 0.975rem;
+    line-height: 1.45;
+    color: var(--color-foreground);
+  }
+  .incl__check {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    margin-top: -1px;
+    border-radius: 50%;
+    color: var(--color-on-accent);
+    background: var(--color-accent);
+  }
+  .incl__check svg { stroke-width: 3; }
+  .incl__note {
+    margin: 1.1rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.9rem;
+    color: var(--color-muted);
+  }
+
+  @media (min-width: 900px) {
+    .incl--row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      column-gap: clamp(1.5rem, 4vw, 3rem);
+    }
+    .incl--row .incl__title { margin: 0; max-width: 12rem; }
+    .incl--row .incl__list { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+    .incl--row .incl__note { grid-column: 1 / -1; }
+  }
+</style>

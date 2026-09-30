@@ -1,0 +1,198 @@
+---
+// Arcotag hero signature: a soft-tip arrow flies a ballistic arc into a target.
+// It lives in the hero's free area (never over the H1 or the CTAs) and is
+// purely decorative. One shot on load: the target locks, the arrow flies and the
+// trail draws behind it, the shaft quivers on impact, then everything is still.
+// Motion is transform/opacity plus the trail's stroke draw (same device as the
+// home HUD corners). The flight keyframes sample the curve at equal arc length
+// with a gentle ease-out, so arrow and trail stay together; the trail uses the
+// matching cubic-bezier. A darker stroke under every line keeps the drawing
+// legible on bright walls without a filter re-rasterised on every frame.
+// Reduced motion shows the final frame.
+// Geometry: path M20 430 Q330 -130 620 160 in a 700×470 box.
+---
+
+<svg
+  class="traj"
+  viewBox="0 0 700 470"
+  preserveAspectRatio="xMidYMid meet"
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <linearGradient id="traj-fade" gradientUnits="userSpaceOnUse" x1="20" y1="0" x2="240" y2="0">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"></stop>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0.8"></stop>
+    </linearGradient>
+    <linearGradient id="traj-halo" class="traj__halo-fade" gradientUnits="userSpaceOnUse" x1="20" y1="0" x2="240" y2="0">
+      <stop offset="0" stop-color="currentColor" stop-opacity="0"></stop>
+      <stop offset="1" stop-color="currentColor" stop-opacity="0.6"></stop>
+    </linearGradient>
+  </defs>
+
+  <path class="traj__trail traj__trail--halo" d="M20 430 Q330 -130 620 160" pathLength="1" stroke="url(#traj-halo)"></path>
+  <path class="traj__trail" d="M20 430 Q330 -130 620 160" pathLength="1" stroke="url(#traj-fade)"></path>
+
+  <g transform="translate(620 160)">
+    <g class="traj__target">
+      <g class="traj__halo traj__halo--ring">
+        <circle r="52"></circle>
+        <circle r="22"></circle>
+        <path d="M0 -72V-60M0 60V72M-72 0H-60M60 0H72"></path>
+      </g>
+      <circle class="traj__ring" r="52"></circle>
+      <circle class="traj__ring traj__ring--inner" r="22"></circle>
+      <path class="traj__ticks" d="M0 -72V-60M0 60V72M-72 0H-60M60 0H72"></path>
+      <circle class="traj__dot" r="3.5"></circle>
+    </g>
+    <circle class="traj__impact" r="52"></circle>
+  </g>
+
+  <!-- Drawn pointing +x with the tip at the origin, so the flight keyframes
+       translate the tip along the curve and rotate to its tangent. -->
+  <g class="traj__arrow">
+    <path class="traj__halo traj__halo--fletch" d="M-92 0 -110 -13M-92 0 -110 13M-106 0 -124 -13M-106 0 -124 13"></path>
+    <line class="traj__halo traj__halo--shaft" x1="-126" y1="0" x2="-8" y2="0"></line>
+    <path class="traj__fletch" d="M-92 0 -110 -13M-92 0 -110 13M-106 0 -124 -13M-106 0 -124 13"></path>
+    <line class="traj__shaft" x1="-126" y1="0" x2="-8" y2="0"></line>
+    <rect class="traj__tip" x="-14" y="-8" width="20" height="16" rx="8"></rect>
+  </g>
+</svg>
+
+<style is:global>
+  .traj {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    color: var(--color-accent);
+    --ink: color-mix(in srgb, var(--color-background) 60%, transparent);
+  }
+
+  /* Underlay: each line 3 units wider in the page's ink, painted once. */
+  .traj__halo-fade { color: var(--color-background); }
+  .traj__halo {
+    fill: none;
+    stroke: var(--ink);
+    stroke-linecap: round;
+  }
+  .traj__trail.traj__trail--halo { stroke-width: 6.2; }
+  .traj__halo--ring { stroke-width: 5.4; }
+  .traj__halo--fletch { stroke-width: 6.2; }
+  .traj__halo--shaft { stroke-width: 7; }
+  .traj__dot,
+  .traj__tip {
+    stroke: var(--ink);
+    stroke-width: 3;
+    paint-order: stroke;
+  }
+
+  .traj__trail {
+    fill: none;
+    stroke-width: 3.2;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: traj-draw 1.25s cubic-bezier(0.333, 0.5, 0.667, 0.833) 0.9s forwards;
+  }
+  @keyframes traj-draw { to { stroke-dashoffset: 0; } }
+
+  .traj__ring,
+  .traj__ticks,
+  .traj__impact {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+  }
+  .traj__ring--inner { stroke-opacity: 0.55; }
+  .traj__ticks { stroke-linecap: round; }
+  .traj__dot { fill: currentColor; }
+
+  .traj__target {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: traj-lock 0.6s var(--ease-out-expo) 0.3s both;
+  }
+  @keyframes traj-lock {
+    from { opacity: 0; transform: scale(1.6); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .traj__impact {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: traj-impact 0.8s var(--ease-out-expo) 2.15s forwards;
+  }
+  @keyframes traj-impact {
+    from { opacity: 0.85; transform: scale(0.6); }
+    to { opacity: 0; transform: scale(1.9); }
+  }
+
+  .traj__shaft {
+    stroke: var(--color-foreground);
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+  .traj__fletch {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3.2;
+    stroke-linecap: round;
+  }
+  .traj__tip { fill: currentColor; }
+
+  .traj__arrow {
+    transform-box: view-box;
+    transform-origin: 0 0;
+    animation: traj-fly 1.7s linear 0.9s both;
+  }
+  /* 0–73.5%: flight (1.25s). 73.5–100%: the shaft quivers in the target. */
+  @keyframes traj-fly {
+    0% { opacity: 0; transform: translate(20px, 430px) rotate(-61deg); }
+    2.6% { opacity: 1; transform: translate(40.7px, 393.5px) rotate(-59.8deg); }
+    5.3% { transform: translate(62.2px, 357.5px) rotate(-58.4deg); }
+    8% { transform: translate(84.7px, 322.1px) rotate(-56.8deg); }
+    10.9% { transform: translate(108.1px, 287.4px) rotate(-55deg); }
+    13.8% { transform: translate(132.8px, 253.5px) rotate(-52.9deg); }
+    16.8% { transform: translate(158.8px, 220.6px) rotate(-50.3deg); }
+    19.9% { transform: translate(186.4px, 189px) rotate(-47.3deg); }
+    23% { transform: translate(215.8px, 159.1px) rotate(-43.6deg); }
+    26.4% { transform: translate(247.3px, 131.5px) rotate(-39deg); }
+    29.9% { transform: translate(281.1px, 106.7px) rotate(-33.2deg); }
+    33.5% { transform: translate(317.5px, 86px) rotate(-25.9deg); }
+    37.3% { transform: translate(356.5px, 70.6px) rotate(-16.8deg); }
+    41.3% { transform: translate(397.5px, 62.2px) rotate(-6.1deg); }
+    45.5% { transform: translate(439.4px, 62px) rotate(5.4deg); }
+    50.1% { transform: translate(480.5px, 70px) rotate(16.5deg); }
+    55% { transform: translate(519.5px, 85.3px) rotate(26.1deg); }
+    60.4% { transform: translate(555.7px, 106.3px) rotate(33.9deg); }
+    66.5% { transform: translate(589.2px, 131.6px) rotate(40.1deg); }
+    73.5% { transform: translate(620px, 160px) rotate(45deg); animation-timing-function: ease-in-out; }
+    80% { transform: translate(620px, 160px) rotate(50deg); animation-timing-function: ease-in-out; }
+    86% { transform: translate(620px, 160px) rotate(41.5deg); animation-timing-function: ease-in-out; }
+    92% { transform: translate(620px, 160px) rotate(47.5deg); animation-timing-function: ease-in-out; }
+    100% { opacity: 1; transform: translate(620px, 160px) rotate(45deg); }
+  }
+
+  /* Phones: thicker strokes, the drawing is scaled down to about half. */
+  @media (max-width: 767px) {
+    .traj__trail { stroke-width: 4.4; }
+    .traj__ring, .traj__ticks, .traj__impact { stroke-width: 3.4; }
+    .traj__shaft { stroke-width: 5.5; }
+    .traj__fletch { stroke-width: 4.4; }
+    .traj__trail.traj__trail--halo, .traj__halo--fletch { stroke-width: 7.4; }
+    .traj__halo--ring { stroke-width: 6.4; }
+    .traj__halo--shaft { stroke-width: 8.5; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .traj__trail,
+    .traj__target,
+    .traj__impact,
+    .traj__arrow { animation: none !important; }
+    .traj__trail { stroke-dashoffset: 0; }
+    .traj__impact { opacity: 0; }
+    .traj__arrow { opacity: 1; transform: translate(620px, 160px) rotate(45deg); }
+  }
+</style>

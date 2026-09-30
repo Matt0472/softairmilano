@@ -3,11 +3,26 @@
   "siteUrl": "https://softairmilano.it",
   "defaultDescription": "SoftAir Milano: l'arena indoor per giocare a softair a Milano. Prenota la tua partita.",
   "defaultOgImage": "/og-default.svg",
-  "phone": "",
+  "footerTagline": "Arena indoor di softair a Milano. Missioni, adrenalina, squadra.",
+  "phone": "375 595 6805",
   "whatsapp": "",
   "email": "info@softairmilano.it",
-  "address": "",
+  "address": "Via Melegnano 26, 20019 Settimo Milanese (MI)",
+  "postalAddress": {
+    "streetAddress": "Via Melegnano 26",
+    "postalCode": "20019",
+    "addressLocality": "Settimo Milanese",
+    "addressRegion": "MI",
+    "addressCountry": "IT"
+  },
+  "openingHours": "Tutti i giorni dalle 10:00 alle 24:00, solo su prenotazione",
+  "directions": "Parcheggio facile · Bus 433 dalla metro M1 Bisceglie",
   "rangerUrl": "https://www.rangersoftairmilano.it/",
+  "footerRanger": {
+    "title": "Anche all'aperto",
+    "label": "Ranger Softair Milano",
+    "text": "La nostra arena boschiva outdoor."
+  },
   "ticketinghubId": "",
   "gaMeasurementId": "",
   "social": {

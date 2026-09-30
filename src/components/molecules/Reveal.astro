@@ -1,0 +1,62 @@
+---
+// Scroll reveal shared by the page organisms (one observer per page).
+// [data-reveal] fades up when it enters the viewport, staggered by an inline
+// --i; [data-inview] only receives the state classes, so a component can run its
+// own entrance (timeline rail, impact drop) keyed on `.is-armed.is-in`.
+// Only what starts below the fold is ever hidden: nothing the reader already
+// sees disappears, and without JS or with reduced motion everything is there.
+---
+
+<style is:global>
+  [data-reveal].is-armed {
+    opacity: 0;
+    transform: translate3d(0, 1.75rem, 0);
+  }
+  [data-reveal].is-armed.is-in {
+    opacity: 1;
+    transform: none;
+    /* Entrances run longer than UI feedback: the expo curve spends most of its time settling. */
+    transition:
+      opacity calc(var(--duration-slow) * 2) var(--ease-out-expo),
+      transform calc(var(--duration-slow) * 2.5) var(--ease-out-expo);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal].is-armed {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const els = document.querySelectorAll<HTMLElement>('[data-reveal], [data-inview]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduce || !('IntersectionObserver' in window)) {
+    els.forEach((el) => el.classList.add('is-in'));
+  } else {
+    // The observer's first report on each element decides, from geometry it has already
+    // measured, whether it starts below the fold: no layout read at startup.
+    const io = new IntersectionObserver(
+      (entries) => {
+        const fold = window.innerHeight;
+        for (const { target, isIntersecting, boundingClientRect } of entries) {
+          if (!target.classList.contains('is-armed')) {
+            if (boundingClientRect.top < fold) {
+              target.classList.add('is-in');
+              io.unobserve(target);
+            } else {
+              target.classList.add('is-armed');
+            }
+          } else if (isIntersecting) {
+            target.classList.add('is-in');
+            io.unobserve(target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -12% 0px' }
+    );
+    els.forEach((el) => io.observe(el));
+  }
+</script>

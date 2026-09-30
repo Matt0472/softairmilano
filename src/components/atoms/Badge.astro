@@ -1,0 +1,31 @@
+---
+// Small outlined accent label ("Il più richiesto", "Serata tra amici"). One style everywhere,
+// so a badge always reads as the same kind of emphasis.
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<span class:list={['badge', className]}><slot /></span>
+
+<style is:global>
+  .badge {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 55%, transparent);
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+</style>

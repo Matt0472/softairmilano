@@ -1,10 +1,58 @@
 {
   "items": [
-    { "label": "L'arena", "href": "/l-arena" },
-    { "label": "Softair", "href": "/softair" },
-    { "label": "Corso", "href": "/corso-softair" },
-    { "label": "Gruppi & eventi", "href": "/teambuilding" },
-    { "label": "Softair VS Paintball", "href": "/paintball" },
-    { "label": "Contatti", "href": "/contatti" }
-  ]
+    {
+      "label": "L'arena",
+      "href": "/l-arena"
+    },
+    {
+      "label": "Attività",
+      "href": "",
+      "children": [
+        {
+          "label": "Softair",
+          "href": "/softair",
+          "badge": "Il più richiesto",
+          "desc": "Missioni a squadre nel villaggio militare"
+        },
+        {
+          "label": "Arcotag",
+          "href": "/arcotag",
+          "badge": "Da provare",
+          "desc": "Arco e frecce a punta morbida, dagli 8 anni"
+        },
+        {
+          "label": "Tiro dinamico",
+          "href": "/tiro-dinamico",
+          "badge": "",
+          "desc": "Percorsi a bersagli contro il tempo"
+        },
+        {
+          "label": "Nerf",
+          "href": "/nerf",
+          "badge": "",
+          "desc": "Dardi in gommapiuma, per i più piccoli"
+        }
+      ]
+    },
+    {
+      "label": "Corso",
+      "href": "/corso-softair"
+    },
+    {
+      "label": "Gruppi & eventi",
+      "href": "/teambuilding"
+    },
+    {
+      "label": "Softair VS Paintball",
+      "href": "/paintball"
+    },
+    {
+      "label": "Contatti",
+      "href": "/contatti"
+    }
+  ],
+  "cta": {
+    "label": "Prenota",
+    "href": "#prenota"
+  }
 }

@@ -6,6 +6,54 @@
 @import "tailwindcss";
 
 /*
+  Metric-matched fallbacks (PERF-03). Until Oswald and Inter arrive (font-display: swap) the text
+  is set in a local face scaled to the web font's advance widths and given its ascent/descent, so
+  the lines wrap and sit where they will stay and the hero copy does not reflow on the swap.
+  Values measured in Chromium on this site's own copy (uppercase headings, Italian body text)
+  against Arial, whose metrics Liberation Sans shares. Roboto (Android) reuses Arial's numbers: its
+  regular widths are within 0.3% of Arial's, its bold ones are close but unmeasured. Recompute if a
+  font or weight changes: size-adjust = web width / fallback width, ascent/descent-override = web
+  metric / size-adjust.
+*/
+@font-face {
+  font-family: "Oswald Fallback";
+  font-weight: 700;
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("LiberationSans-Bold"), local("Roboto Bold"), local("Roboto-Bold");
+  size-adjust: 79.52%;
+  ascent-override: 150.03%;
+  descent-override: 36.34%;
+  line-gap-override: 0%;
+}
+/* Also serves the 400-500 requests, as the 600 web face does. */
+@font-face {
+  font-family: "Oswald Fallback";
+  font-weight: 600;
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("LiberationSans-Bold"), local("Roboto Bold"), local("Roboto-Bold");
+  size-adjust: 77.83%;
+  ascent-override: 153.28%;
+  descent-override: 37.13%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Inter Fallback";
+  font-weight: 100 500;
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("LiberationSans"), local("Roboto"), local("Roboto-Regular");
+  size-adjust: 106.66%;
+  ascent-override: 90.83%;
+  descent-override: 22.61%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Inter Fallback";
+  font-weight: 600 900;
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("LiberationSans-Bold"), local("Roboto Bold"), local("Roboto-Bold");
+  size-adjust: 100.73%;
+  ascent-override: 96.18%;
+  descent-override: 23.95%;
+  line-gap-override: 0%;
+}
+
+/*
   Design tokens — single source of truth. Mirror of
   design-system/softair-milano/MASTER.md. No "magic values" outside this file.
   Dark-first tactical palette; electric-cyan accent (#00ccff, client choice); Oswald display + Inter body.
@@ -26,8 +74,8 @@
   --color-danger: #e5484d;
 
   /* Typography */
-  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
-  --font-display: "Oswald", system-ui, sans-serif;
+  --font-sans: "Inter Variable", "Inter", "Inter Fallback", system-ui, sans-serif;
+  --font-display: "Oswald", "Oswald Fallback", system-ui, sans-serif;
 
   /* Radius */
   --radius-sm: 0.375rem;
@@ -40,6 +88,9 @@
 
   /* Motion */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
 }
 
 @layer base {
@@ -69,7 +120,8 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    line-height: 1.1;
+    /* 1.12, not 1.1: Oswald's accented capitals (È, Ù) rise 1.08em and would touch the line above. */
+    line-height: 1.12;
     text-transform: uppercase;
     letter-spacing: 0.01em;
   }
@@ -102,14 +154,15 @@
 @layer components {
   /* Centered content container with adaptive gutters. */
   .shell {
+    --shell-gutter: 1.25rem;
     width: 100%;
     max-width: 1520px;
     margin-inline: auto;
-    padding-inline: 1.25rem;
+    padding-inline: var(--shell-gutter);
   }
   @media (min-width: 768px) {
     .shell {
-      padding-inline: 2rem;
+      --shell-gutter: 2rem;
     }
   }
 

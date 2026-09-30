@@ -8,7 +8,7 @@
     "title": "Diventa protagonista di un film d'azione",
     "subtitle": "Il campo di softair al coperto più grande di Milano: un villaggio militare di circa 1.500 mq, tra edifici e torrette. Missioni, adrenalina, squadra.",
     "ctaPrimary": {
-      "label": "Prenota la tua partita",
+      "label": "Prenota",
       "href": "#prenota"
     },
     "ctaSecondary": {
@@ -26,7 +26,7 @@
     "text": "Un minuto dentro l'arena: squadre, missioni, adrenalina.",
     "soundLabel": "Attiva audio",
     "cta": {
-      "label": "Prenota la tua partita",
+      "label": "Prenota",
       "href": "#prenota"
     }
   },
@@ -150,7 +150,7 @@
   "finalCta": {
     "title": "Pronto a scendere in campo?",
     "subtitle": "Prenota la tua sessione di softair a Milano.",
-    "label": "Prenota ora",
+    "label": "Prenota",
     "href": "#prenota"
   }
 }

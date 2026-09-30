@@ -1,0 +1,283 @@
+---
+// "Provate anche": the other activities as a squeeze gallery. One panel is in focus (wide, lit,
+// title + description + arrow); the others are dark strips with their name set vertically, which
+// grow a little on hover. A click or tap on a strip brings it into focus, a click on the panel in
+// focus opens the page; keyboard focus brings a panel into focus and Enter follows the link.
+// No autoplay: the visitor decides what moves (A11Y-07). The widths animate through flex-grow,
+// the one exception to transform/opacity-only motion allowed by CODE-07.
+
+import Icon from '../atoms/Icon.astro';
+import Picture from '../atoms/Picture.astro';
+import SectionHead from '../molecules/SectionHead.astro';
+
+interface Activity {
+  title: string;
+  desc?: string;
+  image: string;
+  imageMobile?: string;
+  href: string;
+}
+interface Props {
+  title: string;
+  items: Activity[];
+  headingId?: string;
+}
+
+const { title, items, headingId = 'links-title' } = Astro.props;
+---
+
+{items.length > 0 && (
+  <section class="xl" aria-labelledby={headingId}>
+    <div class="xl__head shell">
+      <SectionHead title={title} id={headingId} />
+      {items.length > 1 && (
+        <div class="xl__nav">
+          <button type="button" class="xl__arrow" data-xl-prev aria-label="Attività precedente">
+            <Icon name="chevronRight" size={22} class="xl__flip" />
+          </button>
+          <button type="button" class="xl__arrow" data-xl-next aria-label="Attività successiva">
+            <Icon name="chevronRight" size={22} />
+          </button>
+        </div>
+      )}
+    </div>
+
+    <div class="shell">
+      <ul class="xl__deck" role="list" data-reveal>
+        {items.map((a, i) => (
+          <li class="xl__panel" data-active={String(i === 0)}>
+            <a class="xl__tile" href={a.href}>
+              <span class="xl__media">
+                <Picture src={a.image} srcMobile={a.imageMobile} alt="" class="xl__img" sizes="(max-width: 767px) 55vw, (max-width: 1520px) 66vw, 1020px" />
+              </span>
+              <span class="xl__strip" aria-hidden="true">{a.title}</span>
+              <span class="xl__body">
+                <h3 class="xl__title">{a.title}</h3>
+                {a.desc && <span class="xl__desc">{a.desc}</span>}
+              </span>
+              <span class="xl__go" aria-hidden="true"><Icon name="arrowUpRight" size={20} /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .xl {
+    --accent: var(--color-accent);
+    --ink: var(--color-background);
+    --xl-speed: 0.75s;
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  .xl__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; }
+  .xl__nav { display: flex; flex-shrink: 0; gap: 0.5rem; }
+  .xl__arrow {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-foreground);
+    transition: border-color var(--duration-base) var(--ease-out-expo), color var(--duration-base) var(--ease-out-expo), transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .xl__arrow:hover { border-color: var(--accent); color: var(--accent); }
+  .xl__arrow:active { transform: scale(0.94); }
+  .xl__arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .xl__flip { transform: scaleX(-1); }
+
+  /* The deck: panels share the row; the one in focus takes most of it. */
+  .xl__deck {
+    list-style: none;
+    margin: clamp(2rem, 5vw, 3rem) 0 0;
+    padding: 0;
+    display: flex;
+    gap: clamp(0.5rem, 1vw, 0.9rem);
+    height: clamp(24rem, 36vw, 34rem);
+  }
+  .xl__panel {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    transition: flex-grow var(--xl-speed) var(--ease-out-expo);
+  }
+  .xl__panel[data-active='true'] { flex-grow: 5; }
+  @media (hover: hover) {
+    .xl__panel[data-active='false']:hover { flex-grow: 1.35; }
+  }
+
+  .xl__tile {
+    position: relative;
+    isolation: isolate;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-foreground);
+    text-decoration: none;
+    transition: border-color var(--duration-slow) var(--ease-out-expo), transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .xl__panel[data-active='true'] .xl__tile {
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    box-shadow: 0 24px 60px -24px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .xl__tile:active { transform: translateY(1px) scale(0.995); }
+  .xl__tile:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+
+  .xl__media,
+  .xl__media picture,
+  .xl__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .xl__media { z-index: -1; }
+  .xl__img {
+    object-fit: cover;
+    object-position: 50% 35%;
+    transform: scale(1.08);
+    transition: transform 1.1s var(--ease-out-expo);
+  }
+  .xl__panel[data-active='true'] .xl__img { transform: scale(1); }
+  /* Two layers over the photo: the reading gradient, and the dark veil that dims a strip. */
+  .xl__media::before,
+  .xl__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transition: opacity var(--xl-speed) var(--ease-out-expo);
+  }
+  .xl__media::before {
+    background: linear-gradient(0deg,
+      color-mix(in srgb, var(--ink) 92%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 45%, transparent) 42%,
+      transparent 72%);
+  }
+  .xl__media::after { background: color-mix(in srgb, var(--ink) 62%, transparent); }
+  .xl__panel[data-active='true'] .xl__media::after { opacity: 0; }
+  @media (hover: hover) {
+    .xl__panel[data-active='false']:hover .xl__media::after { opacity: 0.55; }
+  }
+
+  /* Collapsed: the name runs vertically up the strip. */
+  .xl__strip {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(1.1rem, 2vw, 1.5rem);
+    writing-mode: vertical-rl;
+    transform: translateX(-50%) rotate(180deg);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-shadow: 0 1px 10px color-mix(in srgb, var(--ink) 80%, transparent);
+    transition: opacity var(--duration-base) var(--ease-out-expo);
+  }
+  .xl__panel[data-active='true'] .xl__strip { opacity: 0; }
+
+  /* In focus: title, description and arrow arrive once the panel has opened. */
+  .xl__body {
+    display: block;
+    width: min(100%, 36rem);
+    padding: clamp(1.25rem, 2.4vw, 1.9rem);
+    padding-right: 5rem;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity var(--duration-base) var(--ease-out-expo), transform var(--duration-slow) var(--ease-out-expo);
+  }
+  .xl__panel[data-active='true'] .xl__body {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.18s;
+  }
+  .xl__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+    line-height: 1;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    text-shadow: 0 1px 12px color-mix(in srgb, var(--ink) 80%, transparent);
+  }
+  .xl__desc {
+    display: block;
+    margin-top: 0.6rem;
+    max-width: 44ch;
+    color: color-mix(in srgb, var(--color-foreground) 82%, var(--color-muted));
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+  .xl__go {
+    position: absolute;
+    right: clamp(1.25rem, 2.4vw, 1.9rem);
+    bottom: clamp(1.25rem, 2.4vw, 1.9rem);
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    color: var(--color-on-accent);
+    background: var(--accent);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity var(--duration-base) var(--ease-out-expo), transform var(--duration-slow) var(--ease-out-expo), background-color var(--duration-base) var(--ease-out-expo);
+  }
+  .xl__panel[data-active='true'] .xl__go { opacity: 1; transform: none; transition-delay: 0.22s; }
+  .xl__go svg { transition: transform var(--duration-slow) var(--ease-out-expo); }
+  @media (hover: hover) {
+    .xl__panel[data-active='true'] .xl__tile:hover .xl__go { background: var(--color-accent-hover); }
+    .xl__panel[data-active='true'] .xl__tile:hover .xl__go svg { transform: translate(2px, -2px); }
+  }
+
+  /* Phones: the same squeeze, a taller deck and narrower strips. */
+  @media (max-width: 767px) {
+    .xl__nav { display: none; }
+    .xl__deck { height: min(30rem, 125vw); gap: 0.4rem; }
+    .xl__panel[data-active='true'] { flex-grow: 4; }
+    .xl__body { padding: 1.1rem 1.1rem 1.1rem; padding-right: 4rem; }
+    .xl__title { font-size: 1.7rem; }
+    .xl__go { width: 44px; height: 44px; right: 1rem; bottom: 1rem; }
+  }
+</style>
+
+<script>
+  for (const section of document.querySelectorAll<HTMLElement>('.xl')) {
+    const panels = [...section.querySelectorAll<HTMLElement>('.xl__panel')];
+    if (panels.length < 2) continue;
+    let current = Math.max(0, panels.findIndex((p) => p.dataset.active === 'true'));
+
+    const setActive = (i: number) => {
+      current = (i + panels.length) % panels.length;
+      panels.forEach((p, j) => { p.dataset.active = String(j === current); });
+    };
+
+    panels.forEach((panel, i) => {
+      const tile = panel.querySelector<HTMLAnchorElement>('.xl__tile');
+      if (!tile) return;
+      // The first click (or tap) on a strip brings it into focus; the panel in focus navigates.
+      tile.addEventListener('click', (e) => {
+        if (panel.dataset.active === 'true') return;
+        e.preventDefault();
+        setActive(i);
+      });
+      // Keyboard: whatever has focus is in focus; Enter then follows the link. A mouse press also
+      // focuses the link, just before its click: only keyboard focus (:focus-visible) counts here.
+      tile.addEventListener('focus', () => { if (tile.matches(':focus-visible')) setActive(i); });
+    });
+
+    section.querySelector('[data-xl-prev]')?.addEventListener('click', () => setActive(current - 1));
+    section.querySelector('[data-xl-next]')?.addEventListener('click', () => setActive(current + 1));
+  }
+</script>

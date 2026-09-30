@@ -1,0 +1,39 @@
+---
+// Answer-first paragraph (SEO-08): the first sentence is the citable answer and
+// is set as a lead; the rest follows as body copy. A single sentence renders as
+// lead only. `data-long` lets the parent scale down a lead that runs long.
+
+interface Props {
+  text: string;
+  class?: string;
+}
+
+const { text, class: className } = Astro.props;
+const source = typeof text === 'string' ? text.trim() : '';
+
+// Split after the first sentence end followed by a capital (so "1.500 m²" or
+// "0,2 g" never split).
+const match = source.match(/^(.+?[.!?])\s+(?=[A-ZÀ-ÖØ-Þ])([\s\S]+)$/);
+const lead = match ? match[1] : source;
+const rest = match ? match[2] : '';
+---
+
+{lead && (
+  <div class:list={['lead', className]} data-long={lead.length > 60 ? '' : undefined}>
+    <p class="lead__first">{lead}</p>
+    {rest && <p class="lead__rest">{rest}</p>}
+  </div>
+)}
+
+<style is:global>
+  .lead__first,
+  .lead__rest { margin: 0; text-wrap: pretty; }
+  .lead__first { color: var(--color-foreground); }
+  .lead__rest {
+    margin-top: 1.25rem;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.65;
+    max-width: 62ch;
+  }
+</style>

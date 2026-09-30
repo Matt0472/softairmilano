@@ -5,18 +5,30 @@ import Header from '../components/organisms/Header.astro';
 import Footer from '../components/organisms/Footer.astro';
 import ScrollToTop from '../components/molecules/ScrollToTop.astro';
 import SmoothScroll from '../components/molecules/SmoothScroll.astro';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import sharp from 'sharp';
+import { toLd } from '../lib/jsonld';
+import { toE164 } from '../lib/phone';
+// The display face the hero headline waits for: preloaded so the copy doesn't reflow late (CLS).
+import oswald700 from '@fontsource/oswald/files/oswald-latin-700-normal.woff2?url';
 
 interface Props {
   title: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
+  /** Extra structured data for this page (e.g. BreadcrumbList, FAQPage). */
+  jsonLd?: Record<string, unknown>[];
 }
 
-const {
-  title,
-  description = settings.defaultDescription,
-  image = settings.defaultOgImage,
-} = Astro.props;
+const props = Astro.props;
+// An emptied CMS field falls back to the site defaults instead of dropping the tag (CMS-10).
+const title = props.title || settings.siteName;
+const description = props.description || settings.defaultDescription;
+const image = props.image || settings.defaultOgImage;
+const imageAlt = props.imageAlt || settings.siteName;
+const jsonLd = props.jsonLd ?? [];
 
 // Indexing gate: the whole site stays noindex until go-live. The production
 // build sets PUBLIC_SITE_INDEXABLE=true to allow indexing. See
@@ -25,19 +37,33 @@ const indexable = import.meta.env.PUBLIC_SITE_INDEXABLE === 'true';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? new URL(image, Astro.site).toString() : undefined;
 
-// Structured data (LocalBusiness). Values come from settings.json (CMS-editable);
-// optional fields are emitted only when present.
+// Social previews render faster and uncropped when the size is declared: read it from the file.
+// The build runs from the project root; the bundled module's own URL is not under src/.
+const publicFile = (src: string) => join(process.cwd(), 'public', src);
+let ogSize: { width: number; height: number } | undefined;
+if (image && !image.endsWith('.svg') && existsSync(publicFile(image))) {
+  const { width, height } = await sharp(publicFile(image)).metadata();
+  if (width && height) ogSize = { width, height };
+}
+
+// Structured data for the business. One entity for the whole site (stable @id, fixed image), fed
+// by settings.json; optional fields are emitted only when present.
+const address = settings.postalAddress;
+const hasAddress = address && Object.values(address).some(Boolean);
+const social = Object.values(settings.social ?? {}).filter(Boolean);
 const businessLd: Record<string, unknown> = {
   '@context': 'https://schema.org',
   '@type': 'SportsActivityLocation',
+  '@id': new URL('/#business', settings.siteUrl).toString(),
   name: settings.siteName,
   url: settings.siteUrl,
   description: settings.defaultDescription,
-  ...(ogImage ? { image: ogImage } : {}),
+  ...(settings.defaultOgImage ? { image: new URL(settings.defaultOgImage, settings.siteUrl).toString() } : {}),
   ...(settings.email ? { email: settings.email } : {}),
-  ...(settings.phone ? { telephone: settings.phone } : {}),
-  ...(settings.address ? { address: settings.address } : {}),
-  ...(settings.rangerUrl ? { sameAs: [settings.rangerUrl] } : {}),
+  ...(settings.phone ? { telephone: toE164(settings.phone) } : {}),
+  ...(hasAddress ? { address: { '@type': 'PostalAddress', ...address } } : settings.address ? { address: settings.address } : {}),
+  // sameAs = the same business elsewhere: its social profiles. The outdoor arena is a different place.
+  ...(social.length ? { sameAs: social } : {}),
 };
 ---
 
@@ -59,6 +85,7 @@ const businessLd: Record<string, unknown> = {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#0e1114" />
+    <link rel="preload" href={oswald700} as="font" type="font/woff2" crossorigin />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
@@ -68,7 +95,9 @@ const businessLd: Record<string, unknown> = {
     <meta property="og:site_name" content={settings.siteName} />
     <meta property="og:locale" content="it_IT" />
     {ogImage && <meta property="og:image" content={ogImage} />}
-    {ogImage && <meta property="og:image:alt" content={settings.siteName} />}
+    {ogImage && <meta property="og:image:alt" content={imageAlt} />}
+    {ogSize && <meta property="og:image:width" content={String(ogSize.width)} />}
+    {ogSize && <meta property="og:image:height" content={String(ogSize.height)} />}
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -76,7 +105,8 @@ const businessLd: Record<string, unknown> = {
     {description && <meta name="twitter:description" content={description} />}
     {ogImage && <meta name="twitter:image" content={ogImage} />}
 
-    <script type="application/ld+json" set:html={JSON.stringify(businessLd)} />
+    <script type="application/ld+json" set:html={toLd(businessLd)} />
+    {jsonLd.map((data) => <script type="application/ld+json" set:html={toLd(data)} />)}
   </head>
   <body>
     <a href="#main" class="skip-link">Salta al contenuto</a>

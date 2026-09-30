@@ -1,0 +1,95 @@
+---
+// "Cercavi il paintball a Milano? Prova il softair": the strategic landing that
+// turns paintball searches into softair bookings with an honest comparison.
+// Every section renders only when its data is present (CMS-10).
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/organisms/PageHero.astro';
+import AnswerBlock from '../components/organisms/AnswerBlock.astro';
+import VsComparison from '../components/organisms/VsComparison.astro';
+import ImpactScale from '../components/organisms/ImpactScale.astro';
+import SplitFeature from '../components/organisms/SplitFeature.astro';
+import StepTimeline from '../components/organisms/StepTimeline.astro';
+import PriceTiers from '../components/organisms/PriceTiers.astro';
+import Reviews from '../components/organisms/Reviews.astro';
+import FaqAccordion from '../components/organisms/FaqAccordion.astro';
+import TeaserBanner from '../components/organisms/TeaserBanner.astro';
+import BookingCta from '../components/organisms/BookingCta.astro';
+import IncludedList from '../components/molecules/IncludedList.astro';
+import Reveal from '../components/molecules/Reveal.astro';
+import page from '../data/paintball.json';
+import navigation from '../data/navigation.json';
+import { breadcrumbLd, faqLd } from '../lib/jsonld';
+import { flattenNav, type NavItem } from '../lib/nav';
+
+const {
+  seo,
+  hero,
+  intro,
+  comparison,
+  impact,
+  arena,
+  firstTime,
+  pricing,
+  reviews,
+  faq,
+  alternative,
+  cta,
+} = page;
+
+const path = '/paintball';
+// The page name in the trail is its menu label (single source for both).
+const pageName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === path)?.label || hero.title;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: pageName, href: path },
+];
+// A section renders only when the client filled it in (CMS-10): see the activity template.
+const has = (v?: string) => typeof v === 'string' && v.trim().length > 0;
+const faqItems = (faq?.items ?? []).filter((f) => f.q?.trim() && f.a?.trim());
+const faqData = faqLd(faqItems);
+const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])];
+---
+
+<BaseLayout title={seo.title} description={seo.description} image={seo.image} imageAlt={seo.imageAlt || hero.imageAlt} jsonLd={jsonLd}>
+  <PageHero {...hero} crumbs={crumbs} />
+
+  {intro && has(intro.title) && has(intro.text) && <AnswerBlock {...intro} />}
+
+  {comparison && has(comparison.title) && !!comparison.rows?.length && <VsComparison {...comparison} id="confronto" />}
+
+  {impact && has(impact.title) && <ImpactScale {...impact} />}
+
+  {/* Right after "fa più male?": the gentler option for the group, while the question is fresh. */}
+  {alternative && has(alternative.title) && has(alternative.href) && <TeaserBanner {...alternative} />}
+
+  {arena && has(arena.title) && has(arena.image) && (
+    <SplitFeature
+      title={arena.title}
+      text={arena.text}
+      image={arena.image}
+      imageAlt={arena.imageAlt}
+      ratio="16 / 10"
+      itemsTitle={arena.missionsTitle}
+      items={arena.missions}
+    />
+  )}
+
+  {firstTime && has(firstTime.title) && !!firstTime.steps?.length && (
+    <StepTimeline title={firstTime.title} steps={firstTime.steps} id="prima-volta">
+      {!!firstTime.included?.length && (
+        <IncludedList title={firstTime.includedTitle} items={firstTime.included} note={firstTime.note} layout="row" />
+      )}
+    </StepTimeline>
+  )}
+
+  {pricing && has(pricing.title) && !!pricing.tiers?.length && <PriceTiers {...pricing} cta={hero.ctaPrimary} />}
+
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
+
+  {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
+
+  {cta && has(cta.title) && <BookingCta title={cta.title} text={cta.text} />}
+
+  <Reveal />
+</BaseLayout>

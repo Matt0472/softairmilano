@@ -1,0 +1,235 @@
+---
+// Social proof: the rating on the left, the first review as a pull quote and
+// the others as a ruled grid on the right. Reviews and rating are shared data
+// (testimonials.json, real Google reviews); the page only sets the title.
+// Stars are drawn only from a real score, filled to its exact fraction.
+
+import Icon from '../atoms/Icon.astro';
+import testimonials from '../../data/testimonials.json';
+
+interface Props {
+  title: string;
+  headingId?: string;
+}
+interface Rating {
+  label?: string;
+  value?: number | string | null;
+  count?: string;
+  source?: string;
+  url?: string;
+}
+
+const { title, headingId = 'reviews-title' } = Astro.props;
+const rating: Rating = testimonials.rating ?? {};
+const items = (testimonials.items ?? []).filter((r) => r?.text?.trim());
+const [featured, ...others] = items;
+
+const raw = typeof rating.value === 'string' ? parseFloat(rating.value.replace(',', '.')) : rating.value;
+const score = typeof raw === 'number' && Number.isFinite(raw) && raw >= 1 && raw <= 5 ? raw : null;
+const scoreText = score?.toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const hasSource = !!rating.count?.trim() || !!rating.source?.trim();
+const hasRating = score !== null || !!rating.label?.trim() || hasSource;
+const hasTitle = !!title?.trim();
+---
+
+{featured && (
+  <section class="rv" aria-labelledby={hasTitle ? headingId : undefined}>
+    <div class="rv__inner shell">
+      <div class="rv__aside" data-reveal>
+        {hasTitle && <h2 class="rv__title" id={headingId}>{title}</h2>}
+        {hasRating && (
+          <div class="rv__rating">
+            {score !== null && (
+              <p class="rv__score">
+                <span class="rv__stars" style={`--fill: ${Math.round(score * 20)}%`} aria-hidden="true">
+                  <span class="rv__stars-row">
+                    {[0, 1, 2, 3, 4].map(() => <Icon name="star" size={22} />)}
+                  </span>
+                  <span class="rv__stars-row rv__stars-row--lit">
+                    {[0, 1, 2, 3, 4].map(() => <Icon name="star" size={22} />)}
+                  </span>
+                </span>
+                <b class="rv__value">{scoreText}</b><span class="sr-only"> su 5</span>
+              </p>
+            )}
+            {rating.label?.trim() && <p class="rv__label">{rating.label}</p>}
+            {hasSource && (
+              rating.url?.trim() ? (
+                <a class="rv__count rv__count--link" href={rating.url} target="_blank" rel="noopener">
+                  {rating.count && <b>{rating.count}</b>} {rating.source}
+                  <Icon name="arrowUpRight" size={16} />
+                  <span class="sr-only">(si apre in una nuova scheda)</span>
+                </a>
+              ) : (
+                <p class="rv__count">{rating.count && <b>{rating.count}</b>} {rating.source}</p>
+              )
+            )}
+          </div>
+        )}
+      </div>
+
+      <div class="rv__quotes" data-reveal style="--i: 1">
+        <figure class="rv__feature">
+          <Icon name="quote" size={36} class="rv__mark" />
+          <blockquote class="rv__feature-text"><p>{featured.text}</p></blockquote>
+          {featured.author?.trim() && <figcaption class="rv__by">{featured.author}</figcaption>}
+        </figure>
+
+        {others.length > 0 && (
+          <ul class="rv__grid" role="list">
+            {others.map((r) => (
+              <li class="rv__cell">
+                <figure class="rv__quote">
+                  <blockquote><p>{r.text}</p></blockquote>
+                  {r.author?.trim() && <figcaption class="rv__by">{r.author}</figcaption>}
+                </figure>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .rv {
+    --accent: var(--color-accent);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+  .rv__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: start;
+  }
+
+  .rv__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  .rv__rating {
+    margin-top: clamp(1.75rem, 4vw, 2.75rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .rv__score {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+  }
+  /* Two rows of stars: an unlit one, and the lit one clipped to the score (4,9 → 98%). */
+  .rv__stars { position: relative; display: block; }
+  .rv__stars-row { display: flex; gap: 0.2rem; color: var(--color-steel); }
+  .rv__stars-row svg { flex: none; stroke-width: 1; }
+  .rv__stars-row--lit {
+    position: absolute;
+    inset: 0;
+    color: var(--accent);
+    clip-path: inset(0 calc(100% - var(--fill)) 0 0);
+  }
+  .rv__value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-foreground);
+  }
+  .rv__label {
+    margin: 0.9rem 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .rv__count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.6rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+  .rv__count b {
+    color: var(--color-foreground);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .rv__count--link { min-height: 44px; transition: color var(--duration-fast) var(--ease-out-expo); }
+  .rv__count--link:hover { color: var(--color-accent-hover); }
+
+  .rv__feature { position: relative; margin: 0; }
+  .rv__mark { color: var(--accent); }
+  .rv__feature-text { margin: 1rem 0 0; }
+  .rv__feature-text p {
+    margin: 0;
+    max-width: 30ch;
+    font-size: clamp(1.4rem, 2.8vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.012em;
+    text-wrap: pretty;
+  }
+  /* Author line: a short accent rule, then the name. */
+  .rv__by {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-foreground);
+  }
+  .rv__by::before {
+    content: "";
+    width: 18px;
+    height: 1px;
+    background: var(--color-steel);
+  }
+
+  .rv__grid {
+    list-style: none;
+    margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .rv__cell { border-top: 1px solid var(--color-border); padding-block: 1.25rem 1.5rem; }
+  /* An odd last review takes the whole row: no empty cell. */
+  .rv__cell:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .rv__quote { margin: 0; }
+  .rv__quote blockquote { margin: 0; }
+  .rv__quote p {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.55;
+    /* Keeps every quote short on the page (the full text stays in the data). */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    overflow: hidden;
+  }
+  .rv__quote .rv__by { margin-top: 0.75rem; font-size: 0.85rem; }
+
+  @media (max-width: 1023px) {
+    .rv__inner { grid-template-columns: minmax(0, 1fr); }
+    .rv__rating { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
+    .rv__label { margin: 0; font-size: 1.75rem; }
+    .rv__count { margin: 0; }
+    .rv__score { flex-basis: 100%; }
+  }
+  @media (max-width: 599px) {
+    .rv__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

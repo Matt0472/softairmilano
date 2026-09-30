@@ -1,0 +1,215 @@
+---
+// Photo + copy split ("Come si gioca", "Cosa trovi a Softair Milano"). The photo
+// column follows the photo's orientation (narrow for portrait, wide for
+// landscape) and the frame reserves its ratio, so any image of that ratio fits.
+// Optional `items` (e.g. missions) render as a two-column definition list; the
+// default slot takes an aside such as the "Tutto incluso" panel.
+// Tablet: a landscape photo goes full width above the copy. Phones: the photo
+// runs edge to edge above the copy.
+
+import Picture from '../atoms/Picture.astro';
+
+interface Item {
+  name: string;
+  text: string;
+}
+interface Props {
+  title: string;
+  text?: string;
+  image: string;
+  imageMobile?: string;
+  imageAlt: string;
+  /** CSS aspect-ratio of the photo slot, e.g. "4 / 5" or "16 / 10". */
+  ratio?: string;
+  reverse?: boolean;
+  itemsTitle?: string;
+  items?: Item[];
+  headingId?: string;
+}
+
+const {
+  title,
+  text,
+  image,
+  imageMobile,
+  imageAlt,
+  ratio = '4 / 5',
+  reverse = false,
+  itemsTitle,
+  items = [],
+  headingId = 'split-title',
+} = Astro.props;
+
+const [rw, rh] = ratio.split('/').map((n) => parseFloat(n));
+const orientation = rw >= rh ? 'landscape' : 'portrait';
+// Rendered width of the photo slot per layout (PERF-04), measured against the grid below.
+const sizes =
+  orientation === 'landscape'
+    ? '(max-width: 767px) 100vw, (max-width: 1023px) calc(100vw - 4rem), (max-width: 1520px) 52vw, 800px'
+    : '(max-width: 767px) 100vw, (max-width: 1520px) 43vw, 640px';
+const list = (items ?? []).filter((it) => it?.name?.trim());
+const hasTitle = !!title?.trim();
+---
+
+<section
+  class:list={['split', `split--${orientation}`, reverse && 'split--reverse']}
+  aria-labelledby={hasTitle ? headingId : undefined}
+>
+  <div class="split__inner shell">
+    {image && (
+      <figure class="split__media" style={`--ratio: ${ratio}`} data-inview>
+        <Picture src={image} srcMobile={imageMobile} alt={imageAlt} sizes={sizes} class="split__img" />
+      </figure>
+    )}
+
+    <div class="split__copy">
+      {hasTitle && <h2 class="split__title" id={headingId} data-reveal>{title}</h2>}
+      {text?.trim() && <p class="split__text" data-reveal style="--i: 1">{text}</p>}
+
+      {list.length > 0 && (
+        <div class="split__list" data-reveal style="--i: 2">
+          {itemsTitle?.trim() && <h3 class="split__list-title">{itemsTitle}</h3>}
+          <dl class="split__items">
+            {list.map((it) => (
+              <div class="split__item">
+                <dt>{it.name}</dt>
+                <dd>{it.text}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
+
+      {Astro.slots.has('default') && (
+        <div class="split__aside" data-reveal style="--i: 2">
+          <slot />
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .split {
+    --accent: var(--color-accent);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+  .split__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 5.5rem);
+    align-items: center;
+  }
+  .split--landscape .split__inner { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
+  .split--reverse .split__media { order: 2; }
+
+  .split__media {
+    position: relative;
+    margin: 0;
+    aspect-ratio: var(--ratio);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+  /* A landscape photo beside a long list stays in view while the list is read. */
+  .split--landscape .split__media { position: sticky; top: 2rem; }
+  .split__media picture,
+  .split__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .split__img { object-fit: cover; object-position: 50% 35%; }
+  /* Entrance: the photo settles from a slight zoom as it scrolls in (slower than the copy, it is the backdrop). */
+  .split__media.is-armed .split__img { transform: scale(1.08); }
+  .split__media.is-armed.is-in .split__img {
+    transform: none;
+    transition: transform calc(var(--duration-slow) * 3.5) var(--ease-out-expo);
+  }
+
+  .split__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  .split__text {
+    margin: 1.25rem 0 0;
+    max-width: 56ch;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  .split__list { margin-top: clamp(2rem, 4vw, 2.75rem); }
+  .split__list-title {
+    margin: 0 0 0.25rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+  }
+  .split__items {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1.25rem, 3vw, 2.25rem);
+  }
+  .split__item {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .split__item dt {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .split__item dd {
+    margin: 0.35rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.93rem;
+    line-height: 1.5;
+  }
+
+  .split__aside { margin-top: clamp(1.75rem, 3.5vw, 2.5rem); }
+
+  /* Tablet: a portrait photo stays beside the copy, narrower; a landscape one would
+     leave a void beside a long list, so it goes full width on top. */
+  @media (max-width: 1023px) {
+    .split__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; }
+    .split--landscape .split__inner { grid-template-columns: minmax(0, 1fr); gap: clamp(2rem, 5vw, 3rem); }
+    .split--landscape .split__media { position: relative; top: auto; order: 0; }
+    .split--portrait .split__items { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* Phones: photo edge to edge on top, copy below. */
+  @media (max-width: 767px) {
+    .split { padding-top: 0; }
+    .split__inner { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+    .split--reverse .split__media { order: 0; }
+    .split__media {
+      /* Bleed past the page gutter (.shell) to the screen edge. */
+      margin-inline: calc(var(--shell-gutter) * -1);
+      border-radius: 0;
+      border-inline: 0;
+    }
+    .split--landscape .split__media { aspect-ratio: 4 / 3; }
+  }
+  @media (max-width: 599px) {
+    .split__items { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .split__media.is-armed .split__img { transform: none; }
+  }
+</style>

@@ -1,12 +1,24 @@
 ---
 // Site-wide smooth (inertial) scrolling via Lenis. Exposes the instance on
 // window.__lenis so scroll-driven sections (e.g. the activities story) can
-// snap through it. Disabled under prefers-reduced-motion.
+// snap through it. Disabled under prefers-reduced-motion. In-page anchors also
+// move focus to their target (keyboard and screen readers follow the jump).
 import 'lenis/dist/lenis.css';
 ---
 
 <script>
   import Lenis from 'lenis';
+
+  // Any link to a section of this page (Prenota → #prenota, Come funziona → #serata) hands focus to
+  // that section, so keyboard and screen-reader users continue from where the page now is.
+  document.addEventListener('click', (e) => {
+    const a = (e.target as Element).closest('a');
+    if (!a || a.hash.length < 2 || a.pathname !== location.pathname) return;
+    const section = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+    if (!section) return;
+    if (!section.hasAttribute('tabindex')) section.tabIndex = -1;
+    section.focus({ preventScroll: true });
+  });
 
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const lenis = new Lenis({ duration: 1.15, smoothWheel: true });

@@ -1,100 +1,293 @@
 # HANDOFF — softairmilano.it
 
-Documento per riprendere il lavoro da zero contesto. Aggiornato: 30 settembre 2026, ore 9:30 (**sezione 3D RIMOSSA su decisione del cliente** — performance prima di tutto —, **accento cambiato in ciano `#00CCFF`**, **anteprima online su GitHub Pages**, favicon mirino ciano, fix «torna su»; in precedenza: sezione Attività **mobile** rifatta — layout immagine sopra/testo sotto + immagini verticali 4:5 ad alta risoluzione; Tiro dinamico agganciato alla versione coi bersagli).
+Aggiornato: **30 set 2026, ore 14:30**.
+
+Cosa c'è di nuovo:
+- menu «Attività» a tendina e le prime due pagine interne, **/arcotag** (modello di tutte le pagine attività) e **/paintball**;
+- audit completo e correzione di tutti i bloccanti e i maggiori;
+- immagini responsive con varianti di larghezza e font di ripiego calibrati;
+- canone aggiornato (`DES-11`, eccezioni a `CODE-07`, `src/lib/`, token delle durate).
 
 ## Obiettivo
-Nuovo sito **softairmilano.it** (arena indoor di softair a Milano ~1.500 mq) in **Astro statico + Tailwind v4 + Pages CMS**, deploy su **Cloudflare Pages**.
 
-**Sito attuale e migrazione**: `softairmilano.it` è oggi **online** come sito **WordPress su Aruba** — è la fonte da cui **recuperiamo contenuti e asset durante la costruzione** (foto reali → solo Gallery, URL social, video, testi, prezzi, dati di contatto). Al **go-live** il nuovo sito Astro **sostituisce** quello WordPress **mantenendo lo stesso dominio** `softairmilano.it` (il vecchio WP diventa backup dormiente, l'email `@softairmilano.it` resta su Aruba). Procedura completa in **`docs/cutover-checklist.md`**.
-Obiettivi di business in ordine: **1)** vendere le partite/sessioni di softair (prenotazioni via **TicketingHub**); **2)** far crescere il **corso softair**; **3)** recuperare la "fetta paintball" (chi cerca paintball → convertito al softair).
-Vincoli forti: **standard qualità altissimo**; **impatto visivo "wow"/scenico su OGNI pagina**; **codice in inglese, contenuti in italiano**; **ogni contenuto editabile via Pages CMS** (la struttura solo da un tecnico).
+**Il sito.** Nuovo sito **softairmilano.it** (arena indoor di softair a Milano, ~1.500 m²) in Astro statico + Tailwind v4 + Pages CMS, con deploy su Cloudflare Pages.
 
-## Stato attuale (progress)
-- Repo GitHub `Matt0472/softairmilano`, branch `main`, **reso PUBBLICO il 22 set** (necessario per GitHub Pages col piano gratuito; storia git verificata senza segreti, `.env` mai tracciato). Commit con l'identità git locale (`mpedone <mpedone@contents.com>`, come i commit precedenti) + trailer `Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`. ⚠️ **REGOLA DEL CLIENTE (30 set): mai commit/push diretti — mostrare prima le modifiche e aspettare l'ok esplicito**; ogni push su `main` va online sull'anteprima.
-- Ultimi commit (30 set): `b48da23` favicon mirino ciano + set PNG/ICO/manifest, `7ec5f25` torna-su via Lenis + cursor pointer globale, `495581b` rimozione 3D + accento ciano, `64933b2`/`f5b17b0`/`a35d61c` fix da audit (video lazy, logo WebP, menu mobile inert, tap target, nofollow, workflow Pages), `7215210`/`cee4147` (sezione 3D, poi rimossa). Tutto pushato, working tree pulito.
-- **Design system**: dark tattico. Token in `src/styles/global.css` (`@theme`): fondo gunmetal `#0e1114`, accento **ciano elettrico `#00ccff`** (hover `#33d6ff`; **scelto dal cliente il 30 set** al posto dell'ambra `#f5a524`; i componenti usano solo il token via alias locale `--accent`, quindi il cambio è in un punto solo; nota: le foto AI hanno luce ambra "cotta dentro" → contrasto caldo/freddo da verificare visivamente con il cliente), display **Oswald**, body **Inter**. Contenitore `.shell` **max-width 1520px**.
-- **Home rifatta con impatto visivo forte.** Ordine sezioni: **Hero → L'arena → Video → Attività (scroll-story) → Occasioni → Ranger → CTA finale**.
-  - **Hero** (`Hero.astro`): immagine AI full-bleed (LCP), "still viva" in CSS (Ken Burns, fascio di luce nel colore accento, pulviscolo, grana, HUD, titolo cinetico, scrim + text-shadow). `<picture>` desktop 16:9 + mobile 9:16 (close-up sul soggetto). Perf Lighthouse 100, LCP ~1.7s.
-  - **3D «Apri la partita» — RIMOSSO (30 set, decisione del cliente: performance e resto del sito vengono prima)**. Era una sezione scroll-driven con valigetta + replica glTF (three.js) sotto l'hero, arrivata fino all'anteprima online (commit `64933b2`). Tutto eliminato: componente `Unboxing3D.astro`, `public/models/`, `scripts/prepare-model-3d.mjs`, dipendenze three/gltf-transform, campi CMS `home.unboxing` e `settings.credits3d`, riga crediti nel footer. Se un giorno servisse, la storia è in git (`git show 64933b2`). Restano validi i fix nati dal suo audit: video lazy senza autoplay al load, logo WebP, menu mobile `inert`, tap target, nofollow.
-  - **L'arena** (`ArenaIntro.astro`): "L'arena in breve" — 4 caratteristiche (Al coperto/Illuminato/Sempre nuova/Musica immersiva, icone da CMS fra 12) con animazione MIX (target-lock parentesi → icone che si assemblano), **radar** (dimensione FISSA 1800px desktop / 1600px centrato mobile, indipendente dalla larghezza, spin in place 8s), scanline singola, contatore m². Parte all'ingresso in viewport; `prefers-reduced-motion` statico.
-  - **Video** (`VideoSection.astro`): sezione **split** (desktop copy + video HUD; mobile scritta sopra, video sotto). **`<video>` nativo self-hosted su Cloudflare R2** (muted autoplay loop playsinline, poster, HUD REC/CAM, bottone "Attiva audio") — l'embed YouTube è stato rimosso, quindi **nessuna terza parte da mettere dietro cookie consent** per questa sezione. Sorgente attuale: `https://pub-03634caa58304887b733482b0c916e61.r2.dev/softairmilano-home.mp4` (URL r2.dev, da migrare a custom domain prima del go-live — vedi Decisioni aperte). Il video master 317 MB è stato compresso a 12 MB (ffmpeg H.264 CRF23 + faststart) prima dell'upload. Badge **YouTube** (@softairmilano4590, da `settings.social.youtube`) sempre visibile in basso a sinistra del frame, cliccabile.
-  - **Attività** (`ActivitiesStory.astro`): sezione "**scrolling story**" (pattern 21st.dev interactive-scrolling-story, scelto dal cliente). Track alto (400vh) che **pinna** uno stage full-viewport; scrollando cambia l'attività attiva (crossfade). Testo in **"streaming militare"** stile Call of Duty: eyebrow `// CANALE 0X · TRASMISSIONE`, il **titolo si digita (teletype)** e la **descrizione arriva in streaming monospace** con **cursore lampeggiante** (funzione `stream()`, setTimeout — NON congelata dalla pane). 4 attività (Softair, Tiro dinamico, Arcotag, Nerf), indicatori a trattini in basso. **CMS-driven** (`home.activities`: title/desc/pills/image/imageMobile/imageAlt/href). Desktop: split copy(sx)+immagine(dx, colonna ~60%), `align-items:start`. **Mobile (≤820px, RIFATTO 22 set sera)**: stessa story pinnata ma divisa **in verticale** — griglia `minmax(0,1fr) auto`: l'**immagine full-bleed occupa tutto lo spazio residuo in alto** (≈66% su 390×844, ≈62% su 375×667), il **copy sta SOTTO su fondo ink** (mai sopra il soggetto), raccordo con gradiente corto (34% dell'immagine); riga `// CANALE 0X · TRASMISSIONE` + contatore `01/04` sulla stessa riga (lo span "IN ARRIVO" è nascosto su mobile); trattini di avanzamento spostati in alto a destra sotto la navbar (solo indicatori, `pointer-events:none`); `min-height` sulla descrizione (4 righe) così CTA/pills non saltano durante lo streaming; CTA `justify-self:start` per non finire sotto il bottone "torna su"; `object-position: 50% 40%` (soggetto nel terzo alto). Media query extra per telefoni corti (`max-height:700px`). `prefers-reduced-motion` → statico. **NIENTE auto scroll-snap** (era stato aggiunto e poi RIMOSSO: forzava lo scroll all'ingresso della sezione — da non reintrodurre).
-  - **Smooth scrolling GLOBALE** (`molecules/SmoothScroll.astro` in `BaseLayout`): **Lenis** (ora **dipendenza vera**, `lenis ^1.3.x` — non più CDN) su **tutto il sito**, istanza esposta su `window.__lenis`. Disattivo con `prefers-reduced-motion`.
-  - **Header** (`Header.astro`): **navbar floating a pillola** trasparente sull'hero (no barra classica), hover con l'accento, **menu mobile a tutto schermo** (con il resto della pagina `inert` quando è aperto), **medaglia** (`aria-current`) sulla pagina attiva. Voci menu (`navigation.items`): L'arena, Softair, Corso, Gruppi & eventi, **Softair VS Paintball**, Contatti. ⚠️ Tutte puntano a **pagine ancora da costruire** (esiste solo la Home → per ora fanno 404). In particolare **`/paintball` = landing strategica "Softair VS Paintball"** (confronto onesto softair vs paintball + numeri per convertire chi cerca il paintball; dettagli in `docs/piano-sviluppo.md` pagina #9) — **da costruire**.
-  - **Footer** (`Footer.astro`): **logo** bianco, **social** (Instagram/Facebook/YouTube/TikTok, URL reali dal sito attuale in `settings.social`), colonna Menu che rispecchia `navigation.items`, bottom-bar a 3 colonne (© / firma "Made with 🧡 by Mattia Pedone → mapped-dev.it" / note legali) + **riga crediti modelli 3D** (`settings.credits3d`, CC BY).
-  - **ScrollToTop** globale (`molecules/ScrollToTop.astro`, in `BaseLayout`): dal 30 set scrolla via `window.__lenis.scrollTo(0)` (il `window.scrollTo` smooth veniva annullato da Lenis → servivano due click). `global.css` ripristina `cursor: pointer` su `button`/`[role=button]`/`summary` (Tailwind v4 lo azzera).
-  - **Favicon** (30 set): il **mirino** (`public/favicon.svg`, cerchi concentrici in colore accento su fondo gunmetal) è la sorgente; `scripts/generate-favicons.mjs` rasterizza `favicon.ico`, `favicon-16/32.png`, `apple-touch-icon.png`, `icon-192/512.png` + `public/site.webmanifest`. Il cliente ha **bocciato** l'icona ricavata dal logo (fucili incrociati illeggibili a 16px): non riproporla. Se cambia l'accento, rieseguire lo script.
-  - **Logo**: `public/logo/logo_softair_milano.png` (sorgente) → `logo-white.png` / `logo-dark.png` generati con `scripts/logo-recolor.mjs` (ricolore fedele, no AI-redraw).
-- **Pipeline immagini AI (deciso e attivo)**: si generano via **Gemini 3 Pro Image** attraverso l'API Generative Language, **pilotata da Claude** con `scripts/genera-immagine.mjs` (applica lo "stile di casa" + reframe desktop→mobile close-up). Il cliente ha **attivato il billing su Google (~€10)**: il free tier NON copre le immagini. API key in `.env` (gitignored) come `GOOGLE_AI_STUDIO_SOFTAIRMILANO_PROJECT` (nonostante il nome è la key `AIza...`). `scripts/ottimizza-immagini.mjs` (sharp → WebP) è agganciato a `dev`/`build` via `npm run immagini`.
-  - **Immagini attività (fatte, 22 set)**: **Softair** e **Arcotag** = **foto reali del cliente** (in `~/Documenti/personal-projects/softairmilano/immagini/`, copiate in `public/uploads`); **Nerf** e (candidato) **Tiro** = **AI in image-to-image sulla foto reale dell'arena** `~/Documenti/.../immagini/arena.jpg` (aggiungendo i soggetti mantenendo l'ambientazione vera). ⚠️ **`arena.jpg` va usata SOLO quando il cliente lo dice esplicitamente** per generare. Per il Nerf: giocatori con **maschera a rete** (come arcotag), **occhi/volto coperti**, 1-2 dardi che escono davvero dal blaster (no dardi a caso). Le immagini AI a soggetto singolo si generano con `genera-immagine.mjs` (stile scuro cinematografico); per soggetti "chiari/luminosi" (nerf/arcotag) o edit sull'arena si usano script one-off nello scratchpad (bypassano lo stile scuro).
-  - **Immagini mobile (FATTE, 22 set sera)**: ogni attività ha una **versione verticale 4:5 dedicata** (`att-*-mobile.jpeg`, **1440×1800**, campo `imageMobile`), formato scelto perché nel nuovo layout il riquadro immagine è ~4:5 sui telefoni alti e più largo su quelli corti (soggetto centrato = sempre in frame). Prodotte con **Gemini 3 Pro Image in image-to-image "fedele"** (output 2K 1856×2304, prompt: "recreate this exact photograph as vertical 4:5, keep full width and every subject/pose/gear/lighting, extend naturally above and below, do not add people") partendo dalle **foto reali del cliente**: Softair ← `softair-milano-campo-2.jpg` (corridoio rosso con scudo), Arcotag ← `arcotag-milano-ridimensionata.jpg` (i due arcieri ravvicinati — scartata la variante dalla jeep `ArcoTag-milano-3`: cofano troppo grande, arcieri piccoli), Tiro dinamico ← dalla nuova desktop `att-tiro-dinamico-casetta.jpeg`; Nerf = **ritaglio nativo** 4:5 (sharp, nessun upscale) della verticale 9:16 già esistente. Risultato: fedeli alla scena reale, nitide, nessuna sgranatura. Lo script one-off è nello scratchpad (`reframe.mjs`, non nel repo): se serve rifarlo, replicare la chiamata di `genera-immagine.mjs` con `imageConfig:{aspectRatio:'4:5', imageSize:'2K'}` e il prompt qui sopra. **Tiro dinamico desktop = `att-tiro-dinamico-casetta.jpeg`** (1600×1195, text-to-image 2K con lo stile di casa): il cliente ha **bocciato** sia la vecchia (`att-tiro-dinamico.jpeg`) sia la variante coi bersagli vicini (`-2`, "si capisce che è finta, bersagli troppo vicini") e ha chiesto: **tutto più lontano, tiratore sulla soglia di una casetta di legno dell'arena, bersagli in fondo alla corsia, stesso stile** (senza usare `arena.jpg`). Scena vincente: wide shot, casetta in compensato con rete mimetica a sinistra, tiratore a media distanza sulla porta, sagome e barili piccoli in fondo, linee gialle e pallini a terra, foschia ambra dalle finestre alte. `att-tiro-dinamico.jpeg` e `att-tiro-dinamico-2.jpeg` (+ webp) sono **da eliminare** se il cliente conferma la nuova. ⚠️ Peso WebP mobile: 114–236 KB ciascuna (lazy) — da valutare col `performance-specialist` a pagina finita (eventuale `srcset` a due larghezze).
-- **Agenti, skill e canone (30 set, sull'impianto di contents-backend)**: le regole stanno in **`docs/standards/`** (10 file, regole con ID: `CMS-`, `CODE-`, `DES-`, `MEDIA-`, `A11Y-`, `PERF-`, `RESP-`, `SEO-`, `GIT-`); `CLAUDE.md` è un indice. **8 agenti specialisti** in `.claude/agents/` (design, cms, asset, code-standards, accessibility, performance, responsive, seo) che leggono il canone. **Skill di progetto: solo `ship`, `audit`, `coding-standards`, `handoff`** (la `handoff` di progetto vince su quella personale in `~/.claude/skills/`, che le cede il passo; l'handoff vive in `docs/in-development/HANDOFF.md`, un file unico per tutto il progetto). Le 13 skill di design di terze parti (`taste-skill`, `.agents/skills`, `skills-lock.json`) sono state **rimosse**: i loro principi utili, adattati al progetto, stanno in `design-specialist`.
-- **Verifica visiva con Playwright MCP** (`claude mcp add playwright npx @playwright/mcp@latest`): browser vero, **cattura anche sotto la piega** e vede le animazioni → usarlo per verificare desktop/mobile (la pane interna non basta). Screenshot in `.playwright-mcp/` (ripulire dopo, non committare).
-- **Anteprima online (staging)**: **https://softairmilano-anteprima.mapped-dev.it** — GitHub Pages con sorgente «GitHub Actions» (`.github/workflows/pages.yml`: build con `SITE_URL` di staging, `noindex`, scrive `dist/CNAME`), deploy automatico a ogni push su `main` (~1 min, `gh run watch`). DNS: CNAME `softairmilano-anteprima` → `matt0472.github.io.` su register.it. HTTPS forzato (il certificato non partiva: risolto rimuovendo e ri-aggiungendo il dominio via `gh api -X PUT repos/Matt0472/softairmilano/pages -f cname=…`). Il cliente finale ha visto questa anteprima il 30 set e ha chiesto: niente 3D, accento `#00CCFF`.
-- **Documenti**: `docs/piano-sviluppo.md`, `docs/cutover-checklist.md`, `docs/geo-e-indicizzazione.md`, `CLAUDE.md`.
-- **Memoria progetto** (`.claude/.../memory/`): `asset-strategy`, `visual-references`, `feedback-audit-timing`, `decisione-3d-unboxing`, `feedback-commit-review`.
+**La migrazione.** Oggi `softairmilano.it` è un WordPress su Aruba, ed è la fonte di contenuti e foto. Al go-live il sito nuovo lo sostituisce sullo stesso dominio (`docs/cutover-checklist.md`).
+
+**Obiettivi di business, in ordine:**
+1. vendere partite e sessioni (TicketingHub);
+2. far crescere il corso;
+3. convertire al softair chi cerca il paintball.
+
+**Il pubblico da riconquistare:** i gruppi «non so cosa fare il sabato sera con gli amici» (arcotag e softair).
+
+**Vincoli:**
+- qualità altissima e «wow» su ogni pagina, ma la performance viene prima;
+- tutto il contenuto editabile da CMS;
+- codice in inglese, contenuti in italiano;
+- le regole stanno in `docs/standards/` (indice in `CLAUDE.md`).
+
+## Stato attuale
+
+### Repo, deploy e metodo di lavoro
+
+- **Repo**: `Matt0472/softairmilano` (pubblico), branch `main`. Il commit di questo lavoro segue `5d19553`, l'ultimo pushato.
+- **Anteprima**: **https://softairmilano-anteprima.mapped-dev.it**, su GitHub Pages. Ogni push su `main` la aggiorna in circa 1 minuto (`gh run watch`). Il sito resta `noindex` (`SEO-10`).
+- **Regola del cliente**: mai commit o push senza ok esplicito, dopo avergli mostrato le modifiche (`GIT-01`).
+- **Metodo**: `/ship`, `/audit`, `/coding-standards` e `/handoff` sono skill di progetto in `.claude/skills/`. I **specialisti** sono in `.claude/agents/`: design, cms, asset, code-standards, accessibility, performance, responsive, seo.
+
+### Design system
+
+- **Regole**: `docs/standards/design.md`. Le decisioni bocciate dal cliente sono in `DES-10`, da non riproporre.
+- **Valori**: `src/styles/global.css` (`@theme`):
+  - accento ciano `#00ccff`;
+  - font Oswald per i titoli, Inter per il testo, entrambi con **fallback calibrati** («Oswald Fallback», «Inter Fallback») per avere CLS 0;
+  - easing `--ease-out-expo` e durate `--duration-fast/base/slow`;
+  - `.shell` largo al massimo 1520 px, con `--shell-gutter` (1.25rem, 2rem da 768).
+- **Titoli**: `h1–h4` hanno interlinea 1,12, perché gli accenti delle maiuscole di Oswald non tocchino la riga sopra.
+
+### Home (`src/pages/index.astro`)
+
+- **Ordine delle sezioni**:
+  1. Hero (immagine AI «still viva»);
+  2. L'arena (radar);
+  3. Video (self-hosted su R2);
+  4. Attività (scroll-story pinnata con testo «in streaming»);
+  5. Occasioni, Ranger e CTA finale, ancora con i marcatori «(DA COMPLETARE)».
+- **CTA finale**: ha `id="prenota"`, quindi il bottone Prenota del menu funziona anche in home.
+- **Etichette**: tutte le CTA di prenotazione dicono «Prenota» (`DES-05`).
+
+### Menu (`Header.astro`, `src/data/navigation.json`)
+
+- **Desktop**: voce «Attività ▾», una tendina con Softair (badge «Il più richiesto»), Arcotag («Da provare»), Tiro dinamico e Nerf, ciascuno con una descrizione di una riga.
+  - Si apre al clic e al passaggio del mouse, si chiude con Esc (anche con il focus fuori), si naviga con le frecce.
+  - Solo la pagina corrente è in ciano.
+- **Mobile**: menu a tutto schermo con un gruppo 2×2. È modale: tutti i figli di `body` diventano `inert` e Lenis si ferma.
+- **Voci**: alte 44 px e su una riga fino a 1024.
+- **Bottone Prenota del menu**: `navigation.cta` nel CMS.
+
+### Footer (`Footer.astro`)
+
+- Tutti i link sono almeno 44×44 px.
+- La colonna Ranger viene da `settings.footerRanger`, il nome del sito da `siteName`, il telefono da `src/lib/phone.ts`.
+- La barra in fondo lascia spazio al bottone «torna su».
+
+### Pagine attività: collezione Pages CMS «Attività»
+
+- **Dati**: un file per attività in `src/data/activities/<slug>.json`. Per ora c'è solo `arcotag.json`.
+- **Rotta**: `src/pages/[activity].astro` genera `/<slug>`.
+- **Sezioni**, ognuna mostrata solo se ha titolo e contenuto (`CMS-10`):
+  1. PageHero con i numeri a rullo, stile contachilometri, e la freccia firma per l'arcotag;
+  2. AnswerBlock;
+  3. StepTimeline `#serata` («La vostra serata»);
+  4. SplitFeature «Come si gioca»;
+  5. AudienceGrid «Perfetto per», con «Serata tra amici» in evidenza tramite il campo `featured`;
+  6. PriceTiers: fasce tutte illuminate, badge «Serata tra amici» sulla serale;
+  7. Reviews;
+  8. FaqAccordion, esclusivo (`DES-11`);
+  9. ActivityLinks «Provate anche», una galleria **squeeze**.
+     - Le schede sono le attività di Home › Attività meno la pagina corrente; le descrizioni brevi vengono dal menu.
+     - La scheda attiva è larga e illuminata; clic o tocco su una striscia la apre, un secondo clic naviga.
+     - Frecce e tastiera. Niente autoplay.
+  10. BookingCta `#prenota`: telefono, email e WhatsApp se compilato, con orari e indirizzo.
+
+### Pagina `/paintball` (`src/pages/paintball.astro` + `src/data/paintball.json`)
+
+- **Sezioni, in ordine**:
+  1. apertura AI «due giocatori a confronto»;
+  2. risposta breve;
+  3. VsComparison `#confronto`, una tabella vera;
+  4. ImpactScale, con le sfere da 6 e 17 mm in proporzione;
+  5. TeaserBanner verso l'arcotag;
+  6. «Cosa trovate», con una foto reale e 6 missioni;
+  7. «La prima volta» `#prima-volta`;
+  8. prezzi, con il badge «Per iniziare» sulla Recluta;
+  9. recensioni;
+  10. FAQ;
+  11. Prenota.
+- **Tono**: confronto onesto e rispettoso. Viking Paintball Como è del cliente ma **non va nominato** (sua decisione).
+
+### Componenti nuovi (futuri blocchi CMS)
+
+- **Organismi**: `PageHero`, `AnswerBlock`, `StepTimeline`, `SplitFeature`, `AudienceGrid`, `PriceTiers`, `Reviews`, `FaqAccordion`, `ActivityLinks`, `BookingCta`, `VsComparison`, `ImpactScale`, `TeaserBanner`.
+- **Molecole**: `Breadcrumb`, `FactStrip`, `IncludedList`, `LeadText`, `Reveal`, `SectionHead`, `Trajectory`.
+- **Atomi**: `Icon`, `Picture`, `Badge`.
+- **Helper condivisi** in `src/lib/`: `phone.ts` (`toE164`, `telHref`), `jsonld.ts` (`toLd`, `breadcrumbLd`, `faqLd`), `nav.ts`.
+- **Link interni** alla pagina: spostano anche il focus (`SmoothScroll.astro`).
+
+### SEO
+
+`BaseLayout.astro`:
+- valori predefiniti quando un campo SEO del CMS è vuoto;
+- `og:image` con larghezza e altezza lette dal file, e `og:image:alt`;
+- un JSON-LD `SportsActivityLocation` unico per tutto il sito: `@id` stabile, `PostalAddress` da `settings.postalAddress`, telefono E.164, social in `sameAs`;
+- `BreadcrumbList` e `FAQPage` per pagina, con gli URL nella stessa forma del canonical (barra finale);
+- precarico di Oswald 700.
+
+Immagini social: `arcotag-og.jpg` e `paintball-og.jpg`, 1200×630.
+
+### Immagini
+
+- **Pipeline**: `scripts/ottimizza-immagini.mjs` crea il `.webp` accanto all'originale (massimo 1600 px) più le varianti `public/_img/<nome>-w{640,800,1024,1200}.webp`, ignorate da git e rigenerate a ogni build.
+- **`Picture.astro`**: emette `srcset`, `sizes` e `width`/`height`.
+- **Arcotag**: le immagini (`arcotag-hero*`, `arcotag-azione`) vengono dalle foto reali del cliente in i2i «fedele» (autorizzato), poi ammorbidite per zona per ridurre il peso. Gli originali pre-compressione sono in `~/Documenti/personal-projects/softairmilano/immagini/originali-sito/`.
+- **Paintball**: l'apertura (`paintball-hero*`) è AI d'atmosfera (`MEDIA-02`).
+
+### Qualità misurata (30 set, build di produzione, Lighthouse mobile, mediana di 3)
+
+| Pagina | Performance | Accessibility | Best Practices | LCP | CLS | TBT |
+|---|---|---|---|---|---|---|
+| Home | 98 | 100 | 100 | 2,25 s | 0 | 0 |
+| Arcotag | 98 | 100 | 100 | 2,25 s | 0 | 0 |
+| Paintball | 99 | 100 | 100 | 1,95 s | 0 | 0 |
+
+- Il SEO è 69 solo per il `noindex`.
+- axe: 0 violazioni.
+- Contrasto dell'apertura misurato su 13 viewport: testo piccolo ≥ 5,04:1.
+- Verbale dell'audit: `docs/audits/2026-09-30-arcotag-paintball.md`. I suoi bloccanti e maggiori sono chiusi; restano aperti i punti elencati sotto.
+
+## In attesa del cliente
+
+- **Le due pagine pilota**: /arcotag il cliente l'ha già definita «stupenda». Deve vedere /paintball e lo squeeze di «Provate anche» sul telefono vero.
+- **Immagini social** `arcotag-og.jpg` e `paintball-og.jpg`: ritagli delle aperture approvate, da confermare (`MEDIA-04`).
+- **Apertura arcotag desktop**: dopo la ricompressione è un filo più morbida al 100% su uno schermo grande. Tenere, oppure rifare con meno sfocatura sullo sfondo (~102 KB).
+- **Copy da validare**:
+  - H1 della home senza «softair/Milano»;
+  - badge del menu («Il più richiesto» è un'affermazione);
+  - sopratitolo «Il vostro sabato sera» nell'arcotag, mentre i prezzi vendono anche i pomeriggi feriali;
+  - badge «Per iniziare» sul paintball;
+  - numeri tecnici del paintball (≤ 1 J per legge, 6–12 J, 17 mm, circa 15 volte), presi dagli articoli del sito attuale.
+- **Lede dell'apertura**: ora è bianco invece che grigio, per il contrasto. Scelta di design da confermare.
+
+## Dati dal cliente
+
+- **Età minima arcotag**: 8 anni (pagina arcotag, menu, modulistica del sito attuale) oppure 10 (`home.json`, pill «Dai 10 anni»)?
+- **Prezzo Recluta**: 35 € (pagina più recente del sito attuale) o 30 €? Anche le **fasce orarie dell'arcotag** non coprono tutto l'orario di apertura: quanto costa un martedì alle 21?
+- **Team building arcotag**: «fino a 20 persone» contro 6–25 giocatori.
+- **Recensioni**: voto medio (`testimonials.rating.value`, oggi vuoto, quindi niente stelle), numero aggiornato e link al profilo Google. Oggi la home dice «4,9 / 5 · oltre 500 recensioni», le pagine nuove «347» (widget di agosto 2024). Servono anche recensioni più recenti.
+- **Contenuti dell'arcotag**: nomi delle missioni, protezioni incluse.
+- **Contatti e integrazioni**: WhatsApp, coordinate geografiche, orari strutturati per il JSON-LD, ID di TicketingHub e GA4, prezzi di corso, feste e team building.
 
 ## Cosa ha funzionato
-- **Build/dev con Node 22** via nvm: `export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"; nvm use 22.23.2` poi `npm run build` / `npm run dev`.
-- `astro dev` parte come **daemon** su `http://localhost:4321`.
-- **Gli agenti** (`.claude/agents/`) sono risultati **auto-invocabili** (gli allora «auditor» di accessibility/performance/responsive/seo, oggi `*-specialist`, usati come quality-gate dell'hero — perf 84→100, LCP 4.5→1.7s dopo i fix WebP).
-- **Feedback cliente sul processo**: lanciare `/audit` (i 4 specialisti di qualità) **solo a pagina finita**, non a ogni componente (vedi memoria `feedback-audit-timing`).
-- Generazione immagini via API verificata: `gemini-3-pro-image`, `gemini-3.1-flash-image`, `gemini-2.5-flash-image`, più `veo-3.1` (video) disponibili sulla key.
+
+- **Contenuti dal sito attuale**: WP REST API (`/wp-json/wp/v2/pages|posts?per_page=100`) più sitemap. L'inventario completo era nello scratchpad della sessione. I dati chiave sono già nei JSON.
+- **Specialisti in parallelo** su file diversi:
+  - build serializzate con `flock <scratchpad>/build.lock npm run build`;
+  - ogni agente usa **il suo contesto** Playwright (`page.context().browser().newContext()` in `browser_run_code_unsafe`), mai la pagina condivisa;
+  - un solo server di anteprima: `astro preview` sulla 4322.
+- **Gemini, dettagli che funzionano** (`asset-specialist`):
+  - i2i «fedele» dalle foto reali;
+  - estensione dell'inquadratura riempiendo il bordo aggiunto (zoom-out) per far entrare i soggetti interi;
+  - un ritocco mirato quando la rigenerazione non corregge un dettaglio (per esempio l'impugnatura del fucile);
+  - sfocatura per zona per ridurre il peso senza toccare volti e maschere.
+- **Numeri a rullo solo in CSS**: le cifre sono disegnate con contenuto generato (nel DOM resta il valore vero) e l'animazione parte con `fill-mode: both`, quindi niente JavaScript e nessun flash del valore finale.
+- **FAQ esclusive**: `<details name="…">` nativo più una piccola riserva per i browser vecchi.
+- **Tempi di caricamento**: ricompressione, `srcset` e precarico del font hanno portato l'LCP di /arcotag da 2,78 a 2,25 s; i fallback calibrati hanno portato il CLS a 0.
 
 ## Cosa NON ha funzionato / trappole
-- **Node 20 di default fa fallire il build**. SEMPRE `nvm use 22.23.2`.
-- **La pane/browser interno CONGELA le animazioni** (`document.timeline` fermo, `animation currentTime` resta a 0 anche in primo piano) → **impossibile verificare il movimento negli screenshot/JS interni**; sul movimento ci si fida del browser reale del cliente.
-- **La pane non cattura screenshot del contenuto sotto la piega** (esce nero); si verificano top-page e via ispezione JS (`getBoundingClientRect`, `getComputedStyle`).
-- **YouTube**: il chrome (barra titolo/logo/correlati) **non si nasconde del tutto** senza croppare (e croppare taglia il video). Fix pulito = self-host.
-- **Radar dimensionato in `%` del contenitore**: allargando `.shell` diventava enorme → ora è a **dimensione fissa in px** (indipendente dalla larghezza).
-- Trappola CSS: `@keyframes { to { transform: rotate(360deg) } }` è lo spinner standard e funziona; NON usare la proprietà `rotate` insieme a un `transform: translate` (inverte l'ordine → orbita invece di girare sul posto).
-- **3D**: fatto, funzionante e poi **rimosso dal cliente** (30 set): non riproporlo. Lezioni utili restate nel repo: verificare con **Playwright MCP** (la pane congela rAF; dopo un `npm i` a dev server avviato serve deps Vite scadute → 504 «Outdated Optimize Dep» → riavviare `astro dev`), scrollare nei test con `window.__lenis.scrollTo(y, {immediate:true})`, `offsetTop` dentro una `section` relativa è relativo alla section.
-- **Crop immagini mobile**: un'immagine **orizzontale** in un full-bleed verticale mostra solo una fetta stretta (sembra "zoomata") e con **due soggetti distanti** ne taglia sempre uno. `object-fit: contain` (letterbox con bande) è stato **bocciato dal cliente**. Soluzione = **foto verticali dedicate** o crop mirati con `sharp` (`position:'right'`/`'left'`/`attention`, o `extract`), soggetto **in alto** (la metà bassa la copre il testo). Ancora da rifinire.
-- **Streaming teletype**: usa `setTimeout` (NON `requestAnimationFrame`/CSS animation) → funziona anche nella pane. Lo scroll-snap "on idle" era fastidioso (forzava lo scroll) → **rimosso**, non reintrodurre.
-- **`fetch` di Node verso Google in timeout (ETIMEDOUT/ENETUNREACH IPv6)** mentre `curl` funzionava: risolto lanciando con `NODE_OPTIONS=--dns-result-order=ipv4first` e una generazione alla volta (non 3 in parallelo).
-- **Playwright + `astro dev`**: in fondo agli screenshot mobile spunta la **toolbar di sviluppo di Astro** (icone a y≈830) — NON è un elemento del sito. Dopo un `location.reload()` l'`evaluate` fallisce ("execution context destroyed"): rifare la chiamata dopo il reload.
+
+- **Node 20 fa fallire la build**: sempre `nvm use 22.23.2`.
+- **La pane interna dell'app** congela le animazioni e non cattura sotto la piega: verificare con Playwright MCP.
+- **Nei test di Playwright**:
+  - si scrolla con `window.__lenis.scrollTo(y, {immediate:true})`;
+  - la toolbar di Astro compare in fondo agli screenshot del dev server;
+  - dopo un `reload` l'`evaluate` va rifatto;
+  - i contesti desktop hanno una **barra di scorrimento di 15 px**: per il mobile usare `isMobile: true`, altrimenti «375» misura in realtà 360.
+  - Il touch va simulato con `Input.dispatchTouchEvent` (inizio, movimento, fine). `Input.synthesizeScrollGesture` qui non scorre nulla.
+- **Server di sviluppo** (`npm run dev`, avviato dall'utente sulla 4321): dopo modifiche agli stili `is:global` può servire **CSS vecchio**. Ricaricare con Ctrl+Shift+R, oppure riavviarlo. Astro 7 non permette un secondo dev server sullo stesso progetto.
+- **Spostare file con l'IDE** (JetBrains) riscrive i percorsi nei markdown come relativi al file (`../../src/…`). Claude li legge dalla radice del repo: rimetterli relativi alla radice.
+- **Script Python di modifica**: mai `open(p,'w').write(f(open(p).read()))`. Il file viene troncato prima di essere letto; è già successo con l'HANDOFF, recuperato dalla copia in stage.
+- **Astro/JSX**: `{lista?.length && <X/>}` con una lista vuota stampa «0». Usare `!!lista?.length`.
+- **Percorsi nei componenti**: nella build `import.meta.url` punta al modulo compilato, non a `src/`. Per i file in `public/` usare `join(process.cwd(), 'public', …)`.
+- **Focus e clic**: il clic del mouse dà il focus al link *prima* dell'evento click. Nello squeeze il focus deve aprire la scheda solo se viene da tastiera (`:focus-visible`), altrimenti il primo clic naviga.
+- **Lenis**: `overflow: hidden` sul `body` non lo ferma; servono `__lenis.stop()` e `start()`, più `data-lenis-prevent` sugli overlay che scorrono.
+- **Sfocatura per ridurre il peso delle immagini AI**: una sfocatura uniforme serve poco, perché il peso sta nel dettaglio vero (rete, travi). Serve la sfocatura per zona.
+- **Gemini** tende a sbagliare l'impugnatura dei fucili e a inventare scritte (marchi, lavagne): controllare sempre ingrandendo.
+- **Restano valide le trappole storiche**:
+  - radar a dimensione fissa in px;
+  - mai la proprietà `rotate` insieme a `transform: translate`;
+  - teletype con `setTimeout`;
+  - `NODE_OPTIONS=--dns-result-order=ipv4first` e una generazione Gemini alla volta;
+  - niente scroll-snap automatico nella scroll-story.
 
 ## File chiave
-- `CLAUDE.md` — stack, convenzioni, team agenti, GEO. Leggere per primo.
-- `src/styles/global.css` — token `@theme` + `.shell` (max-width 1520px) + skip-link + mobile-menu.
-- `src/layouts/BaseLayout.astro` — head (meta, OG/Twitter, JSON-LD LocalBusiness, gate noindex) + Header/Footer/ScrollToTop.
-- `src/components/organisms/` — `Hero.astro`, `VideoSection.astro`, `ArenaIntro.astro`, `ActivitiesStory.astro`, `Header.astro`, `Footer.astro`.
-- `.claude/launch.json` — config `astro-dev` per la pane. `.github/workflows/pages.yml` — anteprima su GitHub Pages (`softairmilano-anteprima.mapped-dev.it`, repo reso pubblico per questo, HTTPS forzato).
-- `src/components/molecules/` — `ScrollToTop.astro`, `SmoothScroll.astro` (Lenis globale).
-- `src/pages/index.astro` — Home (ordine: Hero → ArenaIntro → VideoSection → ActivitiesStory → occasioni → ranger → CTA).
-- `src/data/*.json` — contenuti CMS: `home.json` (hero/video/arena + attività con image/imageMobile/pills + occasioni/…), `settings.json` (contatti VUOTI, `social`), `navigation.json` (`items`).
-- `.pages.yml` — Pages CMS (settings + navigation + home, con i campi hero/video/arena/social + attività image/imageMobile/pills).
-- `scripts/` — `genera-immagine.mjs` (generatore AI), `ottimizza-immagini.mjs` (WebP), `logo-recolor.mjs`.
-- `.env` — API key Gemini (gitignored, **mai committare**).
-- `public/uploads/` — immagini hero (desktop + mobile + webp) + **immagini attività** `att-softair*`, `att-tiro-dinamico*`, `att-arcotag*`, `att-nerf*` (ognuna con `-mobile` dedicata) + il video poster. `public/logo/` — logo + versioni bianca/scura. Le **foto reali sorgente** del cliente sono in `~/Documenti/personal-projects/softairmilano/immagini/` (arena.jpg, softair-milano-campo-1/2, ArcoTag-milano-1, arcotag-milano-ridimensionata).
+
+- `CLAUDE.md`: indice di canone, agenti e skill. `docs/standards/README.md`: non negoziabili e debito noto.
+- `src/pages/[activity].astro`: modello delle pagine attività e logica delle sezioni vuote. `src/pages/paintball.astro`: la landing.
+- `src/data/activities/arcotag.json`, `src/data/paintball.json`, `src/data/testimonials.json`, `src/data/navigation.json` (con `children` e `cta`), `src/data/settings.json` (contatti, `postalAddress`, `footerRanger`, `openingHours`, `directions`).
+- `.pages.yml`:
+  - collezione «Attività» con `filename: { template: "{primary}.json", field: create }`;
+  - pagina «Softair VS Paintball»;
+  - «Recensioni»;
+  - campi obbligatori e note «Se vuoto, la sezione non compare».
+- `src/layouts/BaseLayout.astro`: head, OG, JSON-LD, precarico del font.
+- `src/components/organisms/ActivityLinks.astro` (squeeze), `PageHero.astro` (contrasto e varianti per orientamento), `Header.astro` (tendina e menu mobile modale).
+- `scripts/ottimizza-immagini.mjs` e `src/components/atoms/Picture.astro`: immagini responsive.
+- `docs/audits/2026-09-30-arcotag-paintball.md`: il verbale dell'audit.
 
 ## Ambiente & comandi
+
 ```bash
-export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"; nvm use 22.23.2   # OBBLIGATORIO
-cd /home/mpedone/projects/personal/softairmilano
-npm run build          # esegue anche 'immagini' (WebP) poi astro build → dist/
-npm run dev            # daemon su http://localhost:4321
-node scripts/genera-immagine.mjs --name hero-x --ratio 16:9 --scene "..."   # genera immagine AI (serve billing Google attivo)
+export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"; nvm use 22.23.2   # obbligatorio
+npm run build                     # immagini (WebP + varianti in public/_img) poi astro build → dist/
+npx astro preview --port 4322     # anteprima della build (usata da audit e Lighthouse)
+npx lighthouse http://127.0.0.1:4322/arcotag --form-factor=mobile --chrome-flags="--headless=new"
+NODE_OPTIONS=--dns-result-order=ipv4first node scripts/genera-immagine.mjs --name x --ratio 16:9 --scene "..."
 ```
-- Produzione (indicizzabile): `PUBLIC_SITE_INDEXABLE=true`.
-- **Regola Git: mai committare/pushare senza ok esplicito — dal 30 set il cliente vuole VEDERE le modifiche prima (screenshot/build locale), poi dà l'ok.** Build di produzione per test: `npx astro preview --port 4322` + Lighthouse `npx lighthouse http://127.0.0.1:4322/ --chrome-flags="--headless=new"`.
 
-## Prossimi passi (ordinati)
-1. **Sezione Attività**: (a) MOBILE **FATTO** (22 set sera) → far **validare al cliente sul telefono vero** (verificare anche il movimento, che la pane non mostra); (b) Tiro dinamico → nuova scena "**casetta + bersagli lontani**" (`att-tiro-dinamico-casetta`), **da confermare col cliente** e poi cancellare le due vecchie; (c) eventuale sezione **Corso** dedicata (ne avevamo parlato). Le modifiche di questa sessione sono **NON committate** (componente, `home.json`, `.pages.yml`, 4 immagini mobile + webp, `att-tiro-dinamico-2*`): chiedere ok e committare.
-2. **Colore accento ciano**: far vedere al cliente hero e attività con il nuovo accento sulle foto a luce ambra; se stona, rigenerare le immagini con luce neutra.
-3. **Da audit del 22 set (SEO/a11y/responsive/perf), da chiudere PRIMA del go-live** (non necessari per l'anteprima): meta `description` per pagina (campo in `home.json` + `.pages.yml`, prop in `index.astro`); **OG image in PNG/JPG 1200×630** (oggi SVG, non renderizza sui social); JSON-LD LocalBusiness con `address`/`telephone`/`geo`/`openingHours` (campi in `settings.json`); **FAQPage**; chiave **IndexNow** in `public/`; **un solo interruttore** per `robots.txt` e noindex (route `src/pages/robots.txt.ts` che legge `PUBLIC_SITE_INDEXABLE`); **bottone pausa sul video** (WCAG 2.2.2) e niente autoplay con reduced-motion (fatto); bordo card `--color-border` sotto 3:1 su sfondo (WCAG 1.4.11) → più contrasto o secondo segnale; voci nav/CTA header sotto 44px di altezza; **togliere i marcatori «(DA COMPLETARE)»** (oggi `aria-hidden`, in `index.astro`, voluti dal cliente per l'anteprima) man mano che le sezioni si rifanno. Lighthouse mobile home al 30 set: **98 / 100 / 100**, TBT 0.
-4. **Completare la Home**: ridisegnare **Occasioni** in coerenza, poi Pacchetti/prezzi, Recensioni, Galleria, FAQ, Dove siamo, box Ranger, CTA finale.
-5. **Cookie consent** (vanilla-cookieconsent): gate per GA4 + TicketingHub (il video è self-host, niente YouTube da gestire).
-6. **Libreria componenti** mancanti (Input, FormField, Accordion/FAQ, PriceRow, Badge…) + `/styleguide` noindex.
-7. **Le 13 pagine** + collezioni (blog, esperienze, `pages/` a blocchi) + **404** on-brand. La medaglia in nav si attiverà su queste pagine.
-8. **Manuale cliente** (come campo-di-zucche).
-9. **Quality-gate**: `/audit` **a pagina finita** (a11y bloccante); `/audit lancio` prima del go-live.
-10. **Dati/asset dal cliente**: telefono, WhatsApp, indirizzo, geo, orari (`settings.json` → anche JSON-LD LocalBusiness), OG image reale (ora è un SVG che i social non renderizzano → rasterizzare o generarla da una hero), ID TicketingHub, ID GA4, prezzi.
-11. **Go-live**: `docs/cutover-checklist.md` + `docs/geo-e-indicizzazione.md`.
+- La API key di Gemini è in `.env` (`GOOGLE_AI_STUDIO_SOFTAIRMILANO_PROJECT`), con billing attivo.
+- Le foto reali del cliente sono in `~/Documenti/personal-projects/softairmilano/immagini/`.
 
-## Decisioni aperte / note
-- **VIDEO — FATTO (self-host su Cloudflare R2)**: il video della Home è ora un `<video>` nativo servito da R2 (bucket pubblico via URL **r2.dev**). **Da fare prima del go-live**: migrare da `pub-…r2.dev` a un **custom domain** (es. `video.softairmilano.it`) — Cloudflare sconsiglia r2.dev in produzione (non cacheabile su CDN come un dominio proprio). Cambio = un solo `videoSrc` in `home.json`.
-- **H1 della Home** ("Diventa protagonista di un film d'azione") non contiene le keyword "softair/Milano" → il `seo-specialist` propone alternative keyword-rich (decisione copy del cliente, ancora aperta).
-- **OG image è un SVG** → non renderizza nelle anteprime social; da rasterizzare (o generare da una hero) prima del go-live.
-- **Accento colore**: **ciano `#00ccff`** dal 30 set (scelta del cliente). Le foto AI dell'hero/attività hanno luce ambra: se il contrasto caldo/freddo non convince, le opzioni sono rigenerare le immagini con luce più neutra/fredda (pipeline Gemini) o un accento secondario caldo solo nelle foto.
-- Contenuti reali e prezzi definitivi.
+## Prossimi passi
+
+1. **Pagine Softair, Tiro dinamico e Nerf con il modello dell'Arcotag**: creare `src/data/activities/softair.json`, `tiro-dinamico.json` e `nerf.json` con la stessa struttura. La rotta, il menu e «Provate anche» sono già pronti.
+   - Contenuti dal sito attuale:
+     - **softair**: missioni, 1 h 45, 8–20 giocatori, 12+, Recluta/Maggiore/Veterano;
+     - **tiro dinamico**: percorsi Alfa, Beta e Double Team, 60 € per 1–2 persone o 20 € a persona;
+     - **nerf**: quasi nessun dato, chiederlo al cliente.
+   - Immagini: foto reali e varianti mobile già esistenti (`att-*`), più aperture 16:9/9:16 da preparare con l'`asset-specialist`.
+   - Redirect dal vecchio `/partite-di-softair/`.
+   - A pagina finita, `/audit`.
+2. **Manuale cliente** (`CMS-12–14`, non esiste ancora). Sezioni da scrivere:
+   - Impostazioni: orari, come arrivare, indirizzo per Google, footer Ranger, WhatsApp;
+   - Menu: sottomenu, badge, descrizione solo desktop, lunghezza massima delle etichette, bottone Prenota e `#prenota`;
+   - Recensioni: solo vere, niente date, voto e link;
+   - Attività: come si crea una pagina, nomi riservati, rinomina, ogni sezione campo per campo, rapporti delle immagini, badge dei prezzi, FAQ esclusive;
+   - Softair VS Paintball;
+   - Immagini: WebP e varianti automatiche, testo alternativo.
+3. **Home**:
+   - leggere le attività dalla collezione invece di duplicarle in `home.json`;
+   - rifare Occasioni, Ranger e CTA finale;
+   - togliere i marcatori «(DA COMPLETARE)».
+4. **Cookie consent** (vanilla-cookieconsent) per GA4 e TicketingHub, poi il widget TicketingHub nelle sezioni `#prenota`.
+5. **Altre pagine**:
+   - L'arena, Corso (prioritaria), Gruppi & eventi, compleanni, addii al celibato/nubilato, contatti;
+   - legali (servono prima l'opzione `noindex` per pagina in `BaseLayout` e `termini` nel filtro della sitemap);
+   - 404;
+   - landing SEO «cosa fare a Milano con gli amici».
+6. **Seguiti tecnici**:
+   - una sola forma degli URL (`trailingSlash` in `astro.config.mjs` e link interni);
+   - i `.webp` accanto agli originali sono in git: su un clone nuovo la verifica per data potrebbe non rigenerarli se il cliente sostituisce una foto con lo stesso nome (valutare di toglierli da git o di controllare l'hash);
+   - intestazioni del footer («Menu», «Contatti») e link legali ancora nel codice;
+   - un campo punto focale per le immagini dell'apertura;
+   - stato premuto nell'atomo `Button`;
+   - una sottile riga verticale sul bordo destro di `logo-white-120.webp` nel footer, da verificare;
+   - nota di ImpactScale visibile anche quando le sfere non sono disegnate.
+
+## Da chiudere prima del go-live
+
+- Immagine social della home ancora in SVG, da rasterizzare in 1200×630.
+- JSON-LD con `geo` e orari strutturati (`openingHoursSpecification`), con i dati del cliente.
+- Chiave IndexNow in `public/`; un solo interruttore per `robots.txt` e `noindex` (oggi `public/robots.txt` è statico).
+- Bottone pausa sul video della home (WCAG 2.2.2).
+- Bordo `--color-border` sotto 3:1 (WCAG 1.4.11): più contrasto o un secondo segnale.
+- Marcatori «(DA COMPLETARE)» in `index.astro`.
+- Ogni link interno deve puntare a una pagina esistente (oggi /softair, /tiro-dinamico, /nerf, /l-arena, /corso-softair, /teambuilding, /contatti, le occasioni e le legali danno 404).
+- Video R2 da `r2.dev` a un dominio proprio.
+- Rich Results Test di Google; Search Console e Bing Webmaster (`docs/geo-e-indicizzazione.md`).
+
+## Decisioni aperte
+
+- **H1 della home**: keyword «softair Milano» o l'attuale «Diventa protagonista di un film d'azione»? Decide il cliente.
+- **Accento ciano sulle foto con luce ambra**: tenere, oppure rigenerare le foto con luce neutra.
+- **Vecchie immagini del tiro dinamico** (`att-tiro-dinamico.jpeg`, `-2`): da eliminare quando il cliente conferma la versione «casetta».

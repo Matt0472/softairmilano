@@ -9,8 +9,8 @@
 - **RESP-04** — **Tap target ≥ 44px** per ogni elemento interattivo.
 - **RESP-05** — **Immagini fluide** (`max-width: 100%`, `object-fit` corretto, nessuna larghezza fissa
   oltre il viewport); su mobile immagini verticali dedicate (`DES-09`).
-- **RESP-06** — Sezioni a tutto schermo con **`min-height: 100dvh`**, mai `100vh` (salto del viewport
-  su iOS Safari).
+- **RESP-06** — Sezioni a tutto schermo con **`min-height: 100svh`** (o `100dvh`), mai `100vh`: `svh`
+  non salta quando la barra del browser si chiude e tiene la CTA sopra la piega.
 - **RESP-07** — Le sezioni **pinnate** (scroll-story) si disattivano sugli schermi troppo bassi (sotto
   560px di altezza) e hanno una variante per i telefoni corti (`max-height: 700px`).
 - **RESP-08** — Ogni layout a più colonne dichiara il suo **fallback sotto 768px nello stesso

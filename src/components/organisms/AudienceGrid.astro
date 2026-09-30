@@ -1,0 +1,186 @@
+---
+// "Perfetto per": who the activity suits. A brick grid (wide/narrow, then
+// narrow/wide) instead of a row of equal cards; an odd last item takes the whole
+// row. Items with a link are whole-tile links with an arrow; items without one
+// stay plain text tiles (no hover promise). The featured item gets the same lift
+// as the featured price tier (surface step + accent rule), kept deliberately quiet.
+
+import Icon from '../atoms/Icon.astro';
+import SectionHead from '../molecules/SectionHead.astro';
+
+interface Item {
+  title: string;
+  text: string;
+  href?: string;
+  featured?: boolean;
+}
+interface Props {
+  title: string;
+  text?: string;
+  items: Item[];
+  headingId?: string;
+}
+
+const { title, text, items, headingId = 'audience-title' } = Astro.props;
+const list = (items ?? []).filter((it) => it?.title?.trim());
+const hasTitle = !!title?.trim();
+
+// 12-column spans per row: 7/5, then 5/7; a lone last item spans the row.
+const spanFor = (i: number): number => {
+  if (i === list.length - 1 && i % 2 === 0) return 12;
+  const row = Math.floor(i / 2);
+  const first = i % 2 === 0;
+  return row % 2 === 0 ? (first ? 7 : 5) : first ? 5 : 7;
+};
+---
+
+{list.length > 0 && (
+  <section class="aud" aria-labelledby={hasTitle ? headingId : undefined}>
+    <div class="shell">
+      <SectionHead title={title} text={text} id={headingId} />
+
+      <ul class="aud__grid" role="list">
+        {list.map((it, i) => (
+          <li class="aud__cell" style={`--span: ${spanFor(i)}; --i: ${i % 2}`} data-reveal>
+            {it.href ? (
+              <a class:list={['aud__tile aud__tile--link', it.featured && 'aud__tile--featured']} href={it.href}>
+                <h3 class="aud__title">{it.title}</h3>
+                {it.text?.trim() && <p class="aud__text">{it.text}</p>}
+                <span class="aud__go"><Icon name="arrowUpRight" size={20} /></span>
+              </a>
+            ) : (
+              <div class:list={['aud__tile', it.featured && 'aud__tile--featured']}>
+                <h3 class="aud__title">{it.title}</h3>
+                {it.text?.trim() && <p class="aud__text">{it.text}</p>}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .aud {
+    --accent: var(--color-accent);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  .aud__grid {
+    list-style: none;
+    margin: clamp(2rem, 5vw, 3.25rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  }
+  .aud__cell { grid-column: span var(--span, 6); display: flex; }
+
+  .aud__tile {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: clamp(11rem, 15vw, 13rem);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+  .aud__title {
+    margin: 0;
+    max-width: 20ch;
+    padding-right: 3.5rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.55rem, 2.8vw, 2.35rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    transition: color var(--duration-base) var(--ease-out-expo);
+  }
+  .aud__text {
+    margin: 0;
+    max-width: 44ch;
+    color: var(--color-muted);
+    font-size: 0.99rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .aud__go {
+    position: absolute;
+    top: clamp(1.25rem, 2.6vw, 1.9rem);
+    right: clamp(1.25rem, 2.6vw, 1.9rem);
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    color: var(--color-foreground);
+    transition:
+      background-color var(--duration-base) var(--ease-out-expo),
+      border-color var(--duration-base) var(--ease-out-expo),
+      color var(--duration-base) var(--ease-out-expo);
+  }
+  .aud__go svg { transition: transform var(--duration-slow) var(--ease-out-expo); }
+
+  .aud__tile--link {
+    transition:
+      border-color var(--duration-base) var(--ease-out-expo),
+      background-color var(--duration-base) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  /* Hover only where there is a pointer, so a tap never leaves a tile stuck lit; keyboard gets the same. */
+  @media (hover: hover) {
+    .aud__tile--link:hover {
+      border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+      background: var(--color-surface-2);
+    }
+    .aud__tile--link:hover .aud__title { color: var(--color-accent-hover); }
+    .aud__tile--link:hover .aud__go {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--color-on-accent);
+    }
+    .aud__tile--link:hover .aud__go svg { transform: translate(2px, -2px); }
+  }
+  .aud__tile--link:focus-visible .aud__go {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--color-on-accent);
+  }
+  .aud__tile--link:active { transform: translateY(1px) scale(0.99); }
+  .aud__tile--link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-lg);
+  }
+
+  /* Featured occasion: a surface step, a tinted border and the accent rule, plus a slightly larger title. */
+  .aud__tile--featured {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--color-border));
+    background: var(--color-surface-2);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+  .aud__tile--featured .aud__title { font-size: clamp(1.75rem, 3.2vw, 2.7rem); }
+  .aud__tile--featured .aud__text { color: color-mix(in srgb, var(--color-foreground) 82%, var(--color-muted)); }
+  .aud__tile--featured .aud__go { border-color: color-mix(in srgb, var(--accent) 55%, transparent); color: var(--accent); }
+
+  @media (max-width: 1023px) {
+    .aud__cell { grid-column: span 6; }
+    .aud__cell:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  }
+  @media (max-width: 599px) {
+    .aud__cell,
+    .aud__cell:last-child:nth-child(odd) { grid-column: 1 / -1; }
+    .aud__tile { min-height: 0; gap: 1rem; }
+    .aud__go { width: 40px; height: 40px; }
+  }
+</style>

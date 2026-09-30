@@ -1,0 +1,152 @@
+---
+// Answer-first block ("Cos'è l'arcotag", "La differenza in breve"): the question
+// as H2, the direct answer as a large lead that an AI assistant can quote
+// (SEO-08), the rest of the explanation offset beside it, then the key points
+// on a single ruled band. Editorial composition, no cards.
+
+import Icon from '../atoms/Icon.astro';
+import LeadText from '../molecules/LeadText.astro';
+
+interface Point {
+  title: string;
+  text: string;
+}
+interface Props {
+  title: string;
+  text: string;
+  points?: Point[];
+  headingId?: string;
+}
+
+const { title, text, points, headingId = 'answer-title' } = Astro.props;
+const list = (points ?? []).filter((p) => p?.title?.trim());
+const hasTitle = !!title?.trim();
+---
+
+<section class="answer" aria-labelledby={hasTitle ? headingId : undefined}>
+  <div class="shell">
+    {hasTitle && <h2 class="answer__title" id={headingId} data-reveal>{title}</h2>}
+    {text?.trim() && (
+      <div data-reveal style="--i: 1">
+        <LeadText text={text} class="answer__lead" />
+      </div>
+    )}
+
+    {list.length > 0 && (
+      <ul class="answer__points" role="list" style={`--n: ${list.length}`} data-reveal>
+        {list.map((p) => (
+          <li class="answer__point">
+            <span class="answer__mark"><Icon name="check" size={16} /></span>
+            <h3 class="answer__point-title">{p.title}</h3>
+            {p.text?.trim() && <p class="answer__point-text">{p.text}</p>}
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</section>
+
+<style is:global>
+  .answer {
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  .answer__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 5.5vw, 3.4rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+
+  .answer__lead { margin-top: clamp(1.5rem, 3vw, 2.25rem); }
+  .answer__lead .lead__first {
+    max-width: 34ch;
+    font-size: clamp(1.4rem, 2.9vw, 2.3rem);
+    font-weight: 500;
+    line-height: 1.28;
+    letter-spacing: -0.012em;
+  }
+  .answer__lead[data-long] .lead__first { font-size: clamp(1.3rem, 2.5vw, 2rem); max-width: 40ch; }
+  .answer__lead .lead__rest { margin-top: clamp(1.25rem, 2.5vw, 2rem); }
+
+  .answer__points {
+    list-style: none;
+    margin: clamp(2.75rem, 6vw, 4.5rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
+    border-top: 1px solid var(--color-border);
+  }
+  .answer__point {
+    padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1rem, 2.5vw, 2rem) 0 0;
+  }
+  .answer__point + .answer__point {
+    padding-left: clamp(1rem, 2.5vw, 2rem);
+    border-left: 1px solid var(--color-border);
+  }
+  .answer__mark {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: var(--color-accent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  }
+  .answer__mark svg { stroke-width: 2.6; }
+  .answer__point-title {
+    margin: 1rem 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    letter-spacing: 0.03em;
+    line-height: 1.15;
+  }
+  .answer__point-text {
+    margin: 0.5rem 0 0;
+    max-width: 36ch;
+    color: var(--color-muted);
+    font-size: 0.975rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  /* Desktop: the explanation shifts right of the lead, editorial offset. */
+  @media (min-width: 1024px) {
+    .answer__lead .lead__rest { margin-left: auto; margin-right: 8%; }
+  }
+
+  /* Tablet: points two by two. */
+  @media (max-width: 1023px) {
+    .answer__points { grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 0; }
+    .answer__point,
+    .answer__point + .answer__point {
+      padding: 1.25rem 1.25rem 1.5rem 0;
+      border-left: 0;
+      border-top: 1px solid var(--color-border);
+    }
+    .answer__point:nth-child(even) { padding-left: 1.25rem; border-left: 1px solid var(--color-border); }
+    /* An odd last point takes the whole row: no empty cell. */
+    .answer__point:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  }
+
+  /* Phones: a ruled list, icon beside the title. */
+  @media (max-width: 599px) {
+    .answer__points { grid-template-columns: 1fr; }
+    .answer__point,
+    .answer__point + .answer__point,
+    .answer__point:nth-child(even) {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      column-gap: 0.9rem;
+      padding: 1.1rem 0;
+      border-left: 0;
+    }
+    .answer__mark { grid-row: 1 / span 2; width: 28px; height: 28px; }
+    .answer__point-title { margin: 0.2rem 0 0; }
+    .answer__point-text { margin-top: 0.35rem; max-width: none; }
+  }
+</style>

@@ -1,0 +1,219 @@
+---
+// Prices as a ledger: the intro, the notes and the booking CTA on the left, one
+// row per tier on the right with large tabular figures in one aligned column.
+// Every tier is lit the same way; a tier the client wants to push gets a badge,
+// so emphasis never breaks the alignment or introduces a second colour.
+
+import Badge from '../atoms/Badge.astro';
+import Button from '../atoms/Button.astro';
+import SectionHead from '../molecules/SectionHead.astro';
+
+interface Tier {
+  label: string;
+  when?: string;
+  price: string;
+  unit?: string;
+  note?: string;
+  badge?: string;
+}
+interface Cta {
+  label: string;
+  href: string;
+}
+interface Props {
+  title: string;
+  text?: string;
+  tiers: Tier[];
+  notes?: string[];
+  cta?: Cta;
+  headingId?: string;
+}
+
+const { title, text, tiers, notes, cta, headingId = 'price-title' } = Astro.props;
+const list = (tiers ?? []).filter((t) => t?.label?.trim());
+const noteList = (notes ?? []).filter((n) => typeof n === 'string' && n.trim());
+const hasCta = !!cta?.label?.trim() && !!cta?.href?.trim();
+const hasTitle = !!title?.trim();
+---
+
+{list.length > 0 && (
+  <section class="price" aria-labelledby={hasTitle ? headingId : undefined}>
+    <div class="price__inner shell">
+      <div class="price__intro" data-reveal>
+        <SectionHead title={title} text={text} id={headingId} />
+      </div>
+
+      <ul class="price__list" role="list" data-reveal style="--i: 1">
+        {list.map((t) => (
+          <li class:list={['price__row', t.badge && 'price__row--badged']}>
+            <div class="price__what">
+              <h3 class="price__label">{t.label}{t.badge && <Badge class="price__badge">{t.badge}</Badge>}</h3>
+              {t.when && <p class="price__when">{t.when}</p>}
+            </div>
+            {t.price && (
+              <p class="price__amount">
+                <span class="price__num">{t.price}</span>
+                {t.unit && <span class="price__unit">{t.unit}</span>}
+              </p>
+            )}
+            {t.note && <p class="price__note">{t.note}</p>}
+          </li>
+        ))}
+      </ul>
+
+      {(noteList.length > 0 || hasCta) && (
+        <div class="price__after" data-reveal style="--i: 2">
+          {noteList.length > 0 && (
+            <ul class="price__notes" role="list">
+              {noteList.map((n) => <li>{n}</li>)}
+            </ul>
+          )}
+          {hasCta && (
+            <div class="price__cta">
+              <Button href={cta!.href} variant="primary" class="price__btn">{cta!.label}</Button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .price {
+    --accent: var(--color-accent);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+  /* Desktop: intro, then notes + CTA, on the left; the ledger on the right.
+     Smaller screens: intro, ledger, then notes + CTA right after the prices. */
+  .price__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "intro list" "after list";
+    column-gap: clamp(2rem, 6vw, 6rem);
+    align-items: start;
+  }
+  .price__intro { grid-area: intro; }
+  .price__list { grid-area: list; }
+  .price__after { grid-area: after; }
+
+  .price__notes {
+    list-style: none;
+    margin: 1.75rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.93rem;
+    color: var(--color-muted);
+  }
+  .price__notes li {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+  .price__notes li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-steel);
+  }
+  .price__cta { margin-top: 2rem; }
+  .price__btn {
+    min-height: 48px;
+    padding-inline: 1.75rem;
+    transition:
+      background-color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .price__btn:active { transform: translateY(1px) scale(0.98); }
+
+  .price__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  /* Every tier is lit the same: a surface step and the accent rule, one padding for all rows so
+     labels and figures line up in two clean columns. */
+  .price__row {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: 1.5rem;
+    padding: clamp(1.25rem, 2.6vw, 1.75rem) clamp(1rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-2);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+  .price__row--badged { border-color: color-mix(in srgb, var(--accent) 40%, var(--color-border)); }
+  .price__label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.75rem;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.3rem, 2.3vw, 1.8rem);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+  }
+  .price__when {
+    margin: 0.4rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .price__amount {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    justify-self: end;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .price__num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+  }
+  .price__unit {
+    max-width: 6.5rem;
+    white-space: normal;
+    text-align: left;
+    font-size: 0.8rem;
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+  }
+  .price__note {
+    grid-column: 1 / -1;
+    margin: 0.9rem 0 0;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.9rem;
+    color: var(--color-foreground);
+  }
+
+  @media (max-width: 1023px) {
+    .price__inner {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: none;
+      grid-template-areas: "intro" "list" "after";
+    }
+    .price__list { margin-top: clamp(2rem, 5vw, 2.75rem); }
+    .price__notes { margin-top: 1.5rem; }
+  }
+</style>
