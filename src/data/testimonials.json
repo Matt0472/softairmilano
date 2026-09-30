@@ -1,31 +1,47 @@
 {
   "rating": {
     "label": "Eccellente",
-    "value": null,
-    "count": "347",
+    "value": 4.7,
+    "count": "500+",
     "source": "recensioni su Google",
     "url": ""
   },
   "items": [
     {
-      "author": "Joshua Fidone",
-      "text": "Grandi gli organizzatori che spiegano tutto nei minimi dettagli. Davvero ottimo per scaricare la tensione della settimana. Sicuramente ci tornerò."
+      "author": "Carla R.",
+      "text": "Finalmente i nostri figli sono riusciti a fare questa esperienza a dir poco fantastica! Si sono divertiti tantissimo.",
+      "pages": [
+        "arcotag"
+      ]
     },
     {
-      "author": "Carla Riccardi",
-      "text": "Finalmente i nostri figli sono riusciti a fare questa esperienza a dir poco fantastica! Si sono divertiti tantissimo."
+      "author": "Joshua F.",
+      "text": "Grandi gli organizzatori che spiegano tutto nei minimi dettagli. […] Davvero ottimo per prendere una boccata d'aria e scaricare la tensione della settimana. Sicuramente ci tornerò.",
+      "pages": [
+        "softair",
+        "paintball"
+      ]
     },
     {
-      "author": "Francesco Zanaboni",
-      "text": "Esperienza top, personale coinvolgente."
+      "author": "Francesco Z.",
+      "text": "Esperienza top, personale coinvolgente.",
+      "pages": [
+        "all"
+      ]
     },
     {
-      "author": "Andrea Zanaboni",
-      "text": "Bell'arena, gioco divertentissimo!"
+      "author": "Andrea Z.",
+      "text": "Bell'arena, gioco divertentissimo!",
+      "pages": [
+        "all"
+      ]
     },
     {
       "author": "Mc",
-      "text": "Ci vado da anni ed è sempre divertente."
+      "text": "Ci vado da anni ed è sempre divertente.",
+      "pages": [
+        "all"
+      ]
     }
   ]
 }

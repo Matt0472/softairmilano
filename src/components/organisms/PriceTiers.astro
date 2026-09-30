@@ -32,6 +32,8 @@ interface Props {
 const { title, text, tiers, notes, cta, headingId = 'price-title' } = Astro.props;
 const list = (tiers ?? []).filter((t) => t?.label?.trim());
 const noteList = (notes ?? []).filter((n) => typeof n === 'string' && n.trim());
+// Keep "6 €" and "14:00–18:00" on one line: a figure never wraps away from its unit or its range.
+const keep = (s?: string) => s?.replace(/(\d) €/g, '$1\u00a0€').replace(/(\d)–(\d)/g, '$1\u2060–\u2060$2');
 const hasCta = !!cta?.label?.trim() && !!cta?.href?.trim();
 const hasTitle = !!title?.trim();
 ---
@@ -47,8 +49,11 @@ const hasTitle = !!title?.trim();
         {list.map((t) => (
           <li class:list={['price__row', t.badge && 'price__row--badged']}>
             <div class="price__what">
-              <h3 class="price__label">{t.label}{t.badge && <Badge class="price__badge">{t.badge}</Badge>}</h3>
-              {t.when && <p class="price__when">{t.when}</p>}
+              <div class="price__head">
+                <h3 class="price__label">{t.label}</h3>
+                {t.badge && <Badge>{t.badge}</Badge>}
+              </div>
+              {t.when && <p class="price__when">{keep(t.when)}</p>}
             </div>
             {t.price && (
               <p class="price__amount">
@@ -56,7 +61,7 @@ const hasTitle = !!title?.trim();
                 {t.unit && <span class="price__unit">{t.unit}</span>}
               </p>
             )}
-            {t.note && <p class="price__note">{t.note}</p>}
+            {t.note && <p class="price__note">{keep(t.note)}</p>}
           </li>
         ))}
       </ul>
@@ -65,7 +70,7 @@ const hasTitle = !!title?.trim();
         <div class="price__after" data-reveal style="--i: 2">
           {noteList.length > 0 && (
             <ul class="price__notes" role="list">
-              {noteList.map((n) => <li>{n}</li>)}
+              {noteList.map((n) => <li>{keep(n)}</li>)}
             </ul>
           )}
           {hasCta && (
@@ -132,6 +137,7 @@ const hasTitle = !!title?.trim();
   .price__btn:active { transform: translateY(1px) scale(0.98); }
 
   .price__list {
+    container-type: inline-size;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -153,16 +159,18 @@ const hasTitle = !!title?.trim();
     box-shadow: inset 3px 0 0 var(--accent);
   }
   .price__row--badged { border-color: color-mix(in srgb, var(--accent) 40%, var(--color-border)); }
-  .price__label {
+  .price__head {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.4rem 0.75rem;
+  }
+  .price__label {
     margin: 0;
     font-family: var(--font-display);
     font-weight: 700;
     font-size: clamp(1.3rem, 2.3vw, 1.8rem);
-    line-height: 1.05;
+    line-height: 1.12;
     letter-spacing: 0.02em;
   }
   .price__when {
@@ -205,6 +213,12 @@ const hasTitle = !!title?.trim();
     border-top: 1px solid var(--color-border);
     font-size: 0.9rem;
     color: var(--color-foreground);
+  }
+
+  /* A narrow list (small phones): the figure moves under the label instead of squeezing it. */
+  @container (max-width: 21rem) {
+    .price__row { grid-template-columns: minmax(0, 1fr); row-gap: 0.75rem; }
+    .price__amount { justify-self: start; text-align: left; }
   }
 
   @media (max-width: 1023px) {

@@ -8,6 +8,7 @@
 // runs edge to edge above the copy.
 
 import Picture from '../atoms/Picture.astro';
+import { slotHtml } from '../../lib/slots';
 
 interface Item {
   name: string;
@@ -39,6 +40,8 @@ const {
   items = [],
   headingId = 'split-title',
 } = Astro.props;
+
+const asideHtml = await slotHtml(Astro.slots);
 
 const [rw, rh] = ratio.split('/').map((n) => parseFloat(n));
 const orientation = rw >= rh ? 'landscape' : 'portrait';
@@ -80,9 +83,9 @@ const hasTitle = !!title?.trim();
         </div>
       )}
 
-      {Astro.slots.has('default') && (
+      {asideHtml && (
         <div class="split__aside" data-reveal style="--i: 2">
-          <slot />
+          <Fragment set:html={asideHtml} />
         </div>
       )}
     </div>

@@ -22,11 +22,17 @@ interface Props {
 }
 
 const { title, text, items, headingId = 'audience-title' } = Astro.props;
-const list = (items ?? []).filter((it) => it?.title?.trim());
+const filled = (items ?? []).filter((it) => it?.title?.trim());
 const hasTitle = !!title?.trim();
 
-// 12-column spans per row: 7/5, then 5/7; a lone last item spans the row.
+// 12-column spans per row: 7/5, then 5/7; a lone last item spans the row. With three items the
+// featured one stands tall on the left and the other two stack beside it, so the lead item is
+// never the smallest tile on the page.
+const tallFirst = filled.length === 3;
+const lead = filled.findIndex((it) => it.featured);
+const list = tallFirst && lead > 0 ? [filled[lead], ...filled.filter((_, i) => i !== lead)] : filled;
 const spanFor = (i: number): number => {
+  if (tallFirst) return i === 0 ? 7 : 5;
   if (i === list.length - 1 && i % 2 === 0) return 12;
   const row = Math.floor(i / 2);
   const first = i % 2 === 0;
@@ -41,7 +47,7 @@ const spanFor = (i: number): number => {
 
       <ul class="aud__grid" role="list">
         {list.map((it, i) => (
-          <li class="aud__cell" style={`--span: ${spanFor(i)}; --i: ${i % 2}`} data-reveal>
+          <li class:list={['aud__cell', tallFirst && i === 0 && 'aud__cell--tall']} style={`--span: ${spanFor(i)}; --i: ${i % 2}`} data-reveal>
             {it.href ? (
               <a class:list={['aud__tile aud__tile--link', it.featured && 'aud__tile--featured']} href={it.href}>
                 <h3 class="aud__title">{it.title}</h3>
@@ -76,6 +82,9 @@ const spanFor = (i: number): number => {
     gap: clamp(0.75rem, 1.5vw, 1.25rem);
   }
   .aud__cell { grid-column: span var(--span, 6); display: flex; }
+  .aud__cell--tall { grid-row: span 2; }
+  /* The tall tile reads like a poster: title and copy together at the bottom, the arrow up top. */
+  .aud__cell--tall .aud__tile { justify-content: flex-end; gap: 1rem; }
 
   .aud__tile {
     position: relative;
@@ -175,6 +184,7 @@ const spanFor = (i: number): number => {
 
   @media (max-width: 1023px) {
     .aud__cell { grid-column: span 6; }
+    .aud__cell--tall { grid-row: auto; }
     .aud__cell:last-child:nth-child(odd) { grid-column: 1 / -1; }
   }
   @media (max-width: 599px) {

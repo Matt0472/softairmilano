@@ -1,0 +1,267 @@
+{
+  "name": "Tiro dinamico",
+  "seo": {
+    "title": "Tiro dinamico softair a Milano, a cronometro | SoftAir Milano",
+    "description": "Tiro dinamico softair a Milano: tre percorsi a bersagli contro il cronometro, da soli o in coppia, con classifica. Da 1 a 8 persone, dai 12 anni, al coperto.",
+    "image": "/uploads/tiro-dinamico-og.jpg",
+    "imageAlt": ""
+  },
+  "hero": {
+    "eyebrow": "Arena indoor · Milano",
+    "title": "Tiro dinamico softair a Milano",
+    "subtitle": "Bersagli, tappe e un cronometro che corre: tre percorsi da affrontare da soli o in coppia, a caccia del miglior tempo.",
+    "image": "/uploads/tiro-dinamico-hero.jpeg",
+    "imageMobile": "/uploads/tiro-dinamico-hero-mobile.jpeg",
+    "imageAlt": "Un giocatore con maschera protettiva e fucile replica esce da una casetta di legno coperta da una rete mimetica; in fondo alla corsia gialla, i bersagli.",
+    "focus": "right",
+    "ctaPrimary": {
+      "label": "Prenota",
+      "href": "#prenota"
+    },
+    "ctaSecondary": {
+      "label": "Come funziona",
+      "href": "#serata"
+    }
+  },
+  "facts": [
+    {
+      "value": "3",
+      "label": "percorsi"
+    },
+    {
+      "value": "1–8",
+      "label": "persone"
+    },
+    {
+      "value": "12+",
+      "label": "anni"
+    },
+    {
+      "value": "1.500 m²",
+      "label": "al coperto"
+    }
+  ],
+  "intro": {
+    "title": "Cos'è il tiro dinamico",
+    "text": "Il tiro dinamico è una prova di precisione e velocità: si percorre un tracciato a tappe e si colpiscono i bersagli con la replica softair nel minor tempo possibile. Da noi ci sono tre percorsi di difficoltà diversa, da affrontare da soli o in coppia, e ogni percorso usa diverse tipologie di armi. Lo staff rileva il tempo di ogni partecipante e stila una classifica, con il miglior tempo e il miglior tempo complessivo. Si gioca a Milano, nell'arena indoor di Softair Milano.",
+    "points": [
+      {
+        "title": "A cronometro",
+        "text": "Ogni prova ha il suo tempo: la classifica dice chi è stato il più veloce."
+      },
+      {
+        "title": "Da soli o in coppia",
+        "text": "Si gioca da soli, oppure in coppia nel Double Team, in contemporanea."
+      },
+      {
+        "title": "La vostra replica o la nostra",
+        "text": "Portate la vostra attrezzatura o noleggiate i nostri fucili specializzati per il tiro dinamico."
+      }
+    ]
+  },
+  "evening": {
+    "eyebrow": "",
+    "title": "La vostra sfida, un passo alla volta",
+    "text": "Da soli, in coppia o in un gruppo fino a 8: ecco come va una sessione di tiro dinamico.",
+    "steps": [
+      {
+        "time": "Arrivo",
+        "title": "Vi accogliamo",
+        "text": "Arrivate e ritirate la replica, oppure preparate la vostra."
+      },
+      {
+        "time": "Prima di partire",
+        "title": "Regole e percorsi",
+        "text": "Vi spieghiamo le regole di sicurezza e com'è fatto ogni percorso: tappe e bersagli."
+      },
+      {
+        "time": "Percorso",
+        "title": "Contro il tempo",
+        "text": "Tappa dopo tappa, bersagli ravvicinati e a distanza: lo staff rileva il tempo di ogni prova."
+      },
+      {
+        "time": "Classifica",
+        "title": "Chi vince?",
+        "text": "Miglior tempo e miglior tempo complessivo: la classifica chiude ogni discussione."
+      }
+    ]
+  },
+  "modes": {
+    "eyebrow": "",
+    "title": "Tre percorsi, tre livelli",
+    "text": "Ogni percorso ha tappe, bersagli e difficoltà diverse: il tempo di ogni prova finisce in classifica.",
+    "numbered": true,
+    "items": [
+      {
+        "title": "Alfa",
+        "text": "Il percorso d'ingresso: sette tappe tra bersagli ravvicinati e tiri a lunga distanza.",
+        "stats": [
+          {
+            "value": "7",
+            "label": "tappe"
+          },
+          {
+            "value": "16",
+            "label": "bersagli ravvicinati"
+          },
+          {
+            "value": "4",
+            "label": "a lunga distanza"
+          }
+        ]
+      },
+      {
+        "title": "Beta",
+        "text": "Più tappe e più bersagli: si sblocca dopo aver completato l'Alfa.",
+        "stats": [
+          {
+            "value": "8",
+            "label": "tappe"
+          },
+          {
+            "value": "20",
+            "label": "bersagli ravvicinati"
+          },
+          {
+            "value": "6",
+            "label": "a lunga distanza"
+          }
+        ]
+      },
+      {
+        "title": "Double Team",
+        "text": "Il percorso per due: la coppia lo affronta in contemporanea.",
+        "stats": [
+          {
+            "value": "10",
+            "label": "tappe"
+          },
+          {
+            "value": "30",
+            "label": "bersagli ravvicinati"
+          },
+          {
+            "value": "10",
+            "label": "a media distanza"
+          }
+        ]
+      }
+    ]
+  },
+  "howto": {
+    "title": "Tappe, tempi e classifica",
+    "text": "Ogni partecipante affronta il percorso tappa dopo tappa, colpendo i bersagli con armi di tipo diverso a seconda della prova. Lo staff rileva il tempo di ciascuna prova e alla fine stila la classifica.",
+    "includedTitle": "Cosa trovate",
+    "included": [
+      "Fucili specializzati per il tiro dinamico, a noleggio",
+      "Cronometraggio e classifica",
+      "Arena al coperto, anche se piove"
+    ],
+    "image": "/uploads/tiro-dinamico-come-si-gioca.jpeg",
+    "imageAlt": "Un tiratore con casco, maschera protettiva e fucile replica, fermo nel riquadro giallo di una tappa, mira ai bersagli in fondo alla corsia: piatti d'acciaio e sagome su supporti, in un capannone attraversato dalla luce delle finestre."
+  },
+  "audiences": {
+    "title": "Perfetto per",
+    "items": [
+      {
+        "title": "Sfida tra amici",
+        "text": "Stesso percorso, tempi diversi: alla fine la classifica dice chi ha la mira più lucida.",
+        "href": "#prenota",
+        "featured": true
+      },
+      {
+        "title": "In coppia",
+        "text": "Il Double Team si affronta in due, in contemporanea: coordinazione o disastro, lo scoprite sul campo.",
+        "href": "",
+        "featured": false
+      },
+      {
+        "title": "Giocatori di softair",
+        "text": "Allenate mira e velocità con la vostra replica, tappa dopo tappa.",
+        "href": "",
+        "featured": false
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Prezzi del tiro dinamico",
+    "text": "Stesso prezzo con la vostra attrezzatura o con i nostri fucili a noleggio. Si gioca dal lunedì al venerdì: il pomeriggio dalle 14 alle 18 (l'ultimo turno parte alle 18) e la sera dalle 20.",
+    "tiers": [
+      {
+        "label": "Da soli o in due",
+        "when": "1–2 persone",
+        "price": "60",
+        "unit": "€ in totale",
+        "note": "",
+        "badge": ""
+      },
+      {
+        "label": "In gruppo",
+        "when": "Da 3 a 8 persone",
+        "price": "20",
+        "unit": "€ a persona",
+        "note": "",
+        "badge": "Sfida tra amici"
+      }
+    ],
+    "notes": [
+      "Sabato e domenica solo su richiesta: i campi sono riservati al softair, e ogni richiesta va confermata dallo staff.",
+      "Prenotazione obbligatoria."
+    ]
+  },
+  "reviews": {
+    "title": "Cosa dice chi ha giocato"
+  },
+  "faq": {
+    "title": "Domande frequenti sul tiro dinamico",
+    "items": [
+      {
+        "q": "Da che età si può fare tiro dinamico?",
+        "a": "Dai 12 anni compiuti, come il softair. I minorenni portano il modulo firmato da un genitore."
+      },
+      {
+        "q": "Si può giocare da soli?",
+        "a": "Sì: i percorsi si affrontano da soli o in coppia, e per 1 o 2 persone il prezzo è di 60 € in totale. Il Double Team è pensato per una coppia, in contemporanea."
+      },
+      {
+        "q": "Quante persone possono partecipare?",
+        "a": "Da 1 a 8 per sessione. Da 3 persone in su si pagano 20 € a testa."
+      },
+      {
+        "q": "Quando si può fare tiro dinamico?",
+        "a": "Dal lunedì al venerdì, il pomeriggio dalle 14 alle 18 e la sera dalle 20. Sabato e domenica solo su richiesta, perché i campi sono riservati al softair: ogni richiesta va confermata dallo staff."
+      },
+      {
+        "q": "Posso usare la mia replica?",
+        "a": "Sì, allo stesso prezzo. Altrimenti noleggiate i nostri fucili specializzati per il tiro dinamico."
+      },
+      {
+        "q": "Come funziona la classifica?",
+        "a": "Lo staff rileva il tempo di ogni partecipante in ciascuna prova: la classifica indica il miglior tempo e il miglior tempo complessivo."
+      },
+      {
+        "q": "Che differenza c'è tra i percorsi?",
+        "a": "L'Alfa ha 7 tappe e 20 bersagli; il Beta 8 tappe e 26 bersagli, e si sblocca dopo l'Alfa; il Double Team 10 tappe e 40 bersagli, per una coppia in contemporanea."
+      },
+      {
+        "q": "Cosa devo indossare?",
+        "a": "Maglietta a maniche lunghe o felpa, pantaloni lunghi e scarpe comode. L'arena non è riscaldata né climatizzata: d'inverno vestitevi a strati."
+      },
+      {
+        "q": "Come si prenota?",
+        "a": "Chiamateci al 375 595 6805 o scriveteci a info@softairmilano.it indicando giorno, orario e numero di giocatori. La prenotazione è obbligatoria."
+      },
+      {
+        "q": "Dove si trova il percorso?",
+        "a": "Nell'arena al coperto di Via Melegnano 26 a Settimo Milanese, alle porte di Milano: parcheggio facile e bus 433 dalla metro M1 Bisceglie."
+      }
+    ]
+  },
+  "related": {
+    "title": "Provate anche"
+  },
+  "cta": {
+    "title": "Prenotate la vostra sfida",
+    "text": "Diteci giorno, orario e quanti siete: al cronometro pensiamo noi."
+  }
+}

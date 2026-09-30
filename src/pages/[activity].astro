@@ -7,6 +7,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/organisms/PageHero.astro';
 import AnswerBlock from '../components/organisms/AnswerBlock.astro';
 import StepTimeline from '../components/organisms/StepTimeline.astro';
+import ModeGrid from '../components/organisms/ModeGrid.astro';
 import SplitFeature from '../components/organisms/SplitFeature.astro';
 import AudienceGrid from '../components/organisms/AudienceGrid.astro';
 import PriceTiers from '../components/organisms/PriceTiers.astro';
@@ -33,12 +34,20 @@ interface Activity {
     image: string;
     imageMobile?: string;
     imageAlt: string;
+    focus?: 'center' | 'right';
     ctaPrimary: Cta;
     ctaSecondary?: Cta;
   };
   facts?: { value: string; label: string }[];
   intro?: { title: string; text: string; points?: { title: string; text: string }[] };
   evening?: { eyebrow?: string; title: string; text?: string; steps?: { time?: string; title: string; text: string }[] };
+  modes?: {
+    eyebrow?: string;
+    title: string;
+    text?: string;
+    numbered?: boolean;
+    items?: { title: string; text: string; stats?: { value: string; label: string }[] }[];
+  };
   howto?: { title: string; text?: string; includedTitle?: string; included?: string[]; image: string; imageAlt: string };
   audiences?: { title: string; items?: { title: string; text: string; href?: string; featured?: boolean }[] };
   pricing?: {
@@ -71,7 +80,7 @@ const signature: Record<string, 'trajectory'> = { arcotag: 'trajectory' };
 // A section renders only when the client filled it in: Pages CMS always saves the object, so
 // its title (and its list, where it has one) is what decides (CMS-10).
 const has = (v?: string) => typeof v === 'string' && v.trim().length > 0;
-const { intro, evening, howto, audiences, pricing, reviews, faq, related, cta } = data;
+const { intro, evening, modes, howto, audiences, pricing, reviews, faq, related, cta } = data;
 
 const crumbs = [
   { label: 'Home', href: '/' },
@@ -102,13 +111,16 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
     </SplitFeature>
   )}
 
+  {/* The variants come after the rules: first how it plays, then the missions or courses. */}
+  {modes && has(modes.title) && !!modes.items?.length && <ModeGrid {...modes} items={modes.items} />}
+
   {audiences && has(audiences.title) && !!audiences.items?.length && <AudienceGrid title={audiences.title} items={audiences.items} />}
 
   {pricing && has(pricing.title) && !!pricing.tiers?.length && (
     <PriceTiers title={pricing.title} text={pricing.text} tiers={pricing.tiers} notes={pricing.notes} cta={data.hero.ctaPrimary} />
   )}
 
-  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} page={activity} />}
 
   {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
 

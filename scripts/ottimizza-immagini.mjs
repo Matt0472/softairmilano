@@ -39,6 +39,8 @@ let skipped = 0;
 for (const file of sources) {
   const src = join(DIR, file);
   const { name } = parse(file);
+  // Social images (<name>-og) are fetched whole, as JPG, by the platforms: no WebP, no variants.
+  if (name.endsWith('-og')) continue;
   try {
     const sourceMtime = (await stat(src)).mtimeMs;
     const meta = await sharp(src).metadata();

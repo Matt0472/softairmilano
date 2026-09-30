@@ -1,0 +1,274 @@
+{
+  "name": "Softair",
+  "seo": {
+    "title": "Partite di softair a Milano, al coperto | SoftAir Milano",
+    "description": "Partite di softair a Milano in un villaggio militare indoor di 1.500 m²: missioni a squadre arbitrate, attrezzatura inclusa, fino a 30 giocatori, dai 12 anni.",
+    "image": "/uploads/softair-og.jpg",
+    "imageAlt": ""
+  },
+  "hero": {
+    "eyebrow": "Arena indoor · Milano",
+    "title": "Partite di softair a Milano",
+    "subtitle": "Missioni a squadre in un villaggio militare al coperto, arbitrate dal nostro staff: il film d'azione, stavolta, lo giocate voi.",
+    "image": "/uploads/softair-hero.jpeg",
+    "imageMobile": "/uploads/softair-hero-mobile.jpeg",
+    "imageAlt": "Due giocatori di softair con casco, maschera protettiva e fucile replica entrano da una porta in controluce, tra polvere e fumo.",
+    "focus": "right",
+    "ctaPrimary": {
+      "label": "Prenota",
+      "href": "#prenota"
+    },
+    "ctaSecondary": {
+      "label": "Come funziona",
+      "href": "#serata"
+    }
+  },
+  "facts": [
+    {
+      "value": "30",
+      "label": "giocatori al massimo"
+    },
+    {
+      "value": "1 h 45",
+      "label": "di gioco e briefing"
+    },
+    {
+      "value": "12+",
+      "label": "anni"
+    },
+    {
+      "value": "1.500 m²",
+      "label": "al coperto"
+    }
+  ],
+  "intro": {
+    "title": "Cos'è una partita di softair",
+    "text": "Il softair è un gioco di squadra con repliche di armi che sparano pallini da 6 mm: chi viene colpito lo dichiara ed esce dal gioco. Da noi non è un semplice sparatutto: in 1 ora e 45 minuti, briefing compreso, giocate diverse missioni una dopo l'altra, ispirate ai videogiochi del momento e ognuna con regole e obiettivi propri. Si gioca a Milano, in un villaggio militare indoor di 1.500 m², con lo staff che arbitra ogni partita.",
+    "points": [
+      {
+        "title": "Anche alla prima volta",
+        "text": "Attrezzatura inclusa e briefing iniziale: non serve nessuna esperienza."
+      },
+      {
+        "title": "Arbitrato dallo staff",
+        "text": "Regole chiare e gioco leale, dalla prima all'ultima missione."
+      },
+      {
+        "title": "Al coperto e illuminato",
+        "text": "Si gioca con qualsiasi tempo, di giorno e di sera: l'arena è indoor."
+      }
+    ]
+  },
+  "evening": {
+    "eyebrow": "Il vostro sabato sera",
+    "title": "La vostra partita, un passo alla volta",
+    "text": "Che siate in pochi o in 30, al resto pensiamo noi. Tra briefing e missioni, una partita dura 1 ora e 45 minuti in tutto.",
+    "steps": [
+      {
+        "time": "Arrivo",
+        "title": "Vi accogliamo",
+        "text": "Arrivate, vi preparate e ritirate l'attrezzatura: fucile, maschera e pettorina. I maggiorenni hanno già compilato il modulo online."
+      },
+      {
+        "time": "Briefing",
+        "title": "Regole e sicurezza",
+        "text": "Lo staff vi spiega le regole, l'uso della replica e le missioni della partita."
+      },
+      {
+        "time": "Missioni",
+        "title": "In missione",
+        "text": "Una missione dopo l'altra, ognuna con obiettivi diversi, tra edifici, auto e torrette di vedetta."
+      },
+      {
+        "time": "Dopo",
+        "title": "Un timbro in più",
+        "text": "Con la Tessera Élite ogni partita vale un timbro: al quinto, la successiva è gratis."
+      }
+    ]
+  },
+  "modes": {
+    "eyebrow": "",
+    "title": "Missioni, non il solito sparatutto",
+    "text": "Ogni missione ha regole e obiettivi diversi e si ispira ai videogiochi del momento. Lo staff le sceglie di volta in volta in base all'esperienza del gruppo: ecco alcune di quelle che potreste giocare.",
+    "numbered": false,
+    "items": [
+      {
+        "title": "The Last Flag",
+        "text": "Recuperate la bandiera della squadra avversaria.",
+        "stats": []
+      },
+      {
+        "title": "Death Match",
+        "text": "Vince la squadra che elimina l'altra.",
+        "stats": []
+      },
+      {
+        "title": "Highlander",
+        "text": "Tutti contro tutti: ne resterà soltanto uno.",
+        "stats": []
+      },
+      {
+        "title": "VIP",
+        "text": "Scortate il testimone al punto sicuro senza che venga colpito.",
+        "stats": []
+      },
+      {
+        "title": "Bomberman",
+        "text": "Disinnescate l'ordigno prima che scada il tempo.",
+        "stats": []
+      },
+      {
+        "title": "Difesa del bastione",
+        "text": "Resistete fino alla fine: il bastione non deve cadere.",
+        "stats": []
+      }
+    ]
+  },
+  "howto": {
+    "title": "Come si gioca",
+    "text": "Le squadre si affrontano tra edifici, auto e torrette di vedetta. Chi viene colpito lo dichiara ed esce dal gioco: il softair si basa sulla lealtà dei giocatori. La maschera si tiene sempre, dall'inizio alla fine.",
+    "includedTitle": "Attrezzatura inclusa",
+    "included": [
+      "Fucile softair",
+      "Maschera protettiva",
+      "Pettorina",
+      "300 colpi",
+      "Arbitraggio dello staff"
+    ],
+    "image": "/uploads/softair-come-si-gioca.jpeg",
+    "imageAlt": "Un giocatore di softair con casco, maschera protettiva e fucile replica avanza tra barricate di compensato, in una lama di luce che entra da una finestra."
+  },
+  "audiences": {
+    "title": "Perfetto per",
+    "items": [
+      {
+        "title": "Serata tra amici",
+        "text": "Al posto del solito aperitivo: quasi due ore tra briefing e missioni, poi a cena a raccontarvele.",
+        "href": "#prenota",
+        "featured": true
+      },
+      {
+        "title": "Addio al celibato e al nubilato",
+        "text": "Lo sposo (o la sposa) da scortare come un VIP o da braccare in un Highlander: un addio che non si dimentica.",
+        "href": "",
+        "featured": false
+      },
+      {
+        "title": "Compleanni",
+        "text": "Dai 12 anni in su: una festa da protagonisti, una missione dopo l'altra.",
+        "href": "",
+        "featured": false
+      },
+      {
+        "title": "Team building",
+        "text": "Strategia, comunicazione e fiducia nella squadra, con l'arena in esclusiva su richiesta.",
+        "href": "",
+        "featured": false
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Prezzi delle partite di softair",
+    "text": "Prezzo a persona per una partita di 1 ora e 45 minuti, briefing compreso.",
+    "tiers": [
+      {
+        "label": "Recluta",
+        "when": "Prima volta, attrezzatura inclusa",
+        "price": "35",
+        "unit": "€ a persona",
+        "note": "Fucile, maschera, pettorina e 300 colpi",
+        "badge": "Per iniziare"
+      },
+      {
+        "label": "Recluta del martedì",
+        "when": "Martedì pomeriggio",
+        "price": "20",
+        "unit": "€ a persona",
+        "note": "Stessa attrezzatura e colpi della Recluta",
+        "badge": ""
+      },
+      {
+        "label": "Maggiore",
+        "when": "Avete già giocato da noi, con la tessera",
+        "price": "20",
+        "unit": "€ a persona",
+        "note": "Stessa attrezzatura e colpi della Recluta",
+        "badge": ""
+      },
+      {
+        "label": "Veterano",
+        "when": "Con la vostra attrezzatura",
+        "price": "15",
+        "unit": "€ a persona",
+        "note": "Pallini propri solo non bio, al massimo 0,28 g",
+        "badge": ""
+      }
+    ],
+    "notes": [
+      "Si parte da 8 giocatori: se siete meno, vi uniamo a un altro gruppo nello stesso orario.",
+      "Ricarica da 300 colpi: 3 €. Granate: 6 €.",
+      "Fotografo professionista su preventivo.",
+      "Tessera Élite: un timbro a partita, al quinto la successiva è gratis.",
+      "Prenotazione obbligatoria."
+    ]
+  },
+  "reviews": {
+    "title": "Cosa dice chi ha giocato"
+  },
+  "faq": {
+    "title": "Domande frequenti sul softair",
+    "items": [
+      {
+        "q": "Da che età si può giocare a softair?",
+        "a": "Dai 12 anni compiuti. I minorenni portano il modulo firmato da un genitore; i maggiorenni lo compilano online prima di venire."
+      },
+      {
+        "q": "Quanti giocatori servono?",
+        "a": "Si parte da 8 giocatori e si arriva a 30. Se siete meno di 8 vi uniamo a un altro gruppo nello stesso orario; per avere l'arena in esclusiva, chiamateci."
+      },
+      {
+        "q": "Quanto dura una partita?",
+        "a": "1 ora e 45 minuti in tutto, briefing compreso, con più missioni una dopo l'altra."
+      },
+      {
+        "q": "Quanto costa una partita di softair?",
+        "a": "Dipende dal profilo: Recluta 35 € a persona con attrezzatura e 300 colpi (20 € il martedì pomeriggio), Maggiore 20 € per chi ha già giocato da noi con la tessera, Veterano 15 € con la propria attrezzatura."
+      },
+      {
+        "q": "Serve esperienza?",
+        "a": "No. L'attrezzatura è inclusa, il briefing spiega tutto e le missioni si scelgono in base all'esperienza del gruppo: il softair è per tutti, dai principianti ai veterani."
+      },
+      {
+        "q": "Fa male essere colpiti?",
+        "a": "Il colpo si sente, ma è leggero: per legge le repliche softair restano entro 1 joule, e con la maschera e i vestiti giusti si gioca in sicurezza."
+      },
+      {
+        "q": "Cosa devo indossare?",
+        "a": "Maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo e scarpe comode; consigliati i guanti aderenti. L'arena non è riscaldata né climatizzata: d'inverno vestitevi a strati."
+      },
+      {
+        "q": "Posso usare la mia attrezzatura?",
+        "a": "Sì, con il profilo Veterano a 15 €. Nell'arena si usano solo pallini non bio, al massimo da 0,28 g."
+      },
+      {
+        "q": "Si gioca anche se piove?",
+        "a": "Sì, l'arena è al coperto e illuminata: si gioca tutto l'anno, con qualsiasi tempo, anche di sera."
+      },
+      {
+        "q": "Come si prenota?",
+        "a": "Chiamateci al 375 595 6805 o scriveteci a info@softairmilano.it indicando giorno, orario e numero di giocatori. La prenotazione è obbligatoria. Le prenotazioni a meno di 4 ore dalla partita vanno confermate, e la caparra si recupera annullando almeno una settimana prima."
+      },
+      {
+        "q": "Dove si gioca a softair?",
+        "a": "Nel villaggio militare al coperto di Via Melegnano 26 a Settimo Milanese, alle porte di Milano: parcheggio facile e bus 433 dalla metro M1 Bisceglie."
+      }
+    ]
+  },
+  "related": {
+    "title": "Provate anche"
+  },
+  "cta": {
+    "title": "Prenotate la vostra missione",
+    "text": "Diteci giorno, orario e quanti siete: vi rispondiamo con la disponibilità."
+  }
+}

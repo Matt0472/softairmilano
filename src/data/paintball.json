@@ -6,7 +6,7 @@
     "imageAlt": "Un giocatore di softair con la tenuta pulita accanto a un giocatore di paintball coperto di vernice."
   },
   "hero": {
-    "eyebrow": "Arena indoor · Settimo Milanese",
+    "eyebrow": "Arena indoor · Milano",
     "title": "Cercavi il paintball a Milano? Prova il softair",
     "subtitle": "Stessa adrenalina, zero vernice, niente paura dei lividi: missioni a squadre in un'arena al coperto di 1.500 m², attrezzatura inclusa.",
     "image": "/uploads/paintball-hero.jpeg",
@@ -149,17 +149,21 @@
         "text": "Disinnescate l'ordigno prima che scada il tempo."
       },
       {
-        "name": "Difesa del Bastione",
+        "name": "Difesa del bastione",
         "text": "Resistete fino alla fine: il bastione non deve cadere."
       }
-    ]
+    ],
+    "cta": {
+      "label": "Scopri le partite di softair",
+      "href": "/softair"
+    }
   },
   "firstTime": {
     "title": "La prima volta? Ecco come funziona",
     "steps": [
       {
         "title": "Prenotate",
-        "text": "Chiamateci o scriveteci con giorno, orario e numero di giocatori. Si gioca da 8 a 20: se siete meno di 8, vi uniamo a un altro gruppo."
+        "text": "Chiamateci o scriveteci con giorno, orario e numero di giocatori. Si gioca da 8 a 30: se siete meno di 8, vi uniamo a un altro gruppo."
       },
       {
         "title": "Compilate i moduli",
@@ -197,7 +201,7 @@
       },
       {
         "label": "Maggiore",
-        "when": "Avete già giocato da noi (con tessera)",
+        "when": "Avete già giocato da noi, con la tessera",
         "price": "20",
         "unit": "€ a persona",
         "note": "",
@@ -208,13 +212,13 @@
         "when": "Con la vostra attrezzatura",
         "price": "15",
         "unit": "€ a persona",
-        "note": "Pallini propri solo non bio, max 0,28 g",
+        "note": "Pallini propri solo non bio, al massimo 0,28 g",
         "badge": ""
       }
     ],
     "notes": [
       "Ricarica da 300 colpi: 3 €.",
-      "Tessera Élite: al quinto timbro la partita è gratis."
+      "Tessera Élite: un timbro a partita, al quinto la successiva è gratis."
     ]
   },
   "reviews": {
@@ -225,7 +229,7 @@
     "items": [
       {
         "q": "Da voi si gioca a paintball?",
-        "a": "No: nella nostra arena di Milano si gioca a softair, oltre ad arcotag, tiro dinamico e nerf. Se cercavate il paintball, il softair vi dà la stessa adrenalina senza vernice e con molto meno dolore."
+        "a": "No: nella nostra arena di Milano si gioca a softair, oltre ad arcotag, tiro dinamico e Nerf. Se cercavate il paintball, il softair vi dà la stessa adrenalina senza vernice e con molto meno dolore."
       },
       {
         "q": "Qual è la differenza principale tra softair e paintball?",
@@ -249,7 +253,7 @@
       },
       {
         "q": "Da che età si gioca a softair?",
-        "a": "Dai 12 anni compiuti; i minorenni portano il modulo firmato da un genitore. Per i più piccoli c'è l'arcotag, dagli 8 anni."
+        "a": "Dai 12 anni compiuti; i minorenni portano il modulo firmato da un genitore. Per i più piccoli ci sono l'arcotag, dagli 8 anni, e il Nerf, dai 6."
       },
       {
         "q": "Si gioca anche d'inverno o se piove?",

@@ -2,13 +2,13 @@
   "name": "Arcotag",
   "seo": {
     "title": "Arcotag Milano al coperto: serata tra amici | SoftAir Milano",
-    "description": "Arcotag a Milano in un'arena indoor di 1.500 m²: archi e frecce a punta morbida, squadre da 6 a 25, dagli 8 anni. La serata tra amici da prenotare.",
+    "description": "Arcotag a Milano in un'arena indoor di 1.500 m²: archi e frecce a punta morbida, fino a 30 giocatori, dagli 8 anni. La serata tra amici da prenotare.",
     "image": "/uploads/arcotag-og.jpg",
     "imageAlt": "Due giocatori di arcotag con maschera protettiva tendono l'arco nell'arena indoor di Softair Milano."
   },
   "hero": {
-    "eyebrow": "Arena indoor · Settimo Milanese",
-    "title": "Arcotag a Milano",
+    "eyebrow": "Arena indoor · Milano",
+    "title": "Arcotag a Milano",
     "subtitle": "Archi, frecce a punta morbida, due squadre e un'arena al coperto: la serata di gruppo che racconterete per settimane.",
     "image": "/uploads/arcotag-hero.jpeg",
     "imageMobile": "/uploads/arcotag-hero-mobile.jpeg",
@@ -24,8 +24,8 @@
   },
   "facts": [
     {
-      "value": "6–25",
-      "label": "giocatori"
+      "value": "30",
+      "label": "giocatori al massimo"
     },
     {
       "value": "60 min",
@@ -42,7 +42,7 @@
   ],
   "intro": {
     "title": "Cos'è l'arcotag",
-    "text": "L'arcotag è una battaglia a squadre con archi e frecce a punta morbida: si colpiscono gli avversari per eliminarli, come nel softair, ma con l'arco. Gli archi hanno un sistema che rende facilissimo incoccare e tirare, quindi può giocare chiunque, anche chi non ha mai preso in mano un arco. Da noi si gioca a Settimo Milanese, alle porte di Milano, in un'arena indoor di 1.500 m², con missioni diverse una dopo l'altra.",
+    "text": "L'arcotag è una battaglia a squadre con archi e frecce a punta morbida: si colpiscono gli avversari per eliminarli, come nel softair, ma con l'arco. Gli archi hanno un sistema che rende facilissimo incoccare e tirare, quindi può giocare chiunque, anche chi non ha mai preso in mano un arco. Da noi si gioca a Milano, in un'arena indoor di 1.500 m², con missioni diverse una dopo l'altra.",
     "points": [
       {
         "title": "Nessuna esperienza",
@@ -61,7 +61,7 @@
   "evening": {
     "eyebrow": "Il vostro sabato sera",
     "title": "La vostra serata, un passo alla volta",
-    "text": "Che siate in 6 o in 25, al resto pensiamo noi. Ecco come va una serata di arcotag.",
+    "text": "Che siate in pochi o in 30, al resto pensiamo noi. Ecco come va una serata di arcotag.",
     "steps": [
       {
         "time": "Arrivo",
@@ -110,30 +110,30 @@
       {
         "title": "Compleanni",
         "text": "Dagli 8 anni in su, con la saletta per la torta: la festa che ricordano i bambini e anche i grandi.",
-        "href": "/festa-di-compleanno",
+        "href": "",
         "featured": false
       },
       {
         "title": "Addio al celibato e al nubilato",
         "text": "Lo sposo contro tutti, frecce morbide e nessun rischio per il grande giorno.",
-        "href": "/addio-al-celibato-nubilato",
+        "href": "",
         "featured": false
       },
       {
         "title": "Team building",
         "text": "Fino a 20 persone, in arena o nella vostra location: strategia, comunicazione e risate.",
-        "href": "/teambuilding",
+        "href": "",
         "featured": false
       }
     ]
   },
   "pricing": {
     "title": "Prezzi dell'arcotag a Milano",
-    "text": "Prezzo a persona, attrezzatura inclusa. Cambia in base al giorno e all'orario.",
+    "text": "Prezzo a persona, attrezzatura inclusa. Cambia in base al giorno e all'orario. Il pomeriggio va dalle 14 alle 18 (l'ultima partita parte alle 18), la sera si comincia alle 20.",
     "tiers": [
       {
         "label": "Pomeriggio",
-        "when": "Lun–ven, 14:00–17:30",
+        "when": "Lun–ven, 14:00–18:00",
         "price": "15",
         "unit": "€ a persona",
         "note": "",
@@ -141,7 +141,7 @@
       },
       {
         "label": "Sera",
-        "when": "Lun–gio, 17:30–20:30",
+        "when": "Lun–ven, dalle 20:00",
         "price": "20",
         "unit": "€ a persona",
         "note": "",
@@ -149,7 +149,7 @@
       },
       {
         "label": "Weekend",
-        "when": "Ven–dom",
+        "when": "Sab–dom, pomeriggio e sera",
         "price": "25",
         "unit": "€ a persona",
         "note": "20 € a persona per gruppi di oltre 20",
@@ -157,6 +157,7 @@
       }
     ],
     "notes": [
+      "Da lunedì a venerdì si paga per almeno 8 persone, sabato e domenica per almeno 15: se siete meno, ad esempio in 5, si pagano comunque 8 o 15 quote.",
       "Prenotazione obbligatoria."
     ]
   },
@@ -172,7 +173,7 @@
       },
       {
         "q": "Quanti giocatori servono?",
-        "a": "Si gioca da 6 a 25 persone: perfetto per una compagnia di amici, una festa di compleanno o un team di lavoro."
+        "a": "Fino a 30 giocatori. Da lunedì a venerdì si paga per almeno 8 persone, sabato e domenica per almeno 15: se siete meno, ad esempio in 5, si pagano comunque 8 o 15 quote."
       },
       {
         "q": "Quanto dura una partita?",
@@ -213,6 +214,6 @@
   },
   "cta": {
     "title": "Prenotate la vostra battaglia",
-    "text": "Diteci giorno, orario e quanti siete: al resto pensiamo noi."
+    "text": "Diteci giorno, orario e quanti siete: vi rispondiamo con la disponibilità."
   }
 }

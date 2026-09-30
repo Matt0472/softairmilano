@@ -15,6 +15,7 @@ import Reviews from '../components/organisms/Reviews.astro';
 import FaqAccordion from '../components/organisms/FaqAccordion.astro';
 import TeaserBanner from '../components/organisms/TeaserBanner.astro';
 import BookingCta from '../components/organisms/BookingCta.astro';
+import Button from '../components/atoms/Button.astro';
 import IncludedList from '../components/molecules/IncludedList.astro';
 import Reveal from '../components/molecules/Reveal.astro';
 import page from '../data/paintball.json';
@@ -72,7 +73,9 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
       ratio="16 / 10"
       itemsTitle={arena.missionsTitle}
       items={arena.missions}
-    />
+    >
+      {has(arena.cta?.label) && has(arena.cta?.href) && <Button href={arena.cta.href} variant="secondary">{arena.cta.label}</Button>}
+    </SplitFeature>
   )}
 
   {firstTime && has(firstTime.title) && !!firstTime.steps?.length && (
@@ -85,7 +88,7 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
 
   {pricing && has(pricing.title) && !!pricing.tiers?.length && <PriceTiers {...pricing} cta={hero.ctaPrimary} />}
 
-  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} page="paintball" />}
 
   {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
 

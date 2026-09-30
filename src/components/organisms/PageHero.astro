@@ -5,6 +5,7 @@
 
 import Button from '../atoms/Button.astro';
 import Picture from '../atoms/Picture.astro';
+import { slotHtml } from '../../lib/slots';
 import Breadcrumb from '../molecules/Breadcrumb.astro';
 import FactStrip from '../molecules/FactStrip.astro';
 
@@ -26,6 +27,8 @@ interface Props {
   /** Dedicated portrait crop for phones and portrait tablets (DES-09). */
   imageMobile?: string;
   imageAlt: string;
+  /** Where the desktop photo's subject stands: "right" when the photo already leaves the left free for the copy. */
+  focus?: 'center' | 'right';
   eyebrow?: string;
   title: string;
   subtitle?: string;
@@ -39,6 +42,7 @@ const {
   image,
   imageMobile,
   imageAlt,
+  focus = 'center',
   eyebrow,
   title,
   subtitle,
@@ -55,14 +59,15 @@ const isComplete = (c?: Cta): c is Required<Cta> => Boolean(c?.label?.trim() && 
 const primary = isComplete(ctaPrimary) ? ctaPrimary : undefined;
 const secondary = isComplete(ctaSecondary) ? ctaSecondary : undefined;
 
-const hasDecor = Astro.slots.has('decor');
+const decorHtml = await slotHtml(Astro.slots, 'decor');
+const hasDecor = decorHtml.length > 0;
 // A question headline ("…? Prova il softair") shows its answer on its own line.
 const question = title.match(/^(.+?\?)\s+(.+)$/);
 // Long headlines get a smaller scale so they hold in 2–3 lines on desktop.
 const isLong = title.length > 28;
 ---
 
-<section class:list={['phero', hasDecor && 'phero--decor']}>
+<section class:list={['phero', hasDecor && 'phero--decor', focus === 'right' && 'phero--focus-right']}>
   {image && (
     <Picture
       src={image}
@@ -80,7 +85,7 @@ const isLong = title.length > 28;
 
     {hasDecor && (
       <div class="phero__decor" aria-hidden="true">
-        <slot name="decor" />
+        <Fragment set:html={decorHtml} />
       </div>
     )}
 
@@ -325,7 +330,18 @@ const isLong = title.length > 28;
 
   .phero__facts {
     grid-area: facts;
+    position: relative;
     margin-top: clamp(1.75rem, 4vw, 3rem);
+  }
+  /* The strip sits outside the copy's gradient (on wide screens the photo shows through on the
+     right): its own band, anchored to the strip, keeps the small labels AA on any photo. */
+  .phero__facts::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -2.5rem -100vw -100vh;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 0, var(--chip) 2.5rem);
   }
 
   @media (min-width: 1024px) {
@@ -351,6 +367,8 @@ const isLong = title.length > 28;
      moves right, and keep the copy in the left 40%. */
   @media (min-width: 1024px) and (max-width: 1279px) {
     .phero:not(.phero--decor) .phero__bg { object-position: 0% 40%; }
+    /* A subject already on the right would be cut by the left anchor: keep it in the frame. */
+    .phero--focus-right:not(.phero--decor) .phero__bg { object-position: 70% 40%; }
     .phero:not(.phero--decor) .phero__content { max-width: 40vw; }
     .phero:not(.phero--decor) .phero__title--long { font-size: 4.2vw; }
   }

@@ -1,34 +1,28 @@
 ---
 // Social proof: the rating on the left, the first review as a pull quote and
 // the others as a ruled grid on the right. Reviews and rating are shared data
-// (testimonials.json, real Google reviews); the page only sets the title.
+// (testimonials.json, real Google reviews, via lib/reviews); the page sets the
+// title and says which page it is, so it gets the reviews tagged for it.
 // Stars are drawn only from a real score, filled to its exact fraction.
 
 import Icon from '../atoms/Icon.astro';
-import testimonials from '../../data/testimonials.json';
+import StarMeter from '../molecules/StarMeter.astro';
+import { formatScore, rating, ratingReach, ratingScore, reviewsFor } from '../../lib/reviews';
 
 interface Props {
   title: string;
+  /** Page slug (activity slug or "paintball"): picks the reviews tagged for this page. */
+  page?: string;
   headingId?: string;
 }
-interface Rating {
-  label?: string;
-  value?: number | string | null;
-  count?: string;
-  source?: string;
-  url?: string;
-}
 
-const { title, headingId = 'reviews-title' } = Astro.props;
-const rating: Rating = testimonials.rating ?? {};
-const items = (testimonials.items ?? []).filter((r) => r?.text?.trim());
-const [featured, ...others] = items;
+const { title, page, headingId = 'reviews-title' } = Astro.props;
+const [featured, ...others] = reviewsFor(page);
 
-const raw = typeof rating.value === 'string' ? parseFloat(rating.value.replace(',', '.')) : rating.value;
-const score = typeof raw === 'number' && Number.isFinite(raw) && raw >= 1 && raw <= 5 ? raw : null;
-const scoreText = score?.toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-const hasSource = !!rating.count?.trim() || !!rating.source?.trim();
-const hasRating = score !== null || !!rating.label?.trim() || hasSource;
+const score = ratingScore();
+const scoreText = score !== null ? formatScore(score) : '';
+const reach = ratingReach();
+const hasRating = score !== null || !!rating.label?.trim() || !!reach;
 const hasTitle = !!title?.trim();
 ---
 
@@ -41,27 +35,20 @@ const hasTitle = !!title?.trim();
           <div class="rv__rating">
             {score !== null && (
               <p class="rv__score">
-                <span class="rv__stars" style={`--fill: ${Math.round(score * 20)}%`} aria-hidden="true">
-                  <span class="rv__stars-row">
-                    {[0, 1, 2, 3, 4].map(() => <Icon name="star" size={22} />)}
-                  </span>
-                  <span class="rv__stars-row rv__stars-row--lit">
-                    {[0, 1, 2, 3, 4].map(() => <Icon name="star" size={22} />)}
-                  </span>
-                </span>
+                <StarMeter score={score} />
                 <b class="rv__value">{scoreText}</b><span class="sr-only"> su 5</span>
               </p>
             )}
             {rating.label?.trim() && <p class="rv__label">{rating.label}</p>}
-            {hasSource && (
+            {!!reach && (
               rating.url?.trim() ? (
                 <a class="rv__count rv__count--link" href={rating.url} target="_blank" rel="noopener">
-                  {rating.count && <b>{rating.count}</b>} {rating.source}
+                  <b>{rating.count}</b> {rating.source}
                   <Icon name="arrowUpRight" size={16} />
                   <span class="sr-only">(si apre in una nuova scheda)</span>
                 </a>
               ) : (
-                <p class="rv__count">{rating.count && <b>{rating.count}</b>} {rating.source}</p>
+                <p class="rv__count"><b>{rating.count}</b> {rating.source}</p>
               )
             )}
           </div>
@@ -123,16 +110,6 @@ const hasTitle = !!title?.trim();
     align-items: center;
     gap: 0.75rem;
     margin: 0;
-  }
-  /* Two rows of stars: an unlit one, and the lit one clipped to the score (4,9 → 98%). */
-  .rv__stars { position: relative; display: block; }
-  .rv__stars-row { display: flex; gap: 0.2rem; color: var(--color-steel); }
-  .rv__stars-row svg { flex: none; stroke-width: 1; }
-  .rv__stars-row--lit {
-    position: absolute;
-    inset: 0;
-    color: var(--accent);
-    clip-path: inset(0 calc(100% - var(--fill)) 0 0);
   }
   .rv__value {
     font-family: var(--font-display);

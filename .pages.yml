@@ -115,7 +115,7 @@ content:
               - { name: label, label: Testo, type: string }
               - { name: href, label: Link, type: string }
           - { name: hudTag, label: "Etichetta HUD (piccola scritta tattica)", type: string }
-          - { name: proof, label: "Riga recensioni (opzionale)", type: string }
+          - { name: showRating, label: "Mostra il voto Google sotto i bottoni", type: boolean, description: "Stelle, voto e numero di recensioni vengono da «Recensioni» → «Valutazione complessiva» e si cambiano lì" }
       - name: video
         label: Video (sotto l'hero)
         type: object
@@ -211,17 +211,31 @@ content:
         type: object
         fields:
           - { name: label, label: "Giudizio (es. Eccellente)", type: string }
-          - { name: value, label: "Voto medio (es. 4.9)", type: number, options: { min: 1, max: 5, step: 0.1 }, description: "Se vuoto, le stelle non compaiono" }
-          - { name: count, label: Numero di recensioni, type: string }
+          - { name: value, label: "Voto medio (es. 4.7)", type: number, options: { min: 1, max: 5, step: 0.1 }, description: "Se vuoto, le stelle non compaiono" }
+          - { name: count, label: "Numero di recensioni (es. 500+)", type: string, description: "Non si aggiorna da solo: copialo dal profilo Google quando cresce. Compare nell'apertura della home (se attivata) e in ogni sezione recensioni. Se è vuoto, non compare neanche la fonte" }
           - { name: source, label: "Fonte (es. recensioni su Google)", type: string }
           - { name: url, label: Link alla pagina delle recensioni, type: string }
       - name: items
         label: Recensioni
+        description: "Solo recensioni vere, copiate da Google. Se togli una parte in mezzo, segna il punto con […]; puoi anche far partire la citazione più avanti o fermarla prima della fine. L'ordine conta: in ogni pagina la prima recensione mostrata diventa la citazione grande"
         type: object
         list: true
         fields:
-          - { name: author, label: Autore, type: string }
+          - { name: author, label: "Autore (nome e iniziale del cognome)", type: string }
           - { name: text, label: Testo (breve, al massimo 3 righe), type: text }
+          - name: pages
+            label: Pagine in cui compare
+            description: "Ogni pagina mostra prima le sue recensioni, poi quelle di «Tutte le pagine» (al massimo 5). Se non scegli niente, vale come «Tutte le pagine». Una nuova attività mostra le recensioni di «Tutte le pagine» finché un tecnico non la aggiunge a questo elenco"
+            type: select
+            options:
+              multiple: true
+              values:
+                - { name: all, label: Tutte le pagine }
+                - { name: softair, label: Softair }
+                - { name: arcotag, label: Arcotag }
+                - { name: tiro-dinamico, label: Tiro dinamico }
+                - { name: nerf, label: Nerf }
+                - { name: paintball, label: Softair VS Paintball }
 
   - name: activities
     label: Attività (pagine)
@@ -253,6 +267,14 @@ content:
           - { name: image, label: "Immagine (desktop, 16:9)", type: image, required: true }
           - { name: imageMobile, label: "Immagine (mobile, verticale)", type: image }
           - { name: imageAlt, label: Testo alternativo immagine, type: string, required: true }
+          - name: focus
+            label: Dove sta il soggetto della foto (desktop)
+            description: "«A destra» se la foto lascia libera la parte sinistra per il titolo: su portatili e schermi più stretti il soggetto resta nell'inquadratura. Se non scegli, vale «Al centro»"
+            type: select
+            options:
+              values:
+                - { name: center, label: Al centro }
+                - { name: right, label: A destra }
           - name: ctaPrimary
             label: Bottone principale
             description: "Compare anche sotto i prezzi"
@@ -271,7 +293,7 @@ content:
         type: object
         list: true
         fields:
-          - { name: value, label: "Valore (es. 6–25)", type: string }
+          - { name: value, label: "Valore (es. 30 o 12+)", type: string }
           - { name: label, label: "Etichetta (es. giocatori)", type: string }
       - name: intro
         label: In breve
@@ -287,7 +309,7 @@ content:
               - { name: title, label: Titolo, type: string }
               - { name: text, label: Testo, type: text }
       - name: evening
-        label: La vostra serata
+        label: La vostra serata (passo per passo)
         type: object
         fields:
           - { name: eyebrow, label: Sopratitolo, type: string }
@@ -301,6 +323,31 @@ content:
               - { name: time, label: "Momento (es. 60 minuti)", type: string, description: "Se vuoto, compare il numero del passaggio" }
               - { name: title, label: Titolo, type: string }
               - { name: text, label: Testo, type: text }
+      - name: modes
+        label: Missioni / Percorsi
+        description: "Le missioni (softair) o i percorsi (tiro dinamico). Compare dopo «Come si gioca». Se il titolo è vuoto o non c'è nessuna voce, la sezione non compare"
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string }
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - { name: numbered, label: "Numera le voci (01, 02…)", type: boolean, description: "Solo se l'ordine conta, come nei percorsi del tiro dinamico, dove il Beta si sblocca dopo l'Alfa" }
+          - name: items
+            label: Missioni o percorsi
+            description: "L'ordine della lista è quello della pagina (e della numerazione, se attiva). Una voce senza nome non compare"
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Nome, type: string }
+              - { name: text, label: Descrizione (una o due frasi), type: text }
+              - name: stats
+                label: "Cifre (facoltative, es. 7 tappe)"
+                description: "Una cifra compare solo se ha sia il valore sia l'etichetta, e si legge di seguito: «16 bersagli ravvicinati»"
+                type: object
+                list: true
+                fields:
+                  - { name: value, label: "Valore (es. 7)", type: string }
+                  - { name: label, label: "Etichetta (es. tappe)", type: string }
       - name: howto
         label: Come si gioca
         type: object
@@ -323,8 +370,8 @@ content:
             fields:
               - { name: title, label: Titolo, type: string }
               - { name: text, label: Testo, type: text }
-              - { name: href, label: Link (facoltativo), type: string }
-              - { name: featured, label: In evidenza, type: boolean, description: "Una sola occasione in evidenza" }
+              - { name: href, label: Link (facoltativo), type: string, description: "Se vuoto, la scheda non è cliccabile. Metti un link solo verso una pagina che esiste o verso #prenota" }
+              - { name: featured, label: In evidenza, type: boolean, description: "Una sola occasione in evidenza: con tre occasioni diventa la scheda grande" }
       - name: pricing
         label: Prezzi
         type: object
@@ -347,7 +394,7 @@ content:
         label: Recensioni
         type: object
         fields:
-          - { name: title, label: "Titolo (le recensioni si modificano in «Recensioni»)", type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: title, label: "Titolo (le recensioni si modificano in «Recensioni»)", type: string, description: "Quali recensioni compaiono si sceglie in «Recensioni» → «Pagine in cui compare». Se il titolo è vuoto, la sezione non compare" }
       - name: faq
         label: Domande frequenti
         type: object
@@ -480,6 +527,13 @@ content:
             fields:
               - { name: name, label: Nome, type: string }
               - { name: text, label: Descrizione, type: string }
+          - name: cta
+            label: Bottone verso la pagina del softair
+            description: "Porta chi cerca il paintball alle partite di softair. Se testo o link sono vuoti, il bottone non compare"
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string }
       - name: firstTime
         label: La prima volta
         type: object
@@ -517,7 +571,7 @@ content:
         label: Recensioni
         type: object
         fields:
-          - { name: title, label: "Titolo (le recensioni si modificano in «Recensioni»)", type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: title, label: "Titolo (le recensioni si modificano in «Recensioni»)", type: string, description: "Quali recensioni compaiono si sceglie in «Recensioni» → «Pagine in cui compare». Se il titolo è vuoto, la sezione non compare" }
       - name: faq
         label: Domande frequenti
         type: object

@@ -1,0 +1,40 @@
+---
+// Five stars filled to a real score: an unlit row, and a lit row clipped to the exact fraction.
+// The clip is measured on the stars, not on the gaps between them, so 4,7 lights 70% of the
+// fifth star. Decorative: the score is always written out next to it.
+
+import Icon from '../atoms/Icon.astro';
+
+interface Props {
+  score: number;
+  /** Star size in px. */
+  size?: number;
+}
+
+const { score, size = 22 } = Astro.props;
+const whole = Math.floor(score);
+const part = (score - whole).toFixed(2);
+// Whole stars with the gap after each, plus the lit part of the next one.
+const lit = `calc(${whole} * (${size}px + var(--stars-gap)) + ${part} * ${size}px)`;
+---
+
+<span class="stars" style={`--lit: ${lit}`} aria-hidden="true">
+  <span class="stars__row">{[0, 1, 2, 3, 4].map(() => <Icon name="star" size={size} />)}</span>
+  <span class="stars__row stars__row--lit">{[0, 1, 2, 3, 4].map(() => <Icon name="star" size={size} />)}</span>
+</span>
+
+<style is:global>
+  .stars {
+    --stars-gap: 0.2rem;
+    position: relative;
+    display: block;
+  }
+  .stars__row { display: flex; gap: var(--stars-gap); color: var(--color-steel); }
+  .stars__row svg { flex: none; stroke-width: 1; }
+  .stars__row--lit {
+    position: absolute;
+    inset: 0;
+    color: var(--color-accent);
+    clip-path: inset(0 calc(100% - var(--lit)) 0 0);
+  }
+</style>

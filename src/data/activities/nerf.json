@@ -1,0 +1,214 @@
+{
+  "name": "Nerf",
+  "seo": {
+    "title": "Nerf a Milano: battaglie e feste dai 6 anni | SoftAir Milano",
+    "description": "Battaglie Nerf a Milano in un'arena indoor di 1.500 m²: dardi in gommapiuma, fino a 30 giocatori, dai 6 anni. La festa di compleanno più scatenata, al coperto.",
+    "image": "/uploads/nerf-og.jpg",
+    "imageAlt": ""
+  },
+  "hero": {
+    "eyebrow": "Arena indoor · Milano",
+    "title": "Nerf a Milano",
+    "subtitle": "Blaster, dardi in gommapiuma e un villaggio militare al coperto: la battaglia dei più piccoli, dai 6 anni.",
+    "image": "/uploads/nerf-hero.jpeg",
+    "imageMobile": "/uploads/nerf-hero-mobile.jpeg",
+    "imageAlt": "Giocatori con maschera protettiva e blaster Nerf tra casette di legno e reti mimetiche; un dardo in gommapiuma è appena partito da un blaster.",
+    "focus": "right",
+    "ctaPrimary": {
+      "label": "Prenota",
+      "href": "#prenota"
+    },
+    "ctaSecondary": {
+      "label": "Come funziona",
+      "href": "#serata"
+    }
+  },
+  "facts": [
+    {
+      "value": "30",
+      "label": "giocatori al massimo"
+    },
+    {
+      "value": "60 min",
+      "label": "di battaglia"
+    },
+    {
+      "value": "6+",
+      "label": "anni"
+    },
+    {
+      "value": "1.500 m²",
+      "label": "al coperto"
+    }
+  ],
+  "intro": {
+    "title": "Cos'è una battaglia Nerf",
+    "text": "Una battaglia Nerf è una sfida a squadre con i blaster Nerf, che sparano dardi in gommapiuma: si colpiscono gli avversari per eliminarli, come nel softair, ma con blaster e regole pensati per i più piccoli. Da noi si gioca dai 6 anni in su a Milano, tra i ripari e gli edifici dell'arena indoor di 1.500 m².",
+    "points": [
+      {
+        "title": "Dai 6 anni",
+        "text": "Il gioco giusto per i bambini: regole semplici, spiegate dallo staff."
+      },
+      {
+        "title": "Si ride tantissimo",
+        "text": "Si corre, ci si ripara, si schiva all'ultimo: un'ora che vola."
+      },
+      {
+        "title": "La festa perfetta",
+        "text": "Un'ora di battaglia e, se volete, la saletta per la torta: il compleanno che ricorderanno a lungo."
+      }
+    ]
+  },
+  "evening": {
+    "eyebrow": "",
+    "title": "La vostra festa, un passo alla volta",
+    "text": "Che siate in pochi o in 30, al resto pensiamo noi. Ecco come va una festa Nerf.",
+    "steps": [
+      {
+        "time": "Arrivo",
+        "title": "Vi accogliamo",
+        "text": "Arrivate e ritirate blaster e maschere. Per i minorenni serve il modulo firmato da un genitore."
+      },
+      {
+        "time": "Briefing",
+        "title": "Regole del gioco",
+        "text": "Lo staff spiega come si usa il blaster e le regole della battaglia."
+      },
+      {
+        "time": "60 minuti",
+        "title": "Battaglia",
+        "text": "Due squadre, i ripari del villaggio e tanti dardi: un'ora di corse e risate."
+      },
+      {
+        "time": "+45 minuti",
+        "title": "Festa in saletta",
+        "text": "Se volete, la festa continua nella saletta: torta, rinfresco o catering."
+      }
+    ]
+  },
+  "howto": {
+    "title": "Come si gioca",
+    "text": "Due squadre si affrontano tra i ripari del villaggio: chi viene colpito da un dardo è eliminato, vince la squadra che resta in piedi. Regole semplici, spiegate dallo staff prima di cominciare.",
+    "includedTitle": "Tutto incluso",
+    "included": [
+      "Blaster Nerf e dardi in gommapiuma",
+      "Maschera protettiva",
+      "Briefing con lo staff",
+      "Arena al coperto, anche se piove"
+    ],
+    "image": "/uploads/nerf-come-si-gioca.jpeg",
+    "imageAlt": "Bambini con maschera protettiva e blaster Nerf tra casette di legno e reti mimetiche: due, accovacciati dietro una barricata, sparano un dardo in gommapiuma, un terzo corre e un quarto sbuca da dietro un bidone blu."
+  },
+  "audiences": {
+    "title": "Perfetto per",
+    "items": [
+      {
+        "title": "Compleanni",
+        "text": "Dai 6 anni, e se volete la saletta per la torta: la festa di cui si parlerà per settimane in classe.",
+        "href": "#prenota",
+        "featured": true
+      },
+      {
+        "title": "Amici e compagni di classe",
+        "text": "Fino a 30 giocatori, tutti in campo insieme: una squadra contro l'altra.",
+        "href": "",
+        "featured": false
+      },
+      {
+        "title": "Anche per i grandi",
+        "text": "Dardi morbidi, zero pensieri: la battaglia più leggera che ci sia, per tutte le età dai 6 anni in su.",
+        "href": "",
+        "featured": false
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Prezzi del Nerf",
+    "text": "Prezzo a persona, attrezzatura inclusa. Cambia in base al giorno e all'orario. Il pomeriggio va dalle 14 alle 18 (l'ultima partita parte alle 18), la sera si comincia alle 20.",
+    "tiers": [
+      {
+        "label": "Pomeriggio",
+        "when": "Lun–ven, 14:00–18:00",
+        "price": "15",
+        "unit": "€ a persona",
+        "note": "",
+        "badge": ""
+      },
+      {
+        "label": "Sera",
+        "when": "Lun–ven, dalle 20:00",
+        "price": "20",
+        "unit": "€ a persona",
+        "note": "",
+        "badge": ""
+      },
+      {
+        "label": "Weekend",
+        "when": "Sab–dom, pomeriggio e sera",
+        "price": "25",
+        "unit": "€ a persona",
+        "note": "20 € a persona per gruppi di oltre 20",
+        "badge": "Compleanni"
+      }
+    ],
+    "notes": [
+      "Da lunedì a venerdì si paga per almeno 8 persone, sabato e domenica per almeno 15: se siete meno, ad esempio in 5, si pagano comunque 8 o 15 quote.",
+      "Prenotazione obbligatoria."
+    ]
+  },
+  "reviews": {
+    "title": "Cosa dice chi ha giocato"
+  },
+  "faq": {
+    "title": "Domande frequenti sul Nerf",
+    "items": [
+      {
+        "q": "Da che età si può giocare a Nerf?",
+        "a": "Dai 6 anni. I minorenni portano il modulo firmato da un genitore."
+      },
+      {
+        "q": "Quanti possono giocare a una festa Nerf?",
+        "a": "Fino a 30 giocatori. Da lunedì a venerdì si paga per almeno 8 persone, sabato e domenica per almeno 15: se siete meno, ad esempio in 5, si pagano comunque 8 o 15 quote."
+      },
+      {
+        "q": "Quanto dura una battaglia Nerf?",
+        "a": "60 minuti di gioco. Con la saletta, la festa continua per altri 45 minuti."
+      },
+      {
+        "q": "Quanto costa una festa Nerf?",
+        "a": "Dipende da giorno e orario: 15 € a persona il pomeriggio dal lunedì al venerdì, 20 € la sera dal lunedì al venerdì, 25 € sabato e domenica (20 € oltre i 20 giocatori). Blaster, dardi e maschera sono inclusi."
+      },
+      {
+        "q": "Fa male essere colpiti?",
+        "a": "No: i dardi sono in gommapiuma e si gioca con la maschera protettiva."
+      },
+      {
+        "q": "Come funziona la festa di compleanno?",
+        "a": "Dopo la battaglia potete prenotare la saletta per 45 minuti: portate la torta o chiedete il nostro catering."
+      },
+      {
+        "q": "Cosa devono indossare i bambini?",
+        "a": "Maglietta a maniche lunghe o felpa, pantaloni lunghi e scarpe comode. L'arena non è riscaldata né climatizzata: d'inverno meglio vestirsi a strati."
+      },
+      {
+        "q": "Si può giocare quando piove?",
+        "a": "Sì, l'arena è al coperto: la festa si fa con qualsiasi tempo, tutto l'anno."
+      },
+      {
+        "q": "Come si prenota una festa Nerf?",
+        "a": "Chiamateci al 375 595 6805 o scriveteci a info@softairmilano.it con il giorno, l'orario e il numero di bambini. La prenotazione è obbligatoria."
+      },
+      {
+        "q": "Dove si fa la festa?",
+        "a": "Nella nostra arena al coperto in Via Melegnano 26 a Settimo Milanese, alle porte di Milano: parcheggio facile e bus 433 dalla metro M1 Bisceglie."
+      }
+    ]
+  },
+  "related": {
+    "title": "Provate anche"
+  },
+  "cta": {
+    "title": "Prenotate la festa",
+    "text": "Diteci giorno, orario e quanti siete: vi rispondiamo con la disponibilità."
+  }
+}

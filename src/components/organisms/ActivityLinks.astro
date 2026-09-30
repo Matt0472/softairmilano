@@ -149,10 +149,12 @@ const { title, items, headingId = 'links-title' } = Astro.props;
   }
   .xl__panel[data-active='true'] .xl__img { transform: scale(1); }
   /* Two layers over the photo: the reading gradient, and the dark veil that dims a strip. */
+  /* Above the photo: without a stacking order the picture, later in the DOM, covers the gradient. */
   .xl__media::before,
   .xl__media::after {
     content: "";
     position: absolute;
+    z-index: 1;
     inset: 0;
     transition: opacity var(--xl-speed) var(--ease-out-expo);
   }
@@ -247,7 +249,7 @@ const { title, items, headingId = 'links-title' } = Astro.props;
     .xl__deck { height: min(30rem, 125vw); gap: 0.4rem; }
     .xl__panel[data-active='true'] { flex-grow: 4; }
     .xl__body { padding: 1.1rem 1.1rem 1.1rem; padding-right: 4rem; }
-    .xl__title { font-size: 1.7rem; }
+    .xl__title { font-size: min(1.7rem, 8.5vw); }
     .xl__go { width: 44px; height: 44px; right: 1rem; bottom: 1rem; }
   }
 </style>

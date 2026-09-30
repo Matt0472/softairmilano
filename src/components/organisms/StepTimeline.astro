@@ -4,6 +4,7 @@
 // goes on"). Steps without a time label show their order instead.
 
 import SectionHead from '../molecules/SectionHead.astro';
+import { slotHtml } from '../../lib/slots';
 
 interface Step {
   time?: string;
@@ -24,6 +25,7 @@ const list = (steps ?? []).filter((s) => s?.title?.trim());
 const last = list.length - 1;
 const pad = (n: number) => String(n + 1).padStart(2, '0');
 const hasTitle = !!title?.trim();
+const asideHtml = await slotHtml(Astro.slots);
 ---
 
 {list.length > 0 && (
@@ -54,9 +56,9 @@ const hasTitle = !!title?.trim();
         ))}
       </ol>
 
-      {Astro.slots.has('default') && (
+      {asideHtml && (
         <div class="tl__aside" data-reveal>
-          <slot />
+          <Fragment set:html={asideHtml} />
         </div>
       )}
     </div>

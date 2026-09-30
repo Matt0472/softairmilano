@@ -1,0 +1,293 @@
+---
+// Mission dossier ("Le missioni", "I percorsi"): one file per mode (numbered when the order matters) on a
+// single plate, divided by hairlines and framed by four HUD corners that lock on
+// as it scrolls in. A file may carry a readout of figures (stages, targets),
+// pinned to its foot so the readouts line up across a row; each figure reads as
+// one phrase ("16 bersagli ravvicinati"), like the hero facts. The plate always
+// fills its rows: a short last row widens its files instead of leaving a gap.
+
+import SectionHead from '../molecules/SectionHead.astro';
+
+interface Stat {
+  value: string;
+  label: string;
+}
+interface Mode {
+  title: string;
+  text: string;
+  stats?: Stat[];
+}
+interface Props {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+  /** Number the files 01, 02… Only where the order means something (courses that unlock in turn). */
+  numbered?: boolean;
+  items: Mode[];
+  headingId?: string;
+}
+
+const { eyebrow, title, text, numbered = false, items, headingId = 'modes-title' } = Astro.props;
+const list = (items ?? [])
+  .filter((m) => m?.title?.trim())
+  .map((m) => ({ ...m, stats: (m.stats ?? []).filter((s) => s?.value?.trim() && s?.label?.trim()) }));
+const hasTitle = !!title?.trim();
+const pad = (n: number) => String(n + 1).padStart(2, '0');
+
+// Desktop: three files per row on a 6-column grid. A remainder of two shares the
+// last row; a remainder of one turns the last two rows into pairs (4 = 2 + 2).
+const count = list.length;
+const tail = count === 1 ? 1 : count % 3 === 1 ? 4 : count % 3;
+const spanFor = (i: number) => (count === 1 ? 6 : i >= count - tail ? 3 : 2);
+// Stagger by position in the row, so each row rises left to right.
+const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) % 2);
+---
+
+{list.length > 0 && (
+  <section class:list={['modes', !numbered && 'modes--plain']} aria-labelledby={hasTitle ? headingId : undefined}>
+    <div class="shell">
+      <SectionHead eyebrow={eyebrow} title={title} text={text} id={headingId} class="modes__head" />
+
+      <div class="modes__plate" data-inview>
+        <span class="modes__frame" aria-hidden="true"></span>
+        <ol class="modes__grid" role="list">
+          {list.map((m, i) => (
+            <li class="modes__file" style={`--span: ${spanFor(i)}`}>
+              <div class="modes__body" data-reveal style={`--i: ${colFor(i)}`}>
+                {numbered && <span class="modes__num" aria-hidden="true">{pad(i)}</span>}
+                <h3 class="modes__title">{m.title}</h3>
+                {m.text?.trim() && <p class="modes__text">{m.text}</p>}
+                {m.stats.length > 0 && (
+                  <ul class="modes__stats" role="list">
+                    {m.stats.map((s) => (
+                      <li class="modes__stat">
+                        <span class="modes__value">{s.value}</span> <span class="modes__label">{s.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .modes {
+    --accent: var(--color-accent);
+    /* Inner padding of a file; the desktop intro offsets by it to line up with the file copy. */
+    --pad-x: clamp(1.25rem, 2.4vw, 2.5rem);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  .modes__plate {
+    position: relative;
+    margin-top: clamp(2.5rem, 5vw, 3.75rem);
+  }
+
+  /* Four L-shaped corners in one layer. The plate has no outer border: the corners
+     are its edge, the hairlines inside are the only rules. */
+  .modes__frame {
+    --arm: clamp(0.9rem, 1.6vw, 1.4rem);
+    --w: 2px;
+    --c: linear-gradient(var(--accent), var(--accent));
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      var(--c) top left / var(--arm) var(--w),
+      var(--c) top left / var(--w) var(--arm),
+      var(--c) top right / var(--arm) var(--w),
+      var(--c) top right / var(--w) var(--arm),
+      var(--c) bottom left / var(--arm) var(--w),
+      var(--c) bottom left / var(--w) var(--arm),
+      var(--c) bottom right / var(--arm) var(--w),
+      var(--c) bottom right / var(--w) var(--arm);
+    background-repeat: no-repeat;
+  }
+
+  /* The hairlines are the plate showing through 1px gaps between opaque files, so
+     they follow any span. The colour stops 1px short of the outer edge, where a
+     plate on a half pixel would otherwise show a sliver. Only the file copy fades
+     in, never the file itself, or the plate colour would flash through it. */
+  .modes__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1px;
+    background: linear-gradient(var(--color-border), var(--color-border)) center / calc(100% - 2px) calc(100% - 2px) no-repeat;
+  }
+  .modes__file {
+    display: flex;
+    background: var(--color-background);
+    container-type: inline-size;
+  }
+
+  .modes__body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    grid-template-areas: "num" "title" "text" "stats";
+    padding: clamp(1.75rem, 3vw, 2.75rem) var(--pad-x);
+  }
+
+  /* Outlined figure: the file number, decorative (the list carries the order). */
+  .modes__num {
+    grid-area: num;
+    justify-self: start;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.75rem, 4.4vw, 4rem);
+    line-height: 0.85;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    color: transparent;
+    -webkit-text-stroke: 1.25px var(--accent);
+  }
+
+  .modes__title {
+    grid-area: title;
+    margin: clamp(1.25rem, 2.4vw, 1.9rem) 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.45rem, 2.3vw, 2rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  .modes__text {
+    grid-area: text;
+    margin: 0.7rem 0 0;
+    max-width: 42ch;
+    color: var(--color-muted);
+    font-size: 0.99rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .modes__stats {
+    grid-area: stats;
+    align-self: end;
+    list-style: none;
+    margin: clamp(1.75rem, 3vw, 2.25rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.9rem;
+  }
+  .modes__stat {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: baseline;
+    padding-block: 0.65rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .modes__value {
+    justify-self: end;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.35rem, 2vw, 1.6rem);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-foreground);
+  }
+  .modes__label {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* A file wide enough (a whole row on tablets, a half row on wide desktops) sets
+     its readout beside the copy instead of below it. */
+  @container (min-width: 40rem) {
+    .modes__body:has(.modes__stats) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: auto auto 1fr;
+      grid-template-areas: "num stats" "title stats" "text stats";
+      column-gap: calc(var(--pad-x) * 2);
+    }
+    .modes__stats { margin-top: 0; }
+  }
+
+  @media (max-width: 599px) {
+    .modes__body {
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr;
+      grid-template-areas: "num title" "text text" "stats stats";
+      column-gap: 1rem;
+      padding: 1.6rem 1.1rem 1.75rem;
+    }
+    /* Oswald's figures are proportional ("01" is narrower than "06"): a fixed
+       column keeps every title on the same line. */
+    .modes__num { align-self: center; min-width: 1.15em; font-size: 2.6rem; }
+    .modes__title { margin: 0; align-self: center; }
+    .modes__text { margin-top: 0.85rem; }
+  }
+
+  /* Without numbers the title opens the file. */
+  .modes--plain .modes__body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto 1fr; grid-template-areas: "title" "text" "stats"; }
+  .modes--plain .modes__title { margin-top: 0; }
+  @container (min-width: 40rem) {
+    .modes--plain .modes__body:has(.modes__stats) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: auto 1fr;
+      grid-template-areas: "title stats" "text stats";
+    }
+  }
+
+  @media (min-width: 600px) {
+    .modes__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .modes__file:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  }
+
+  @media (min-width: 1024px) {
+    .modes__grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .modes__file,
+    .modes__file:last-child:nth-child(odd) { grid-column: span var(--span, 2); }
+
+    .modes__head:has(.shead__text) {
+      max-width: none;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: 1fr auto;
+    }
+    .modes__head:has(.shead__text) .shead__eyebrow { grid-column: 1 / span 2; grid-row: 1; align-self: end; }
+    .modes__head:has(.shead__text) .shead__title { grid-column: 1 / span 2; grid-row: 2; }
+    .modes__head .shead__text {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+      align-self: end;
+      margin: 0;
+      padding-left: var(--pad-x);
+    }
+  }
+
+  /* Entrance (only when armed below the fold): the corners lock onto the plate
+     while the files rise into it. */
+  .modes__plate.is-armed .modes__frame {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  .modes__plate.is-armed.is-in .modes__frame {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--duration-slow) var(--ease-out-expo),
+      transform calc(var(--duration-slow) * 2) var(--ease-out-expo);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .modes__plate.is-armed .modes__frame { opacity: 1; transform: none; }
+  }
+</style>

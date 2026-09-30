@@ -1,0 +1,3 @@
+# Old WordPress URLs → new pages (Cloudflare Pages; ignored by the GitHub Pages preview)
+/partite-di-softair/ /softair/ 301
+/partite-di-softair /softair/ 301
