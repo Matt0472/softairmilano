@@ -18,7 +18,7 @@ Playbook già applicato su **campo-di-zucche** (robots.txt che ammette gli AI cr
 ## GEO / leggibilità per gli agenti AI (in fase di build)
 
 - **HTML statico e semantico** (Astro): il contenuto è nel testo HTML, non dietro JS → gli AI crawler lo leggono direttamente.
-- **JSON-LD**: `LocalBusiness` (indirizzo, geo, orari, telefono), `FAQPage`, `Article` (blog), `BreadcrumbList`. *(competenza `seo-auditor`)*
+- **JSON-LD**: `LocalBusiness` (indirizzo, geo, orari, telefono), `FAQPage`, `Article` (blog), `BreadcrumbList`. *(competenza `seo-specialist`)*
 - **Contenuto "answer-first"**: risposte chiare e concise, FAQ, definizioni; entità esplicite (attività, città = Milano, servizi, prezzi) → facili da estrarre e citare.
 - **robots.txt che AMMETTE gli AI crawler** (in produzione), elencati esplicitamente.
 - **llms.txt** (opzionale, standard emergente): `/llms.txt` che indicizza i contenuti chiave per gli LLM. Da valutare.
@@ -62,4 +62,4 @@ AI crawler da ammettere: **GPTBot, OAI-SearchBot, ChatGPT-User** (OpenAI), **Cla
 7. Verifica **JSON-LD** (Rich Results) e che le pagine chiave siano leggibili senza JS.
 8. *(opzionale)* pubblicare `llms.txt`.
 
-Coordinare con `docs/cutover-checklist.md` (il cambio dominio) e con l'agente `seo-auditor`.
+Coordinare con `docs/cutover-checklist.md` (il cambio dominio) e con l'agente `seo-specialist`.

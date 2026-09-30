@@ -21,7 +21,7 @@ Estetica **tattico-militare cinematografica, dark-first, elegante (non kitsch)**
 | Success | `--color-success` | `#34C759` | conferme |
 | Danger | `--color-danger` | `#E5484D` | errori |
 
-Contrasto: testo/muted su background e testo-su-accento pensati per **AA su dark** (primario ≥4.5:1, secondario ≥3:1). Verifica puntuale a carico di `accessibility-auditor`. Testo sopra le foto → sempre **scrim/overlay**.
+Contrasto: testo/muted su background e testo-su-accento pensati per **AA su dark** (primario ≥4.5:1, secondario ≥3:1). Verifica puntuale a carico di `accessibility-specialist`. Testo sopra le foto → sempre **scrim/overlay**.
 
 ## Tipografia
 - **Display**: `Oswald` (condensed, uppercase per i titoli) — cinematografico e tattico, elegante. Pesi 500/600/700.

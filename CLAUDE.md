@@ -1,127 +1,135 @@
 # softairmilano.it — sito
 
-Sito di **SoftAir Milano** (arena/villaggio militare indoor ~1.500mq a Milano). Contenuti in **italiano**.
+Guida per Claude Code in questo repository.
 
-**Obiettivo primario: vendere le partite/sessioni di softair** dell'arena — tutto converte alla **prenotazione (TicketingHub)**. Obiettivi secondari: **far crescere il corso** e **recuperare la fetta paintball** (convertire chi cerca il paintball al softair). Sito **veloce**, **mobile-first**, aggiornabile in autonomia dal cliente.
+Questo file è un **indice**, non un regolamento. Le regole stanno in `docs/standards/`, che leggono
+persone e assistenti: una copia sola, un solo posto dove cambiarle.
 
-**Standard di qualità (non negoziabile): si lavora sempre al massimo.** Ogni pagina, contenuto e componente dev'essere eccellente e curato nei dettagli. Creiamo solo cose meravigliose — mai contenuti di riempimento o soluzioni "abbastanza buone".
+## Il progetto
 
-## Uso efficiente di token e risorse
+Sito di **SoftAir Milano**, arena/villaggio militare indoor di ~1.500 mq a Milano. Contenuti in
+**italiano**. Oggi `softairmilano.it` è un WordPress su Aruba: il nuovo sito Astro lo sostituisce allo
+switch, mantenendo il dominio (procedura in `docs/cutover-checklist.md`).
 
-Ottimizza sempre l'uso di token e delle risorse disponibili puntando comunque al **miglior risultato possibile**: pianifica prima di agire, riusa ciò che è già noto, **non rileggere file già letti né ripetere lavoro**, mantieni gli output concisi e non ridondanti, ed **evita errori che costringono a rifare**. Massima qualità, minimo spreco.
+**Obiettivo primario: vendere le partite/sessioni di softair**: tutto porta alla **prenotazione
+(TicketingHub)**. Obiettivi secondari: **far crescere il corso** e **recuperare la fetta paintball**
+(convertire al softair chi cerca il paintball). Sito **veloce**, **mobile-first**, aggiornabile in
+autonomia dal cliente.
 
-## Tutto gestibile da Pages CMS (principio fondamentale)
+**Standard di qualità (non negoziabile): si lavora sempre al massimo.** Ogni pagina, contenuto e
+componente dev'essere eccellente e curato nei dettagli. Solo cose meravigliose, mai riempitivi o
+soluzioni "abbastanza buone".
 
-Ogni **contenuto** del sito — testi, titoli, immagini, video, prezzi, FAQ, recensioni, dati di contatto, meta/SEO, voci di menu, CTA, ecc. — deve essere **completamente modificabile dal cliente via Pages CMS**, senza toccare il codice. **Niente contenuto "in duro" nei componenti**: va in `src/data/*.json` (o in una collezione) ed esposto nel `.pages.yml`.
+**Principio fondante: se è contenuto sta nel CMS, se è struttura sta nel codice.** Il cliente cambia
+tutto da Pages CMS; la struttura la tocca solo un tecnico (`docs/standards/contenuti-cms.md`).
 
-La **struttura** (layout, componenti, logica, stile, configurazione) resta modificabile **solo da una persona tecnicamente esperta**, mai dal cliente.
+## Leggi prima di lavorare
 
-Regola pratica: **se è contenuto → sta nel CMS; se è struttura → sta nel codice.** Prima di scrivere qualunque testo o asset dentro un componente, chiedersi "il cliente vorrà cambiarlo?": se sì, va nei dati e nel `.pages.yml`.
+| Stai per | Leggi |
+|---|---|
+| Fare qualunque cosa | [`docs/standards/README.md`](docs/standards/README.md): indice, non negoziabili, debito noto |
+| Scrivere un testo, aggiungere un'immagine, toccare `src/data` o `.pages.yml` | [`contenuti-cms.md`](docs/standards/contenuti-cms.md) |
+| Scrivere componenti, layout, CSS, script | [`codice.md`](docs/standards/codice.md) |
+| Progettare o ritoccare l'aspetto di qualcosa | [`design.md`](docs/standards/design.md), con le **decisioni del cliente da non riproporre** |
+| Produrre foto, immagini AI, video, favicon | [`media.md`](docs/standards/media.md) |
+| Toccare elementi interattivi, contrasti, motion | [`accessibilita.md`](docs/standards/accessibilita.md) |
+| Toccare immagini, font, JS, hero | [`performance.md`](docs/standards/performance.md) |
+| Toccare un layout | [`responsive.md`](docs/standards/responsive.md) |
+| Toccare pagine, meta, JSON-LD, robots | [`seo.md`](docs/standards/seo.md) |
+| Committare, pubblicare, andare online | [`git.md`](docs/standards/git.md) |
 
-## Stack tecnologico
+Il canone è l'autorità. Dove il tuo giudizio diverge, **vince il file**. Se una regola sembra sbagliata
+per il caso, dillo e fermati: non improvvisare varianti.
 
-- **Astro** `^7` — sito **statico** (nessun adapter SSR; `astro build` genera HTML statico)
-- **Tailwind CSS** `^4` — via plugin Vite `@tailwindcss/vite` (NON l'integrazione Astro)
-- **@astrojs/sitemap** — generazione sitemap
-- **Pages CMS** (pagescms.org) — editing contenuti da parte del cliente, config in **`.pages.yml`**
-- **Cloudflare Pages** — hosting (build statica)
-- **GitHub** — repository del codice (owner `Matt0472`)
-- **TicketingHub** — widget JS per le prenotazioni
-- **Google Analytics 4** — analytics, caricato **solo dopo consenso** (Consent Mode v2, IP anonimizzato); Measurement ID come campo CMS. *(opzionale: Cloudflare Web Analytics, cookieless)*
-- Librerie di contorno (usare solo se servono): **anime.js** (motore di animazione, MIT — SVG draw, stagger, tipografia cinetica), **lenis** (smooth scroll), **vanilla-cookieconsent** (banner + policy, gestione fatta a mano), **@fontsource** (font self-hosted), **sharp** (dev, ottimizzazione immagini in build)
+Lo **stato del lavoro** (cosa è fatto, cosa manca, cosa manca dal cliente) è in `docs/in-development/HANDOFF.md`.
 
-## Hosting e deploy
+## Stack
 
-- **Cloudflare Pages** (build statica, in produzione). Dominio custom gestito dalla **dashboard Cloudflare** (non con un file `CNAME` nel repo).
-- **Staging**: si pubblica **solo su GitHub Pages** sotto un sottodominio di **mapped-dev.it** (come la presentazione).
-- Eventuali redirect: file **`_redirects`** nella root pubblicata.
-
-## Indicizzazione e GEO (regola critica)
-
-- **Fino allo switch il sito è NON indicizzabile**: `robots.txt` `Disallow: /` + `<meta name="robots" content="noindex, nofollow">` ovunque. Il **noindex si rimuove SOLO il giorno dello switch** su `softairmilano.it`, mai prima. Indicizzabilità gestita da un **flag di build/ambiente** (un solo punto).
-- **GEO / agenti AI** (obiettivo: comparire e farsi **citare** nelle risposte AI): in produzione `robots.txt` che ammette esplicitamente gli AI crawler, **JSON-LD**, contenuto **answer-first**, **IndexNow**, Cloudflare **Crawler Hints** + **AI Crawl Control** (AI bot ammessi). Bing Webmaster + Google Search Console al go-live.
-- Dettagli, elenco crawler e checklist go-live: **`docs/geo-e-indicizzazione.md`**.
-
-## Gestione contenuti (Pages CMS)
-
-- Config editor in **`.pages.yml`** (content types, campi, media).
-- Contenuti come **file JSON in `src/data/*.json`** (un file per sezione), letti dai componenti Astro.
-- Media caricati dal cliente in **`public/uploads`** (mappati come `/uploads` in output).
-- `settings.commit.identity: user` (ogni salvataggio riporta nome/email dell'editor).
-- Per pagine aggiungibili in autonomia: **collezioni** con schema predefinito e, dove serve, il campo **block** (blocchi selezionabili e riordinabili) → struttura libera ma sotto controllo.
-
-## Manuale utente (obbligatorio)
-
-Il progetto include un **manuale d'uso per il cliente**, realizzato **esattamente come su campo-di-zucche**:
-
-- **Sorgente**: frammento HTML in `docs/manuale-cliente.html` (solo `<title>` + `<style>` + corpo, senza involucro del documento).
-- **Generazione**: `scripts/genera-manuale.mjs` lo avvolge in una pagina completa **`noindex, nofollow`** + `no-referrer` e lo scrive in `public/<percorso-non-indovinabile>/index.html`. Eseguito da `npm run manuale`, incluso in `dev`/`build`.
-- **Riservato**: non collegato da nessuna pagina, **non** in sitemap, **non** in `robots.txt` (che è pubblico) — raggiungibile solo da chi conosce l'URL.
-- **Indice scrollspy**: `<nav class="toc">` con `aria-current` che **segue automaticamente la sezione** in cui si trova il lettore; sezioni numerate `<section id="...">` con `<h2><span class="num">NN</span> Titolo</h2>`.
-- **Sincronizzato col sito**: ogni sezione e ogni contenuto modificabile via Pages CMS deve essere spiegato nel manuale (come accedere, cosa si cambia, cosa **non** si tocca). Va aggiornato ogni volta che il sito cambia.
-
-Si costruisce insieme al sito, perché documenta i contenuti reali.
-
-## Struttura del progetto
-
-```
-src/
-  components/   componenti Astro — Atomic Design: atoms/, molecules/, organisms/ (gli organismi = blocchi CMS)
-  layouts/      layout di pagina (template: BaseLayout, PageLayout a blocchi, ArticleLayout)
-  pages/        rotte (.astro)
-  data/         contenuti in JSON (editati via Pages CMS)
-  scripts/      script client (es. animazioni)
-  styles/       stili globali
-scripts/        script di build (es. genera-manuale.mjs, ottimizzazione immagini)
-docs/           sorgenti (es. manuale-cliente.html)
-public/
-  uploads/      media caricati dal cliente
-.pages.yml      config Pages CMS
-astro.config.mjs
-_redirects      eventuali redirect (Cloudflare Pages)
-```
+- **Astro** `^7`, sito **statico** (nessun adapter SSR).
+- **Tailwind CSS** `^4` via plugin Vite `@tailwindcss/vite` (non l'integrazione Astro).
+- **@astrojs/sitemap**, **lenis** (smooth scroll globale), **@fontsource** (Inter, Oswald), **sharp** (dev).
+- **Pages CMS** (pagescms.org), config in `.pages.yml`, contenuti in `src/data/*.json`.
+- **Cloudflare Pages** in produzione (dominio gestito dalla dashboard Cloudflare, redirect in
+  `_redirects`); **anteprima** su GitHub Pages: https://softairmilano-anteprima.mapped-dev.it.
+- **GitHub** `Matt0472/softairmilano` (pubblico), **TicketingHub** (prenotazioni), **GA4** dopo consenso
+  (opzionale: Cloudflare Web Analytics, senza cookie), video su **Cloudflare R2**, immagini AI con
+  **Gemini** (`scripts/genera-immagine.mjs`).
 
 ## Comandi
 
-Richiede **Node ≥ 22** (Astro 7) — versione fissata in `.nvmrc` (`nvm use`).
+Richiede **Node ≥ 22**: con Node 20 il build fallisce.
 
 ```bash
-npm run dev       # sviluppo locale
-npm run build     # build statica di produzione
-npm run preview   # anteprima della build
-npm run manuale   # (ri)genera il manuale cliente in public/
+export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"; nvm use 22.23.2
+npm run dev        # sviluppo su http://localhost:4321 (ottimizza le immagini prima di partire)
+npm run build      # build statica di produzione in dist/
+npx astro preview --port 4322                                                    # anteprima della build
+npx lighthouse http://127.0.0.1:4322/ --chrome-flags="--headless=new"            # Lighthouse sulla build
 ```
 
-## Convenzioni
+Produzione indicizzabile: `PUBLIC_SITE_INDEXABLE=true`, **solo il giorno dello switch**.
 
-### Lingua
-- **Il codice è interamente in inglese**: nomi di variabili, funzioni, componenti, file e cartelle, e **tutti i commenti**.
-- **Solo i contenuti visibili all'utente sono in italiano** (testi delle pagine, copy, valori dei contenuti in `src/data`).
-- Nel `.pages.yml` e nei dati: la **chiave** (`name` dei campi, nomi file) è in **inglese**; la **label** mostrata al cliente nel CMS e il **valore** del contenuto sono in **italiano**. Es. `{ name: "title", label: "Titolo" }` con valore italiano.
+## Delega agli agenti
 
-### Altre convenzioni
-- **Dominio configurabile in un punto solo**: costante `SITE_URL` in `astro.config.mjs` (override con env `SITE_URL` per le anteprime) + `siteUrl` in `src/data/settings.json` + riga Sitemap in `public/robots.txt`.
-- **Priorità**: SEO al massimo (meta, Open Graph, JSON-LD, sitemap) e responsive **mobile-first** perfetto.
-- **Performance**: build con `inlineStylesheets` per ridurre le richieste; immagini ottimizzate (WebP/miniature).
-- **Pagine legali** (privacy, cookie) in `noindex` ed escluse dalla sitemap.
-- **Terze parti & consenso**: TicketingHub e GA4 si caricano **solo dopo consenso** (categorie del banner); i loro **ID sono campi CMS** (`settings.json`) — l'unica cosa che il cliente cambia. Cookie/privacy policy costruite a mano e allineate.
-- **Git**: mai committare/pushare senza ok esplicito dell'utente.
+Gli agenti sono **specialisti di una materia**. Ognuno conosce un'area e serve qualunque fase:
+costruire, rivedere, esplorare, correggere, rispondere a una domanda. Si usa quello la cui materia
+corrisponde, **senza aspettare che l'utente lo chieda**; i lavori che toccano più materie li delegano a
+più specialisti, in parallelo.
 
-## Team di agenti
-
-Il progetto ha 5 agenti specialisti in `.claude/agents/`. **Vanno auto-invocati proattivamente quando serve** (senza aspettare che l'utente li chieda), delegando loro il rispettivo dominio:
-
-| Agente | Quando auto-invocarlo |
+| Materia | Specialista |
 |---|---|
-| **ui-designer** | quando si progetta/costruisce una nuova pagina o componente, si scelgono stile/colori/tipografia/spaziature/motion/navigazione, o si rivede la qualità visiva. Possiede il **design system** (`design-system/softair-milano/MASTER.md`, via skill ui-ux-pro-max) |
-| **seo-auditor** | ogni volta che si creano/modificano pagine, layout, metadata o si aggiungono articoli al blog |
-| **responsive-auditor** | ogni volta che si costruisce/modifica il layout di una pagina o di un componente |
-| **accessibility-auditor** | su ogni pagina/componente; è **bloccante** (WCAG 2.2 AA), quindi va sempre coinvolto prima di considerare "finito" un lavoro |
-| **performance-auditor** | dopo modifiche significative (immagini, font, JS/CSS, hero) |
+| Aspetto: composizione, gerarchia, tipografia, motion, stati, navigazione, UX dei form | `design-specialist` |
+| Contenuti: campi CMS, `src/data`, `.pages.yml`, manuale cliente, testi scritti nel codice | `cms-specialist` |
+| Asset: foto reali, immagini AI, varianti mobile, video, logo, favicon | `asset-specialist` |
+| Forma del codice: Astro, CSS, script, dipendenze | `code-standards-specialist` |
+| Accessibilità WCAG 2.2 AA (**bloccante**) | `accessibility-specialist` |
+| Performance e Core Web Vitals | `performance-specialist` |
+| Responsive e mobile | `responsive-specialist` |
+| SEO, GEO, gate di indicizzazione | `seo-specialist` |
 
-I domini sono **complementari e senza sovrapposizioni**: `ui-designer` cura il *design* (stile, token, gerarchia, motion, navigazione, UX form) e rimanda ai 4 auditor per accessibilità, performance, responsive e SEO.
+### Revisione
 
-**Regole di uso:**
-- Quando un task tocca uno di questi domini, **delega all'agente competente** invece di fare da soli; per lavori che ne toccano più d'uno, invocali (anche **in parallelo**).
-- **Prima del lancio**: eseguire i **4 auditor come quality-gate**. L'esito dell'accessibility-auditor è **bloccante**.
-- Di default gli agenti fanno audit e propongono i fix; applicano modifiche solo se il task lo richiede esplicitamente.
+- **Chi ha costruito qualcosa non lo rivede.** Dopo ogni modifica non banale: `code-standards-specialist`
+  e `cms-specialist` sui file toccati.
+- **A pagina finita** si fa `/audit` come quality-gate, con i quattro specialisti di qualità
+  (accessibilità, performance, responsive, SEO) più design, CMS e codice. **Non a ogni componente**: in
+  itinere bastano build, browser vero e la revisione qui sopra. L'esito dell'accessibilità è
+  **bloccante**, e prima del lancio si fa `/audit lancio`.
+- Si salta la revisione solo per modifiche banali e meccaniche (un refuso, un valore, una riga senza
+  effetti).
+
+## Usa queste skill senza che te lo chiedano
+
+Chi lavora qui descrive il lavoro a parole e non sa che le skill esistono. Riconosci l'intento e agisci:
+dì in una riga quale usi, poi usala.
+
+| Dicono qualcosa come | Fai |
+|---|---|
+| "facciamo la pagina X" · "rifai la sezione Y" · "aggiungi Z" · "sistema W" | **`/ship`**: raccolta, domande, piano, costruzione, verifica, via libera, pubblicazione |
+| "controlla la home" · "è pronta?" · "va bene così?" · una pagina appena finita | **`/audit`** |
+| "dove va questo?" · "posso usare questo colore?" · "come lo chiamo?" | **Rispondi da `docs/standards/`** citando l'ID della regola, mai a memoria |
+| "passiamo la mano" · "chiudiamo la sessione" · "salva i progressi" | **`/handoff`** |
+
+- **Usala direttamente quando la richiesta corrisponde chiaramente.** Chiedere "uso una skill?" scarica
+  la decisione su chi non sa cosa siano.
+- **Proponi, non imporre, quando corrisponde solo in parte.** "Mi sembra un lavoro da `/ship`, lo faccio
+  per bene?" è meglio che avviare in silenzio cinque fasi non richieste.
+- Se una skill non è disponibile, fai il lavoro tu: contano i gate del canone, le skill sono il modo per
+  raggiungerli in modo affidabile.
+
+## Regole operative
+
+Riguardano come si lavora qui, non come deve essere il codice (quello è in `docs/standards/`).
+
+- **Mai commit né push senza un ok esplicito**: prima si mostrano le modifiche (screenshot, anteprima
+  locale, diff), poi si aspetta (`GIT-01`). Ogni push su `main` va online sull'anteprima.
+- **Il sito resta `noindex` fino allo switch** (`SEO-10`). Mai toccare il flag di indicizzazione, il
+  DNS o Cloudflare di tua iniziativa: gli interruttori di produzione li aziona l'utente (`GIT-08`).
+- **Mai segreti nei file**: la API key sta in `.env` e il repo è pubblico (`GIT-04`).
+- **Verifica nel browser vero con Playwright MCP**, non nella pane dell'app: la pane congela le
+  animazioni e non cattura sotto la piega. Screenshot in `.playwright-mcp/` (ignorata da git).
+- **Uso efficiente di token e risorse, puntando al miglior risultato**: pianifica prima di agire, riusa
+  ciò che è già noto, non rileggere file già letti, output concisi, evita errori che costringono a
+  rifare. Massima qualità, minimo spreco.
+- **Non creare documentazione non richiesta**, tranne il manuale cliente, che è obbligatorio e va
+  tenuto allineato al CMS (`CMS-12`–`CMS-14`).

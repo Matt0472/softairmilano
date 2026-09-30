@@ -28,13 +28,13 @@ Totale pagine "vere" costruite: **~13 + 3 legali**, più i contenuti illimitati 
 
 ## Direzione artistica
 
-Stile **specifico di questo sito** (ogni progetto avrà il suo). Guida il design system e il lavoro di `ui-designer`; i valori concreti (palette, scale, font) li fissa `design-system/softair-milano/MASTER.md`.
+Stile **specifico di questo sito** (ogni progetto avrà il suo). Guida il design system e il lavoro di `design-specialist`; i valori concreti (palette, scale, font) li fissa `design-system/softair-milano/MASTER.md`.
 
 - **Estetica**: tattico-militare **cinematografica ma elegante**, mai kitsch. Palette **scura** con **un solo accento** ad alto contrasto; tipografia forte con gerarchia netta; ampio uso di **spazi negativi**. Anti-kitsch: niente camo come texture primaria, niente stencil ovunque (display condensato forte + neutro pulito per il corpo); la scena la fanno **fotografia + spazio**, non gli effetti.
 - **Hero & micro-interazioni**: hero immersivo (immagine/gradiente), parallax leggero e reveal on-scroll, con vincoli: il contenuto hero (titolo + CTA) **visibile subito**, mai dipendente da JS/animazione (**non si anima l'LCP**); solo `transform`/`opacity`, **niente layout shift** (CLS ~0); `prefers-reduced-motion` → **statico pieno**.
 - **Galleria arena**: griglia responsive + **lightbox accessibile da tastiera** (focus trap, `Esc`, frecce, aria); immagini **ottimizzate e lazy-load**; contenuto gestito da CMS. Il sito è fotografico → servono foto ottime (segnaposto di qualità nel frattempo).
 - **Coerenza / token**: colori, spaziature, raggi, ombre e tipografia definiti **in un unico posto** (Tailwind v4 `@theme` / CSS custom properties) e riusati; gli atomi consumano solo token; **nessun valore magico** (hex/px) sparso nel codice.
-- **Contrasto su dark/foto**: dark-first → testo primario ≥4.5:1, secondario ≥3:1; testo sopra le immagini con scrim/overlay dove serve (verifica `accessibility-auditor`).
+- **Contrasto su dark/foto**: dark-first → testo primario ≥4.5:1, secondario ≥3:1; testo sopra le immagini con scrim/overlay dove serve (verifica `accessibility-specialist`).
 
 ### Impatto visivo — TUTTO IL SITO (feedback rev. 13 set 2026, DA REALIZZARE)
 
@@ -164,7 +164,7 @@ Il cliente deve poter **creare nuove pagine e contenuti in totale autonomia**, g
 
 **Libreria blocchi predefiniti** (riutilizzabili, coerenti col design system): Hero, Testo, Testo + immagine, Galleria, Video, Elenco/feature, Prezzi/pacchetti, FAQ (accordion), Recensione/citazione, CTA prenotazione, Mappa/contatti.
 
-Ogni nuova pagina eredita automaticamente header, footer, stile, responsive, SEO e accessibilità: il cliente inserisce solo i contenuti dentro blocchi già "a norma". La libreria blocchi è responsabilità dell'agente `ui-designer`.
+Ogni nuova pagina eredita automaticamente header, footer, stile, responsive, SEO e accessibilità: il cliente inserisce solo i contenuti dentro blocchi già "a norma". La libreria blocchi è responsabilità dell'agente `design-specialist`.
 
 ## Cookie, consenso e terze parti
 
@@ -224,10 +224,10 @@ Regola: ogni testo/immagine/prezzo qui sopra è un **campo CMS** (label italiana
 ---
 
 ## Ordine di sviluppo proposto
-1. Design system (`ui-designer`) + impianto Astro + `.pages.yml`.
+1. Design system (`design-specialist`) + impianto Astro + `.pages.yml`.
 2. Elementi globali (header, footer, CTA, cookie) + `settings`.
 3. Home → L'arena → Softair (le pagine cardine).
 4. Attività (tiro dinamico, arcotag) + occasioni (teambuilding, compleanni, eventi).
 5. Landing paintball + collezione Blog.
 6. Voucher, Contatti, Esperienze, legali.
-7. Manuale cliente + quality-gate (4 auditor) + preparazione cutover.
+7. Manuale cliente + quality-gate (`/audit`) + preparazione cutover.
