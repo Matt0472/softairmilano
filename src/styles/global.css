@@ -8,7 +8,7 @@
 /*
   Design tokens — single source of truth. Mirror of
   design-system/softair-milano/MASTER.md. No "magic values" outside this file.
-  Dark-first tactical palette; amber accent; Oswald display + Inter body.
+  Dark-first tactical palette; electric-cyan accent (#00ccff, client choice); Oswald display + Inter body.
 */
 @theme {
   /* Colors */
@@ -18,8 +18,8 @@
   --color-foreground: #eceef1;
   --color-muted: #a6aeb8;
   --color-border: #3a434e;
-  --color-accent: #f5a524;
-  --color-accent-hover: #ffb53d;
+  --color-accent: #00ccff;
+  --color-accent-hover: #33d6ff;
   --color-on-accent: #0e1114;
   --color-steel: #5b6b7a;
   --color-success: #34c759;

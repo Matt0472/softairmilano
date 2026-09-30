@@ -18,31 +18,6 @@
     "hudTag": "IND · 1.500 M² · CQB",
     "proof": "4,9 / 5 · oltre 500 recensioni"
   },
-  "unboxing": {
-    "beats": [
-      {
-        "eyebrow": "Tutto incluso",
-        "title": "Apri la partita.",
-        "text": "Replica, caricatore, maschera: tutto compreso nel prezzo, tutto pronto al tuo arrivo."
-      },
-      {
-        "eyebrow": "Ogni dettaglio conta",
-        "title": "Prendi la replica.",
-        "text": "Fucili elettrici pronti all’uso, regolati e controllati prima di ogni sessione."
-      },
-      {
-        "eyebrow": "Sei pronto",
-        "title": "Entra in arena.",
-        "text": "Scegli data e orario: la prenotazione richiede due minuti."
-      }
-    ],
-    "cta": {
-      "label": "Prenota la partita",
-      "href": "#prenota"
-    },
-    "fireHint": "Clicca per sparare",
-    "scrollHint": "Scorri"
-  },
   "video": {
     "videoSrc": "https://pub-03634caa58304887b733482b0c916e61.r2.dev/softairmilano-home.mp4",
     "poster": "/uploads/video-poster.jpg",

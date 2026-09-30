@@ -3,7 +3,7 @@
 Fonte di verità del design. I token sono implementati in `src/styles/global.css` (`@theme` Tailwind v4): **nessun valore magico fuori da lì**. Direzione artistica completa: `docs/piano-sviluppo.md` → *Direzione artistica*.
 
 ## Sintesi
-Estetica **tattico-militare cinematografica, dark-first, elegante (non kitsch)**: fondo gunmetal, testo chiaro, **un solo accento** ambra ad alto contrasto, tipografia forte, molto spazio negativo, fotografia protagonista. CTA primaria unica = **Prenota**.
+Estetica **tattico-militare cinematografica, dark-first, elegante (non kitsch)**: fondo gunmetal, testo chiaro, **un solo accento** ciano elettrico (#00CCFF) ad alto contrasto, tipografia forte, molto spazio negativo, fotografia protagonista. CTA primaria unica = **Prenota**.
 
 ## Palette (dark-first)
 | Ruolo | Token | Hex | Uso |
@@ -14,8 +14,8 @@ Estetica **tattico-militare cinematografica, dark-first, elegante (non kitsch)**
 | Foreground | `--color-foreground` | `#ECEEF1` | testo primario |
 | Muted | `--color-muted` | `#A6AEB8` | testo secondario |
 | Border | `--color-border` | `#2A313A` | bordi/divisori |
-| Accent | `--color-accent` | `#F5A524` | CTA, accenti (ambra tattica) |
-| Accent hover | `--color-accent-hover` | `#FFB53D` | hover CTA |
+| Accent | `--color-accent` | `#00CCFF` | CTA, accenti (ciano elettrico, scelta del cliente) |
+| Accent hover | `--color-accent-hover` | `#33D6FF` | hover CTA |
 | On accent | `--color-on-accent` | `#0E1114` | testo su accento |
 | Steel | `--color-steel` | `#5B6B7A` | secondario/steel |
 | Success | `--color-success` | `#34C759` | conferme |
