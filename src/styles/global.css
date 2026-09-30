@@ -47,6 +47,13 @@
     color-scheme: dark;
   }
 
+  /* Tailwind v4 preflight resets buttons to cursor: default; interactive controls must show a hand. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  summary {
+    cursor: pointer;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);

@@ -51,7 +51,11 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     btn.addEventListener('click', () => {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      // Lenis owns the scroll position: a native smooth scrollTo gets overridden by its next frame
+      // (hence the occasional "needs two clicks"). Go through Lenis when it is active.
+      const lenis = (window as any).__lenis;
+      if (lenis && !reduce) lenis.scrollTo(0, { duration: 1.1 });
+      else window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     });
   }
 </script>
