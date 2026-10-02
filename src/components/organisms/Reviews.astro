@@ -27,7 +27,7 @@ const hasTitle = !!title?.trim();
 ---
 
 {featured && (
-  <section class="rv" aria-labelledby={hasTitle ? headingId : undefined}>
+  <section class="rv band" aria-labelledby={hasTitle ? headingId : undefined}>
     <div class="rv__inner shell">
       <div class="rv__aside" data-reveal>
         {hasTitle && <h2 class="rv__title" id={headingId}>{title}</h2>}

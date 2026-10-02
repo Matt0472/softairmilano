@@ -2,12 +2,15 @@
 // Full-bleed hero for inner pages. The LCP element is the H1 or the lede (Chromium
 // ignores full-viewport images), so neither ever gets an entrance animation (DES-08).
 // An optional `decor` slot has its own grid area, so decoration never covers the copy.
+// The home hero's HUD frame runs here too: its scan passes under the copy, its corners and
+// readout stay clear of the copy and of the facts.
 
 import Button from '../atoms/Button.astro';
 import Picture from '../atoms/Picture.astro';
 import { slotHtml } from '../../lib/slots';
 import Breadcrumb from '../molecules/Breadcrumb.astro';
 import FactStrip from '../molecules/FactStrip.astro';
+import HudFrame from '../molecules/HudFrame.astro';
 
 interface Cta {
   label?: string;
@@ -36,6 +39,8 @@ interface Props {
   ctaSecondary?: Cta;
   facts?: Fact[];
   crumbs?: Crumb[];
+  /** Small readout in the HUD frame (CMS `hudTag`), shown from 641px wide (landscape phones too). */
+  hudTag?: string;
 }
 
 const {
@@ -50,6 +55,7 @@ const {
   ctaSecondary,
   facts = [],
   crumbs = [],
+  hudTag,
 } = Astro.props;
 
 // Any portrait screen below desktop gets the vertical crop; a landscape phone keeps the wide photo.
@@ -79,6 +85,7 @@ const isLong = title.length > 28;
     />
   )}
   <div class="phero__scrim" aria-hidden="true"></div>
+  <HudFrame tag={hudTag} />
 
   <div class="phero__grid shell">
     {crumbs.length > 0 && <Breadcrumb items={crumbs} class="phero__crumbs" />}
@@ -124,6 +131,13 @@ const isLong = title.length > 28;
     /* Small text over the photo sits on this chip: at 82% ink even a white patch
        behind it keeps muted text above 5:1 (A11Y-02). */
     --chip: color-mix(in srgb, var(--ink) 82%, transparent);
+    /* Room for the floating header (logo 48px + 20px padding each side): the grid starts below
+       it, and the HUD readout sits on the grid's first row, the breadcrumb (centred on its 44px),
+       right-aligned with the page column like the header's Prenota. The bottom belongs to the facts. */
+    --phero-top: 5.75rem;
+    --hud-tag-top: calc(var(--phero-top) + 0.55rem);
+    --hud-tag-right: calc(max(0px, (100% - var(--shell-max)) / 2) + var(--shell-gutter));
+    --hud-tag-bottom: auto;
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -162,6 +176,12 @@ const isLong = title.length > 28;
         transparent 20%);
   }
 
+  /* The scan runs between the scrim and the copy, so the copy's gradients dim it; the corners
+     and the readout sit above, where nothing of the copy is. */
+  .phero .hud__scan { z-index: 1; }
+  .phero .hud__corners,
+  .phero .hud__tag { z-index: 3; }
+
   .phero__grid {
     position: relative;
     z-index: 2;
@@ -170,9 +190,9 @@ const isLong = title.length > 28;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr) auto auto;
     grid-template-areas: "crumbs" "decor" "content" "facts";
-    /* Room for the floating header (logo 48px + 20px padding each side). */
-    padding-top: 5.75rem;
-    padding-bottom: clamp(1.25rem, 3.5vw, 2.25rem);
+    padding-top: var(--phero-top);
+    /* Clears the HUD's bottom corner caps (18px inset + 34px), which would cross the fact labels. */
+    padding-bottom: 3.75rem;
   }
   .phero__crumbs {
     grid-area: crumbs;
@@ -374,7 +394,7 @@ const isLong = title.length > 28;
   }
 
   @media (max-width: 767px) {
-    .phero__grid { padding-top: 5.5rem; }
+    .phero { --phero-top: 5.5rem; }
     .phero__decor { margin-block: 0.5rem; }
     .phero__eyebrow { --track: 0.2em; }
   }
@@ -396,7 +416,7 @@ const isLong = title.length > 28;
   /* Landscape phones: the headline goes wide and small, the lede to two lines, so
      the primary CTA stays above the fold. After the short-phone rule on purpose. */
   @media (max-height: 500px) and (orientation: landscape) {
-    .phero__grid { padding-top: 4.75rem; }
+    .phero { --phero-top: 4.75rem; }
     .phero__content { padding-top: 0.5rem; }
     .phero__eyebrow { margin-bottom: 0.6rem; }
     .phero__title,

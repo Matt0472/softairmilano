@@ -1,0 +1,24 @@
+---
+// The inner frame of a content photo: one cyan hairline 12px inside the image, the
+// photo's own edge left clean (no outer accent border). Decorative. It fills its
+// parent, the positioned, clipped media box, and sits above the image.
+// Content photos only: the heroes carry the HUD frame (HudFrame), the home video its
+// own camera readout.
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<span class:list={['pframe', className]} aria-hidden="true"></span>
+
+<style is:global>
+  .pframe {
+    position: absolute;
+    inset: 12px;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+    pointer-events: none;
+  }
+</style>

@@ -114,7 +114,7 @@ content:
             fields:
               - { name: label, label: Testo, type: string }
               - { name: href, label: Link, type: string }
-          - { name: hudTag, label: "Etichetta HUD (piccola scritta tattica)", type: string }
+          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in basso a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «IND · 1.500 M² · CQB». Solo numeri già scritti nella pagina. Se vuota non compare" }
           - { name: showRating, label: "Mostra il voto Google sotto i bottoni", type: boolean, description: "Stelle, voto e numero di recensioni vengono da «Recensioni» → «Valutazione complessiva» e si cambiano lì" }
       - name: video
         label: Video (sotto l'hero)
@@ -288,6 +288,7 @@ content:
             fields:
               - { name: label, label: Testo, type: string }
               - { name: href, label: Link, type: string }
+          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «CQB · MAX 30 GIOCATORI · 12+». I numeri devono essere quelli dei Dati chiave: se li cambi, aggiornala anche qui. Se vuota non compare" }
       - name: facts
         label: Dati chiave (sotto il titolo)
         type: object
@@ -340,6 +341,21 @@ content:
             fields:
               - { name: title, label: Nome, type: string }
               - { name: text, label: Descrizione (una o due frasi), type: text }
+              - name: icon
+                label: Icona
+                description: "Il simbolo che apre la scheda della missione o del percorso. Sceglilo per tutte le voci o per nessuna, così le schede restano allineate. Se vuota, la scheda resta senza simbolo"
+                type: select
+                options:
+                  values:
+                    - { name: flag, label: "Bandiera (cattura)" }
+                    - { name: crosshair, label: "Mirino (eliminazione)" }
+                    - { name: crown, label: "Corona (l'ultimo in piedi)" }
+                    - { name: shieldUser, label: "Scudo con persona (scorta)" }
+                    - { name: bomb, label: "Ordigno (disinnesco)" }
+                    - { name: castle, label: "Fortezza (difesa)" }
+                    - { name: target, label: "Bersaglio (precisione)" }
+                    - { name: users, label: "Squadra (a squadre)" }
+                    - { name: timer, label: "Cronometro (a tempo)" }
               - name: stats
                 label: "Cifre (facoltative, es. 7 tappe)"
                 description: "Una cifra compare solo se ha sia il valore sia l'etichetta, e si legge di seguito: «16 bersagli ravvicinati»"
@@ -456,6 +472,7 @@ content:
             fields:
               - { name: label, label: Testo, type: string }
               - { name: href, label: Link, type: string }
+          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «Ø 6 MM VS Ø 17 MM». I numeri sono quelli del confronto: se li cambi, aggiornala anche qui. Se vuota non compare" }
       - name: intro
         label: In breve
         type: object

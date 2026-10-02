@@ -1,13 +1,15 @@
 ---
 // Photo + copy split ("Come si gioca", "Cosa trovi a Softair Milano"). The photo
 // column follows the photo's orientation (narrow for portrait, wide for
-// landscape) and the frame reserves its ratio, so any image of that ratio fits.
+// landscape) and the frame reserves its ratio, so any image of that ratio fits;
+// the photo carries the site's inner hairline frame.
 // Optional `items` (e.g. missions) render as a two-column definition list; the
 // default slot takes an aside such as the "Tutto incluso" panel.
 // Tablet: a landscape photo goes full width above the copy. Phones: the photo
 // runs edge to edge above the copy.
 
 import Picture from '../atoms/Picture.astro';
+import PhotoFrame from '../molecules/PhotoFrame.astro';
 import { slotHtml } from '../../lib/slots';
 
 interface Item {
@@ -55,13 +57,14 @@ const hasTitle = !!title?.trim();
 ---
 
 <section
-  class:list={['split', `split--${orientation}`, reverse && 'split--reverse']}
+  class:list={['split band', `split--${orientation}`, reverse && 'split--reverse']}
   aria-labelledby={hasTitle ? headingId : undefined}
 >
   <div class="split__inner shell">
     {image && (
       <figure class="split__media" style={`--ratio: ${ratio}`} data-inview>
         <Picture src={image} srcMobile={imageMobile} alt={imageAlt} sizes={sizes} class="split__img" />
+        <PhotoFrame />
       </figure>
     )}
 
@@ -112,8 +115,7 @@ const hasTitle = !!title?.trim();
     aspect-ratio: var(--ratio);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    background: var(--color-surface);
-    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    background: var(--lift);
   }
   /* A landscape photo beside a long list stays in view while the list is read. */
   .split--landscape .split__media { position: sticky; top: 2rem; }
@@ -204,7 +206,6 @@ const hasTitle = !!title?.trim();
       /* Bleed past the page gutter (.shell) to the screen edge. */
       margin-inline: calc(var(--shell-gutter) * -1);
       border-radius: 0;
-      border-inline: 0;
     }
     .split--landscape .split__media { aspect-ratio: 4 / 3; }
   }

@@ -1,12 +1,21 @@
 ---
-// Mission dossier ("Le missioni", "I percorsi"): one file per mode (numbered when the order matters) on a
-// single plate, divided by hairlines and framed by four HUD corners that lock on
-// as it scrolls in. A file may carry a readout of figures (stages, targets),
-// pinned to its foot so the readouts line up across a row; each figure reads as
-// one phrase ("16 bersagli ravvicinati"), like the hero facts. The plate always
-// fills its rows: a short last row widens its files instead of leaving a gap.
+// Mission select ("Le missioni", "I percorsi"): one file per mode on a single
+// plate, divided by hairlines and framed by four HUD corners that lock on as it
+// scrolls in. A file opens on its mark: the mission emblem, picked in the CMS,
+// in a sight that traces it in, and/or its number when the order matters
+// (courses that unlock in turn). The same emblem, oversized and faint, is the
+// file's texture. Pointing at a file locks the sight onto its objective; the
+// files are not links, so nothing promises a click. A file may carry a readout
+// of figures (stages, targets), pinned to its foot so the readouts line up
+// across a row; each figure reads as one phrase ("16 bersagli ravvicinati"),
+// like the hero facts. The plate always fills its rows: a short last row widens
+// its files instead of leaving a gap.
 
+import type { ComponentProps } from 'astro/types';
+import Icon from '../atoms/Icon.astro';
 import SectionHead from '../molecules/SectionHead.astro';
+
+type IconName = ComponentProps<typeof Icon>['name'];
 
 interface Stat {
   value: string;
@@ -15,6 +24,7 @@ interface Stat {
 interface Mode {
   title: string;
   text: string;
+  icon?: string;
   stats?: Stat[];
 }
 interface Props {
@@ -27,10 +37,17 @@ interface Props {
   headingId?: string;
 }
 
+// The emblems the CMS offers (modes.items.icon in .pages.yml): any other value draws none.
+const EMBLEMS: IconName[] = ['flag', 'crosshair', 'crown', 'shieldUser', 'bomb', 'castle', 'target', 'users', 'timer'];
+
 const { eyebrow, title, text, numbered = false, items, headingId = 'modes-title' } = Astro.props;
 const list = (items ?? [])
   .filter((m) => m?.title?.trim())
-  .map((m) => ({ ...m, stats: (m.stats ?? []).filter((s) => s?.value?.trim() && s?.label?.trim()) }));
+  .map((m) => ({
+    ...m,
+    emblem: EMBLEMS.find((e) => e === m.icon),
+    stats: (m.stats ?? []).filter((s) => s?.value?.trim() && s?.label?.trim()),
+  }));
 const hasTitle = !!title?.trim();
 const pad = (n: number) => String(n + 1).padStart(2, '0');
 
@@ -44,7 +61,7 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
 ---
 
 {list.length > 0 && (
-  <section class:list={['modes', !numbered && 'modes--plain']} aria-labelledby={hasTitle ? headingId : undefined}>
+  <section class:list={['modes band', !numbered && 'modes--plain']} aria-labelledby={hasTitle ? headingId : undefined}>
     <div class="shell">
       <SectionHead eyebrow={eyebrow} title={title} text={text} id={headingId} class="modes__head" />
 
@@ -53,8 +70,16 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
         <ol class="modes__grid" role="list">
           {list.map((m, i) => (
             <li class="modes__file" style={`--span: ${spanFor(i)}`}>
+              {m.emblem && <Icon name={m.emblem} size={184} class="modes__ghost" />}
               <div class="modes__body" data-reveal style={`--i: ${colFor(i)}`}>
-                {numbered && <span class="modes__num" aria-hidden="true">{pad(i)}</span>}
+                {(numbered || m.emblem) && (
+                  <div class="modes__mark" aria-hidden="true">
+                    {numbered && <span class="modes__num" data-num={pad(i)}>{pad(i)}</span>}
+                    {m.emblem && (
+                      <span class="modes__sight"><Icon name={m.emblem} size={52} class="modes__emblem" /></span>
+                    )}
+                  </div>
+                )}
                 <h3 class="modes__title">{m.title}</h3>
                 {m.text?.trim() && <p class="modes__text">{m.text}</p>}
                 {m.stats.length > 0 && (
@@ -124,24 +149,44 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
     background: linear-gradient(var(--color-border), var(--color-border)) center / calc(100% - 2px) calc(100% - 2px) no-repeat;
   }
   .modes__file {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: flex;
-    background: var(--color-background);
+    background: var(--plane);
     container-type: inline-size;
+  }
+  /* The lift a pointed file takes: a layer one step up, faded in, so only opacity moves. */
+  .modes__file::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--lift);
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-out-expo);
   }
 
   .modes__body {
+    position: relative;
     flex: 1;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto auto 1fr;
-    grid-template-areas: "num" "title" "text" "stats";
+    grid-template-areas: "mark" "title" "text" "stats";
     padding: clamp(1.75rem, 3vw, 2.75rem) var(--pad-x);
+  }
+
+  .modes__mark {
+    grid-area: mark;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: clamp(1.25rem, 2.4vw, 1.9rem);
   }
 
   /* Outlined figure: the file number, decorative (the list carries the order). */
   .modes__num {
-    grid-area: num;
-    justify-self: start;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: clamp(2.75rem, 4.4vw, 4rem);
@@ -150,11 +195,79 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
     font-variant-numeric: tabular-nums;
     color: transparent;
     -webkit-text-stroke: 1.25px var(--accent);
+    position: relative;
+  }
+  /* The lit number: a filled copy laid over the outline, faded in, so only opacity moves. */
+  .modes__num::after {
+    content: attr(data-num);
+    position: absolute;
+    inset: 0;
+    color: color-mix(in srgb, var(--accent) 22%, transparent);
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-out-expo);
+  }
+
+  /* The emblem's sight: steel corners at rest; the accent pair closes in on a pointed file. */
+  .modes__sight {
+    --arm: 10px;
+    --w: 2px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 5.25rem;
+    height: 5.25rem;
+    color: var(--accent);
+  }
+  .modes__sight::before,
+  .modes__sight::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      var(--c) top left / var(--arm) var(--w),
+      var(--c) top left / var(--w) var(--arm),
+      var(--c) top right / var(--arm) var(--w),
+      var(--c) top right / var(--w) var(--arm),
+      var(--c) bottom left / var(--arm) var(--w),
+      var(--c) bottom left / var(--w) var(--arm),
+      var(--c) bottom right / var(--arm) var(--w),
+      var(--c) bottom right / var(--w) var(--arm);
+    background-repeat: no-repeat;
+  }
+  .modes__sight::before { --c: linear-gradient(var(--color-steel), var(--color-steel)); }
+  .modes__sight::after {
+    --c: linear-gradient(var(--accent), var(--accent));
+    opacity: 0;
+    transform: scale(1.35);
+    transition:
+      opacity var(--duration-base) var(--ease-out-expo),
+      transform var(--duration-slow) var(--ease-out-expo);
+  }
+  /* Thinner than the 24px grid's stroke 2, so the line art stays fine at this size. */
+  .modes__emblem { stroke-width: 1.25; }
+
+  /* The emblem again, oversized and faint, bleeding off the file's top corner, across from the
+     sight and clear of the copy. */
+  .modes__ghost {
+    position: absolute;
+    top: -1.75rem;
+    right: -1.75rem;
+    z-index: -1;
+    /* Scales with a narrow file (tablets, 1024), so it never crowds the sight. */
+    width: min(11.5rem, 42cqi);
+    height: min(11.5rem, 42cqi);
+    stroke-width: 0.2;
+    color: color-mix(in srgb, var(--accent) 15%, transparent);
+    opacity: 0.6;
+    transition:
+      opacity var(--duration-slow) var(--ease-out-expo),
+      transform calc(var(--duration-slow) * 2) var(--ease-out-expo);
   }
 
   .modes__title {
     grid-area: title;
-    margin: clamp(1.25rem, 2.4vw, 1.9rem) 0 0;
+    margin: 0;
     font-family: var(--font-display);
     font-weight: 700;
     font-size: clamp(1.45rem, 2.3vw, 2rem);
@@ -167,7 +280,7 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
     margin: 0.7rem 0 0;
     max-width: 42ch;
     color: var(--color-muted);
-    font-size: 0.99rem;
+    font-size: 1rem;
     line-height: 1.6;
     text-wrap: pretty;
   }
@@ -214,36 +327,65 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
     .modes__body:has(.modes__stats) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       grid-template-rows: auto auto 1fr;
-      grid-template-areas: "num stats" "title stats" "text stats";
+      grid-template-areas: "mark stats" "title stats" "text stats";
       column-gap: calc(var(--pad-x) * 2);
     }
     .modes__stats { margin-top: 0; }
+  }
+
+  /* Pointing at a file: it lifts a step, the sight locks onto the emblem (or the
+     number lights up) and the texture drifts. Pointer only: the files are not
+     controls, so there is no focus or press state to give them. */
+  @media (hover: hover) {
+    .modes__file:hover::before { opacity: 1; }
+    .modes__file:hover .modes__sight::after { opacity: 1; transform: none; }
+    .modes__file:hover .modes__num::after { opacity: 1; }
+    .modes__file:hover .modes__ghost { opacity: 1; transform: translate(-0.6rem, 0.6rem); }
   }
 
   @media (max-width: 599px) {
     .modes__body {
       grid-template-columns: auto minmax(0, 1fr);
       grid-template-rows: auto auto 1fr;
-      grid-template-areas: "num title" "text text" "stats stats";
+      grid-template-areas: "mark title" "text text" "stats stats";
       column-gap: 1rem;
       padding: 1.6rem 1.1rem 1.75rem;
     }
+    .modes__mark { margin: 0; align-self: center; }
     /* Oswald's figures are proportional ("01" is narrower than "06"): a fixed
        column keeps every title on the same line. */
-    .modes__num { align-self: center; min-width: 1.15em; font-size: 2.6rem; }
-    .modes__title { margin: 0; align-self: center; }
+    .modes__num { min-width: 1.15em; font-size: 2.6rem; }
+    .modes__title { align-self: center; }
     .modes__text { margin-top: 0.85rem; }
+    .modes__ghost { display: none; }
   }
 
-  /* Without numbers the title opens the file. */
-  .modes--plain .modes__body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto 1fr; grid-template-areas: "title" "text" "stats"; }
-  .modes--plain .modes__title { margin-top: 0; }
+  /* Without numbers the title opens the file, or sits beside the emblem. */
+  .modes--plain .modes__body:not(:has(.modes__mark)) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: "title" "text" "stats";
+  }
   @container (min-width: 40rem) {
-    .modes--plain .modes__body:has(.modes__stats) {
+    .modes--plain .modes__body:not(:has(.modes__mark)):has(.modes__stats) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       grid-template-rows: auto 1fr;
       grid-template-areas: "title stats" "text stats";
     }
+  }
+  /* Phones: a mission list, the emblem beside its name and objective. */
+  @media (max-width: 599px) {
+    .modes--plain .modes__body:has(.modes__mark) {
+      grid-template-rows: auto auto 1fr;
+      grid-template-areas: "mark title" "mark text" "stats stats";
+      column-gap: 1.1rem;
+      padding-block: 1.4rem 1.5rem;
+    }
+    .modes--plain .modes__mark { align-self: start; }
+    .modes--plain .modes__sight { --arm: 8px; width: 3.25rem; height: 3.25rem; }
+    .modes--plain .modes__emblem { width: 34px; height: 34px; }
+    .modes--plain .modes__title { align-self: end; margin-top: 0.15rem; }
+    .modes--plain .modes__text { margin-top: 0.35rem; }
   }
 
   @media (min-width: 600px) {
@@ -274,7 +416,7 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
   }
 
   /* Entrance (only when armed below the fold): the corners lock onto the plate
-     while the files rise into it. */
+     while the files rise into it and each emblem traces itself, row by row. */
   .modes__plate.is-armed .modes__frame {
     opacity: 0;
     transform: scale(1.04);
@@ -286,8 +428,22 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
       opacity var(--duration-slow) var(--ease-out-expo),
       transform calc(var(--duration-slow) * 2) var(--ease-out-expo);
   }
+  .modes__plate.is-armed .modes__emblem > * {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .modes__plate.is-armed.is-in .modes__emblem > * {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset calc(var(--duration-slow) * 3.5) var(--ease-out-expo);
+    transition-delay: calc(var(--i, 0) * 90ms + 250ms);
+  }
 
+  /* Static in full: the entrance is already there, and pointing at a file only lights it
+     (the lift, the sight, the texture), nothing moves. */
   @media (prefers-reduced-motion: reduce) {
     .modes__plate.is-armed .modes__frame { opacity: 1; transform: none; }
+    .modes__plate.is-armed .modes__emblem > * { stroke-dashoffset: 0; }
+    .modes__sight::after,
+    .modes__file:hover .modes__ghost { transform: none; }
   }
 </style>

@@ -41,7 +41,7 @@ const spanFor = (i: number): number => {
 ---
 
 {list.length > 0 && (
-  <section class="aud" aria-labelledby={hasTitle ? headingId : undefined}>
+  <section class="aud band" aria-labelledby={hasTitle ? headingId : undefined}>
     <div class="shell">
       <SectionHead title={title} text={text} id={headingId} />
 
@@ -97,7 +97,7 @@ const spanFor = (i: number): number => {
     padding: clamp(1.5rem, 3vw, 2.25rem);
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
-    background: var(--color-surface);
+    background: var(--lift);
     color: var(--color-foreground);
     text-decoration: none;
   }
@@ -117,7 +117,7 @@ const spanFor = (i: number): number => {
     margin: 0;
     max-width: 44ch;
     color: var(--color-muted);
-    font-size: 0.99rem;
+    font-size: 1rem;
     line-height: 1.55;
     text-wrap: pretty;
   }
@@ -150,7 +150,7 @@ const spanFor = (i: number): number => {
   @media (hover: hover) {
     .aud__tile--link:hover {
       border-color: color-mix(in srgb, var(--accent) 50%, transparent);
-      background: var(--color-surface-2);
+      background: var(--lift-2);
     }
     .aud__tile--link:hover .aud__title { color: var(--color-accent-hover); }
     .aud__tile--link:hover .aud__go {
@@ -175,7 +175,7 @@ const spanFor = (i: number): number => {
   /* Featured occasion: a surface step, a tinted border and the accent rule, plus a slightly larger title. */
   .aud__tile--featured {
     border-color: color-mix(in srgb, var(--accent) 35%, var(--color-border));
-    background: var(--color-surface-2);
+    background: var(--lift-2);
     box-shadow: inset 3px 0 0 var(--accent);
   }
   .aud__tile--featured .aud__title { font-size: clamp(1.75rem, 3.2vw, 2.7rem); }

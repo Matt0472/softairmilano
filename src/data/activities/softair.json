@@ -21,7 +21,8 @@
     "ctaSecondary": {
       "label": "Come funziona",
       "href": "#serata"
-    }
+    },
+    "hudTag": "CQB · MAX 30 GIOCATORI · 12+"
   },
   "facts": [
     {
@@ -95,31 +96,37 @@
       {
         "title": "The Last Flag",
         "text": "Recuperate la bandiera della squadra avversaria.",
+        "icon": "flag",
         "stats": []
       },
       {
         "title": "Death Match",
         "text": "Vince la squadra che elimina l'altra.",
+        "icon": "crosshair",
         "stats": []
       },
       {
         "title": "Highlander",
         "text": "Tutti contro tutti: ne resterà soltanto uno.",
+        "icon": "crown",
         "stats": []
       },
       {
         "title": "VIP",
         "text": "Scortate il testimone al punto sicuro senza che venga colpito.",
+        "icon": "shieldUser",
         "stats": []
       },
       {
         "title": "Bomberman",
         "text": "Disinnescate l'ordigno prima che scada il tempo.",
+        "icon": "bomb",
         "stats": []
       },
       {
         "title": "Difesa del bastione",
         "text": "Resistete fino alla fine: il bastione non deve cadere.",
+        "icon": "castle",
         "stats": []
       }
     ]

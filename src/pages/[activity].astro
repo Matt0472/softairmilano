@@ -37,6 +37,7 @@ interface Activity {
     focus?: 'center' | 'right';
     ctaPrimary: Cta;
     ctaSecondary?: Cta;
+    hudTag?: string;
   };
   facts?: { value: string; label: string }[];
   intro?: { title: string; text: string; points?: { title: string; text: string }[] };
@@ -46,7 +47,7 @@ interface Activity {
     title: string;
     text?: string;
     numbered?: boolean;
-    items?: { title: string; text: string; stats?: { value: string; label: string }[] }[];
+    items?: { title: string; text: string; icon?: string; stats?: { value: string; label: string }[] }[];
   };
   howto?: { title: string; text?: string; includedTitle?: string; included?: string[]; image: string; imageAlt: string };
   audiences?: { title: string; items?: { title: string; text: string; href?: string; featured?: boolean }[] };

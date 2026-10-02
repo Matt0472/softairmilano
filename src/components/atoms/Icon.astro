@@ -22,6 +22,17 @@ const ICONS = {
   menu: '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/>',
   x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
   messageCircle: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  // Mission emblems, picked per mission in the CMS (modes.items.icon). pathLength="1" lets a
+  // component trace them in with stroke-dashoffset (CODE-07); it changes nothing otherwise.
+  flag: '<path pathLength="1" d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path pathLength="1" d="M4 22v-7"/>',
+  crosshair: '<circle pathLength="1" cx="12" cy="12" r="10"/><path pathLength="1" d="M22 12h-4"/><path pathLength="1" d="M6 12H2"/><path pathLength="1" d="M12 6V2"/><path pathLength="1" d="M12 22v-4"/>',
+  crown: '<path pathLength="1" d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path pathLength="1" d="M5 21h14"/>',
+  shieldUser: '<path pathLength="1" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path pathLength="1" d="M6.376 18.91a6 6 0 0 1 11.249.003"/><circle pathLength="1" cx="12" cy="11" r="4"/>',
+  bomb: '<circle pathLength="1" cx="11" cy="13" r="9"/><path pathLength="1" d="M14.35 4.65 16.3 2.7a2.41 2.41 0 0 1 3.4 0l1.6 1.6a2.4 2.4 0 0 1 0 3.4l-1.95 1.95"/><path pathLength="1" d="m22 2-1.5 1.5"/>',
+  castle: '<path pathLength="1" d="M10 5V3"/><path pathLength="1" d="M14 5V3"/><path pathLength="1" d="M15 21v-3a3 3 0 0 0-6 0v3"/><path pathLength="1" d="M18 3v8"/><path pathLength="1" d="M18 5H6"/><path pathLength="1" d="M22 11H2"/><path pathLength="1" d="M22 9v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9"/><path pathLength="1" d="M6 3v8"/>',
+  target: '<circle pathLength="1" cx="12" cy="12" r="10"/><circle pathLength="1" cx="12" cy="12" r="6"/><circle pathLength="1" cx="12" cy="12" r="2"/>',
+  users: '<path pathLength="1" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle pathLength="1" cx="9" cy="7" r="4"/><path pathLength="1" d="M22 21v-2a4 4 0 0 0-3-3.87"/><path pathLength="1" d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  timer: '<path pathLength="1" d="M10 2h4"/><path pathLength="1" d="m12 14 3-3"/><circle pathLength="1" cx="12" cy="14" r="8"/>',
   // Brand marks: TikTok and the dots are filled glyphs, so they opt out of the stroke.
   instagram: '<rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>',
   facebook: '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',

@@ -35,7 +35,7 @@ const list = (items ?? []).filter((it) => typeof it === 'string' && it.trim());
   .incl {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    background: color-mix(in srgb, var(--color-surface-2) 70%, transparent);
+    background: color-mix(in srgb, var(--lift-2, var(--color-surface-2)) 70%, transparent);
     padding: clamp(1.25rem, 3vw, 1.75rem);
   }
   .incl__title {

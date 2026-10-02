@@ -29,7 +29,7 @@ const asideHtml = await slotHtml(Astro.slots);
 ---
 
 {list.length > 0 && (
-  <section class="tl" id={id} aria-labelledby={hasTitle ? headingId : undefined}>
+  <section class="tl band" id={id} aria-labelledby={hasTitle ? headingId : undefined}>
     <div class="shell">
       <SectionHead eyebrow={eyebrow} title={title} text={text} id={headingId} />
 
@@ -74,8 +74,6 @@ const asideHtml = await slotHtml(Astro.slots);
     --tail: 22%;
     position: relative;
     padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
-    background: var(--color-surface);
-    border-block: 1px solid var(--color-border);
   }
 
   .tl__steps {
@@ -151,7 +149,7 @@ const asideHtml = await slotHtml(Astro.slots);
     height: 18px;
     border-radius: 50%;
     border: 2px solid var(--accent);
-    background: var(--color-surface);
+    background: var(--plane);
   }
   .tl__node::after {
     content: "";
@@ -173,7 +171,7 @@ const asideHtml = await slotHtml(Astro.slots);
     margin: 0.7rem 0 0;
     max-width: 34ch;
     color: var(--color-muted);
-    font-size: 0.99rem;
+    font-size: 1rem;
     line-height: 1.6;
     text-wrap: pretty;
   }

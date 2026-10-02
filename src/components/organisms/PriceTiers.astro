@@ -39,7 +39,7 @@ const hasTitle = !!title?.trim();
 ---
 
 {list.length > 0 && (
-  <section class="price" aria-labelledby={hasTitle ? headingId : undefined}>
+  <section class="price band" aria-labelledby={hasTitle ? headingId : undefined}>
     <div class="price__inner shell">
       <div class="price__intro" data-reveal>
         <SectionHead title={title} text={text} id={headingId} />
@@ -155,7 +155,7 @@ const hasTitle = !!title?.trim();
     padding: clamp(1.25rem, 2.6vw, 1.75rem) clamp(1rem, 2.5vw, 1.75rem);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    background: var(--color-surface-2);
+    background: var(--lift-2);
     box-shadow: inset 3px 0 0 var(--accent);
   }
   .price__row--badged { border-color: color-mix(in srgb, var(--accent) 40%, var(--color-border)); }

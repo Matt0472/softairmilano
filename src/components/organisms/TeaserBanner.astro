@@ -1,7 +1,8 @@
 ---
 // Cross-sell banner ("Nel gruppo qualcuno non se la sente? Provate l'arcotag").
 // A cinematic panel: the photo fills the right side and dissolves into the
-// surface under the copy. The whole panel is one link (the button stretches
+// surface under the copy; the photo's inner hairline frames the whole panel, since
+// the photo has no edge of its own. The whole panel is one link (the button stretches
 // over it), so there is a single, clearly named target. Focus ring and press sit
 // on the panel: a transform on the button or its column would make it the
 // containing block of the stretched area and shrink the target mid-click.
@@ -9,6 +10,7 @@
 import Picture from '../atoms/Picture.astro';
 import Button from '../atoms/Button.astro';
 import Icon from '../atoms/Icon.astro';
+import PhotoFrame from '../molecules/PhotoFrame.astro';
 
 interface Props {
   title: string;
@@ -51,6 +53,7 @@ const hasLink = !!label?.trim() && !!href?.trim();
             </Button>
           )}
         </div>
+        {image && <PhotoFrame />}
       </div>
     </div>
   </section>

@@ -27,7 +27,7 @@ const { title, items, headingId = 'links-title' } = Astro.props;
 ---
 
 {items.length > 0 && (
-  <section class="xl" aria-labelledby={headingId}>
+  <section class="xl band" aria-labelledby={headingId}>
     <div class="xl__head shell">
       <SectionHead title={title} id={headingId} />
       {items.length > 1 && (

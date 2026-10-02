@@ -23,7 +23,7 @@ const list = (points ?? []).filter((p) => p?.title?.trim());
 const hasTitle = !!title?.trim();
 ---
 
-<section class="answer" aria-labelledby={hasTitle ? headingId : undefined}>
+<section class="answer band" aria-labelledby={hasTitle ? headingId : undefined}>
   <div class="shell">
     {hasTitle && <h2 class="answer__title" id={headingId} data-reveal>{title}</h2>}
     {text?.trim() && (

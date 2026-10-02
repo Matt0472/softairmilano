@@ -1,0 +1,119 @@
+---
+// Tactical HUD over a hero photo: four L-shaped corner caps that draw themselves in, a scan
+// line running down the frame and an optional readout (`tag`, the CMS `hudTag`) on
+// its own dark chip with a blinking dot. Decorative, never the LCP. It fills its
+// parent; the parent decides the stacking (against its own scrim and copy) and
+// where the readout sits, through --hud-tag-top / --hud-tag-right / --hud-tag-bottom.
+// The scan and the dot keep running while the page is open, with no pause control: an
+// accepted deviation from A11Y-07, recorded as known debt in docs/standards/README.md.
+
+interface Props {
+  tag?: string;
+  class?: string;
+}
+
+const { tag, class: className } = Astro.props;
+---
+
+<div class:list={['hud', className]} aria-hidden="true">
+  <span class="hud__corners">
+    <svg class="hud__corner hud__corner--tl" viewBox="0 0 34 34"><path pathLength="1" d="M1 33V1h32"></path></svg>
+    <svg class="hud__corner hud__corner--tr" viewBox="0 0 34 34"><path pathLength="1" d="M1 1h32v32"></path></svg>
+    <svg class="hud__corner hud__corner--br" viewBox="0 0 34 34"><path pathLength="1" d="M33 1v32H1"></path></svg>
+    <svg class="hud__corner hud__corner--bl" viewBox="0 0 34 34"><path pathLength="1" d="M33 33H1V1"></path></svg>
+  </span>
+  <span class="hud__scan"></span>
+  {tag?.trim() && (
+    <span class="hud__tag"><span class="hud__dot"></span>{tag}</span>
+  )}
+</div>
+
+<style is:global>
+  .hud {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* One 34px L per corner, 18px inside the edge. Each path runs clockwise round the frame
+     (arm, corner, arm), so the four draw in from nothing as one sweep. */
+  .hud__corners {
+    position: absolute;
+    inset: 18px;
+  }
+  .hud__corner {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    overflow: visible;
+  }
+  .hud__corner--tl { top: 0; left: 0; }
+  .hud__corner--tr { top: 0; right: 0; }
+  .hud__corner--br { bottom: 0; right: 0; }
+  .hud__corner--bl { bottom: 0; left: 0; }
+  .hud__corner path {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-accent) 55%, transparent);
+    stroke-width: 2;
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+    animation: hud-draw calc(var(--duration-slow) * 2.75) var(--ease-out-expo) calc(var(--duration-slow) / 2) forwards;
+  }
+  @keyframes hud-draw { to { stroke-dashoffset: 0; } }
+
+  /* A full-height layer carrying the line on its top edge, so the sweep is a transform.
+     Linear on purpose: a scanner moves at constant speed. */
+  .hud__scan {
+    position: absolute;
+    inset: 0 18px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-accent) 50%, transparent), transparent) top / 100% 1px no-repeat;
+    mix-blend-mode: screen;
+    opacity: 0.4;
+    animation: hud-scan calc(var(--duration-slow) * 17.5) linear infinite;
+  }
+  @keyframes hud-scan {
+    from { transform: translateY(6%); }
+    to { transform: translateY(94%); }
+  }
+
+  /* Own dark chip, so the readout's contrast never depends on the photo behind it. */
+  .hud__tag {
+    position: absolute;
+    top: var(--hud-tag-top, auto);
+    right: var(--hud-tag-right, 22px);
+    bottom: var(--hud-tag-bottom, 22px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-background) 82%, transparent);
+    font-family: var(--font-display);
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-accent-hover);
+  }
+  /* The light of the readout: the only glow the HUD allows itself. */
+  .hud__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 8px 1px color-mix(in srgb, var(--color-accent) 80%, transparent);
+    animation: hud-blink calc(var(--duration-slow) * 6) var(--ease-out-expo) infinite;
+  }
+  @keyframes hud-blink { 50% { opacity: 0.25; } }
+  /* On phones the bottom of a hero holds the CTAs and the top the breadcrumb: no readout. */
+  @media (max-width: 640px) {
+    .hud__tag { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hud__corner path { animation: none; stroke-dashoffset: 0; }
+    .hud__scan { display: none; }
+    .hud__dot { animation: none; }
+  }
+</style>
