@@ -4,7 +4,8 @@ Aggiornato: **2 ott 2026, ore 15:00**.
 
 Cosa c'è di nuovo:
 - commit `8516850` (online): fasce alternate, Missioni ridisegnate, `PhotoFrame`, `HudFrame` su tutte le aperture;
-- commit **«Home finita»** del 2 ott (questo): la home rifatta da capo su richiesta dell'utente, più la voce «Home» nel menu. L'audit `docs/audits/2026-10-02-home.md` è chiuso: corretti bloccanti e maggiori, le revisioni di codice e CMS sono state fatte da un'istanza diversa e applicate. Dopo il push l'utente controlla la home dal telefono vero.
+- commit **«Prenota uguale su tutte le pagine»** del 2 ott (questo): la sezione finale «Sei pronto a scendere in campo?» (`FinalCta`) chiude ora anche le pagine attività e /paintball al posto di `BookingCta` (cancellato). Il testo sta in un posto solo, `settings.json` → `finalCta`, compresa la lista delle parole della fascia inclinata;
+- commit `915029c` «Home finita» del 2 ott: la home rifatta da capo su richiesta dell'utente, più la voce «Home» nel menu. L'audit `docs/audits/2026-10-02-home.md` è chiuso: corretti bloccanti e maggiori, le revisioni di codice e CMS sono state fatte da un'istanza diversa e applicate. Dopo il push l'utente controlla la home dal telefono vero.
 
 ## Obiettivo
 
@@ -52,6 +53,7 @@ Ogni sezione di contenuto sta su `.band`. Le tre sezioni guidate dallo scroll (v
 2. **`ActionVideo` «Dentro l'azione»**: il video parte come una pillola e si allarga mentre la sezione è bloccata allo scroll. A video aperto compaiono «REC · CAM 01», gli angoli, i pulsanti pausa e audio (icone SVG) e, in basso a sinistra, il **chip YouTube** (link a `settings.social.youtube`, testo da `video.youtubeLabel` o dall'@ dell'indirizzo).
    - Sui riquadri stretti i due pulsanti si impilano, così il chip si legge per intero fino a 320 px.
    - **Autoplay sempre** (decisione dell'utente, 2 ott): parte appena è a schermo, anche con reduced motion e mentre è ancora una pillola; a mano si accende solo l'audio. Eccezione scritta in `A11Y-07` e nel debito noto.
+   - L'audio è solo musica (confermato dall'utente il 2 ott): niente sottotitoli (WCAG 1.2.2 non si applica).
    - Video su R2: `dentro-l-azione.mp4` (1920×756, 38,6 s) e `dentro-l-azione-mobile.mp4` (604×756, 4:5, per i telefoni in verticale). I master sono in `~/Documenti/personal-projects/softairmilano/video/`. Il vecchio `softairmilano-home.mp4` su R2 non serve più: lo può togliere l'utente.
 3. **`ArenaIntro`**: «1.500 m²» grande con i numeri a rullo (atomo `Odometer`), 4 caratteristiche con emblema tra le staffe (campo `arena.features.icon`), radar.
 4. **`ActivitiesStory`**: la storia a scorrimento, ora con sonde `IntersectionObserver` invece di un listener di scroll; «Scopri X» è un bottone secondario con testo dal CMS (`activities[].label`); sotto i 560 px di altezza non si blocca.
@@ -61,7 +63,7 @@ Ogni sezione di contenuto sta su `.band`. Le tre sezioni guidate dallo scroll (v
 8. **`CourseTeaser`**: breve introduzione al corso con dati chiave e «Scopri il corso» verso `/corso-softair`, che oggi dà 404 (la pagina è la prossima da fare).
 9. **`SocialChannels`**: tessere a X con il mirino al centro e Instagram, Facebook, YouTube, TikTok (loghi monocromi, ciano al passaggio).
 10. **`RangerTeaser`**: tutta la sezione è un solo link a `settings.rangerUrl` (nuova scheda), senza bottoni; sfondo AI «Al riparo» (`ranger-bosco*`), palette Ranger con misura (`DES-12`, token `--color-ranger-*`).
-11. **`FinalCta`** `#prenota`: sipario allo scroll, titolo con animazione d'ingresso, fascia diagonale di parole più in basso, azioni vere (chiama, scrivi, WhatsApp se compilato, orari).
+11. **`FinalCta`** `#prenota`: sipario allo scroll, titolo con animazione d'ingresso, fascia diagonale di parole più in basso, azioni vere (chiama, scrivi, WhatsApp se compilato, orari, indirizzo, come arrivare). È la stessa su tutte le pagine (vedi sotto).
 
 ### Menu (`Header.astro`, `src/data/navigation.json`)
 
@@ -96,7 +98,7 @@ Ogni sezione di contenuto sta su `.band`. Le tre sezioni guidate dallo scroll (v
      - Le schede sono le attività di Home › Attività meno la pagina corrente; le descrizioni brevi vengono dal menu.
      - La scheda attiva è larga e illuminata; clic o tocco su una striscia la apre, un secondo clic naviga.
      - Frecce e tastiera. Niente autoplay.
-  11. BookingCta `#prenota`: telefono, email e WhatsApp se compilato, con orari e indirizzo.
+  11. FinalCta `#prenota`, la stessa della home (testo da `settings.finalCta`).
 - **Slot dei componenti**: `PageHero` (`decor`) e `SplitFeature` (default) guardano l'HTML reso dello slot, non `Astro.slots.has`: una condizione falsa passata come slot non accende più layout vuoti.
 
 ### Pagina `/paintball` (`src/pages/paintball.astro` + `src/data/paintball.json`)
@@ -112,12 +114,12 @@ Ogni sezione di contenuto sta su `.band`. Le tre sezioni guidate dallo scroll (v
   8. prezzi, con il badge «Per iniziare» sulla Recluta;
   9. recensioni;
   10. FAQ;
-  11. Prenota.
+  11. Prenota (FinalCta, come in home).
 - **Tono**: confronto onesto e rispettoso. Viking Paintball Como è del cliente ma **non va nominato** (sua decisione).
 
 ### Componenti nuovi (futuri blocchi CMS)
 
-- **Organismi**: `PageHero`, `AnswerBlock`, `StepTimeline`, `SplitFeature`, `AudienceGrid`, `PriceTiers`, `Reviews`, `FaqAccordion`, `ActivityLinks`, `BookingCta`, `VsComparison`, `ImpactScale`, `TeaserBanner`; per la home `ActionVideo`, `OccasionMosaic`, `CourseTeaser`, `SocialChannels`, `RangerTeaser`, `FinalCta`. Cancellati `VideoSection` e `molecules/Card`.
+- **Organismi**: `PageHero`, `AnswerBlock`, `StepTimeline`, `SplitFeature`, `AudienceGrid`, `PriceTiers`, `Reviews`, `FaqAccordion`, `ActivityLinks`, `BookingCta`, `VsComparison`, `ImpactScale`, `TeaserBanner`; `FinalCta` in fondo a ogni pagina; per la home `ActionVideo`, `OccasionMosaic`, `CourseTeaser`, `SocialChannels`, `RangerTeaser`, `FinalCta`. Cancellati `VideoSection`, `molecules/Card` e `BookingCta`.
 - **Molecole**: `Breadcrumb`, `FactStrip`, `IncludedList`, `LeadText`, `Reveal`, `SectionHead`, `Trajectory`.
 - **Atomi**: `Icon`, `Picture`, `Badge`, `Odometer` (numeri a rullo, usato da `FactStrip` e `ArenaIntro`).
 - **Molecole condivise nuove**: `StarMeter` (stelle a frazione esatta), `PhotoFrame` (cornice sottile interna di ogni foto), `HudFrame` (angoli, riga che scorre e scritta tattica delle aperture).
@@ -309,7 +311,7 @@ Piano dell'utente (2 ott 2026): la home è finita; **ora le pagine mancanti, con
    - Home → Il corso: sopratitolo, titolo, testo, da 2 a 4 dati, bottone, immagine;
    - Home → Social: titolo e testo; i link ai profili stanno in Impostazioni; senza nessun link la sezione sparisce;
    - Home → Ranger: sopratitolo (perché nomina l'altra arena), titolo, testo, immagini; link e dominio mostrato vengono da «Link arena outdoor»;
-   - Home → Prenota (fondo): titolo, sottotitolo, testo del bottone «Scrivi»; contatti e orari vengono da Impostazioni; la fascia di parole usa i titoli delle attività e la cifra dell'arena; la scritta gigante è il «Nome sito»;
+   - Impostazioni → «Prenota (fondo di ogni pagina)»: titolo, sottotitolo, testo del bottone «Scrivi», parole della fascia inclinata (le attività e «1.500 m²»: vanno aggiornate a mano se cambiano); è la stessa sezione in fondo a home, attività e /paintball; contatti, orari, indirizzo e «Come arrivare» sono i campi di Impostazioni; la scritta gigante è il «Nome sito»;
    - Menu: la voce «Home» (`/`) è la prima;
    - Home, Attività e Softair VS Paintball → Apertura → «Scritta tattica sulla foto (HUD)» (`hudTag`): in basso a destra in home, in alto a destra nelle pagine interne, non sotto i 641 px di larghezza (telefoni in verticale); in maiuscolo da sola, massimo 32 caratteri, solo dati già scritti nella pagina; vuota = sparisce (cornice e riga che scorre restano: sono struttura);
    - Attività → Apertura: il campo «Dove sta il soggetto della foto» (`hero.focus`): «A destra» se la foto lascia libera la sinistra per il titolo, vuoto = «Al centro». Non ha effetto dove c'è una firma nell'apertura (la freccia dell'arcotag);
@@ -336,10 +338,11 @@ Piano dell'utente (2 ott 2026): la home è finita; **ora le pagine mancanti, con
    - una sottile riga verticale sul bordo destro di `logo-white-120.webp` nel footer, da verificare;
    - nota di ImpactScale visibile anche quando le sfere non sono disegnate;
    - lo scroll «con Lenis se c'è, altrimenti nativo» è ripetuto in `ActionVideo`, `FinalCta`, `ActivitiesStory` e `ScrollToTop`: un helper `src/scripts/scroll.ts` con il tipo di `window.__lenis` (`CODE-03`, `CODE-04`);
-   - `has()` e `waHref()` ancora da usare in `[activity].astro`, `paintball.astro` e negli altri organismi delle pagine interne (oggi `?.trim()` a mano);
+   - `has()` ancora da usare negli organismi delle pagine interne (oggi `?.trim()` a mano); `[activity].astro` e `paintball.astro` lo importano già;
    - `[activity].astro:100`: `og:image:alt` ripiega sull'alt dell'apertura anche quando l'immagine social è quella predefinita (in home già corretto: ripiega sul nome del sito);
    - l'angolo in alto a sinistra di `HudFrame` tocca il logo dell'header nelle aperture (visibile a 1024);
    - `public/uploads/video-poster.jpg` e `.webp` non sono più usati;
+   - il sottotitolo della CTA finale («Prenota la tua sessione di softair a Milano.») ora compare anche su arcotag, Nerf e tiro: valutare un testo che valga per tutte le attività;
    - «WhatsApp» nella CTA finale è scritto nel codice (nome del canale, `CMS-02`): un campo `finalCta.whatsappLabel` solo se il cliente lo vuole diverso;
    - un token `--radius-full` per i `999px` delle pillole;
    - le sei missioni stanno sia in `softair.json` (`modes`) sia in `paintball.json` (`arena.missions`): far leggere al paintball quelle del softair (tocca `paintball.astro` e `.pages.yml`, migrazione `CMS-09`);
@@ -356,7 +359,6 @@ Piano dell'utente (2 ott 2026): la home è finita; **ora le pagine mancanti, con
 - JSON-LD con `geo` e orari strutturati (`openingHoursSpecification`), con i dati del cliente.
 - Chiave IndexNow in `public/`; un solo interruttore per `robots.txt` e `noindex` (oggi `public/robots.txt` è statico).
 - Pausa per il movimento continuo (WCAG 2.2.2): riga e puntino delle aperture, che per decisione dell'utente (2 ott 2026) girano sempre anche nelle pagine interne; il video della home ha la sua pausa ma parte sempre da solo, anche con reduced motion (eccezione in `A11Y-07`). Registrato nel debito noto del canone.
-- **Audio del video** (WCAG 1.2.2, livello A): se nella traccia c'è parlato servono i sottotitoli (`<track>`); se è solo musica la questione decade. Da chiedere.
 - Bordo `--color-border` sotto 3:1 (WCAG 1.4.11): più contrasto o un secondo segnale.
 - Ogni link interno deve puntare a una pagina esistente (oggi /l-arena, /corso-softair, /teambuilding, /contatti, le occasioni e le legali danno 404).
 - Video R2 da `r2.dev` a un dominio proprio.

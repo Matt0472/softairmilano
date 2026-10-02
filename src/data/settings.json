@@ -18,6 +18,12 @@
   "openingHours": "Tutti i giorni dalle 10:00 alle 24:00, solo su prenotazione",
   "directions": "Parcheggio facile · Bus 433 dalla metro M1 Bisceglie",
   "rangerUrl": "https://www.rangersoftairmilano.it/",
+  "finalCta": {
+    "title": "Sei pronto a scendere in campo?",
+    "subtitle": "Prenota la tua sessione di softair a Milano.",
+    "writeLabel": "Scrivi",
+    "phrases": ["Softair", "Tiro dinamico", "Arcotag", "Nerf", "1.500 m²"]
+  },
   "footerRanger": {
     "title": "Anche all'aperto",
     "label": "Ranger Softair Milano",

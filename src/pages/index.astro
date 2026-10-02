@@ -16,13 +16,8 @@ import home from '../data/home.json';
 import settings from '../data/settings.json';
 import { has } from '../lib/fields';
 
-const { seo, hero, video, arena, intro, activitiesTitle, activities, reviews, occasions, course, paintballTeaser, social, rangerTeaser, finalCta } = home;
+const { seo, hero, video, arena, intro, activitiesTitle, activities, reviews, occasions, course, paintballTeaser, social, rangerTeaser } = home;
 
-// The closing band repeats the page's own words: the activities and the arena's headline figure.
-const finalePhrases = [
-  ...(activities ?? []).map((a) => a?.title),
-  arena?.stat?.value && arena?.stat?.unit ? `${arena.stat.value} ${arena.stat.unit}` : '',
-].filter(has);
 ---
 
 <BaseLayout title={seo?.title} description={seo?.description} image={seo?.image} imageAlt={seo?.imageAlt}>
@@ -52,13 +47,8 @@ const finalePhrases = [
   {/* The outdoor arena (Ranger): the whole section links to its own site. */}
   {rangerTeaser && has(rangerTeaser.title) && <RangerTeaser {...rangerTeaser} href={settings.rangerUrl} />}
 
-  {/* #prenota: every Prenota on the page lands here. */}
-  <FinalCta
-    title={finalCta?.title}
-    subtitle={finalCta?.subtitle}
-    writeLabel={finalCta?.writeLabel}
-    phrases={finalePhrases}
-  />
+  {/* #prenota: every Prenota on the page lands here. The same block closes every page. */}
+  <FinalCta {...settings.finalCta} />
 
   <Reveal />
 </BaseLayout>

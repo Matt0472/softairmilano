@@ -14,12 +14,14 @@ import PriceTiers from '../components/organisms/PriceTiers.astro';
 import Reviews from '../components/organisms/Reviews.astro';
 import FaqAccordion from '../components/organisms/FaqAccordion.astro';
 import ActivityLinks from '../components/organisms/ActivityLinks.astro';
-import BookingCta from '../components/organisms/BookingCta.astro';
+import FinalCta from '../components/organisms/FinalCta.astro';
 import IncludedList from '../components/molecules/IncludedList.astro';
 import Trajectory from '../components/molecules/Trajectory.astro';
 import Reveal from '../components/molecules/Reveal.astro';
 import home from '../data/home.json';
 import navigation from '../data/navigation.json';
+import settings from '../data/settings.json';
+import { has } from '../lib/fields';
 import { breadcrumbLd, faqLd } from '../lib/jsonld';
 import { flattenNav, type NavItem } from '../lib/nav';
 
@@ -60,7 +62,6 @@ interface Activity {
   reviews?: { title: string };
   faq?: { title: string; items?: { q: string; a: string }[] };
   related?: { title: string };
-  cta?: { title: string; text?: string };
 }
 
 export function getStaticPaths() {
@@ -80,8 +81,7 @@ const signature: Record<string, 'trajectory'> = { arcotag: 'trajectory' };
 
 // A section renders only when the client filled it in: Pages CMS always saves the object, so
 // its title (and its list, where it has one) is what decides (CMS-10).
-const has = (v?: string) => typeof v === 'string' && v.trim().length > 0;
-const { intro, evening, modes, howto, audiences, pricing, reviews, faq, related, cta } = data;
+const { intro, evening, modes, howto, audiences, pricing, reviews, faq, related } = data;
 
 const crumbs = [
   { label: 'Home', href: '/' },
@@ -127,7 +127,7 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
 
   {related && has(related.title) && <ActivityLinks title={related.title} items={relatedItems} />}
 
-  {cta && has(cta.title) && <BookingCta title={cta.title} text={cta.text} />}
+  <FinalCta {...settings.finalCta} />
 
   <Reveal />
 </BaseLayout>

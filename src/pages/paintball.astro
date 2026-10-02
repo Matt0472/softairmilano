@@ -14,12 +14,14 @@ import PriceTiers from '../components/organisms/PriceTiers.astro';
 import Reviews from '../components/organisms/Reviews.astro';
 import FaqAccordion from '../components/organisms/FaqAccordion.astro';
 import TeaserBanner from '../components/organisms/TeaserBanner.astro';
-import BookingCta from '../components/organisms/BookingCta.astro';
+import FinalCta from '../components/organisms/FinalCta.astro';
 import Button from '../components/atoms/Button.astro';
 import IncludedList from '../components/molecules/IncludedList.astro';
 import Reveal from '../components/molecules/Reveal.astro';
 import page from '../data/paintball.json';
 import navigation from '../data/navigation.json';
+import settings from '../data/settings.json';
+import { has } from '../lib/fields';
 import { breadcrumbLd, faqLd } from '../lib/jsonld';
 import { flattenNav, type NavItem } from '../lib/nav';
 
@@ -35,7 +37,6 @@ const {
   reviews,
   faq,
   alternative,
-  cta,
 } = page;
 
 const path = '/paintball';
@@ -46,7 +47,6 @@ const crumbs = [
   { label: pageName, href: path },
 ];
 // A section renders only when the client filled it in (CMS-10): see the activity template.
-const has = (v?: string) => typeof v === 'string' && v.trim().length > 0;
 const faqItems = (faq?.items ?? []).filter((f) => f.q?.trim() && f.a?.trim());
 const faqData = faqLd(faqItems);
 const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])];
@@ -92,7 +92,7 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
 
   {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
 
-  {cta && has(cta.title) && <BookingCta title={cta.title} text={cta.text} />}
+  <FinalCta {...settings.finalCta} />
 
   <Reveal />
 </BaseLayout>

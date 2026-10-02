@@ -1,12 +1,12 @@
 ---
-// The home's closing call to action (#prenota). It waits under the page and is uncovered as the
-// page slides away, like a curtain; then its title rises word by word out of its own line while a
-// target lock closes on it once and lets go. Booking works as in the inner pages' booking block: by
-// phone (the primary action, labelled with the number), WhatsApp when it is set, then email, with
-// the hours, the address (it opens Google Maps) and the directions under them. Contact data comes
-// from settings.json, the copy from the page. A band of the page's own phrases crosses the lower
-// part, above a giant wordmark set on the floor, so neither the curtain nor the page's edge ever
-// hides the call to action. The site footer follows as usual.
+// Every page's closing call to action (#prenota), the same on all of them. It waits under the page
+// and is uncovered as the page slides away, like a curtain; then its title rises word by word out
+// of its own line while a target lock closes on it once and lets go. Booking goes by phone (the
+// primary action, labelled with the number), WhatsApp when it is set, then email, with the hours,
+// the address (it opens Google Maps) and the directions under them. Contact data and copy both
+// come from settings.json (finalCta). A band of short phrases crosses the lower part, above a
+// giant wordmark set on the floor, so neither the curtain nor the page's edge ever hides the call
+// to action. The site footer follows as usual.
 // The id sits on the section, which never moves: an anchor jump measures where it is drawn.
 
 import Icon from '../atoms/Icon.astro';
@@ -20,7 +20,7 @@ interface Props {
   subtitle?: string;
   /** Label of the email action (the address itself is in settings.json). */
   writeLabel?: string;
-  /** Short phrases for the diagonal band, taken from the page (activities, the arena's figure). */
+  /** Short phrases for the diagonal band (the activities, the arena's figure). */
   phrases?: string[];
   id?: string;
   headingId?: string;

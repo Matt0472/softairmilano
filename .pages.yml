@@ -39,6 +39,15 @@ content:
       - { name: openingHours, label: Orari, type: string, description: "Es. Tutti i giorni dalle 10:00 alle 24:00, solo su prenotazione" }
       - { name: directions, label: Come arrivare, type: string, description: "Parcheggio, mezzi pubblici: una riga breve" }
       - { name: rangerUrl, label: "Link arena outdoor (Ranger Softair)", type: string }
+      - name: finalCta
+        label: "Prenota (fondo di ogni pagina)"
+        description: "La sezione «Sei pronto a scendere in campo?» in fondo a home, attività e Softair VS Paintball, uguale ovunque. Telefono, WhatsApp, email, orari, indirizzo e «Come arrivare» sono i campi qui sopra; un dato vuoto non compare. La scritta gigante sul fondo è il «Nome sito»"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, required: true, description: "Grande, al centro: le parole salgono una alla volta. Meglio breve, cinque o sei parole" }
+          - { name: subtitle, label: Sottotitolo, type: text }
+          - { name: writeLabel, label: "Testo del bottone email", type: string, description: "Es. Scrivi. Se vuoto, il bottone email non compare" }
+          - { name: phrases, label: "Parole della fascia inclinata", type: string, list: { max: 8 }, description: "Parole brevi che scorrono nella fascia in basso, es. le attività e «1.500 m²». Se la lista è vuota, la fascia non compare" }
       - name: footerRanger
         label: Colonna arena outdoor nel footer
         type: object
@@ -282,14 +291,6 @@ content:
           - { name: image, label: "Immagine di sfondo (desktop, orizzontale)", type: image, description: "Il lato sinistro deve restare scuro: ci sta sopra il testo" }
           - { name: imageMobile, label: "Immagine di sfondo (telefono, verticale 4:5)", type: image, description: "Soggetto nel terzo alto: il testo sta sotto" }
           - { name: imageAlt, label: Testo alternativo immagine, type: string }
-      - name: finalCta
-        label: Prenota (fondo della home)
-        description: "Telefono, WhatsApp, email, orari, indirizzo e «Come arrivare» vengono da «Impostazioni generali»; un dato vuoto lì non compare qui. La fascia di parole inclinata ripete i titoli di «Attività» e il numero in evidenza dell'arena (valore e unità); la scritta gigante sul fondo è il «Nome sito»"
-        type: object
-        fields:
-          - { name: title, label: Titolo, type: string, description: "Grande, al centro: le parole salgono una alla volta. Meglio breve, cinque o sei parole" }
-          - { name: subtitle, label: Sottotitolo, type: text }
-          - { name: writeLabel, label: "Testo del bottone email", type: string, description: "Es. Scrivi. Se vuoto, il bottone email non compare" }
 
   - name: testimonials
     label: Recensioni
@@ -520,12 +521,6 @@ content:
         type: object
         fields:
           - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
-      - name: cta
-        label: Prenota (fondo pagina)
-        type: object
-        fields:
-          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
-          - { name: text, label: Testo, type: text }
 
   - name: paintball
     label: Softair VS Paintball
@@ -702,9 +697,3 @@ content:
           - { name: href, label: Link, type: string }
           - { name: image, label: "Immagine (orizzontale)", type: image }
           - { name: imageAlt, label: Testo alternativo immagine, type: string }
-      - name: cta
-        label: Prenota (fondo pagina)
-        type: object
-        fields:
-          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
-          - { name: text, label: Testo, type: text }
