@@ -1,0 +1,52 @@
+---
+// A status line on its own dark chip (the course's enrolment), so its contrast never depends on
+// what is behind it, a photo or a band. The dot is still: the status is information, not motion,
+// and the words carry it (colour is only a second cue, A11Y-04). Short words stay with the next
+// one, so a wrapped line never ends on «il» or «la».
+
+import { keepShortWords } from '../../lib/typography';
+
+interface Props {
+  text: string;
+  /** "on" lights the dot in the accent (e.g. enrolment open); "off" leaves it grey. */
+  tone?: 'on' | 'off';
+  class?: string;
+}
+
+const { text, tone = 'on', class: className } = Astro.props;
+---
+
+{text?.trim() && (
+  <p class:list={['status-chip', tone === 'off' && 'status-chip--off', className]}>
+    <span class="status-chip__dot" aria-hidden="true"></span>{keepShortWords(text)}
+  </p>
+)}
+
+<style is:global>
+  .status-chip {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0;
+    padding: 0.5rem 0.95rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-background) 82%, transparent);
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--color-foreground);
+    text-wrap: pretty;
+  }
+  /* The same light as the HUD readout's dot. */
+  .status-chip__dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 8px 1px color-mix(in srgb, var(--color-accent) 80%, transparent);
+    translate: 0 -1px;
+  }
+  .status-chip--off .status-chip__dot { background: var(--color-muted); box-shadow: none; }
+</style>

@@ -328,6 +328,7 @@ content:
                 - { name: tiro-dinamico, label: Tiro dinamico }
                 - { name: nerf, label: Nerf }
                 - { name: paintball, label: Softair VS Paintball }
+                - { name: corso, label: Corso }
 
   - name: activities
     label: Attività (pagine)
@@ -697,3 +698,154 @@ content:
           - { name: href, label: Link, type: string }
           - { name: image, label: "Immagine (orizzontale)", type: image }
           - { name: imageAlt, label: Testo alternativo immagine, type: string }
+
+  - name: corso
+    label: Corso softair
+    type: file
+    path: src/data/corso.json
+    fields:
+      - name: seo
+        label: SEO e anteprima social
+        type: object
+        fields:
+          - { name: title, label: Titolo della pagina (Google), type: string, description: "Circa 60 caratteri", required: true }
+          - { name: description, label: Descrizione (Google), type: text, description: "Circa 155 caratteri" }
+          - { name: image, label: Immagine per i social, type: image, description: "Orizzontale, 1200×630 (JPG o PNG). Se vuota si usa l'immagine social predefinita di «Impostazioni generali»" }
+          - { name: imageAlt, label: Testo alternativo immagine social, type: string, description: "Descrive l'immagine per i social. Se vuoto si usa il nome del sito" }
+      - name: hero
+        label: Apertura
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string, description: "Es. «Corso · stagione 2026–2027»: aggiornalo quando cambia la stagione" }
+          - { name: title, label: "Titolo principale (H1)", type: string, required: true }
+          - { name: subtitle, label: Sottotitolo (massimo 20 parole), type: text }
+          - { name: image, label: "Immagine (desktop, 16:9)", type: image, required: true }
+          - { name: imageMobile, label: "Immagine (mobile, verticale)", type: image, description: "Verticale, con il soggetto nel terzo alto: la metà bassa ospita i testi. Se vuota, si usa l'immagine per computer" }
+          - { name: imageAlt, label: Testo alternativo immagine, type: string, required: true }
+          - name: focus
+            label: Dove sta il soggetto della foto (desktop)
+            description: "«A destra» se la foto lascia libera la parte sinistra per il titolo: su portatili e schermi più stretti il soggetto resta nell'inquadratura. Se non scegli, vale «Al centro»"
+            type: select
+            options:
+              values:
+                - { name: center, label: Al centro }
+                - { name: right, label: A destra }
+          - name: ctaPrimary
+            label: Bottone principale
+            description: "Porta alla sezione Prenota in fondo alla pagina (#prenota). Compare solo se ha sia il testo sia il link"
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string, description: "Lo stesso testo del bottone Prenota nel menu, es. «Prenota»" }
+              - { name: href, label: Link, type: string, description: "Es. #prenota" }
+          - name: ctaSecondary
+            label: Bottone secondario
+            description: "Compare solo se ha sia il testo sia il link"
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string, description: "Es. #calendario: porta al calendario di questa pagina. Se il calendario non compare, svuota questo bottone" }
+          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «OGNI MER · 21:00 · 16+». I dati devono essere quelli dei Dati chiave: se li cambi, aggiornala anche qui. Se vuota non compare" }
+      - name: facts
+        label: Dati chiave (sotto il titolo)
+        description: "Da 2 a 4 dati brevi; ognuno si legge di seguito, es. «16+ anni». Il primo è il più importante (oggi la prova gratuita). Un dato senza valore o senza etichetta non compare"
+        type: object
+        list: { max: 4 }
+        fields:
+          - { name: value, label: "Valore (es. 16+)", type: string }
+          - { name: label, label: "Etichetta (es. anni)", type: string }
+      - name: enrollment
+        label: Iscrizioni
+        description: "Lo stato delle iscrizioni compare sotto i bottoni dell'apertura e sotto il calendario. Con l'interruttore acceso si vede il primo testo, spento il secondo. Ogni volta che lo sposti, controlla che il testo che compare dica la parte e la data giuste"
+        type: object
+        fields:
+          - { name: open, label: Iscrizioni aperte, type: boolean, description: "Acceso: iscrizioni aperte. Spento: iscrizioni chiuse. Durante l'anno: acceso fino all'inizio della prima parte, spento dopo; quando lo riaccendi per la seconda parte, riscrivi il testo «aperte» (es. «…per la seconda parte: si riparte il 3 marzo»); quando parte la seconda, spegnilo e riscrivi il testo «chiuse» (es. «riaprono a ottobre per la nuova stagione»)" }
+          - { name: openText, label: "Testo con le iscrizioni aperte", type: string, options: { maxlength: 90 }, description: "Es. «Iscrizioni aperte per la prima parte: si parte il 7 ottobre». Breve: sul telefono va su due righe. Se vuoto, con le iscrizioni aperte non compare nulla" }
+          - { name: closedText, label: "Testo con le iscrizioni chiuse", type: string, options: { maxlength: 90 }, description: "Es. «Iscrizioni chiuse: riaprono per la seconda parte, che inizia il 3 marzo». Se vuoto, con le iscrizioni chiuse non compare nulla" }
+      - name: intro
+        label: In breve
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text, description: "Tre o quattro frasi che si reggono da sole: chi organizza il corso, quando, dove e per chi. È anche la descrizione del corso per Google: se è vuoto, la sezione non compare e Google non la riceve" }
+      - name: trial
+        label: La prova gratuita (foto e testo)
+        description: "Una foto verticale accanto al testo sulla prima sera gratuita. Compare solo con titolo e foto"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - { name: image, label: "Foto (verticale, 4:5)", type: image, description: "Meglio una foto vera di una serata del corso. Se vuota, la sezione non compare" }
+          - { name: imageAlt, label: Testo alternativo foto, type: string }
+          - { name: itemsTitle, label: Titolo dell'elenco, type: string, description: "Es. «Da sapere»" }
+          - name: items
+            label: Elenco
+            description: "Due o tre voci brevi. Una voce senza nome non compare"
+            type: object
+            list: { max: 4 }
+            fields:
+              - { name: name, label: Nome, type: string }
+              - { name: text, label: Testo, type: string }
+      - name: features
+        label: Cosa trovi nel corso
+        description: "Una scheda per ogni cosa che il corso offre, ciascuna con il suo simbolo. Se il titolo è vuoto o non c'è nessuna voce, la sezione non compare"
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string, description: "Facoltativo: meglio vuoto se ripete il titolo" }
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - name: items
+            label: Voci
+            description: "Da 3 a 6: con 4 voci le schede stanno due per riga. Una voce senza nome non compare"
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Nome, type: string }
+              - { name: text, label: Descrizione (una o due frasi), type: text }
+              - name: icon
+                label: Icona
+                description: "Il simbolo che apre la scheda. Sceglilo per tutte le voci o per nessuna, così le schede restano allineate. Se vuota, la scheda resta senza simbolo"
+                type: select
+                options:
+                  values:
+                    - { name: map, label: "Mappa (le arene)" }
+                    - { name: shieldUser, label: "Scudo con persona (istruttore)" }
+                    - { name: users, label: "Squadra" }
+                    - { name: trophy, label: "Coppa (tornei)" }
+                    - { name: tag, label: "Cartellino (sconti)" }
+                    - { name: award, label: "Medaglia (attestato)" }
+                    - { name: target, label: "Bersaglio (precisione)" }
+                    - { name: timer, label: "Cronometro (orari)" }
+      - name: calendar
+        label: Il calendario
+        description: "Le tappe del corso, in ordine. Sotto le tappe compare lo stato delle iscrizioni (vedi «Iscrizioni»)"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Es. «Il calendario 2026–2027». Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text, description: "Giorno e orario degli allenamenti, e come ci si iscrive" }
+          - name: steps
+            label: Tappe
+            description: "Togli le date passate quando inizia una nuova stagione. Una tappa senza titolo non compare"
+            type: object
+            list: true
+            fields:
+              - { name: time, label: "Quando (es. 7 ott – 16 dic 2026)", type: string, description: "Se vuoto, compare il numero della tappa" }
+              - { name: title, label: Titolo, type: string }
+              - { name: text, label: Testo, type: text }
+      - name: reviews
+        label: Recensioni
+        type: object
+        fields:
+          - { name: title, label: "Titolo (le recensioni si modificano in «Recensioni»)", type: string, description: "Compaiono prima le recensioni con «Corso» in «Recensioni» → «Pagine in cui compare», poi quelle di «Tutte le pagine». Se il titolo è vuoto, la sezione non compare" }
+      - name: faq
+        label: Domande frequenti
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - name: items
+            label: Domande
+            description: "Una domanda senza risposta non compare"
+            type: object
+            list: true
+            fields:
+              - { name: q, label: Domanda, type: string }
+              - { name: a, label: Risposta, type: text }

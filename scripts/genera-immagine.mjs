@@ -9,7 +9,7 @@
 //   node scripts/genera-immagine.mjs --name hero-mira --ratio 16:9 --scene "A lone airsoft player ..."
 //   node scripts/genera-immagine.mjs --name hero-mira --ratio 16:9           (uses a stored SCENE by name)
 //   node scripts/genera-immagine.mjs --name hero-mira-mobile --ratio 9:16 --from public/uploads/hero-mira.jpeg
-//   flags: --draft (cheaper model), --model <id>, --out <dir>
+//   flags: --draft (cheaper model), --model <id>, --out <dir>, --size 2K (the openings: about 2752×1536 at 16:9)
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, extname } from 'node:path';
@@ -53,6 +53,10 @@ const SCENES = {
     'of him, the rifle barrel and optic foreshortened toward the lens, one focused eye visible behind the protective mask. ' +
     'Warm amber light (#f5a524) rakes low across the concrete floor through thick haze, catching floating dust. Very shallow ' +
     'depth of field, eye and optic in sharp focus, background falling into soft darkness.',
+  // /corso-softair opening: beginners in a circle round the instructor and his whiteboard. The
+  // board must come out blank of writing: check it zoomed in, with the hands and the grips.
+  'corso-hero':
+    'A weekly beginners\' airsoft course inside a large indoor military-village arena built in an old industrial hall: a village of scuffed plywood barricades, rough wooden shack walls and low cover walls on a dusty concrete floor, steel roof trusses above, and high industrial windows on the right from which warm late-afternoon light shafts slant down through a light haze and floating dust. This is the briefing before the first drill: a calm, focused lesson, not a firefight.\n\nThe group: seven first-time players stand or kneel on one knee in a loose circle around their instructor, all turned toward him. They clearly read as beginners in rental gear, not soldiers: plain black full-face airsoft masks with clear lenses, or goggles with a mesh lower-face mask, under simple plain black bump helmets; plain black or olive nylon vests worn over everyday clothes such as hoodies, t-shirts, a flannel shirt, jeans, cargo trousers, joggers and sneakers. Mixed men and women of different builds. The two or three students nearest the camera are seen from behind or three-quarter back. Their replica rifles hang on slings across the body with the muzzle pointing at the floor, or rest upright beside a kneeling leg with the muzzle down on the floor; hands rest on the stock, on the sling or on the knee, index fingers straight and away from any trigger. Relaxed, attentive body language.\n\nThe instructor: in the middle of the circle, in worn plain tactical gear (plain helmet, protective goggles, lower-face mesh mask, unmarked olive plate carrier, gloves), his replica rifle slung across his chest with the muzzle down. He explains with one open hand gesturing toward a whiteboard; the other hand holds a black marker. Next to him stands a whiteboard on a simple metal easel stand, angled toward the students and partly toward the camera. On the whiteboard there is ONLY a rough hand-drawn tactical sketch in black marker: a few simple rectangles as buildings, a couple of circles, two or three curved arrows and a dashed line. No letters, no words, no numbers, no symbols on the board.\n\nCamera: slightly elevated eye level, about two metres high, tilted gently down so the circle of players reads clearly as a circle. Wide 16:9 frame: the whole group with the instructor and the board sits in the centre-right of the frame; the left third falls into deep, quiet shadow, a dark plywood wall and floor, almost black, with very little detail, calm negative space for a title. Neutral grade: warm light only in the window shafts and their pools on the floor, charcoal, olive, sand and grey tones elsewhere, no cyan or blue cast. All gear, clothing, helmets, vests and the board are plain and unmarked: no patches, flags, logos, brand names, numbers or lettering anywhere. Every face covered by a mask or goggles. Every hand anatomically correct with five fingers.',
 };
 
 // --- Args -------------------------------------------------------------------
@@ -65,6 +69,8 @@ for (let i = 0; i < argv.length; i++) {
 }
 if (!args.name) { console.error('Manca --name'); process.exit(1); }
 const ratio = args.ratio || '16:9';
+// Without --size the API answers at its default (about 1376×768 at 16:9): enough for sections, short for an opening.
+const imageConfig = { aspectRatio: ratio, ...(args.size ? { imageSize: args.size } : {}) };
 const outDir = args.out || 'public/uploads';
 const model = args.model || (args.draft ? 'gemini-2.5-flash-image' : 'gemini-3-pro-image');
 
@@ -99,7 +105,7 @@ if (args.from) {
 
 const body = {
   contents: [{ parts }],
-  generationConfig: { responseModalities: ['IMAGE'], imageConfig: { aspectRatio: ratio } },
+  generationConfig: { responseModalities: ['IMAGE'], imageConfig },
 };
 
 const t0 = Date.now();
@@ -119,4 +125,4 @@ const ext = (img.inlineData.mimeType || 'image/jpeg').split('/')[1];
 const buf = Buffer.from(img.inlineData.data, 'base64');
 const out = `${outDir}/${args.name}.${ext}`;
 writeFileSync(resolve(PROJECT, out), buf);
-console.log(`✅ ${args.name} — ${model} — ${ratio} — ${secs}s — ${(buf.length / 1024).toFixed(0)} KB — ${out}`);
+console.log(`✅ ${args.name} — ${model} — ${ratio}${args.size ? ` ${args.size}` : ''} — ${secs}s — ${(buf.length / 1024).toFixed(0)} KB — ${out}`);

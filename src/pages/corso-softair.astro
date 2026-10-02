@@ -1,0 +1,86 @@
+---
+// The softair course (/corso-softair, the same address as the old site): a short page that sells
+// the free first training. The enrolment status, switched in the CMS, shows in the opening and
+// under the calendar; the course's offer, its calendar, the reviews and the questions follow;
+// booking is the closing section shared by every page.
+
+import type { ComponentProps } from 'astro/types';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/organisms/PageHero.astro';
+import AnswerBlock from '../components/organisms/AnswerBlock.astro';
+import SplitFeature from '../components/organisms/SplitFeature.astro';
+import ModeGrid from '../components/organisms/ModeGrid.astro';
+import StepTimeline from '../components/organisms/StepTimeline.astro';
+import Reviews from '../components/organisms/Reviews.astro';
+import FaqAccordion from '../components/organisms/FaqAccordion.astro';
+import FinalCta from '../components/organisms/FinalCta.astro';
+import Reveal from '../components/molecules/Reveal.astro';
+import StatusChip from '../components/molecules/StatusChip.astro';
+import page from '../data/corso.json';
+import navigation from '../data/navigation.json';
+import settings from '../data/settings.json';
+import { has } from '../lib/fields';
+import { breadcrumbLd, faqLd } from '../lib/jsonld';
+import { flattenNav, type NavItem } from '../lib/nav';
+
+const { seo, hero, facts, enrollment, intro, trial, features, calendar, reviews, faq } = page;
+
+const path = '/corso-softair';
+// The page name in the trail is its menu label (single source for both).
+const pageName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === path)?.label || hero.title;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: pageName, href: path },
+];
+
+// One switch in the CMS, two texts: the opening and the calendar say the same thing.
+const open = !!enrollment?.open;
+const enrollmentText = open ? enrollment.openText : enrollment?.closedText;
+const notice: ComponentProps<typeof PageHero>['notice'] = has(enrollmentText)
+  ? { text: enrollmentText, tone: open ? 'on' : 'off' }
+  : undefined;
+
+// A section renders only when the client filled it in (CMS-10): see the activity template.
+const faqItems = (faq?.items ?? []).filter((f) => has(f.q) && has(f.a));
+const faqData = faqLd(faqItems);
+// The provider is the business BaseLayout describes on every page, under the same @id.
+const courseData = has(hero.title) && has(intro?.text)
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Course',
+      name: hero.title,
+      description: intro.text,
+      url: new URL(`${path}/`, Astro.site).toString(),
+      inLanguage: 'it',
+      provider: { '@id': new URL('/#business', settings.siteUrl).toString() },
+    }
+  : null;
+const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(courseData ? [courseData] : []), ...(faqData ? [faqData] : [])];
+---
+
+<BaseLayout title={seo.title} description={seo.description} image={seo.image} imageAlt={seo.imageAlt} jsonLd={jsonLd}>
+  <PageHero {...hero} focus={hero.focus === 'right' ? 'right' : 'center'} facts={facts} crumbs={crumbs} notice={notice} />
+
+  {intro && has(intro.title) && has(intro.text) && <AnswerBlock title={intro.title} text={intro.text} />}
+
+  {/* The free trial: it shows once it has its photo. */}
+  {trial && has(trial.title) && has(trial.image) && (
+    <SplitFeature title={trial.title} text={trial.text} image={trial.image} imageAlt={trial.imageAlt} ratio="4 / 5" itemsTitle={trial.itemsTitle} items={trial.items} />
+  )}
+
+  {features && has(features.title) && !!features.items?.length && <ModeGrid {...features} items={features.items} />}
+
+  {calendar && has(calendar.title) && !!calendar.steps?.length && (
+    <StepTimeline title={calendar.title} text={calendar.text} steps={calendar.steps} id="calendario">
+      {notice && <StatusChip {...notice} />}
+    </StepTimeline>
+  )}
+
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} page="corso" />}
+
+  {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
+
+  <FinalCta {...settings.finalCta} />
+
+  <Reveal />
+</BaseLayout>

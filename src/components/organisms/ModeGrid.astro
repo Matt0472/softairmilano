@@ -37,8 +37,9 @@ interface Props {
   headingId?: string;
 }
 
-// The emblems the CMS offers (modes.items.icon in .pages.yml): any other value draws none.
-const EMBLEMS: IconName[] = ['flag', 'crosshair', 'crown', 'shieldUser', 'bomb', 'castle', 'target', 'users', 'timer'];
+// The emblems the CMS offers (modes.items.icon and the course's features.items.icon in .pages.yml):
+// any other value draws none.
+const EMBLEMS: IconName[] = ['flag', 'crosshair', 'crown', 'shieldUser', 'bomb', 'castle', 'target', 'users', 'timer', 'map', 'trophy', 'tag', 'award'];
 
 const { eyebrow, title, text, numbered = false, items, headingId = 'modes-title' } = Astro.props;
 const list = (items ?? [])
@@ -358,6 +359,12 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
     .modes--plain .modes__emblem { width: 34px; height: 34px; }
     .modes--plain .modes__title { align-self: end; margin-top: 0.15rem; }
     .modes--plain .modes__text { margin-top: 0.35rem; }
+  }
+  /* The narrowest phones: beside the emblem the text would run 24 characters a line, so it
+     takes the full width under the emblem and the name. */
+  @media (max-width: 359px) {
+    .modes--plain .modes__body:has(.modes__mark) { grid-template-areas: "mark title" "text text" "stats stats"; }
+    .modes--plain .modes__text { margin-top: 0.75rem; }
   }
 
   @media (min-width: 600px) {

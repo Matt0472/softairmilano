@@ -1,0 +1,155 @@
+{
+  "seo": {
+    "title": "Corso di softair a Milano, ogni mercoledì | SoftAir Milano",
+    "description": "Corso di softair a Milano dai 16 anni, per principianti ed esperti: ogni mercoledì dalle 21 con un istruttore qualificato. Il primo allenamento è gratis.",
+    "image": "",
+    "imageAlt": ""
+  },
+  "hero": {
+    "eyebrow": "Corso · stagione 2026–2027",
+    "title": "Corso di softair a Milano",
+    "subtitle": "Ogni mercoledì sera con un istruttore qualificato, per principianti ed esperti: migliori la tecnica e arrivi ai tornei.",
+    "image": "/uploads/scena-softair.jpeg",
+    "imageMobile": "",
+    "imageAlt": "Un giocatore di softair con casco, maschera protettiva e replica imbracciata avanza tra barricate di compensato, nella luce calda di una finestra.",
+    "focus": "right",
+    "ctaPrimary": {
+      "label": "Prenota",
+      "href": "#prenota"
+    },
+    "ctaSecondary": {
+      "label": "Il calendario",
+      "href": "#calendario"
+    },
+    "hudTag": "CORSO · 16+ · 2 ARENE"
+  },
+  "facts": [
+    {
+      "value": "Gratis",
+      "label": "il primo allenamento"
+    },
+    {
+      "value": "21:00",
+      "label": "ogni mercoledì"
+    },
+    {
+      "value": "16+",
+      "label": "anni"
+    },
+    {
+      "value": "2",
+      "label": "arene, al coperto e nel bosco"
+    }
+  ],
+  "enrollment": {
+    "open": true,
+    "openText": "Iscrizioni aperte per la prima parte: si parte il 7 ottobre",
+    "closedText": "Iscrizioni chiuse: riaprono per la seconda parte, che inizia il 3 marzo"
+  },
+  "intro": {
+    "title": "Il corso in breve",
+    "text": "Il corso di softair di SoftAir Milano è aperto a principianti ed esperti, dai 16 anni. Si tiene ogni mercoledì dalle 21:00 alle 22:30, da ottobre 2026 a maggio 2027, nella nostra arena al coperto a Milano e nell'arena nel bosco di Ranger Softair Milano. Le lezioni le tiene un istruttore qualificato e, se non hai l'attrezzatura, la noleggi da noi."
+  },
+  "trial": {
+    "title": "La prova gratuita",
+    "text": "Il primo allenamento è gratis e senza impegno: vieni a provare, conosci l'istruttore e il gruppo, poi decidi se iscriverti.",
+    "image": "",
+    "imageAlt": "",
+    "itemsTitle": "Da sapere",
+    "items": [
+      {
+        "name": "Gratis",
+        "text": "Il primo allenamento non si paga ed è senza impegno."
+      },
+      {
+        "name": "Attrezzatura",
+        "text": "Se non ce l'hai, la noleggi da noi."
+      },
+      {
+        "name": "Per tutti",
+        "text": "Principianti ed esperti, dai 16 anni."
+      }
+    ]
+  },
+  "features": {
+    "eyebrow": "",
+    "title": "Cosa trovi nel corso",
+    "text": "Allenamenti, tornei e vantaggi riservati a chi si iscrive.",
+    "items": [
+      {
+        "icon": "map",
+        "title": "Due arene",
+        "text": "Ti alleni al coperto, tra gli edifici del nostro villaggio militare, e all'aperto, nel bosco di Ranger Softair Milano."
+      },
+      {
+        "icon": "shieldUser",
+        "title": "Un istruttore qualificato",
+        "text": "Tiene le lezioni e ti fa migliorare la tecnica di gioco, che tu sia alle prime armi o giochi da anni."
+      },
+      {
+        "icon": "trophy",
+        "title": "Tornei contro altre squadre",
+        "text": "Quello che impari in allenamento lo metti alla prova sul campo, nei tornei contro altre squadre."
+      },
+      {
+        "icon": "tag",
+        "title": "Sconti per gli allievi",
+        "text": "Attrezzatura a prezzo scontato e sconti sulle partite: allenarti e giocare ti costa meno."
+      }
+    ]
+  },
+  "calendar": {
+    "title": "Il calendario 2026–2027",
+    "text": "Ogni mercoledì dalle 21:00 alle 22:30, in due parti. A corso iniziato non ci si iscrive: si entra all'inizio di una delle due parti, e il primo allenamento è gratis.",
+    "steps": [
+      {
+        "time": "7 ott – 16 dic 2026",
+        "title": "Prima parte",
+        "text": "Gli allenamenti d'autunno, ogni mercoledì fino a metà dicembre."
+      },
+      {
+        "time": "Dic – feb",
+        "title": "La pausa d'inverno",
+        "text": "Tra le due parti ci si ferma, e le iscrizioni si riaprono per la seconda parte."
+      },
+      {
+        "time": "3 mar – 26 mag 2027",
+        "title": "Seconda parte",
+        "text": "Si riprende dopo l'inverno e si va avanti fino a fine maggio."
+      },
+      {
+        "time": "A fine corso",
+        "title": "Grigliata e attestato",
+        "text": "Si festeggia insieme con la grigliata, inclusa, e ognuno riceve il suo attestato di partecipazione."
+      }
+    ]
+  },
+  "reviews": {
+    "title": "Cosa dice chi gioca da noi"
+  },
+  "faq": {
+    "title": "Domande frequenti",
+    "items": [
+      {
+        "q": "Serve esperienza per fare il corso?",
+        "a": "No. Il corso è aperto sia a chi non ha mai giocato sia a chi gioca già e vuole migliorare la tecnica."
+      },
+      {
+        "q": "Non ho l'attrezzatura: posso partecipare?",
+        "a": "Sì, l'attrezzatura si noleggia da noi. E se poi decidi di comprarla, come allievo del corso la paghi meno."
+      },
+      {
+        "q": "Da che età si può fare il corso?",
+        "a": "Dai 16 anni."
+      },
+      {
+        "q": "Posso iscrivermi a corso iniziato?",
+        "a": "No: ci si iscrive prima che parta una delle due parti, a ottobre o a marzo. Il primo allenamento è comunque gratis e senza impegno."
+      },
+      {
+        "q": "Dove si fanno gli allenamenti?",
+        "a": "Nella nostra arena al coperto, in Via Melegnano 26 a Settimo Milanese, e nell'arena nel bosco di Ranger Softair Milano."
+      }
+    ]
+  }
+}

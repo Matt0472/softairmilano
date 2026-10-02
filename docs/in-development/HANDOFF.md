@@ -4,7 +4,8 @@ Aggiornato: **2 ott 2026, ore 15:00**.
 
 Cosa c'è di nuovo:
 - commit `8516850` (online): fasce alternate, Missioni ridisegnate, `PhotoFrame`, `HudFrame` su tutte le aperture;
-- commit **«Prenota uguale su tutte le pagine»** del 2 ott (questo): la sezione finale «Sei pronto a scendere in campo?» (`FinalCta`) chiude ora anche le pagine attività e /paintball al posto di `BookingCta` (cancellato). Il testo sta in un posto solo, `settings.json` → `finalCta`, compresa la lista delle parole della fascia inclinata;
+- **pagina /corso-softair** del 2 ott (questo commit): costruita con `/ship` e chiusa con `/audit` (`docs/audits/2026-10-02-corso.md`, nessun bloccante, maggiori e minori corretti). **L'immagine di apertura è provvisoria** (`scena-softair.jpeg`): quella vera aspetta la ricarica del credito Gemini (vedi «Prossimi passi»);
+- commit `5bc74a3` «Prenota uguale su tutte le pagine» del 2 ott: la sezione finale «Sei pronto a scendere in campo?» (`FinalCta`) chiude ora anche le pagine attività e /paintball al posto di `BookingCta` (cancellato). Il testo sta in un posto solo, `settings.json` → `finalCta`, compresa la lista delle parole della fascia inclinata;
 - commit `915029c` «Home finita» del 2 ott: la home rifatta da capo su richiesta dell'utente, più la voce «Home» nel menu. L'audit `docs/audits/2026-10-02-home.md` è chiuso: corretti bloccanti e maggiori, le revisioni di codice e CMS sono state fatte da un'istanza diversa e applicate. Dopo il push l'utente controlla la home dal telefono vero.
 
 ## Obiettivo
@@ -60,7 +61,7 @@ Ogni sezione di contenuto sta su `.band`. Le tre sezioni guidate dallo scroll (v
 5. **`TeaserBanner` paintball** subito dopo le attività (obiettivo 3).
 6. **`Reviews`** con `page="home"` (nel campo «Pagine in cui compare» c'è la voce «Home»).
 7. **`OccasionMosaic`**: una scheda grande e tre piccole. **Le foto sono segnaposto** (foto delle attività): «Ne parliamo dopo», decisione dell'utente.
-8. **`CourseTeaser`**: breve introduzione al corso con dati chiave e «Scopri il corso» verso `/corso-softair`, che oggi dà 404 (la pagina è la prossima da fare).
+8. **`CourseTeaser`**: breve introduzione al corso con dati chiave e «Scopri il corso» verso `/corso-softair`.
 9. **`SocialChannels`**: tessere a X con il mirino al centro e Instagram, Facebook, YouTube, TikTok (loghi monocromi, ciano al passaggio).
 10. **`RangerTeaser`**: tutta la sezione è un solo link a `settings.rangerUrl` (nuova scheda), senza bottoni; sfondo AI «Al riparo» (`ranger-bosco*`), palette Ranger con misura (`DES-12`, token `--color-ranger-*`).
 11. **`FinalCta`** `#prenota`: sipario allo scroll, titolo con animazione d'ingresso, fascia diagonale di parole più in basso, azioni vere (chiama, scrivi, WhatsApp se compilato, orari, indirizzo, come arrivare). È la stessa su tutte le pagine (vedi sotto).
@@ -117,11 +118,30 @@ Ogni sezione di contenuto sta su `.band`. Le tre sezioni guidate dallo scroll (v
   11. Prenota (FinalCta, come in home).
 - **Tono**: confronto onesto e rispettoso. Viking Paintball Como è del cliente ma **non va nominato** (sua decisione).
 
+### Pagina `/corso-softair` (`src/pages/corso-softair.astro` + `src/data/corso.json`)
+
+- **Stesso indirizzo del sito attuale**, quindi niente redirect. I contenuti vengono da https://www.softairmilano.it/corso-softair/, riscritti senza aggiungere fatti (`CMS-10`) e senza le date passate (le prove del 9–30 settembre).
+- **Sezioni:**
+  1. apertura con il chip dello stato iscrizioni (`StatusChip`) e i dati: «Gratis» il primo allenamento, 21:00, 16+, 2 arene;
+  2. In breve;
+  3. «La prova gratuita» (`trial`, `SplitFeature`): **nascosta finché non ha la foto**;
+  4. «Cosa trovi nel corso» (`ModeGrid`, 4 schede con le icone `map`, `shieldUser`, `trophy`, `tag`);
+  5. calendario 2026–2027 (`StepTimeline` `#calendario`, con lo stesso chip sotto le tappe);
+  6. recensioni generali (`Reviews page="corso"`; nel campo «Pagine in cui compare» c'è la voce «Corso»);
+  7. FAQ;
+  8. `FinalCta`.
+- **Interruttore iscrizioni** (`enrollment.open` con `openText` e `closedText`), decisione dell'utente. Oggi è acceso, «aperte per la prima parte: si parte il 7 ottobre»; da spento dice che si riaprono per la seconda parte, dal 3 marzo. Ogni volta che lo si sposta vanno riscritti anche i testi: lo dice la descrizione del campo.
+- **«Primo allenamento gratuito»** vale sempre (decisione dell'utente).
+- **Niente prezzo**: il sito attuale non lo dà. Va chiesto al cliente, poi le FAQ «Quanto costa?» e «Come mi iscrivo?».
+- **Niente form di contatto**: si prenota con la sezione finale comune (telefono, email).
+- **Dati strutturati:** JSON-LD `Course` (name, description, url, provider = `/#business`), senza `hasCourseInstance` (Google ha chiuso i risultati arricchiti «Course info» nel 2025).
+
 ### Componenti nuovi (futuri blocchi CMS)
 
 - **Organismi**: `PageHero`, `AnswerBlock`, `StepTimeline`, `SplitFeature`, `AudienceGrid`, `PriceTiers`, `Reviews`, `FaqAccordion`, `ActivityLinks`, `BookingCta`, `VsComparison`, `ImpactScale`, `TeaserBanner`; `FinalCta` in fondo a ogni pagina; per la home `ActionVideo`, `OccasionMosaic`, `CourseTeaser`, `SocialChannels`, `RangerTeaser`, `FinalCta`. Cancellati `VideoSection`, `molecules/Card` e `BookingCta`.
 - **Molecole**: `Breadcrumb`, `FactStrip`, `IncludedList`, `LeadText`, `Reveal`, `SectionHead`, `Trajectory`.
 - **Atomi**: `Icon`, `Picture`, `Badge`, `Odometer` (numeri a rullo, usato da `FactStrip` e `ArenaIntro`).
+- **`StatusChip`** (molecola): una riga di stato su un chip scuro proprio, con il punto fermo, ciano «on» e grigio «off». La usano l'apertura (`PageHero`, prop `notice`) e il calendario del corso.
 - **Molecole condivise nuove**: `StarMeter` (stelle a frazione esatta), `PhotoFrame` (cornice sottile interna di ogni foto), `HudFrame` (angoli, riga che scorre e scritta tattica delle aperture).
 - **Ritmo delle sezioni**: ogni sezione di contenuto ha `.band`; le fasce si alternano da sole (`:nth-child(even of .band)` in `<main>`). Dentro una fascia le superfici si ricavano da `--plane`/`--lift`/`--lift-2`, mai da un colore fisso, altrimenti la parità si rompe quando il cliente svuota una sezione.
 - **Primitiva `.corners`** in `global.css`: i quattro angoli a L dell'HUD in un solo strato (mirino degli emblemi, targa delle missioni, video); il componente ne decide `--arm`, colore e posizione.
@@ -285,20 +305,29 @@ NODE_OPTIONS=--dns-result-order=ipv4first node scripts/genera-immagine.mjs --nam
 
 Piano dell'utente (2 ott 2026): la home è finita; **ora le pagine mancanti, con il Corso per primo, poi la rifinitura di tutte le pagine quando saranno tutte complete.**
 
-1. **Riscontro dell'utente sul telefono vero** dopo il push della home: in particolare la storia delle attività (con l'estensione Mobile View di Chrome sembrava ferma; con Playwright a 390×844, anche con il touch, avanza 0→1→2→3) e l'autoplay del video.
-2. **Pagine mancanti**, sul sistema attuale (`PageHero` con HUD, fasce, `PhotoFrame`, `/ship` e `/audit` a pagina finita):
-   - **Corso (prioritaria)**: la home ci rimanda già da `CourseTeaser`. Contenuti dalla pagina attuale https://www.softairmilano.it/corso-softair/ (ogni mercoledì 21:00–22:30, dai 16 anni, primo allenamento gratis, attrezzatura a noleggio, due stagioni ottobre–dicembre e marzo–maggio, arena indoor e outdoor, tornei);
+1. **Immagini del corso, appena l'utente ricarica il credito Gemini** (https://ai.studio/projects; il 2 ott l'API rispondeva HTTP 402 «prepayment credits are depleted»):
+   - **apertura**, soggetto scelto dall'utente: principianti in cerchio nell'arena, il coach al centro che spiega su una lavagna;
+     - scena salvata in `scripts/genera-immagine.mjs` come `corso-hero`;
+     - comando: `NODE_OPTIONS=--dns-result-order=ipv4first node scripts/genera-immagine.mjs --name corso-hero --ratio 16:9 --size 2K`;
+     - poi la versione 9:16 ricomposta (`--from public/uploads/corso-hero.jpeg --ratio 9:16`), con coach e lavagna al centro in alto;
+     - va controllata ingrandita: mani, impugnature, lavagna senza scritte;
+     - va mostrata all'utente prima di collegarla (`MEDIA-04`);
+     - poi in `corso.json` → `hero.image` e `hero.imageMobile`, con un alt nuovo;
+   - **foto 4:5 della prova gratuita** (`trial.image`): la sezione compare da sola appena c'è; meglio una foto vera dal cliente;
+   - **budget** (performance): 16:9 a 1600 px fino a 90 KB, 9:16 fino a 80 KB, w800 fino a 50 KB, nessun preload.
+2. **Riscontro dell'utente sul telefono vero** dopo il push della home: in particolare la storia delle attività (con l'estensione Mobile View di Chrome sembrava ferma; con Playwright a 390×844, anche con il touch, avanza 0→1→2→3) e l'autoplay del video.
+3. **Pagine mancanti**, sul sistema attuale (`PageHero` con HUD, fasce, `PhotoFrame`, `/ship` e `/audit` a pagina finita):
    - L'arena, Gruppi & eventi, compleanni, addii al celibato/nubilato, team building, contatti;
    - legali (servono prima l'opzione `noindex` per pagina in `BaseLayout` e `termini` nel filtro della sitemap);
    - 404;
    - landing SEO «cosa fare a Milano con gli amici»;
    - quando nascono le pagine delle occasioni, rimettere gli `href` nelle schede «Perfetto per» delle attività e in `home.json` → `occasions.items[].href`; quando nasce /l-arena, `hero.ctaSecondary.href` e `arena.cta`.
-3. **Home, passi rimasti**:
+4. **Home, passi rimasti**:
    - leggere le attività dalla collezione invece di duplicarle in `home.json` (commit a parte, migrazione `CMS-09`/`GIT-07`);
    - foto vere delle occasioni (oggi segnaposto): foto di gruppi dal cliente, oppure AI dopo la ricarica del credito Gemini (HTTP 402 il 2 ott);
    - apertura su telefono in orizzontale (667×375): «Prenota» finisce 1 px sotto la piega; serve un layout orizzontale dedicato come quello di `PageHero`.
-4. **Rifinitura di tutte le pagine**, a sito completo: un giro di `/audit` per pagina e la coerenza fra le pagine (ritmo, immagini, testi, dati ripetuti).
-5. **Manuale cliente** (`CMS-12–14`, non esiste ancora). Sezioni da scrivere:
+5. **Rifinitura di tutte le pagine**, a sito completo: un giro di `/audit` per pagina e la coerenza fra le pagine (ritmo, immagini, testi, dati ripetuti).
+6. **Manuale cliente** (`CMS-12–14`, non esiste ancora). Sezioni da scrivere:
    - Impostazioni: orari, come arrivare, indirizzo per Google, footer Ranger, WhatsApp;
    - Home → Apertura: l'interruttore «Mostra il voto Google sotto i bottoni», con il rimando a «Recensioni»; immagine verticale 9:16 per i telefoni; i bottoni vogliono testo e link; le ancore `#prenota` e `#arena`;
    - Home → SEO e anteprima social: titolo, descrizione, immagine e testo alternativo, con i valori usati quando sono vuoti;
@@ -312,6 +341,18 @@ Piano dell'utente (2 ott 2026): la home è finita; **ora le pagine mancanti, con
    - Home → Social: titolo e testo; i link ai profili stanno in Impostazioni; senza nessun link la sezione sparisce;
    - Home → Ranger: sopratitolo (perché nomina l'altra arena), titolo, testo, immagini; link e dominio mostrato vengono da «Link arena outdoor»;
    - Impostazioni → «Prenota (fondo di ogni pagina)»: titolo, sottotitolo, testo del bottone «Scrivi», parole della fascia inclinata (le attività e «1.500 m²»: vanno aggiornate a mano se cambiano); è la stessa sezione in fondo a home, attività e /paintball; contatti, orari, indirizzo e «Come arrivare» sono i campi di Impostazioni; la scritta gigante è il «Nome sito»;
+   - Corso softair:
+     - sopratitolo da cambiare a ogni stagione;
+     - apertura con immagine verticale e `focus`, bottoni `#prenota` e `#calendario`;
+     - Dati chiave: da 2 a 4, il primo è il più importante;
+     - **Iscrizioni, il giro dell'anno**: acceso con il testo della prima parte fino al 7 ottobre, spento dopo; riacceso con il testo della seconda parte prima del 3 marzo; spento dal 3 marzo con «riaprono a ottobre». Compare nell'apertura e sotto il calendario;
+     - In breve: è anche la descrizione del corso per Google;
+     - La prova gratuita compare solo con la foto;
+     - Cosa trovi nel corso: da 3 a 6 voci, il significato delle icone, icona per tutte o per nessuna;
+     - Calendario: togliere le date passate e aggiornare l'anno;
+     - Recensioni: la voce «Corso» in «Pagine in cui compare»;
+     - FAQ;
+     - non toccare l'indirizzo della pagina, le ancore e la sezione Prenota (sta in Impostazioni);
    - Menu: la voce «Home» (`/`) è la prima;
    - Home, Attività e Softair VS Paintball → Apertura → «Scritta tattica sulla foto (HUD)» (`hudTag`): in basso a destra in home, in alto a destra nelle pagine interne, non sotto i 641 px di larghezza (telefoni in verticale); in maiuscolo da sola, massimo 32 caratteri, solo dati già scritti nella pagina; vuota = sparisce (cornice e riga che scorre restano: sono struttura);
    - Attività → Apertura: il campo «Dove sta il soggetto della foto» (`hero.focus`): «A destra» se la foto lascia libera la sinistra per il titolo, vuoto = «Al centro». Non ha effetto dove c'è una firma nell'apertura (la freccia dell'arcotag);
@@ -322,17 +363,28 @@ Piano dell'utente (2 ott 2026): la home è finita; **ora le pagine mancanti, con
    - Attività → Missioni / Percorsi → «Icona»: il significato di ogni simbolo; un'icona per tutte le voci o per nessuna; vuota = nessun simbolo; il tiro dinamico usa i numeri. Nota per il tecnico: un simbolo nuovo va aggiunto in `ICONS` di `Icon.astro`, in `EMBLEMS` di `ModeGrid.astro` e nei `values` di `.pages.yml`;
    - Attività → Missioni / Percorsi: compare dopo «Come si gioca»; «Numera le voci» solo se l'ordine conta; cifre facoltative (servono valore ed etichetta); titolo vuoto = sezione nascosta; le missioni del softair sono ripetute in «Softair VS Paintball → Cosa trovi da noi»;
    - Softair VS Paintball, compreso il «Bottone verso la pagina del softair» in «Cosa trovi da noi»;
-   - riquadro «Dati ripetuti: dove cambiarli tutti»: il minimo pagato 8/15 (arcotag e Nerf, nota prezzi e FAQ), «30 giocatori» (dati chiave, SEO, serata, FAQ, «Perfetto per»), i turni (testo dei prezzi e FAQ del tiro), telefono ed email nelle FAQ «Come si prenota», indirizzo nelle FAQ «Dove…», le somme dei bersagli nella FAQ del tiro; il listino del softair (sezione prezzi, FAQ «Quanto costa», prezzi di /paintball), i prezzi di Nerf e tiro nelle loro FAQ, «si parte da 8 / vi uniamo» (note, FAQ del softair, primo passo di /paintball), «1 ora e 45» (softair e /paintball), la Tessera Élite (softair e /paintball), le età citate nelle FAQ di /paintball e nelle pill della home; le scritte tattiche (`hudTag`) che ripetono «30 giocatori», le età (12+, 8+, 6+), «3 percorsi · 1–8 persone», «6 mm / 17 mm» e «1.500 m²»; in home «1.500 m²» sta anche in `hero.subtitle`, `seo.description`, `arena.stat` e nella fascia della CTA finale, i dati del corso in `course.facts`;
+   - riquadro «Dati ripetuti: dove cambiarli tutti»: il minimo pagato 8/15 (arcotag e Nerf, nota prezzi e FAQ), «30 giocatori» (dati chiave, SEO, serata, FAQ, «Perfetto per»), i turni (testo dei prezzi e FAQ del tiro), telefono ed email nelle FAQ «Come si prenota», indirizzo nelle FAQ «Dove…», le somme dei bersagli nella FAQ del tiro; il listino del softair (sezione prezzi, FAQ «Quanto costa», prezzi di /paintball), i prezzi di Nerf e tiro nelle loro FAQ, «si parte da 8 / vi uniamo» (note, FAQ del softair, primo passo di /paintball), «1 ora e 45» (softair e /paintball), la Tessera Élite (softair e /paintball), le età citate nelle FAQ di /paintball e nelle pill della home; le scritte tattiche (`hudTag`) che ripetono «30 giocatori», le età (12+, 8+, 6+), «3 percorsi · 1–8 persone», «6 mm / 17 mm» e «1.500 m²»; in home «1.500 m²» sta anche in `hero.subtitle`, `seo.description`, `arena.stat` e nella fascia della CTA finale, i dati del corso in `course.facts` e, per la pagina del corso, orari, età, date e indirizzo in SEO, sottotitolo, scritta tattica, dati, In breve, calendario e FAQ;
    - nelle sezioni Recensioni di attività e paintball si cambia solo il titolo: quali recensioni compaiono si sceglie con «Pagine in cui compare»;
    - nota per il tecnico: ogni nuova attività va aggiunta tra i valori del campo `pages` di `.pages.yml`;
    - Immagini: WebP e varianti automatiche, testo alternativo.
-6. **Cookie consent** (vanilla-cookieconsent) per GA4 e TicketingHub, poi il widget TicketingHub nelle sezioni `#prenota`.
-7. **Seguiti tecnici**:
+7. **Cookie consent** (vanilla-cookieconsent) per GA4 e TicketingHub, poi il widget TicketingHub nelle sezioni `#prenota`.
+8. **Seguiti tecnici**:
    - una sola forma degli URL (`trailingSlash` in `astro.config.mjs` e link interni);
    - i `.webp` accanto agli originali sono in git: su un clone nuovo la verifica per data potrebbe non rigenerarli se il cliente sostituisce una foto con lo stesso nome (valutare di toglierli da git o di controllare l'hash);
    - intestazioni del footer («Menu», «Contatti») e link legali ancora nel codice;
    - il campo «Dove sta il soggetto della foto» (`hero.focus`) c'è solo nelle attività: estenderlo al paintball se la sua apertura cambia;
-   - `hero-opt2-breach`, `hero-opt3-run`, `hero-opt4-prone` e le loro `-mobile` in `public/uploads` non sono più usati (l'apertura del softair è la nuova `softair-hero`): da cancellare dopo la conferma del cliente, anche dagli originali in `~/Documenti/…/originali-sito/`;
+   - `hero-opt3-run`, `hero-opt4-prone` e le loro `-mobile` non sono usati: l'utente li ha scartati anche per il corso («pessime»), quindi si possono cancellare; `hero-opt2-breach` è ancora il segnaposto di «Team building» nelle occasioni della home;
+   - dall'audit del corso, da fare su tutto il sito:
+     - link interni senza la barra finale (`/corso-softair` contro il canonical `/corso-softair/`: un redirect a link);
+     - link dal testo di /softair e /paintball verso il corso;
+     - immagine social `corso-og.jpg`;
+     - Lenis creato dopo il primo disegno (ricalcolo forzato di 43 ms in `SmoothScroll.astro`);
+     - solo i caratteri latini nei `@font-face` (`global.css:2-4`, 0,9 KB gzip a pagina);
+     - `SectionHead`: la barretta del sopratitolo senza `flex: none`;
+     - `StepTimeline`: il subgrid per le etichette lunghe tra 900 e 960 px;
+     - un `businessId()` condiviso in `jsonld.ts` (oggi in `BaseLayout` e nel corso);
+     - un `menuLabel(path)` in `nav.ts` per le briciole di pane (paintball e corso);
+     - il punto luminoso è copiato in `HudFrame`, `ActionVideo` e `StatusChip`: una classe sola;
    - stato premuto nell'atomo `Button`;
    - `pad` (numeri a due cifre, 01, 02…) è copiato in `StepTimeline`, `ActivitiesStory` e `ModeGrid`: al terzo uso va in `src/lib/` (`CODE-03`, `CODE-04`);
    - una sottile riga verticale sul bordo destro di `logo-white-120.webp` nel footer, da verificare;
@@ -360,7 +412,7 @@ Piano dell'utente (2 ott 2026): la home è finita; **ora le pagine mancanti, con
 - Chiave IndexNow in `public/`; un solo interruttore per `robots.txt` e `noindex` (oggi `public/robots.txt` è statico).
 - Pausa per il movimento continuo (WCAG 2.2.2): riga e puntino delle aperture, che per decisione dell'utente (2 ott 2026) girano sempre anche nelle pagine interne; il video della home ha la sua pausa ma parte sempre da solo, anche con reduced motion (eccezione in `A11Y-07`). Registrato nel debito noto del canone.
 - Bordo `--color-border` sotto 3:1 (WCAG 1.4.11): più contrasto o un secondo segnale.
-- Ogni link interno deve puntare a una pagina esistente (oggi /l-arena, /corso-softair, /teambuilding, /contatti, le occasioni e le legali danno 404).
+- Ogni link interno deve puntare a una pagina esistente (oggi /l-arena, /teambuilding, /contatti, le occasioni e le legali danno 404).
 - Video R2 da `r2.dev` a un dominio proprio.
 - Rich Results Test di Google; Search Console e Bing Webmaster (`docs/geo-e-indicizzazione.md`).
 
@@ -371,6 +423,7 @@ Piano dell'utente (2 ott 2026): la home è finita; **ora le pagine mancanti, con
 - **H1 della home**: keyword «softair Milano» o l'attuale «Diventa protagonista di un film d'azione»? Decide il cliente.
 - **Social**: TikTok è un profilo attivo? Il testo della sezione promette «consigli utili»: il cliente li pubblica davvero?
 - **Testo del Ranger**: è quello dell'utente, lungo per una sezione-link; da accorciare se il cliente vuole.
+- **Prezzo del corso**: dal cliente; poi le FAQ «Quanto costa?» e «Come mi iscrivo?». Chiedere anche 2–3 recensioni di allievi del corso.
 - **Foto delle occasioni**: foto reali di gruppi dal cliente o immagini AI (serve la ricarica del credito Gemini).
 - **Accento ciano sulle foto con luce ambra**: tenere, oppure rigenerare le foto con luce neutra.
 - **Vecchie immagini del tiro dinamico** (`att-tiro-dinamico.jpeg`, `-2`): da eliminare quando il cliente conferma la versione «casetta».

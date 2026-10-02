@@ -5,12 +5,15 @@
 // The home hero's HUD frame runs here too: its scan passes under the copy, its corners and
 // readout stay clear of the copy and of the facts.
 
+import type { ComponentProps } from 'astro/types';
 import Button from '../atoms/Button.astro';
 import Picture from '../atoms/Picture.astro';
+import { has } from '../../lib/fields';
 import { slotHtml } from '../../lib/slots';
 import Breadcrumb from '../molecules/Breadcrumb.astro';
 import FactStrip from '../molecules/FactStrip.astro';
 import HudFrame from '../molecules/HudFrame.astro';
+import StatusChip from '../molecules/StatusChip.astro';
 
 interface Cta {
   label?: string;
@@ -41,6 +44,8 @@ interface Props {
   crumbs?: Crumb[];
   /** Small readout in the HUD frame (CMS `hudTag`), shown from 641px wide (landscape phones too). */
   hudTag?: string;
+  /** A status line under the buttons, on its own chip (the course's enrolment). */
+  notice?: Pick<ComponentProps<typeof StatusChip>, 'text' | 'tone'>;
 }
 
 const {
@@ -56,6 +61,7 @@ const {
   facts = [],
   crumbs = [],
   hudTag,
+  notice,
 } = Astro.props;
 
 // Any portrait screen below desktop gets the vertical crop; a landscape phone keeps the wide photo.
@@ -64,6 +70,9 @@ const portraitMedia = '(max-width: 1023px) and (orientation: portrait)';
 const isComplete = (c?: Cta): c is Required<Cta> => Boolean(c?.label?.trim() && c?.href?.trim());
 const primary = isComplete(ctaPrimary) ? ctaPrimary : undefined;
 const secondary = isComplete(ctaSecondary) ? ctaSecondary : undefined;
+
+// A fact emptied in the CMS leaves no blank cell (CMS-10).
+const factList = facts.filter((f) => has(f?.value) && has(f?.label));
 
 const decorHtml = await slotHtml(Astro.slots, 'decor');
 const hasDecor = decorHtml.length > 0;
@@ -118,9 +127,10 @@ const isLong = title.length > 28;
           )}
         </div>
       )}
+      {notice && <StatusChip {...notice} class="phero__notice" />}
     </div>
 
-    {facts.length > 0 && <FactStrip facts={facts} class="phero__facts" />}
+    {factList.length > 0 && <FactStrip facts={factList} class="phero__facts" />}
   </div>
 </section>
 
@@ -345,6 +355,9 @@ const isLong = title.length > 28;
       transform var(--duration-fast) var(--ease-out-expo);
   }
   .phero__btn:active { transform: translateY(1px) scale(0.98); }
+
+  /* Scoped to the hero, so it wins over the chip's own reset whatever the CSS order. */
+  .phero .phero__notice { margin-top: 1rem; }
   /* The secondary's label and its accent hover state never depend on the photo. */
   .phero__btn--on-photo { background: var(--chip); }
 
@@ -390,6 +403,9 @@ const isLong = title.length > 28;
     /* A subject already on the right would be cut by the left anchor: keep it in the frame. */
     .phero--focus-right:not(.phero--decor) .phero__bg { object-position: 70% 40%; }
     .phero:not(.phero--decor) .phero__content { max-width: 40vw; }
+    /* In the 40vw column a full-size title runs to three lines and pushes the facts off a 768px
+       screen; capped, it holds in two. */
+    .phero:not(.phero--decor) .phero__title { font-size: 5vw; }
     .phero:not(.phero--decor) .phero__title--long { font-size: 4.2vw; }
   }
 
@@ -410,6 +426,7 @@ const isLong = title.length > 28;
     .phero__title--long { font-size: clamp(1.85rem, 8.4vw, 2.1rem); }
     .phero__lede { margin-top: 1rem; font-size: 0.95rem; }
     .phero__cta { margin-top: 1.25rem; }
+    .phero .phero__notice { margin-top: 0.75rem; padding-block: 0.35rem; }
     .phero__facts { margin-top: 1.25rem; }
   }
 
@@ -432,6 +449,7 @@ const isLong = title.length > 28;
       line-height: 1.45;
     }
     .phero__cta { margin-top: 1rem; }
+    .phero .phero__notice { margin-top: 0.6rem; padding-block: 0.35rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
