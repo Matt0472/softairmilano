@@ -15,3 +15,9 @@ export const telHref = (phone: string | undefined): string => {
   const e164 = toE164(phone);
   return e164 ? `tel:${e164}` : '';
 };
+
+// wa.me wants the international number as bare digits, without "+".
+export const waHref = (phone: string | undefined): string => {
+  const digits = toE164(phone).replace(/\D/g, '');
+  return digits ? `https://wa.me/${digits}` : '';
+};

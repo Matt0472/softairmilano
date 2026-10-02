@@ -121,9 +121,11 @@ const hasLink = !!label?.trim() && !!href?.trim();
     text-wrap: pretty;
   }
 
-  /* The secondary Button, sized for the panel; the atom keeps its colours and hover. */
+  /* The secondary Button, sized for the panel; the atom keeps its colours and hover. A descriptive
+     label can wrap on a phone: it stays left-aligned, and the arrow (flex: none) keeps its size. */
   .teaser__link {
     gap: 0.6rem;
+    text-align: start;
     min-height: 48px;
     margin-top: 1.6rem;
     padding-inline: 1.4rem;
@@ -131,7 +133,7 @@ const hasLink = !!label?.trim() && !!href?.trim();
       border-color var(--duration-fast) var(--ease-out-expo),
       color var(--duration-fast) var(--ease-out-expo);
   }
-  .teaser__link svg { transition: transform var(--duration-slow) var(--ease-out-expo); }
+  .teaser__link svg { flex: none; transition: transform var(--duration-slow) var(--ease-out-expo); }
   /* Stretched link: the whole panel is the target. */
   .teaser__link::after {
     content: "";

@@ -1,42 +1,45 @@
 {
-  "title": "SoftAir Milano — Arena indoor di softair a Milano",
+  "seo": {
+    "title": "SoftAir Milano — Arena indoor di softair a Milano",
+    "description": "Softair al coperto a Milano: arena indoor di 1.500 m², aperta tutti i giorni dalle 10 alle 24 su prenotazione. Softair, tiro dinamico, arcotag e Nerf.",
+    "image": "",
+    "imageAlt": ""
+  },
   "hero": {
     "image": "/uploads/hero-mira.jpeg",
     "imageMobile": "/uploads/hero-mira-mobile.jpeg",
     "imageAlt": "Giocatore di softair in tenuta tattica che prende la mira nella luce di un'arena indoor.",
     "eyebrow": "Arena indoor · Milano",
     "title": "Diventa protagonista di un film d'azione",
-    "subtitle": "Il campo di softair al coperto più grande di Milano: un villaggio militare di circa 1.500 mq, tra edifici e torrette. Missioni, adrenalina, squadra.",
+    "subtitle": "Il campo di softair al coperto più grande di Milano: un villaggio militare di 1.500 m² tra edifici e torrette.",
     "ctaPrimary": {
       "label": "Prenota",
       "href": "#prenota"
     },
     "ctaSecondary": {
       "label": "Scopri l'arena",
-      "href": "/l-arena"
+      "href": "#arena"
     },
     "hudTag": "IND · 1.500 M² · CQB",
     "showRating": true
   },
   "video": {
-    "videoSrc": "https://pub-03634caa58304887b733482b0c916e61.r2.dev/softairmilano-home.mp4",
-    "poster": "/uploads/video-poster.jpg",
-    "eyebrow": "Il video",
-    "title": "Guarda l'azione",
-    "text": "Un minuto dentro l'arena: squadre, missioni, adrenalina.",
-    "soundLabel": "Attiva audio",
-    "cta": {
-      "label": "Prenota",
-      "href": "#prenota"
-    }
+    "title": "Dentro l'azione",
+    "text": "Così si gioca da noi. Guardalo, poi tocca a te.",
+    "videoSrc": "https://pub-03634caa58304887b733482b0c916e61.r2.dev/dentro-l-azione.mp4",
+    "videoSrcMobile": "https://pub-03634caa58304887b733482b0c916e61.r2.dev/dentro-l-azione-mobile.mp4",
+    "poster": "/uploads/dentro-l-azione-poster.jpg",
+    "posterMobile": "/uploads/dentro-l-azione-poster-mobile.jpg",
+    "videoAlt": "Partite di softair nell'arena indoor: giocatori con casco e maschera avanzano tra pneumatici, reti mimetiche e barricate.",
+    "youtubeLabel": ""
   },
   "arena": {
-    "eyebrow": "Il campo di gioco",
     "title": "L'arena",
     "text": "L'arena indoor di softair più grande di Milano: un villaggio militare al coperto dove ogni partita sembra una scena d'azione.",
     "stat": {
       "value": "1.500",
-      "unit": "m² al coperto"
+      "unit": "m²",
+      "label": "al coperto"
     },
     "features": [
       {
@@ -62,9 +65,10 @@
     ],
     "cta": {
       "label": "Leggi di più sull'arena",
-      "href": "/l-arena"
+      "href": ""
     }
   },
+  "activitiesTitle": "Le attività",
   "intro": "Un'arena indoor pensata nei minimi dettagli, per vivere ogni missione come in un film. Scegli come giocare.",
   "activities": [
     {
@@ -78,6 +82,7 @@
       "image": "/uploads/att-softair.jpeg",
       "imageMobile": "/uploads/att-softair-mobile.jpeg",
       "imageAlt": "Squadra di softair in tenuta tattica schierata lungo un muro dell'arena indoor.",
+      "label": "Scopri Softair",
       "href": "/softair"
     },
     {
@@ -91,6 +96,7 @@
       "image": "/uploads/att-tiro-dinamico-casetta.jpeg",
       "imageMobile": "/uploads/att-tiro-dinamico-mobile.jpeg",
       "imageAlt": "Giocatore in tenuta tattica sulla soglia di una casetta di legno con rete mimetica, in un percorso di tiro dinamico con bersagli in fondo alla corsia.",
+      "label": "Scopri Tiro dinamico",
       "href": "/tiro-dinamico"
     },
     {
@@ -104,6 +110,7 @@
       "image": "/uploads/att-arcotag.jpeg",
       "imageMobile": "/uploads/att-arcotag-mobile.jpeg",
       "imageAlt": "Giocatori di arcotag con archi e frecce soft dietro i bunker.",
+      "label": "Scopri Arcotag",
       "href": "/arcotag"
     },
     {
@@ -117,40 +124,111 @@
       "image": "/uploads/att-nerf.jpeg",
       "imageMobile": "/uploads/att-nerf-mobile.jpeg",
       "imageAlt": "Giocatori con maschera protettiva e blaster Nerf nell'arena indoor.",
+      "label": "Scopri Nerf",
       "href": "/nerf"
     }
   ],
-  "occasions": [
-    {
-      "title": "Team building",
-      "desc": "Rafforza la squadra con una sfida diversa dal solito.",
-      "href": "/teambuilding"
+  "reviews": {
+    "title": "Cosa dice chi ha giocato"
+  },
+  "occasions": {
+    "title": "Le occasioni",
+    "text": "Non solo partite: il posto giusto per gruppi, feste e aziende.",
+    "cta": {
+      "label": "Prenota",
+      "href": "#prenota"
     },
-    {
-      "title": "Feste di compleanno",
-      "desc": "Un compleanno alternativo ed emozionante.",
-      "href": "/festa-di-compleanno"
-    },
-    {
-      "title": "Addio al celibato/nubilato",
-      "desc": "Un ricordo di gruppo indimenticabile.",
-      "href": "/addio-al-celibato-nubilato"
-    },
-    {
-      "title": "Corso softair",
-      "desc": "Impara tecniche e sicurezza con i nostri istruttori.",
+    "items": [
+      {
+        "title": "Serata tra amici",
+        "text": "Porta i tuoi amici: squadre, missioni e rivincite per tutta la serata.",
+        "image": "/uploads/att-softair.jpeg",
+        "imageMobile": "/uploads/att-softair-mobile.jpeg",
+        "imageAlt": "Squadra di softair in tenuta tattica schierata lungo un muro dell'arena indoor.",
+        "href": "",
+        "featured": true
+      },
+      {
+        "title": "Compleanni",
+        "text": "Un compleanno alternativo ed emozionante.",
+        "image": "/uploads/att-nerf.jpeg",
+        "imageMobile": "",
+        "imageAlt": "Giocatori con maschera protettiva e blaster Nerf nell'arena indoor.",
+        "href": "",
+        "featured": false
+      },
+      {
+        "title": "Addio al celibato/nubilato",
+        "text": "Un ricordo di gruppo indimenticabile.",
+        "image": "/uploads/att-arcotag.jpeg",
+        "imageMobile": "",
+        "imageAlt": "Giocatori di arcotag con archi e frecce soft dietro i bunker.",
+        "href": "",
+        "featured": false
+      },
+      {
+        "title": "Team building",
+        "text": "Rafforza la squadra con una sfida diversa dal solito.",
+        "image": "/uploads/hero-opt2-breach.jpeg",
+        "imageMobile": "",
+        "imageAlt": "Due giocatori di softair in tenuta tattica entrano in una stanza, nella luce polverosa.",
+        "href": "",
+        "featured": false
+      }
+    ]
+  },
+  "course": {
+    "eyebrow": "",
+    "title": "Il corso di softair",
+    "text": "Ti allena un istruttore qualificato, nell'arena al coperto e in quella all'aperto, fino ai tornei contro altre squadre. Due stagioni: da ottobre a dicembre e da marzo a maggio.",
+    "facts": [
+      {
+        "value": "Ogni mercoledì",
+        "label": "Dalle 21:00 alle 22:30"
+      },
+      {
+        "value": "Dai 16 anni",
+        "label": "Per principianti ed esperti"
+      },
+      {
+        "value": "Primo allenamento gratis",
+        "label": "Senza impegno"
+      },
+      {
+        "value": "Attrezzatura a noleggio",
+        "label": "Per chi non ce l'ha"
+      }
+    ],
+    "cta": {
+      "label": "Scopri il corso",
       "href": "/corso-softair"
-    }
-  ],
+    },
+    "image": "/uploads/scena-softair.jpeg",
+    "imageAlt": "Un giocatore di softair con casco, maschera protettiva e replica imbracciata avanza tra barricate di compensato, nella luce calda di una finestra."
+  },
+  "paintballTeaser": {
+    "title": "Cercavi il paintball? Prova il softair",
+    "text": "Un gioco a squadre simile, ma senza vernice e senza lividi, al coperto tutto l'anno. Ecco in cosa sono diversi.",
+    "label": "Softair o paintball: guarda il confronto",
+    "href": "/paintball",
+    "image": "/uploads/paintball-hero.jpeg",
+    "imageAlt": "Un giocatore di softair in tenuta tattica pulita accanto a un giocatore di paintball coperto di macchie di vernice, in un'arena indoor."
+  },
+  "social": {
+    "title": "Anche sui social",
+    "text": "Seguici sui nostri canali per restare aggiornato, con consigli utili dal mondo del softair."
+  },
   "rangerTeaser": {
-    "title": "Preferisci giocare all'aperto?",
-    "text": "Scopri Ranger Softair Milano, la nostra arena boschiva outdoor: oltre 12.000 mq immersi nel verde.",
-    "label": "Vai a Ranger Softair"
+    "eyebrow": "Ranger Softair Milano · arena all'aperto",
+    "title": "La più grande arena boschiva di Milano",
+    "text": "Con oltre 12.000 m² di superficie, Ranger Softair Milano è la più grande arena boschiva all'aperto di Milano. Il campo da gioco, di 4.500 m², è stato realizzato ponendo la massima attenzione a ogni dettaglio, così da rendere l'esperienza il più immersiva possibile. Vieni a provare!",
+    "image": "/uploads/ranger-bosco.jpeg",
+    "imageMobile": "/uploads/ranger-bosco-mobile.jpeg",
+    "imageAlt": "Due giocatori di softair in mimetica al riparo dietro un tronco caduto, in un bosco attraversato dalla luce."
   },
   "finalCta": {
-    "title": "Pronto a scendere in campo?",
+    "title": "Sei pronto a scendere in campo?",
     "subtitle": "Prenota la tua sessione di softair a Milano.",
-    "label": "Prenota",
-    "href": "#prenota"
+    "writeLabel": "Scrivi"
   }
 }

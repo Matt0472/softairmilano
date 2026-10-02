@@ -72,6 +72,11 @@
   --color-steel: #5b6b7a;
   --color-success: #34c759;
   --color-danger: #e5484d;
+  /* Ranger Softair Milano, the outdoor arena's own brand: only in the home's Ranger section (DES-12).
+     Earth is the warm veil over its photo, sand its body copy, amber a detail (the domain, one rule). */
+  --color-ranger-earth: #140e09;
+  --color-ranger-sand: #e1dad3;
+  --color-ranger-amber: #e4a316;
 
   /* Typography */
   --font-sans: "Inter Variable", "Inter", "Inter Fallback", system-ui, sans-serif;
@@ -208,7 +213,9 @@
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       .band:nth-child(even of .band)::before {
-        animation: band-seam var(--ease-out-expo) both;
+        animation-name: band-seam;
+        animation-timing-function: var(--ease-out-expo);
+        animation-fill-mode: both;
         animation-timeline: view();
         animation-range: entry 0% cover 35%;
       }
@@ -216,6 +223,32 @@
   }
   @keyframes band-seam {
     from { transform: scaleX(0); }
+  }
+
+  /*
+    HUD corners: four L-shaped brackets in one layer, over the positioned box that holds it. Eight
+    background strips, no extra elements; the upright arms start under the flat ones, so no pixel
+    is painted twice and a translucent colour stays even. The component sets --arm (each arm's
+    length, on the element or an ancestor) and the colour; where the layer sits (inset) and how it
+    moves (transform and opacity, CODE-07) are its own. HudFrame's corners are a different device:
+    they draw themselves in.
+  */
+  .corners {
+    --w: 2px;
+    --c: linear-gradient(currentColor, currentColor);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      var(--c) left top / var(--arm) var(--w),
+      var(--c) right top / var(--arm) var(--w),
+      var(--c) left bottom / var(--arm) var(--w),
+      var(--c) right bottom / var(--arm) var(--w),
+      var(--c) left 0 top var(--w) / var(--w) calc(var(--arm) - var(--w)),
+      var(--c) right 0 top var(--w) / var(--w) calc(var(--arm) - var(--w)),
+      var(--c) left 0 bottom var(--w) / var(--w) calc(var(--arm) - var(--w)),
+      var(--c) right 0 bottom var(--w) / var(--w) calc(var(--arm) - var(--w));
+    background-repeat: no-repeat;
   }
 
   /* Skip-to-content link (accessibility). */

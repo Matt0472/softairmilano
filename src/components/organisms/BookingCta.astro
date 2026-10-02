@@ -7,7 +7,7 @@
 
 import Icon from '../atoms/Icon.astro';
 import settings from '../../data/settings.json';
-import { telHref, toE164 } from '../../lib/phone';
+import { telHref, waHref } from '../../lib/phone';
 
 interface Props {
   title: string;
@@ -20,9 +20,7 @@ const { title, text, id = 'prenota', headingId = 'booking-title' } = Astro.props
 const { phone, whatsapp, email, address, openingHours, directions } = settings;
 
 const tel = telHref(phone);
-// wa.me wants the international number as bare digits, without "+".
-const waDigits = toE164(whatsapp).replace(/\D/g, '');
-const waHref = waDigits ? `https://wa.me/${waDigits}` : '';
+const wa = waHref(whatsapp);
 const mapsHref = address
   ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
   : '';
@@ -36,7 +34,7 @@ const hasInfo = Boolean(openingHours || address || directions);
         <h2 class="book__title" id={headingId}>{title}</h2>
         {text && <p class="book__text">{text}</p>}
 
-        {(tel || waHref || email) && (
+        {(tel || wa || email) && (
           <div class="book__actions">
             {tel && (
               <a class="book__call" href={tel} aria-label={`Chiama il ${phone}`}>
@@ -44,8 +42,8 @@ const hasInfo = Boolean(openingHours || address || directions);
                 <span class="book__call-num">{phone}</span>
               </a>
             )}
-            {waHref && (
-              <a class="book__write" href={waHref} target="_blank" rel="noopener">
+            {wa && (
+              <a class="book__write" href={wa} target="_blank" rel="noopener">
                 <Icon name="messageCircle" size={20} />
                 <span class="book__write-addr">WhatsApp</span>
                 <span class="sr-only">(si apre in una nuova scheda)</span>

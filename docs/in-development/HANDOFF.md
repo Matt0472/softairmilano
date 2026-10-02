@@ -1,15 +1,10 @@
 # HANDOFF — softairmilano.it
 
-Aggiornato: **2 ott 2026, ore 11:00**.
+Aggiornato: **2 ott 2026, ore 15:00**.
 
 Cosa c'è di nuovo:
-- commit `83bdd2b` (online sull'anteprima): pagine **/softair**, **/tiro-dinamico**, **/nerf**, recensioni divise per pagina con voto unico 4,7 · 500+, correzioni dell'audit del 30 set, «Milano» nei testi;
-- **non ancora committato** (in attesa dell'ok dell'utente), il redesign chiesto dall'utente sulla pagina softair e reso sistema per tutte le pagine:
-  - **ritmo delle sezioni**: fasce alternate fondo/superficie (`.band` in `global.css`, `--plane`/`--lift`/`--lift-2`), filetti e un tratto ciano che si disegna allo scroll;
-  - **Missioni ridisegnate** (`ModeGrid`): emblema per missione dentro staffe ad angolo, texture tenue, sollevamento al passaggio; campo CMS `modes.items.icon`;
-  - **foto con la cornice sottile interna** (`molecules/PhotoFrame.astro`) ovunque: niente più bordo esterno; «REC · CAM» resta solo sul video della home;
-  - **aperture con l'HUD della home** (`molecules/HudFrame.astro`, condiviso da `Hero` e `PageHero`): angoli a L che si disegnano, riga che scorre, scritta tattica (`hero.hudTag`); movimento continuo senza pausa per decisione dell'utente (debito noto `A11Y-07`);
-  - corretti tre bloccanti di accessibilità in home (angoli sul voto, focus su scene invisibili, contatore «/ 04») emersi dalla revisione.
+- commit `8516850` (online): fasce alternate, Missioni ridisegnate, `PhotoFrame`, `HudFrame` su tutte le aperture;
+- commit **«Home finita»** del 2 ott (questo): la home rifatta da capo su richiesta dell'utente, più la voce «Home» nel menu. L'audit `docs/audits/2026-10-02-home.md` è chiuso: corretti bloccanti e maggiori, le revisioni di codice e CMS sono state fatte da un'istanza diversa e applicate. Dopo il push l'utente controlla la home dal telefono vero.
 
 ## Obiettivo
 
@@ -34,7 +29,7 @@ Cosa c'è di nuovo:
 
 ### Repo, deploy e metodo di lavoro
 
-- **Repo**: `Matt0472/softairmilano` (pubblico), branch `main`. Il commit di questo lavoro segue `5d19553`, l'ultimo pushato.
+- **Repo**: `Matt0472/softairmilano` (pubblico), branch `main`. L'ultimo commit pushato è quello della home (2 ott 2026).
 - **Anteprima**: **https://softairmilano-anteprima.mapped-dev.it**, su GitHub Pages. Ogni push su `main` la aggiorna in circa 1 minuto (`gh run watch`). Il sito resta `noindex` (`SEO-10`).
 - **Regola del cliente**: mai commit o push senza ok esplicito, dopo avergli mostrato le modifiche (`GIT-01`).
 - **Metodo**: `/ship`, `/audit`, `/coding-standards` e `/handoff` sono skill di progetto in `.claude/skills/`. I **specialisti** sono in `.claude/agents/`: design, cms, asset, code-standards, accessibility, performance, responsive, seo.
@@ -49,16 +44,24 @@ Cosa c'è di nuovo:
   - `.shell` largo al massimo 1520 px, con `--shell-gutter` (1.25rem, 2rem da 768).
 - **Titoli**: `h1–h4` hanno interlinea 1,12, perché gli accenti delle maiuscole di Oswald non tocchino la riga sopra.
 
-### Home (`src/pages/index.astro`)
+### Home (`src/pages/index.astro` + `src/data/home.json`)
 
-- **Ordine delle sezioni**:
-  1. Hero (immagine AI «still viva»);
-  2. L'arena (radar);
-  3. Video (self-hosted su R2);
-  4. Attività (scroll-story pinnata con testo «in streaming»);
-  5. Occasioni, Ranger e CTA finale, ancora con i marcatori «(DA COMPLETARE)».
-- **CTA finale**: ha `id="prenota"`, quindi il bottone Prenota del menu funziona anche in home.
-- **Etichette**: tutte le CTA di prenotazione dicono «Prenota» (`DES-05`).
+Ogni sezione di contenuto sta su `.band`. Le tre sezioni guidate dallo scroll (video, attività, CTA finale) non sono mai una accanto all'altra.
+
+1. **Hero**: invariato nell'impianto, con `HudFrame`, il voto Google e il sottotitolo accorciato. «Scopri l'arena» porta a `#arena` finché /l-arena non esiste.
+2. **`ActionVideo` «Dentro l'azione»**: il video parte come una pillola e si allarga mentre la sezione è bloccata allo scroll. A video aperto compaiono «REC · CAM 01», gli angoli, i pulsanti pausa e audio (icone SVG) e, in basso a sinistra, il **chip YouTube** (link a `settings.social.youtube`, testo da `video.youtubeLabel` o dall'@ dell'indirizzo).
+   - Sui riquadri stretti i due pulsanti si impilano, così il chip si legge per intero fino a 320 px.
+   - **Autoplay sempre** (decisione dell'utente, 2 ott): parte appena è a schermo, anche con reduced motion e mentre è ancora una pillola; a mano si accende solo l'audio. Eccezione scritta in `A11Y-07` e nel debito noto.
+   - Video su R2: `dentro-l-azione.mp4` (1920×756, 38,6 s) e `dentro-l-azione-mobile.mp4` (604×756, 4:5, per i telefoni in verticale). I master sono in `~/Documenti/personal-projects/softairmilano/video/`. Il vecchio `softairmilano-home.mp4` su R2 non serve più: lo può togliere l'utente.
+3. **`ArenaIntro`**: «1.500 m²» grande con i numeri a rullo (atomo `Odometer`), 4 caratteristiche con emblema tra le staffe (campo `arena.features.icon`), radar.
+4. **`ActivitiesStory`**: la storia a scorrimento, ora con sonde `IntersectionObserver` invece di un listener di scroll; «Scopri X» è un bottone secondario con testo dal CMS (`activities[].label`); sotto i 560 px di altezza non si blocca.
+5. **`TeaserBanner` paintball** subito dopo le attività (obiettivo 3).
+6. **`Reviews`** con `page="home"` (nel campo «Pagine in cui compare» c'è la voce «Home»).
+7. **`OccasionMosaic`**: una scheda grande e tre piccole. **Le foto sono segnaposto** (foto delle attività): «Ne parliamo dopo», decisione dell'utente.
+8. **`CourseTeaser`**: breve introduzione al corso con dati chiave e «Scopri il corso» verso `/corso-softair`, che oggi dà 404 (la pagina è la prossima da fare).
+9. **`SocialChannels`**: tessere a X con il mirino al centro e Instagram, Facebook, YouTube, TikTok (loghi monocromi, ciano al passaggio).
+10. **`RangerTeaser`**: tutta la sezione è un solo link a `settings.rangerUrl` (nuova scheda), senza bottoni; sfondo AI «Al riparo» (`ranger-bosco*`), palette Ranger con misura (`DES-12`, token `--color-ranger-*`).
+11. **`FinalCta`** `#prenota`: sipario allo scroll, titolo con animazione d'ingresso, fascia diagonale di parole più in basso, azioni vere (chiama, scrivi, WhatsApp se compilato, orari).
 
 ### Menu (`Header.astro`, `src/data/navigation.json`)
 
@@ -66,7 +69,7 @@ Cosa c'è di nuovo:
   - Si apre al clic e al passaggio del mouse, si chiude con Esc (anche con il focus fuori), si naviga con le frecce.
   - Solo la pagina corrente è in ciano.
 - **Mobile**: menu a tutto schermo con un gruppo 2×2. È modale: tutti i figli di `body` diventano `inert` e Lenis si ferma.
-- **Voci**: alte 44 px e su una riga fino a 1024.
+- **Voci**: «Home» è la prima (richiesta dell'utente, 2 ott: si vede sempre dove si è), poi L'arena, Attività ▾, Corso, Gruppi & eventi, Softair VS Paintball, Contatti. Alte 44 px e su una riga fino a 1024 (verificato con «Home»).
 - **Bottone Prenota del menu**: `navigation.cta` nel CMS.
 
 ### Footer (`Footer.astro`)
@@ -114,12 +117,13 @@ Cosa c'è di nuovo:
 
 ### Componenti nuovi (futuri blocchi CMS)
 
-- **Organismi**: `PageHero`, `AnswerBlock`, `StepTimeline`, `SplitFeature`, `AudienceGrid`, `PriceTiers`, `Reviews`, `FaqAccordion`, `ActivityLinks`, `BookingCta`, `VsComparison`, `ImpactScale`, `TeaserBanner`.
+- **Organismi**: `PageHero`, `AnswerBlock`, `StepTimeline`, `SplitFeature`, `AudienceGrid`, `PriceTiers`, `Reviews`, `FaqAccordion`, `ActivityLinks`, `BookingCta`, `VsComparison`, `ImpactScale`, `TeaserBanner`; per la home `ActionVideo`, `OccasionMosaic`, `CourseTeaser`, `SocialChannels`, `RangerTeaser`, `FinalCta`. Cancellati `VideoSection` e `molecules/Card`.
 - **Molecole**: `Breadcrumb`, `FactStrip`, `IncludedList`, `LeadText`, `Reveal`, `SectionHead`, `Trajectory`.
-- **Atomi**: `Icon`, `Picture`, `Badge`.
+- **Atomi**: `Icon`, `Picture`, `Badge`, `Odometer` (numeri a rullo, usato da `FactStrip` e `ArenaIntro`).
 - **Molecole condivise nuove**: `StarMeter` (stelle a frazione esatta), `PhotoFrame` (cornice sottile interna di ogni foto), `HudFrame` (angoli, riga che scorre e scritta tattica delle aperture).
 - **Ritmo delle sezioni**: ogni sezione di contenuto ha `.band`; le fasce si alternano da sole (`:nth-child(even of .band)` in `<main>`). Dentro una fascia le superfici si ricavano da `--plane`/`--lift`/`--lift-2`, mai da un colore fisso, altrimenti la parità si rompe quando il cliente svuota una sezione.
-- **Helper condivisi** in `src/lib/`: `phone.ts` (`toE164`, `telHref`), `jsonld.ts` (`toLd`, `breadcrumbLd`, `faqLd`), `nav.ts`, `reviews.ts` (voto unico e `reviewsFor(page)`).
+- **Primitiva `.corners`** in `global.css`: i quattro angoli a L dell'HUD in un solo strato (mirino degli emblemi, targa delle missioni, video); il componente ne decide `--arm`, colore e posizione.
+- **Helper condivisi** in `src/lib/`: `phone.ts` (`toE164`, `telHref`, `waHref`), `fields.ts` (`has()`: un campo CMS è pieno solo se ha testo vero, perché Pages CMS salva i campi svuotati come `""`), `typography.ts` (`keepShortWords`: lega le parole di 1–2 lettere alla successiva nei titoli grandi), `jsonld.ts` (`toLd`, `breadcrumbLd`, `faqLd`), `nav.ts`, `reviews.ts` (voto unico e `reviewsFor(page)`).
 - **Recensioni**: voto e numero hanno una fonte sola, `testimonials.json` → `rating`, letta dall'hero della home (`hero.showRating`, le stelle si riempiono fino alla frazione esatta) e da `Reviews.astro`. Ogni recensione ha `pages`: `Reviews` riceve lo slug della pagina (`page={activity}`, `page="paintball"`) e mostra prima le sue, poi quelle generali (`all` o nessuna), al massimo 5.
 - **Link interni** alla pagina: spostano anche il focus (`SmoothScroll.astro`).
 
@@ -145,7 +149,7 @@ Immagini social: `arcotag-og.jpg` e `paintball-og.jpg`, 1200×630.
 
 | Pagina | Performance | Accessibility | Best Practices | LCP | CLS | TBT |
 |---|---|---|---|---|---|---|
-| Home | 98 | 100 | 100 | 2,25 s | 0 | 0 |
+| Home (audit del 2 ott, home nuova, prima delle correzioni) | 98 | 100 | 100 | 2,25 s | 0 | 0 |
 | Arcotag | 98 | 100 | 100 | 2,25 s | 0 | 0 |
 | Paintball | 99 | 100 | 100 | 1,95 s | 0 | 0 |
 | Softair | 99 | 100 | 100 | 1,88 s | 0 | 0 |
@@ -218,6 +222,9 @@ Immagini social: `arcotag-og.jpg` e `paintball-og.jpg`, 1200×630.
 
 - **`<path>` SVG senza `fill: none`** si riempie di nero: durante una modifica degli angoli dell'HUD l'apertura di tutte le pagine si è coperta di un triangolo nero. Ogni `path` decorativo va stilato insieme al markup.
 - **`.band` sta in `@layer components`**, gli stili degli organismi sono `is:global` fuori layer: un `background` o un `border` sulla radice di una sezione con `.band` vince sempre sull'alternanza. Le superfici interne vanno ricavate da `--plane`/`--lift`/`--lift-2`.
+- **Animazioni guidate dallo scroll solo con le proprietà estese** (`CODE-19`): con la scorciatoia `animation` il minifier la fonde con la timeline e Chrome la scarta, quindi in sviluppo funziona e nella build sparisce. Dopo ogni modifica controllare `dist/`.
+- **Test «mobile» con estensioni di Chrome** (es. Mobile View): non emulano il touch né il viewport vero, e la storia delle attività può sembrare ferma. Si verifica con Playwright a 390×844 o sul telefono.
+- **Sostituzioni automatiche nei CSS**: un `replace` di `44px` → `var(--btn)` ha riscritto anche la dichiarazione `--btn: 44px`, rendendola circolare. Escludere la riga che definisce la variabile.
 - **Misurare le aperture almeno 2 s dopo il caricamento**: l'animazione d'ingresso tiene il testo 26 px più in basso, e falsa le distanze dagli angoli.
 
 - **Node 20 fa fallire la build**: sempre `nvm use 22.23.2`.
@@ -274,25 +281,36 @@ NODE_OPTIONS=--dns-result-order=ipv4first node scripts/genera-immagine.mjs --nam
 
 ## Prossimi passi
 
-Piano dell'utente (2 ott 2026): **prima le pagine mancanti, poi la home finita per bene, infine la rifinitura di tutte le pagine quando saranno tutte complete.**
+Piano dell'utente (2 ott 2026): la home è finita; **ora le pagine mancanti, con il Corso per primo, poi la rifinitura di tutte le pagine quando saranno tutte complete.**
 
-1. **Commit e push del redesign** (fasce, Missioni, `PhotoFrame`, `HudFrame`, correzioni di accessibilità) dopo l'ok dell'utente.
+1. **Riscontro dell'utente sul telefono vero** dopo il push della home: in particolare la storia delle attività (con l'estensione Mobile View di Chrome sembrava ferma; con Playwright a 390×844, anche con il touch, avanza 0→1→2→3) e l'autoplay del video.
 2. **Pagine mancanti**, sul sistema attuale (`PageHero` con HUD, fasce, `PhotoFrame`, `/ship` e `/audit` a pagina finita):
-   - L'arena, Corso (prioritaria), Gruppi & eventi, compleanni, addii al celibato/nubilato, team building, contatti;
+   - **Corso (prioritaria)**: la home ci rimanda già da `CourseTeaser`. Contenuti dalla pagina attuale https://www.softairmilano.it/corso-softair/ (ogni mercoledì 21:00–22:30, dai 16 anni, primo allenamento gratis, attrezzatura a noleggio, due stagioni ottobre–dicembre e marzo–maggio, arena indoor e outdoor, tornei);
+   - L'arena, Gruppi & eventi, compleanni, addii al celibato/nubilato, team building, contatti;
    - legali (servono prima l'opzione `noindex` per pagina in `BaseLayout` e `termini` nel filtro della sitemap);
    - 404;
    - landing SEO «cosa fare a Milano con gli amici»;
-   - quando nascono `/festa-di-compleanno`, `/addio-al-celibato-nubilato` e `/teambuilding`, rimettere gli `href` nelle schede «Perfetto per» delle attività.
-3. **Home finita per bene**:
-   - leggere le attività dalla collezione invece di duplicarle in `home.json`;
-   - rifare Occasioni, Ranger e CTA finale;
-   - togliere i marcatori «(DA COMPLETARE)»;
-   - il titolo «Le attività» è scritto in `src/pages/index.astro` e va spostato nel CMS (`CMS-01`);
-   - apertura su telefono in orizzontale (667×375): «Prenota» finisce 1 px sotto la piega e il sopratitolo sta sotto l'header e l'angolo in alto a sinistra; serve un layout orizzontale dedicato come quello di `PageHero` (difetto precedente al redesign).
+   - quando nascono le pagine delle occasioni, rimettere gli `href` nelle schede «Perfetto per» delle attività e in `home.json` → `occasions.items[].href`; quando nasce /l-arena, `hero.ctaSecondary.href` e `arena.cta`.
+3. **Home, passi rimasti**:
+   - leggere le attività dalla collezione invece di duplicarle in `home.json` (commit a parte, migrazione `CMS-09`/`GIT-07`);
+   - foto vere delle occasioni (oggi segnaposto): foto di gruppi dal cliente, oppure AI dopo la ricarica del credito Gemini (HTTP 402 il 2 ott);
+   - apertura su telefono in orizzontale (667×375): «Prenota» finisce 1 px sotto la piega; serve un layout orizzontale dedicato come quello di `PageHero`.
 4. **Rifinitura di tutte le pagine**, a sito completo: un giro di `/audit` per pagina e la coerenza fra le pagine (ritmo, immagini, testi, dati ripetuti).
 5. **Manuale cliente** (`CMS-12–14`, non esiste ancora). Sezioni da scrivere:
    - Impostazioni: orari, come arrivare, indirizzo per Google, footer Ranger, WhatsApp;
-   - Home → Apertura: l'interruttore «Mostra il voto Google sotto i bottoni», con il rimando a «Recensioni»;
+   - Home → Apertura: l'interruttore «Mostra il voto Google sotto i bottoni», con il rimando a «Recensioni»; immagine verticale 9:16 per i telefoni; i bottoni vogliono testo e link; le ancore `#prenota` e `#arena`;
+   - Home → SEO e anteprima social: titolo, descrizione, immagine e testo alternativo, con i valori usati quando sono vuoti;
+   - Home → Dentro l'azione: titolo, testo, i due video R2 (orizzontale 2,5:1 e verticale 4:5), i due poster, la descrizione del video, il testo del pulsante YouTube (il link sta in Impostazioni → Social; un testo più lungo dell'@ attuale si taglia con «…»); il video parte da solo senza audio; senza il video per computer la sezione sparisce;
+   - Home → L'arena: la cifra (valore, unità, etichetta), il significato di ogni emblema, il link che resta vuoto finché la pagina non esiste; la cifra «1.500 m²» compare anche nella CTA finale;
+   - Home → Attività: titolo della sezione, introduzione, testo e link del bottone di ogni attività; un'attività senza titolo o foto non compare;
+   - Home → Rimando al paintball: i tre campi vanno compilati insieme;
+   - Home → Recensioni: solo il titolo; quali recensioni compaiono si sceglie con «Pagine in cui compare» → «Home»;
+   - Home → Occasioni: titolo, testo, bottone, da 2 a 4 schede, quella «In evidenza» è la grande (l'unica con l'immagine per telefono), link solo verso pagine che esistono;
+   - Home → Il corso: sopratitolo, titolo, testo, da 2 a 4 dati, bottone, immagine;
+   - Home → Social: titolo e testo; i link ai profili stanno in Impostazioni; senza nessun link la sezione sparisce;
+   - Home → Ranger: sopratitolo (perché nomina l'altra arena), titolo, testo, immagini; link e dominio mostrato vengono da «Link arena outdoor»;
+   - Home → Prenota (fondo): titolo, sottotitolo, testo del bottone «Scrivi»; contatti e orari vengono da Impostazioni; la fascia di parole usa i titoli delle attività e la cifra dell'arena; la scritta gigante è il «Nome sito»;
+   - Menu: la voce «Home» (`/`) è la prima;
    - Home, Attività e Softair VS Paintball → Apertura → «Scritta tattica sulla foto (HUD)» (`hudTag`): in basso a destra in home, in alto a destra nelle pagine interne, non sotto i 641 px di larghezza (telefoni in verticale); in maiuscolo da sola, massimo 32 caratteri, solo dati già scritti nella pagina; vuota = sparisce (cornice e riga che scorre restano: sono struttura);
    - Attività → Apertura: il campo «Dove sta il soggetto della foto» (`hero.focus`): «A destra» se la foto lascia libera la sinistra per il titolo, vuoto = «Al centro». Non ha effetto dove c'è una firma nell'apertura (la freccia dell'arcotag);
    - Attività → Per chi è: una scheda è cliccabile solo se ha un link (una pagina che esiste o `#prenota`); con tre occasioni quella «In evidenza» diventa la scheda grande;
@@ -302,7 +320,7 @@ Piano dell'utente (2 ott 2026): **prima le pagine mancanti, poi la home finita p
    - Attività → Missioni / Percorsi → «Icona»: il significato di ogni simbolo; un'icona per tutte le voci o per nessuna; vuota = nessun simbolo; il tiro dinamico usa i numeri. Nota per il tecnico: un simbolo nuovo va aggiunto in `ICONS` di `Icon.astro`, in `EMBLEMS` di `ModeGrid.astro` e nei `values` di `.pages.yml`;
    - Attività → Missioni / Percorsi: compare dopo «Come si gioca»; «Numera le voci» solo se l'ordine conta; cifre facoltative (servono valore ed etichetta); titolo vuoto = sezione nascosta; le missioni del softair sono ripetute in «Softair VS Paintball → Cosa trovi da noi»;
    - Softair VS Paintball, compreso il «Bottone verso la pagina del softair» in «Cosa trovi da noi»;
-   - riquadro «Dati ripetuti: dove cambiarli tutti»: il minimo pagato 8/15 (arcotag e Nerf, nota prezzi e FAQ), «30 giocatori» (dati chiave, SEO, serata, FAQ, «Perfetto per»), i turni (testo dei prezzi e FAQ del tiro), telefono ed email nelle FAQ «Come si prenota», indirizzo nelle FAQ «Dove…», le somme dei bersagli nella FAQ del tiro; il listino del softair (sezione prezzi, FAQ «Quanto costa», prezzi di /paintball), i prezzi di Nerf e tiro nelle loro FAQ, «si parte da 8 / vi uniamo» (note, FAQ del softair, primo passo di /paintball), «1 ora e 45» (softair e /paintball), la Tessera Élite (softair e /paintball), le età citate nelle FAQ di /paintball e nelle pill della home; le scritte tattiche (`hudTag`) che ripetono «30 giocatori», le età (12+, 8+, 6+), «3 percorsi · 1–8 persone», «6 mm / 17 mm» e «1.500 m²»;
+   - riquadro «Dati ripetuti: dove cambiarli tutti»: il minimo pagato 8/15 (arcotag e Nerf, nota prezzi e FAQ), «30 giocatori» (dati chiave, SEO, serata, FAQ, «Perfetto per»), i turni (testo dei prezzi e FAQ del tiro), telefono ed email nelle FAQ «Come si prenota», indirizzo nelle FAQ «Dove…», le somme dei bersagli nella FAQ del tiro; il listino del softair (sezione prezzi, FAQ «Quanto costa», prezzi di /paintball), i prezzi di Nerf e tiro nelle loro FAQ, «si parte da 8 / vi uniamo» (note, FAQ del softair, primo passo di /paintball), «1 ora e 45» (softair e /paintball), la Tessera Élite (softair e /paintball), le età citate nelle FAQ di /paintball e nelle pill della home; le scritte tattiche (`hudTag`) che ripetono «30 giocatori», le età (12+, 8+, 6+), «3 percorsi · 1–8 persone», «6 mm / 17 mm» e «1.500 m²»; in home «1.500 m²» sta anche in `hero.subtitle`, `seo.description`, `arena.stat` e nella fascia della CTA finale, i dati del corso in `course.facts`;
    - nelle sezioni Recensioni di attività e paintball si cambia solo il titolo: quali recensioni compaiono si sceglie con «Pagine in cui compare»;
    - nota per il tecnico: ogni nuova attività va aggiunta tra i valori del campo `pages` di `.pages.yml`;
    - Immagini: WebP e varianti automatiche, testo alternativo.
@@ -317,15 +335,19 @@ Piano dell'utente (2 ott 2026): **prima le pagine mancanti, poi la home finita p
    - `pad` (numeri a due cifre, 01, 02…) è copiato in `StepTimeline`, `ActivitiesStory` e `ModeGrid`: al terzo uso va in `src/lib/` (`CODE-03`, `CODE-04`);
    - una sottile riga verticale sul bordo destro di `logo-white-120.webp` nel footer, da verificare;
    - nota di ImpactScale visibile anche quando le sfere non sono disegnate;
-   - `ArenaIntro.astro:51`: un `<div aria-label>` senza `role` (axe `aria-prohibited-attr`, `A11Y-10`);
-   - `VideoSection.astro`: la riga che scorre anima `top` (`CODE-07`; si può usare la tecnica a `transform` di `HudFrame`), icone audio in emoji (`DES-07`), lo script rimette «Attiva audio» scritto nel codice ignorando l'etichetta del CMS;
+   - lo scroll «con Lenis se c'è, altrimenti nativo» è ripetuto in `ActionVideo`, `FinalCta`, `ActivitiesStory` e `ScrollToTop`: un helper `src/scripts/scroll.ts` con il tipo di `window.__lenis` (`CODE-03`, `CODE-04`);
+   - `has()` e `waHref()` ancora da usare in `[activity].astro`, `paintball.astro` e negli altri organismi delle pagine interne (oggi `?.trim()` a mano);
+   - `[activity].astro:100`: `og:image:alt` ripiega sull'alt dell'apertura anche quando l'immagine social è quella predefinita (in home già corretto: ripiega sul nome del sito);
+   - l'angolo in alto a sinistra di `HudFrame` tocca il logo dell'header nelle aperture (visibile a 1024);
+   - `public/uploads/video-poster.jpg` e `.webp` non sono più usati;
+   - «WhatsApp» nella CTA finale è scritto nel codice (nome del canale, `CMS-02`): un campo `finalCta.whatsappLabel` solo se il cliente lo vuole diverso;
+   - un token `--radius-full` per i `999px` delle pillole;
    - le sei missioni stanno sia in `softair.json` (`modes`) sia in `paintball.json` (`arena.missions`): far leggere al paintball quelle del softair (tocca `paintball.astro` e `.pages.yml`, migrazione `CMS-09`);
    - la FAQ «Come si prenota» ripete telefono ed email in ogni pagina: se cambiano in `settings.json`, vanno corrette anche lì.
    - il CSS di `ModeGrid` è inline anche su arcotag e Nerf, che non lo usano (0,7 KB gzip): l'`<head>` è già oltre la prima finestra TCP;
    - gli h3 del footer («Menu», «Contatti», «Anche all'aperto») stanno sotto l'h2 della CTA finale: meglio h2;
    - transizioni di `color`/`background-color` al passaggio (bottoni, titoli): `CODE-07` ammette solo transform e opacity; decidere se aggiungerle alle eccezioni del canone o rifarle in opacità;
    - la formula del bordo della `.shell` è ripetuta in `global.css` e `PageHero.astro`: al terzo uso una `--shell-edge` su `:root`;
-   - `VideoSection.astro`: `max-width: 1520px` scritto a mano, da passare a `var(--shell-max)`;
    - al go-live: 301 da `www.softairmilano.it` al dominio nudo (regola Cloudflare, non `_redirects`) e mappatura di `/partite-di-softair-teambulding/` e `/softair-milano-cose/` (fase 3 di `docs/cutover-checklist.md`).
 
 ## Da chiudere prima del go-live
@@ -333,9 +355,9 @@ Piano dell'utente (2 ott 2026): **prima le pagine mancanti, poi la home finita p
 - Immagine social della home ancora in SVG, da rasterizzare in 1200×630.
 - JSON-LD con `geo` e orari strutturati (`openingHoursSpecification`), con i dati del cliente.
 - Chiave IndexNow in `public/`; un solo interruttore per `robots.txt` e `noindex` (oggi `public/robots.txt` è statico).
-- Pausa per il movimento continuo (WCAG 2.2.2): video della home e riga/puntino delle aperture, che per decisione dell'utente (2 ott 2026) girano sempre anche nelle pagine interne. Registrato nel debito noto del canone.
+- Pausa per il movimento continuo (WCAG 2.2.2): riga e puntino delle aperture, che per decisione dell'utente (2 ott 2026) girano sempre anche nelle pagine interne; il video della home ha la sua pausa ma parte sempre da solo, anche con reduced motion (eccezione in `A11Y-07`). Registrato nel debito noto del canone.
+- **Audio del video** (WCAG 1.2.2, livello A): se nella traccia c'è parlato servono i sottotitoli (`<track>`); se è solo musica la questione decade. Da chiedere.
 - Bordo `--color-border` sotto 3:1 (WCAG 1.4.11): più contrasto o un secondo segnale.
-- Marcatori «(DA COMPLETARE)» in `index.astro`.
 - Ogni link interno deve puntare a una pagina esistente (oggi /l-arena, /corso-softair, /teambuilding, /contatti, le occasioni e le legali danno 404).
 - Video R2 da `r2.dev` a un dominio proprio.
 - Rich Results Test di Google; Search Console e Bing Webmaster (`docs/geo-e-indicizzazione.md`).
@@ -345,5 +367,8 @@ Piano dell'utente (2 ott 2026): **prima le pagine mancanti, poi la home finita p
 - **Cronometro nell'apertura del tiro dinamico** (proposta dell'audit di design): da valutare; le aperture hanno già angoli, riga che scorre e scritta tattica come la home.
 - **«Provate anche» con un ordine per pagina** (per esempio sul Nerf prima l'arcotag, dagli 8 anni): oggi l'ordine è quello di Home › Attività; servirebbe un campo CMS.
 - **H1 della home**: keyword «softair Milano» o l'attuale «Diventa protagonista di un film d'azione»? Decide il cliente.
+- **Social**: TikTok è un profilo attivo? Il testo della sezione promette «consigli utili»: il cliente li pubblica davvero?
+- **Testo del Ranger**: è quello dell'utente, lungo per una sezione-link; da accorciare se il cliente vuole.
+- **Foto delle occasioni**: foto reali di gruppi dal cliente o immagini AI (serve la ricarica del credito Gemini).
 - **Accento ciano sulle foto con luce ambra**: tenere, oppure rigenerare le foto con luce neutra.
 - **Vecchie immagini del tiro dinamico** (`att-tiro-dinamico.jpeg`, `-2`): da eliminare quando il cliente conferma la versione «casetta».

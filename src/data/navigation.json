@@ -1,6 +1,10 @@
 {
   "items": [
     {
+      "label": "Home",
+      "href": "/"
+    },
+    {
       "label": "L'arena",
       "href": "/l-arena"
     },

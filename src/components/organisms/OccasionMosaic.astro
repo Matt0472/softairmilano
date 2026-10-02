@@ -1,0 +1,287 @@
+---
+// The occasions as a photo mosaic: the featured one is the big tile, the others stack beside it
+// (tablet and up) or follow it (phones). A tile with a link is a whole-tile link with an arrow; a
+// tile without one stays a plain photo with its caption, with no hover promise. The section's own
+// action sits beside the intro (under it on narrow screens), so it comes before the photos both on
+// screen and in the focus order. Copy and photos come from the CMS; a tile without title or photo
+// is skipped.
+
+import Button from '../atoms/Button.astro';
+import Icon from '../atoms/Icon.astro';
+import Picture from '../atoms/Picture.astro';
+import SectionHead from '../molecules/SectionHead.astro';
+import { has } from '../../lib/fields';
+import { keepShortWords } from '../../lib/typography';
+
+interface Item {
+  title: string;
+  text?: string;
+  image: string;
+  imageMobile?: string;
+  imageAlt?: string;
+  href?: string;
+  featured?: boolean;
+}
+interface Props {
+  title: string;
+  text?: string;
+  cta?: { label?: string; href?: string };
+  items: Item[];
+  headingId?: string;
+}
+
+const { title, text, cta, items, headingId = 'occasions-title' } = Astro.props;
+const filled = (items ?? []).filter((it) => has(it?.title) && has(it?.image));
+const hasTitle = has(title);
+const hasCta = has(cta?.label) && has(cta?.href);
+
+// The featured tile leads; without one, the first does. The others keep the CMS order.
+const leadAt = Math.max(0, filled.findIndex((it) => it.featured));
+const lead = filled[leadAt];
+const others = filled.filter((_, i) => i !== leadAt);
+
+// Rendered width of each tile (PERF-04): phones show it at the shell width; the lead then takes three
+// fifths of the shell (tablets) or two thirds (from 1280), the others the rest (shell max 1520px).
+const leadSizes = '(max-width: 767px) calc(100vw - 2.5rem), (max-width: 1279px) 58vw, (max-width: 1520px) 64vw, 980px';
+const tileSizes = '(max-width: 767px) calc(100vw - 2.5rem), (max-width: 1279px) 38vw, (max-width: 1520px) 32vw, 490px';
+const tiles = lead ? [{ ...lead, isLead: true }, ...others.map((it) => ({ ...it, isLead: false }))] : [];
+// The lead stands tall on portrait phones and on tablets, where it spans the rows beside it: both
+// get its vertical photo. Landscape phones (600–767) show it wide, and so do desktops.
+const leadMobileMedia = '(max-width: 599px), (min-width: 768px) and (max-width: 1023px)';
+---
+
+{tiles.length > 0 && (
+  <section class="occ band" aria-labelledby={hasTitle ? headingId : undefined}>
+    <div class="shell">
+      <div class="occ__head" data-reveal>
+        <SectionHead title={keepShortWords(title)} text={text} id={headingId} />
+        {hasCta && (
+          <div class="occ__action">
+            <Button href={cta!.href} variant="primary" class="occ__cta">{cta!.label}</Button>
+          </div>
+        )}
+      </div>
+
+      <ul class:list={['occ__grid', others.length === 0 && 'occ__grid--solo']} role="list" style={`--rows: ${Math.max(1, others.length)}`}>
+        {tiles.map((it, i) => {
+          const Tag = has(it.href) ? 'a' : 'div';
+          return (
+            <li class:list={['occ__cell', it.isLead && 'occ__cell--lead']} style={`--i: ${i}`} data-reveal>
+              <Tag
+                class:list={['occ__tile', Tag === 'a' && 'occ__tile--link']}
+                href={Tag === 'a' ? it.href : undefined}
+              >
+                <span class="occ__media">
+                  <Picture
+                    src={it.image}
+                    srcMobile={it.isLead ? it.imageMobile : undefined}
+                    mobileMedia={leadMobileMedia}
+                    alt={it.imageAlt ?? ''}
+                    sizes={it.isLead ? leadSizes : tileSizes}
+                    class="occ__img"
+                  />
+                </span>
+                <div class="occ__copy">
+                  <h3 class="occ__title">{keepShortWords(it.title)}</h3>
+                  {has(it.text) && <p class="occ__text">{it.text}</p>}
+                </div>
+                {Tag === 'a' && <span class="occ__go"><Icon name="arrowUpRight" size={20} /></span>}
+              </Tag>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .occ {
+    --accent: var(--color-accent);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  /* Intro on the left, the action on the right, on the intro's last line. */
+  .occ__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem clamp(2rem, 6vw, 5rem);
+  }
+  .occ__cta { min-height: 48px; padding-inline: 1.6rem; }
+  .occ__cta:active { transform: translateY(1px); }
+
+  .occ__grid {
+    list-style: none;
+    margin: clamp(2rem, 5vw, 3.25rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  }
+  .occ__cell { display: flex; min-width: 0; }
+
+  .occ__tile {
+    position: relative;
+    isolation: isolate;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--lift);
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+  /* Portrait phones: the lead stands tall, on its dedicated vertical photo. */
+  @media (max-width: 599px) {
+    .occ__cell--lead .occ__tile { aspect-ratio: 4 / 5; }
+  }
+  /* The photo's edge on the band: a faint hairline drawn over it, not a border around it. */
+  .occ__tile::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-foreground) 9%, transparent);
+    pointer-events: none;
+  }
+
+  .occ__media,
+  .occ__media picture,
+  .occ__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .occ__media { z-index: -1; }
+  .occ__img {
+    object-fit: cover;
+    object-position: 50% 40%;
+    transition: transform calc(var(--duration-slow) * 2.5) var(--ease-out-expo);
+  }
+  /* A light gradient from the floor of the photo (DES-09): the photo stays a photo. */
+  .occ__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-background) 65%, transparent) 0%,
+      transparent 55%
+    );
+  }
+
+  /* And a shade that follows the caption, however many lines it runs to, so the copy reads on any photo. */
+  .occ__copy {
+    position: relative;
+    isolation: isolate;
+    /* Full width, so its shade spans the tile; the lines keep their own measure. */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: clamp(1.1rem, 2.2vw, 1.75rem);
+    text-shadow: 0 1px 12px color-mix(in srgb, var(--color-background) 70%, transparent);
+  }
+  .occ__copy::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -2.5rem 0 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-background) 58%, transparent) 0%,
+      color-mix(in srgb, var(--color-background) 48%, transparent) calc(100% - 2.5rem),
+      transparent
+    );
+  }
+  .occ__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.3rem, 1.9vw, 1.7rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    transition: color var(--duration-base) var(--ease-out-expo);
+  }
+  .occ__text {
+    margin: 0;
+    max-width: 40ch;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--color-foreground) 88%, var(--color-muted));
+    text-wrap: pretty;
+  }
+  .occ__cell--lead .occ__copy { gap: 0.65rem; padding: clamp(1.5rem, 3.2vw, 2.75rem); }
+  /* Room for the arrow chip, on link tiles only. */
+  .occ__tile--link .occ__copy { padding-right: 4.5rem; }
+  .occ__cell--lead .occ__title { max-width: 18ch; font-size: clamp(2rem, 4vw, 3.4rem); }
+  .occ__cell--lead .occ__text { font-size: clamp(1rem, 1.4vw, 1.15rem); }
+
+  /* Link tiles only: an arrow chip in the corner, the photo leaning in on hover and focus. */
+  .occ__go {
+    position: absolute;
+    z-index: 2;
+    top: clamp(1rem, 2vw, 1.5rem);
+    right: clamp(1rem, 2vw, 1.5rem);
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 30%, transparent);
+    background: color-mix(in srgb, var(--color-background) 55%, transparent);
+    color: var(--color-foreground);
+    transition:
+      background-color var(--duration-base) var(--ease-out-expo),
+      border-color var(--duration-base) var(--ease-out-expo),
+      color var(--duration-base) var(--ease-out-expo);
+  }
+  .occ__go svg { transition: transform var(--duration-slow) var(--ease-out-expo); }
+  .occ__tile--link { transition: transform var(--duration-fast) var(--ease-out-expo); }
+  .occ__tile--link:active { transform: translateY(1px) scale(0.99); }
+  .occ__tile--link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .occ__tile--link:focus-visible .occ__img { transform: scale(1.04); }
+  .occ__tile--link:focus-visible .occ__go {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--color-on-accent);
+  }
+  @media (hover: hover) {
+    .occ__tile--link:hover .occ__img { transform: scale(1.04); }
+    .occ__tile--link:hover .occ__title { color: var(--color-accent-hover); }
+    .occ__tile--link:hover .occ__go {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--color-on-accent);
+    }
+    .occ__tile--link:hover .occ__go svg { transform: translate(2px, -2px); }
+  }
+
+  /* Tablet and up: the lead spans every row beside it and the others stack in the second column. The
+     columns split 3:2 on tablets, so the captions have room, and 2:1 from 1280. */
+  @media (min-width: 768px) {
+    .occ__grid {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      grid-auto-rows: minmax(clamp(12rem, 15vw, 15.5rem), auto);
+    }
+    .occ__cell--lead { grid-row: span var(--rows); }
+    .occ__grid--solo { grid-template-columns: minmax(0, 1fr); }
+    .occ__tile,
+    .occ__cell--lead .occ__tile { aspect-ratio: auto; }
+    .occ__grid--solo .occ__tile { aspect-ratio: 21 / 9; }
+  }
+  @media (min-width: 1280px) {
+    .occ__grid:not(.occ__grid--solo) { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .occ__tile--link:hover .occ__img,
+    .occ__tile--link:focus-visible .occ__img { transform: none; }
+  }
+</style>

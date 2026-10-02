@@ -21,6 +21,12 @@
       transform calc(var(--duration-slow) * 2.5) var(--ease-out-expo);
     transition-delay: calc(var(--i, 0) * 90ms);
   }
+  /* Keyboard focus inside skips the entrance: a control is never focused while it is still faded (A11Y-05). */
+  [data-reveal].is-armed:is(:focus-visible, :has(:focus-visible)) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
   @media (prefers-reduced-motion: reduce) {
     [data-reveal].is-armed {
       opacity: 1;

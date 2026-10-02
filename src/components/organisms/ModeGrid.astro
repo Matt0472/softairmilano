@@ -66,7 +66,7 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
       <SectionHead eyebrow={eyebrow} title={title} text={text} id={headingId} class="modes__head" />
 
       <div class="modes__plate" data-inview>
-        <span class="modes__frame" aria-hidden="true"></span>
+        <span class="corners modes__frame" aria-hidden="true"></span>
         <ol class="modes__grid" role="list">
           {list.map((m, i) => (
             <li class="modes__file" style={`--span: ${spanFor(i)}`}>
@@ -76,7 +76,11 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
                   <div class="modes__mark" aria-hidden="true">
                     {numbered && <span class="modes__num" data-num={pad(i)}>{pad(i)}</span>}
                     {m.emblem && (
-                      <span class="modes__sight"><Icon name={m.emblem} size={52} class="modes__emblem" /></span>
+                      <span class="modes__sight">
+                        <span class="corners modes__sight-rest"></span>
+                        <Icon name={m.emblem} size={52} class="modes__emblem" />
+                        <span class="corners modes__sight-lock"></span>
+                      </span>
                     )}
                   </div>
                 )}
@@ -117,22 +121,8 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
      are its edge, the hairlines inside are the only rules. */
   .modes__frame {
     --arm: clamp(0.9rem, 1.6vw, 1.4rem);
-    --w: 2px;
-    --c: linear-gradient(var(--accent), var(--accent));
-    position: absolute;
-    inset: 0;
     z-index: 1;
-    pointer-events: none;
-    background:
-      var(--c) top left / var(--arm) var(--w),
-      var(--c) top left / var(--w) var(--arm),
-      var(--c) top right / var(--arm) var(--w),
-      var(--c) top right / var(--w) var(--arm),
-      var(--c) bottom left / var(--arm) var(--w),
-      var(--c) bottom left / var(--w) var(--arm),
-      var(--c) bottom right / var(--arm) var(--w),
-      var(--c) bottom right / var(--w) var(--arm);
-    background-repeat: no-repeat;
+    color: var(--accent);
   }
 
   /* The hairlines are the plate showing through 1px gaps between opaque files, so
@@ -210,7 +200,6 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
   /* The emblem's sight: steel corners at rest; the accent pair closes in on a pointed file. */
   .modes__sight {
     --arm: 10px;
-    --w: 2px;
     position: relative;
     display: grid;
     place-items: center;
@@ -219,25 +208,8 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
     height: 5.25rem;
     color: var(--accent);
   }
-  .modes__sight::before,
-  .modes__sight::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      var(--c) top left / var(--arm) var(--w),
-      var(--c) top left / var(--w) var(--arm),
-      var(--c) top right / var(--arm) var(--w),
-      var(--c) top right / var(--w) var(--arm),
-      var(--c) bottom left / var(--arm) var(--w),
-      var(--c) bottom left / var(--w) var(--arm),
-      var(--c) bottom right / var(--arm) var(--w),
-      var(--c) bottom right / var(--w) var(--arm);
-    background-repeat: no-repeat;
-  }
-  .modes__sight::before { --c: linear-gradient(var(--color-steel), var(--color-steel)); }
-  .modes__sight::after {
-    --c: linear-gradient(var(--accent), var(--accent));
+  .modes__sight-rest { color: var(--color-steel); }
+  .modes__sight-lock {
     opacity: 0;
     transform: scale(1.35);
     transition:
@@ -338,7 +310,7 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
      controls, so there is no focus or press state to give them. */
   @media (hover: hover) {
     .modes__file:hover::before { opacity: 1; }
-    .modes__file:hover .modes__sight::after { opacity: 1; transform: none; }
+    .modes__file:hover .modes__sight-lock { opacity: 1; transform: none; }
     .modes__file:hover .modes__num::after { opacity: 1; }
     .modes__file:hover .modes__ghost { opacity: 1; transform: translate(-0.6rem, 0.6rem); }
   }
@@ -443,7 +415,7 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
   @media (prefers-reduced-motion: reduce) {
     .modes__plate.is-armed .modes__frame { opacity: 1; transform: none; }
     .modes__plate.is-armed .modes__emblem > * { stroke-dashoffset: 0; }
-    .modes__sight::after,
+    .modes__sight-lock,
     .modes__file:hover .modes__ghost { transform: none; }
   }
 </style>

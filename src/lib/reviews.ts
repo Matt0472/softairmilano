@@ -14,7 +14,7 @@ export interface Rating {
 export interface Review {
   author?: string;
   text?: string;
-  /** Pages the review belongs to (activity slugs, "paintball"); ALL_PAGES or none: any page. */
+  /** Pages the review belongs to (activity slugs, "paintball", "home"); ALL_PAGES or none: any page. */
   pages?: string[];
 }
 

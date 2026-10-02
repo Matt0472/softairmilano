@@ -1,0 +1,257 @@
+---
+// The course, in brief: the heading, then a photo with a raised card laid over its lower corner. The
+// card is the brief itself: a line of intro, the course's key facts (when, who, what it takes to
+// try) and the link to its own page, which explains it in full; the photo sets the mood. Desktop
+// overlaps the two across two columns, smaller screens drop the card over the photo's lower edge.
+// Copy, facts, link and photo come from the CMS; an empty fact, or a link without its label, is
+// skipped.
+
+import Button from '../atoms/Button.astro';
+import Icon from '../atoms/Icon.astro';
+import Picture from '../atoms/Picture.astro';
+import PhotoFrame from '../molecules/PhotoFrame.astro';
+import SectionHead from '../molecules/SectionHead.astro';
+import { has } from '../../lib/fields';
+import { keepShortWords } from '../../lib/typography';
+
+interface Fact {
+  value: string;
+  label?: string;
+}
+interface Props {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+  facts?: Fact[];
+  cta?: { label?: string; href?: string };
+  image?: string;
+  imageAlt?: string;
+  headingId?: string;
+}
+
+const { eyebrow, title, text, facts, cta, image, imageAlt = '', headingId = 'course-title' } = Astro.props;
+const list = (facts ?? []).filter((f) => has(f?.value));
+const hasCta = has(cta?.label) && has(cta?.href);
+const hasImage = has(image);
+const hasCard = has(text) || list.length > 0 || hasCta;
+
+// Rendered width of the photo (PERF-04): the shell on phones and tablets, eight of twelve columns
+// from 1024 (shell max 1520px).
+const sizes = '(max-width: 767px) calc(100vw - 2.5rem), (max-width: 1023px) calc(100vw - 4rem), (max-width: 1520px) 64vw, 980px';
+---
+
+{has(title) && (
+  <section class="course band" aria-labelledby={headingId}>
+    <div class="shell">
+      <div class="course__head" data-reveal>
+        <SectionHead eyebrow={eyebrow} title={keepShortWords(title)} id={headingId} />
+      </div>
+
+      {(hasImage || hasCard) && (
+        <div class:list={['course__stage', !hasImage && 'course__stage--plain']}>
+          {hasImage && (
+            <div class="course__media" data-reveal>
+              <Picture src={image!} alt={imageAlt} sizes={sizes} class="course__img" />
+              <PhotoFrame />
+            </div>
+          )}
+          {hasCard && (
+            <div class="course__card" data-reveal style="--i: 1">
+              {has(text) && <p class="course__text">{text}</p>}
+              {list.length > 0 && (
+                <ul class="course__facts" role="list" style={`--n: ${list.length}`}>
+                  {list.map((f) => (
+                    <li class="course__fact">
+                      <span class="course__value">{f.value}</span>
+                      {has(f.label) && <span class="course__label">{f.label}</span>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {hasCta && (
+                <Button href={cta!.href} variant="secondary" class="course__link">
+                  {cta!.label}
+                  <Icon name="arrowRight" size={18} />
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .course {
+    --accent: var(--color-accent);
+    /* How far the card rides over the photo's lower edge (phones, tablets) or hangs below it (desktop). */
+    --course-drop: clamp(2.5rem, 7vw, 4rem);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  .course__stage { margin-top: clamp(2rem, 5vw, 3.5rem); }
+
+  .course__media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--radius-lg);
+    background: var(--lift);
+  }
+  .course__media picture,
+  .course__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .course__img {
+    object-fit: cover;
+    /* The player stands right of centre: keep him in the narrower crops. */
+    object-position: 62% 40%;
+  }
+
+  /* The card: one step above the band, over the photo. Opaque, so its copy never reads on the image. */
+  .course__card {
+    position: relative;
+    z-index: 1;
+    margin: calc(-1 * var(--course-drop)) min(0.75rem, 2.5vw) 0;
+    padding: clamp(1.25rem, 5vw, 2.25rem);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    background: var(--lift-2);
+    box-shadow: var(--shadow-md);
+  }
+  .course__stage--plain .course__card { margin: 0; box-shadow: none; }
+
+  .course__text {
+    margin: 0 0 clamp(1.25rem, 2.5vw, 1.75rem);
+    max-width: 58ch;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.4vw, 1.08rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .course__facts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .course__fact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-block: 0.95rem;
+  }
+  .course__fact:first-child { padding-top: 0; }
+  .course__fact + .course__fact { border-top: 1px solid color-mix(in srgb, var(--color-foreground) 12%, transparent); }
+  .course__value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.15rem, 1.6vw, 1.3rem);
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-foreground);
+    text-wrap: balance;
+  }
+  .course__label {
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+    text-wrap: pretty;
+  }
+
+  /* The secondary Button, sized for the card; the atom keeps its colours and hover. */
+  .course__link {
+    gap: 0.6rem;
+    min-height: 48px;
+    margin-top: 1.5rem;
+    padding-inline: 1.4rem;
+    transition:
+      border-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .course__link svg { flex: none; transition: transform var(--duration-slow) var(--ease-out-expo); }
+  .course__link:hover svg,
+  .course__link:focus-visible svg { transform: translateX(4px); }
+  .course__link:active { transform: translateY(1px); }
+
+  /* Two facts a row once the card has the width; an odd last one takes the whole row. Hairlines run
+     between the facts only, never round the outside. */
+  @media (min-width: 600px) {
+    .course__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .course__fact,
+    .course__fact:first-child { padding-block: 1rem; }
+    .course__fact + .course__fact { border-top: 0; }
+    .course__fact:nth-child(-n + 2) { padding-top: 0; }
+    .course__fact:nth-child(n + 3) { border-top: 1px solid color-mix(in srgb, var(--color-foreground) 12%, transparent); }
+    .course__fact:nth-child(odd) { padding-right: clamp(1rem, 2.5vw, 1.75rem); }
+    .course__fact:nth-child(even) {
+      padding-left: clamp(1rem, 2.5vw, 1.75rem);
+      border-left: 1px solid color-mix(in srgb, var(--color-foreground) 12%, transparent);
+    }
+    .course__fact:last-child:nth-child(odd) { grid-column: 1 / -1; padding-right: 0; }
+  }
+
+  /* Tablets: a wider photo, the card set in from its right edge. */
+  @media (min-width: 768px) {
+    .course__media { aspect-ratio: 16 / 9; }
+    .course__card {
+      width: min(100% - 2rem, 36rem);
+      margin-inline: auto clamp(1rem, 3vw, 2rem);
+    }
+    .course__stage--plain .course__card { width: auto; }
+  }
+
+  /* Desktop: the photo takes eight of twelve columns and the card the last six, so they overlap by
+     two; the card sits on the photo's lower edge and hangs below it. */
+  @media (min-width: 1024px) {
+    .course__stage {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto var(--course-drop);
+      column-gap: clamp(1rem, 2vw, 2rem);
+    }
+    /* 4:3 while the card's facts still wrap, so the photo stands as tall as the card it carries. */
+    .course__media { grid-column: 1 / span 8; grid-row: 1; align-self: start; aspect-ratio: 4 / 3; }
+    /* The overlap covers the photo's right quarter: the player moves left of it. */
+    .course__img { object-position: 70% 40%; }
+    .course__card {
+      grid-column: 7 / -1;
+      grid-row: 1 / span 2;
+      align-self: end;
+      width: auto;
+      margin: 0;
+    }
+    .course__stage--plain { grid-template-rows: auto; }
+    .course__stage--plain .course__card { grid-column: 1 / -1; grid-row: 1; }
+    .course__stage--plain .course__facts { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); }
+    /* Without a photo the facts run in one row across the card. */
+    .course__stage--plain .course__facts > .course__fact {
+      grid-column: auto;
+      padding: 0 clamp(1rem, 2.5vw, 1.75rem);
+      border: 0;
+    }
+    .course__stage--plain .course__fact:first-child { padding-left: 0; }
+    .course__stage--plain .course__fact:last-child { padding-right: 0; }
+    .course__stage--plain .course__fact + .course__fact {
+      border-left: 1px solid color-mix(in srgb, var(--color-foreground) 12%, transparent);
+    }
+  }
+  @media (min-width: 1280px) {
+    .course__media { aspect-ratio: 16 / 9; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .course__link:hover svg,
+    .course__link:focus-visible svg { transform: none; }
+  }
+</style>

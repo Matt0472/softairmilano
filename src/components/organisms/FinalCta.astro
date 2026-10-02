@@ -1,0 +1,620 @@
+---
+// The home's closing call to action (#prenota). It waits under the page and is uncovered as the
+// page slides away, like a curtain; then its title rises word by word out of its own line while a
+// target lock closes on it once and lets go. Booking works as in the inner pages' booking block: by
+// phone (the primary action, labelled with the number), WhatsApp when it is set, then email, with
+// the hours, the address (it opens Google Maps) and the directions under them. Contact data comes
+// from settings.json, the copy from the page. A band of the page's own phrases crosses the lower
+// part, above a giant wordmark set on the floor, so neither the curtain nor the page's edge ever
+// hides the call to action. The site footer follows as usual.
+// The id sits on the section, which never moves: an anchor jump measures where it is drawn.
+
+import Icon from '../atoms/Icon.astro';
+import settings from '../../data/settings.json';
+import { has } from '../../lib/fields';
+import { telHref, waHref } from '../../lib/phone';
+import { keepShortWords } from '../../lib/typography';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  /** Label of the email action (the address itself is in settings.json). */
+  writeLabel?: string;
+  /** Short phrases for the diagonal band, taken from the page (activities, the arena's figure). */
+  phrases?: string[];
+  id?: string;
+  headingId?: string;
+}
+
+const { title, subtitle, writeLabel, phrases = [], id = 'prenota', headingId = 'finale-title' } = Astro.props;
+const { phone, whatsapp, email, address, openingHours, directions, siteName } = settings;
+
+const tel = telHref(phone);
+const wa = waHref(whatsapp);
+const hasWrite = has(email) && has(writeLabel);
+const mapsHref = has(address) ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}` : '';
+const hasInfo = has(openingHours) || has(address) || has(directions);
+
+// The title rises word by word, each from under its own line. A short word is bound to the next
+// (keepShortWords), so the split keeps the pair together and it rises, and wraps, as one.
+const titleWords = keepShortWords(title).trim().split(/[^\S\u00A0]+/).filter(Boolean);
+const band = phrases.filter(has).map((p) => p.trim());
+// Copies of the phrase set: enough to cover the tilted, oversized band through its whole drift.
+const copies = Array.from({ length: 4 });
+// The wordmark is set word by word, so a phone can stack the words and keep them large.
+const words = (siteName ?? '').split(/\s+/).filter(Boolean);
+// Letters rise one after the other: a running index across the words.
+let n = 0;
+const wordmark = words.map((w) => [...w].map((ch) => ({ ch, i: n++ })));
+---
+
+<section id={id} class="finale" aria-labelledby={titleWords.length ? headingId : undefined} data-finale>
+  <div class="finale__inner">
+    <div class="finale__grid" aria-hidden="true"></div>
+    <div class="finale__glow" aria-hidden="true"></div>
+
+    <div class="shell finale__body">
+      {titleWords.length > 0 && (
+        <div class="finale__head" data-finale-head>
+          <span class="corners finale__lock" aria-hidden="true"></span>
+          <h2 class="finale__title" id={headingId}>
+            {titleWords.map((w, i) => (
+              <Fragment>
+                <span class="finale__word"><span class="finale__word-in" style={`--w: ${i}`}>{w}</span></span>
+                {i < titleWords.length - 1 && ' '}
+              </Fragment>
+            ))}
+          </h2>
+        </div>
+      )}
+      {has(subtitle) && <p class="finale__text">{subtitle}</p>}
+
+      {(tel || wa || hasWrite) && (
+        <div class="finale__actions">
+          {tel && (
+            <a class="finale__action finale__action--primary" href={tel} aria-label={`Chiama il ${phone}`} data-magnetic>
+              <span class="finale__action-label">
+                <span class="finale__action-chip"><Icon name="phone" size={20} /></span>
+                {phone}
+              </span>
+            </a>
+          )}
+          {wa && (
+            <a class="finale__action finale__action--glass" href={wa} target="_blank" rel="noopener" data-magnetic>
+              <span class="finale__action-label"><Icon name="messageCircle" size={20} />WhatsApp</span>
+              <span class="sr-only">(si apre in una nuova scheda)</span>
+            </a>
+          )}
+          {hasWrite && (
+            <a class="finale__action finale__action--glass" href={`mailto:${email}`} data-magnetic>
+              <span class="finale__action-label">
+                <Icon name="mail" size={20} />{writeLabel}
+                <span class="sr-only"> ({email})</span>
+              </span>
+            </a>
+          )}
+        </div>
+      )}
+
+      {hasInfo && (
+        <ul class="finale__info" role="list">
+          {has(openingHours) && (
+            <li class="finale__info-row"><Icon name="clock" size={16} /><span>{openingHours}</span></li>
+          )}
+          {has(address) && (
+            <li class="finale__info-row">
+              <Icon name="mapPin" size={16} />
+              <a class="finale__map" href={mapsHref} target="_blank" rel="noopener">
+                {address}<span class="sr-only"> (apre Google Maps in una nuova scheda)</span>
+              </a>
+            </li>
+          )}
+          {has(directions) && (
+            <li class="finale__info-row"><Icon name="route" size={16} /><span>{directions}</span></li>
+          )}
+        </ul>
+      )}
+    </div>
+
+    {band.length > 0 && (
+      <div class="finale__ticker" aria-hidden="true" data-finale-floor>
+        <div class="finale__ticker-track">
+          {copies.map(() => band.map((p) => <span class="finale__ticker-item">{p}</span>))}
+        </div>
+      </div>
+    )}
+
+    {wordmark.length > 0 && (
+      <div class="finale__wordmark" aria-hidden="true" data-finale-floor>
+        <div class="finale__wordmark-clip">
+          <span class="finale__wordmark-text">
+            {wordmark.map((w) => (
+              <span class="finale__wordmark-word">
+                {w.map(({ ch, i }) => <span class="finale__wordmark-ch" style={`--i: ${i}`}>{ch}</span>)}
+              </span>
+            ))}
+          </span>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+<style is:global>
+  .finale {
+    --accent: var(--color-accent);
+    /* Clip, not hidden: no scroll container, so the view timeline still tracks the page scroll. */
+    position: relative;
+    overflow: clip;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-background);
+    view-timeline: --finale block;
+    /* The root's scroll-padding (kept clear for the back-to-top button) would shrink the timeline's
+       viewport by its height: measure against the whole screen, as the content is pinned to it. */
+    view-timeline-inset: 0;
+  }
+  /* Prenota links move focus here: no ring on the whole section, the actions carry their own. */
+  .finale:focus { outline: none; }
+  /* The page's lower edge casts a short shadow onto what it uncovers. */
+  .finale::before {
+    content: "";
+    position: absolute;
+    z-index: 3;
+    inset: -1px 0 auto;
+    height: 1px;
+    box-shadow: var(--shadow-md);
+    pointer-events: none;
+  }
+  /* One screen: the call to action in the middle, the band and the wordmark on the floor. */
+  .finale__inner {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+  }
+
+  /* Map grid, faded out toward the edges (a mask only reads alpha). */
+  .finale__grid {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--color-foreground) 5%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--color-foreground) 5%, transparent) 1px, transparent 1px);
+    background-size: 5.5rem 5.5rem;
+    background-position: center top;
+    mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, black 25%, transparent 100%);
+  }
+  /* Ambient light: neutral, with a cold accent cast low on the right. No halo on text or buttons. */
+  .finale__glow {
+    position: absolute;
+    z-index: -1;
+    inset: -10% 0 0;
+    background:
+      radial-gradient(40% 45% at 22% 18%, color-mix(in srgb, var(--color-foreground) 7%, transparent), transparent 70%),
+      radial-gradient(40% 38% at 80% 58%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 70%);
+    pointer-events: none;
+  }
+
+  .finale__body {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-block: clamp(4.5rem, 13vh, 8rem) clamp(2rem, 5vh, 3.5rem);
+  }
+
+  .finale__head { position: relative; }
+  .finale__title {
+    margin: 0;
+    max-width: 18ch;
+    font-weight: 700;
+    font-size: clamp(3.25rem, 1.6rem + 6.4vw, 7.5rem);
+    line-height: 0.98;
+    letter-spacing: 0.005em;
+    text-wrap: balance;
+  }
+  /* Each word is its own mask: the line it rises from. The padding gives accented capitals (È, PIÙ)
+     room above the cap height, and the negative margin gives it back, so the lines keep their rhythm. */
+  .finale__word {
+    display: inline-block;
+    overflow: clip;
+    padding-block: 0.14em 0.04em;
+    margin-block: -0.14em -0.04em;
+    vertical-align: top;
+  }
+  /* Brushed-metal fill, on each word: a clipped background does not follow a moving child. Bright at
+     the top, settling on the muted tone (still 9:1 on the ground). */
+  .finale__word-in {
+    display: inline-block;
+    background: linear-gradient(180deg, var(--color-foreground) 35%, var(--color-muted));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Target lock: four corner brackets round the title, drawn only during the entrance. */
+  .finale__lock {
+    --arm: clamp(1.25rem, 2.4vw, 2rem);
+    /* Out from the title by a little, never past half the page gutter, so no corner meets the screen edge. */
+    inset: -0.6rem calc(-1 * min(1.1rem, var(--shell-gutter) / 2));
+    opacity: 0;
+    color: color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+
+  .finale__text {
+    margin: 1.5rem 0 0;
+    max-width: 44ch;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 0.9rem + 0.4vw, 1.2rem);
+    text-wrap: pretty;
+  }
+  .finale__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.9rem 1rem;
+    margin-top: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  /* Where and when, answered in the page itself: one line each, side by side where they fit. */
+  .finale__info {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0 clamp(1.25rem, 3vw, 2.25rem);
+    margin: 1.25rem 0 0;
+    padding: 0;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .finale__info-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: start;
+  }
+  .finale__info-row svg { flex: none; color: var(--accent); }
+  .finale__map {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--color-foreground);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 50%, transparent);
+    text-underline-offset: 4px;
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      text-decoration-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .finale__map:hover { color: var(--color-accent-hover); text-decoration-color: var(--accent); }
+  .finale__map:active { translate: 0 1px; }
+
+  /* Actions. The accent one keeps the site's CTA shape (radius-md); the glass ones are pills, as the
+     glass navbar is. The magnetic pull writes --mx/--my, the label follows a little further. */
+  .finale__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.5rem;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    translate: var(--mx, 0) var(--my, 0);
+    transition:
+      translate var(--duration-slow) var(--ease-out-expo),
+      scale var(--duration-fast) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  .finale__action-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    translate: var(--lx, 0) var(--ly, 0);
+    transition: translate var(--duration-slow) var(--ease-out-expo);
+  }
+  .finale__action:active { scale: 0.98; }
+  .finale__action:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .finale__action--primary {
+    padding: 0.4rem 1.5rem 0.4rem 0.4rem;
+    border-radius: var(--radius-md);
+    background: var(--accent);
+    color: var(--color-on-accent);
+    font-size: clamp(1.2rem, 1rem + 0.6vw, 1.45rem);
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .finale__action--primary:hover { background: var(--color-accent-hover); }
+  .finale__action-chip {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-on-accent);
+    color: var(--accent);
+  }
+
+  .finale__action--glass {
+    padding-inline: 1.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-steel);
+    background: color-mix(in srgb, var(--color-foreground) 5%, transparent);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-foreground) 8%, transparent);
+    color: var(--color-foreground);
+    font-size: 1.05rem;
+  }
+  .finale__action--glass svg { color: var(--accent); }
+  .finale__action--glass:hover {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--color-foreground) 9%, transparent);
+  }
+
+  /* Diagonal band of phrases across the floor, above the wordmark. Tilt on the band, drift on the track. */
+  .finale__ticker {
+    position: relative;
+    width: 120%;
+    margin-inline-start: -10%;
+    margin-block: clamp(1.5rem, 4vw, 2.75rem) clamp(1.75rem, 4vw, 3rem);
+    rotate: -2.5deg;
+    border-block: 1px solid color-mix(in srgb, var(--color-foreground) 9%, transparent);
+    background: color-mix(in srgb, var(--color-surface-2) 70%, transparent);
+  }
+  .finale__ticker-track {
+    display: flex;
+    width: max-content;
+    padding-block: 0.85rem;
+  }
+  .finale__ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(1.5rem, 3vw, 2.75rem);
+    padding-inline-end: clamp(1.5rem, 3vw, 2.75rem);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(0.85rem, 0.6rem + 0.6vw, 1.05rem);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-muted);
+  }
+  .finale__ticker-item::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+  }
+
+  /* Giant wordmark on the section's floor: sized to the full width, its letters cut by the edge. */
+  .finale__wordmark {
+    --wm-size: 14.2cqi;
+    --wm-lines: 1;
+    container-type: inline-size;
+  }
+  .finale__wordmark-clip {
+    /* Oswald 700 sets "SOFTAIR MILANO" at about 6.7em: 14.2cqi fills the line with a small margin. */
+    font-size: var(--wm-size);
+    /* Every line but the last shows whole; the last shows its top 62%, the rest is under the edge. */
+    height: calc((var(--wm-lines) - 1) * 0.8em + 0.62em);
+    overflow: clip;
+    /* The letters sink into the floor rather than end on a hard line when the section scrolls on. */
+    mask-image: linear-gradient(to bottom, black 55%, transparent);
+  }
+  .finale__wordmark-text {
+    display: flex;
+    justify-content: center;
+    gap: 0.25em;
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 0.8;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .finale__wordmark-word { display: flex; }
+  /* Each letter carries the fill: a clipped background does not follow a moving child. */
+  .finale__wordmark-ch {
+    display: inline-block;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-foreground) 15%, transparent) 10%, color-mix(in srgb, var(--color-foreground) 2%, transparent) 75%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  @media (max-width: 599px) {
+    .finale__wordmark { --wm-size: 26cqi; --wm-lines: 2; }
+    .finale__wordmark-text { flex-direction: column; align-items: center; gap: 0; }
+    .finale__actions { flex-direction: column; align-items: stretch; width: 100%; max-width: 22rem; }
+    /* Under the stacked actions, in their column: one row per item, icons aligned. */
+    .finale__info { flex-direction: column; align-items: stretch; gap: 0.6rem; width: 100%; max-width: 22rem; margin-top: 1.25rem; }
+  }
+
+  /* Entrance, armed by the script only when the section starts below the fold: without it, or with
+     reduced motion, everything is simply there. The curtain uncovers the section from the bottom up
+     and is itself the reveal of the copy and the actions, which never wait (a control is never
+     focused while invisible, A11Y-05). Two parts play once they are in sight: the floor (band and
+     wordmark) first, then the title, the last thing uncovered. */
+  .finale.is-armed .finale__word-in { transform: translateY(115%) rotate(4deg); transform-origin: 0 100%; }
+  .finale.is-armed .finale__wordmark-ch { translate: 0 100%; }
+  .finale.is-armed .finale__ticker { opacity: 0; }
+  .finale.is-armed.is-in .finale__word-in {
+    transform: none;
+    transition: transform calc(var(--duration-slow) * 2.75) var(--ease-out-expo);
+    transition-delay: calc(120ms + var(--w, 0) * 85ms);
+  }
+  .finale.is-armed.is-in .finale__lock {
+    animation: finale-lock calc(var(--duration-slow) * 5) var(--ease-out-expo) 200ms both;
+  }
+  .finale.is-armed.is-floor .finale__wordmark-ch {
+    translate: 0 0;
+    transition: translate calc(var(--duration-slow) * 3) var(--ease-out-expo);
+    transition-delay: calc(150ms + var(--i, 0) * 40ms);
+  }
+  .finale.is-armed.is-floor .finale__ticker {
+    opacity: 1;
+    transition: opacity calc(var(--duration-slow) * 3) var(--ease-out-expo);
+  }
+  /* Keyboard focus on the section or inside it skips what is still to come. */
+  .finale.is-armed:is(:focus-visible, :has(:focus-visible)) :is(.finale__word-in, .finale__wordmark-ch, .finale__ticker) {
+    opacity: 1;
+    transform: none;
+    translate: none;
+    transition: none;
+  }
+  /* The brackets close in from wide, hold on the title for a beat and let go. */
+  @keyframes finale-lock {
+    0% { opacity: 0; transform: scale(1.18); }
+    30% { opacity: 1; transform: scale(1); }
+    70% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .finale.is-armed .finale__word-in,
+    .finale.is-armed .finale__wordmark-ch { translate: none; transform: none; }
+    .finale.is-armed .finale__ticker { opacity: 1; }
+    .finale.is-armed.is-in .finale__lock { animation: none; }
+  }
+
+  /* Scroll-driven, so no script and nothing per frame. Unsupported or reduced motion: a plain section.
+     Longhands only (CODE-19). */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* Linear on purpose: these track the scroll. */
+      .finale__inner,
+      .finale__ticker-track,
+      .finale__glow {
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --finale;
+      }
+      /* The content holds still while the section's top edge rises over it: shifted up by what is
+         still covered, never by more than one screen. */
+      .finale__inner {
+        animation-name: finale-curtain;
+        animation-range: entry 0% entry 100%;
+      }
+      .finale__ticker-track {
+        animation-name: finale-ticker;
+        animation-range: cover 0% cover 100%;
+      }
+      .finale__glow {
+        animation-name: finale-glow;
+        animation-range: cover 0% cover 100%;
+      }
+    }
+  }
+  @keyframes finale-curtain {
+    from { translate: 0 calc(-1 * min(100%, 100dvh)); }
+    to { translate: 0 0; }
+  }
+  @keyframes finale-ticker {
+    from { translate: 0 0; }
+    to { translate: -25% 0; }
+  }
+  @keyframes finale-glow {
+    from { translate: 0 12%; }
+    to { translate: 0 -8%; }
+  }
+</style>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finale = document.querySelector<HTMLElement>('[data-finale]');
+
+  if (finale && !reduce) {
+    // Magnetic actions: they lean toward a fine pointer hovering them, the label a little further.
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      finale.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
+        let ox = 0;
+        let oy = 0;
+        el.addEventListener('pointermove', (e) => {
+          const r = el.getBoundingClientRect();
+          // The rect already includes the current pull: measure from the resting centre.
+          const dx = e.clientX - (r.left - ox + r.width / 2);
+          const dy = e.clientY - (r.top - oy + r.height / 2);
+          ox = dx * 0.3;
+          oy = dy * 0.4;
+          el.style.setProperty('--mx', `${ox}px`);
+          el.style.setProperty('--my', `${oy}px`);
+          el.style.setProperty('--lx', `${dx * 0.12}px`);
+          el.style.setProperty('--ly', `${dy * 0.15}px`);
+        });
+        el.addEventListener('pointerleave', () => {
+          ox = 0;
+          oy = 0;
+          ['--mx', '--my', '--lx', '--ly'].forEach((p) => el.style.removeProperty(p));
+        });
+      });
+    }
+
+    // Entrance. The section's first report decides whether it is armed (only when it starts below
+    // the fold); then the floor and the title each play once half of it is in sight. The observer
+    // measures what the curtain leaves uncovered, since the section clips its pinned content.
+    if ('IntersectionObserver' in window) {
+      const parts = new Map<Element, string>();
+      const floor = finale.querySelector('[data-finale-floor]');
+      const head = finale.querySelector('[data-finale-head]');
+      if (floor) parts.set(floor, 'is-floor');
+      if (head) parts.set(head, 'is-in');
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.target === finale) {
+              io.unobserve(finale);
+              if (entry.boundingClientRect.top < window.innerHeight) {
+                finale.classList.add('is-floor', 'is-in');
+                io.disconnect();
+                return;
+              }
+              finale.classList.add('is-armed');
+            } else if (entry.intersectionRatio >= 0.5) {
+              finale.classList.add(parts.get(entry.target)!);
+              io.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: [0, 0.5] }
+      );
+      io.observe(finale);
+      parts.forEach((_, el) => io.observe(el));
+    }
+
+    // While the section is still being uncovered, a control inside it can sit under the page's edge
+    // although the browser thinks it is on screen. Keyboard focus there opens it first, far enough
+    // that the control itself clears the bottom edge and the root's scroll padding, which matters
+    // where the section is taller than the screen (a phone held sideways) (A11Y-05).
+    const pinned = CSS.supports('animation-timeline: view()');
+    finale.addEventListener('focusin', (e) => {
+      finale.classList.add('is-floor', 'is-in');
+      const el = e.target as HTMLElement;
+      if (!pinned || !el.matches(':focus-visible')) return;
+      const top = finale.getBoundingClientRect().top + window.scrollY;
+      const open = top + Math.min(finale.offsetHeight, window.innerHeight) - window.innerHeight;
+      // Where the control sits once open: offsets ignore the curtain's translate. The section itself
+      // (a Prenota link hands it focus) only needs opening.
+      let want = open;
+      if (el !== finale) {
+        let bottom = top + el.offsetHeight;
+        for (let n: HTMLElement | null = el; n && n !== finale; n = n.offsetParent as HTMLElement | null) bottom += n.offsetTop;
+        const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingBottom) || 0;
+        want = Math.max(open, bottom - (window.innerHeight - pad));
+      }
+      if (window.scrollY >= want - 1) return;
+      const lenis = (window as any).__lenis;
+      if (lenis) lenis.scrollTo(want, { immediate: true });
+      else window.scrollTo(0, want);
+    });
+  }
+</script>

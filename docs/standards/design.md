@@ -18,7 +18,15 @@ template) sta nell'agente `design-specialist`; i **valori** stanno in `src/style
   gunmetal (`background` / `surface` / `surface-2`), mai una sezione chiara in mezzo.
 - **DES-04** — **Un solo accento**: `--color-accent` (ciano `#00CCFF`, hover `#33D6FF`, scelto dal
   cliente). Si usa solo tramite token, identico su tutto il sito; nessun secondo accento (badge, puntini
-  di stato, icone colorate). La luce calda delle foto è l'unica nota calda, e sta nelle foto.
+  di stato, icone colorate). La luce calda delle foto è l'unica nota calda, e sta nelle foto. Unica
+  eccezione: la sezione Ranger (`DES-12`).
+- **DES-12** — **La sezione Ranger della home usa la palette del marchio Ranger, solo lì**: marrone
+  caldo e beige nella foto e nel velo (il beige anche nel testo della sezione), **ambra solo come
+  dettaglio** (il dominio, un filetto), mai un bottone, uno sfondo pieno o un testo lungo. I colori
+  sono i token `--color-ranger-*` di `@theme`, con il contrasto misurato (`A11Y-02`); il focus resta
+  ciano come nel resto del sito. Perché: la sezione porta a un altro sito, l'arena boschiva Ranger
+  Softair Milano, e il suo colore dice al lettore che sta per uscire; l'ambra come accento del sito
+  resta bocciata (`DES-10`).
 
 ## Gerarchia e azione
 

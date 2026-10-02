@@ -1,0 +1,186 @@
+---
+// The social channels as a reticle: the site's crosshair mark in the middle and one channel on each
+// of its four arms, the cluster beside the copy (above it on phones). Each arm is a real link to
+// the profile in settings.social, opening a new tab; the logos are monochrome and take the accent
+// on hover and focus, never their brand colours (DES-04). A channel left empty in the CMS leaves
+// its arm empty; with none at all the section does not render.
+
+import Icon from '../atoms/Icon.astro';
+import settings from '../../data/settings.json';
+import { has } from '../../lib/fields';
+
+interface Props {
+  title: string;
+  text?: string;
+  headingId?: string;
+}
+
+const { title, text, headingId = 'social-title' } = Astro.props;
+const hasTitle = has(title);
+
+const social: Partial<Record<'instagram' | 'facebook' | 'youtube' | 'tiktok', string>> = settings.social ?? {};
+// Arms in reading order: top, left, right, bottom (x, y in tile steps on a 3 × 3 grid).
+const arms = [
+  { key: 'instagram', label: 'Instagram', x: 1, y: 0 },
+  { key: 'facebook', label: 'Facebook', x: 0, y: 1 },
+  { key: 'youtube', label: 'YouTube', x: 2, y: 1 },
+  { key: 'tiktok', label: 'TikTok', x: 1, y: 2 },
+] as const;
+const channels = arms.filter((c) => has(social[c.key]));
+---
+
+{channels.length > 0 && (
+  <section class="soc band" aria-labelledby={hasTitle ? headingId : undefined}>
+    <div class="shell soc__inner">
+      <div class="soc__cluster">
+        {/* The site's mark (public/favicon.svg), drawn without its tile background. */}
+        <span class="soc__hub" aria-hidden="true" data-reveal>
+          <svg viewBox="10 10 44 44" width="40" height="40" fill="none" stroke="currentColor" stroke-width="4">
+            <circle cx="32" cy="32" r="18" />
+            <circle cx="32" cy="32" r="8" />
+            <circle cx="32" cy="32" r="2.5" fill="currentColor" stroke="none" />
+          </svg>
+        </span>
+        <ul class="soc__list" role="list">
+          {channels.map((c, i) => (
+            <li class="soc__slot" style={`--x: ${c.x}; --y: ${c.y}; --i: ${i + 1}`} data-reveal>
+              <a class="soc__tile" href={social[c.key]} target="_blank" rel="noopener">
+                <Icon name={c.key} size={28} />
+                <span class="sr-only">{c.label} (si apre in una nuova scheda)</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="soc__copy" data-reveal style="--i: 2">
+        {hasTitle && <h2 class="soc__title" id={headingId}>{title}</h2>}
+        {has(text) && <p class="soc__text">{text}</p>}
+      </div>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .soc {
+    --accent: var(--color-accent);
+    /* Tile side and gap: the cluster is three tiles wide and three tall. */
+    --soc-s: 4rem;
+    --soc-g: 0.55rem;
+    padding-block: clamp(3.5rem, 7vw, 5.5rem) clamp(4rem, 8vw, 6rem);
+  }
+  @media (min-width: 768px) {
+    .soc { --soc-s: 4.75rem; --soc-g: 0.65rem; }
+  }
+  @media (min-width: 1280px) {
+    .soc { --soc-s: 5.5rem; --soc-g: 0.75rem; }
+  }
+
+  .soc__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 2.75rem);
+    text-align: center;
+  }
+  @media (min-width: 768px) {
+    .soc__inner {
+      flex-direction: row;
+      justify-content: center;
+      gap: clamp(3rem, 7vw, 6rem);
+      text-align: start;
+    }
+  }
+
+  .soc__cluster {
+    position: relative;
+    flex: none;
+    width: calc(3 * var(--soc-s) + 2 * var(--soc-g));
+    height: calc(3 * var(--soc-s) + 2 * var(--soc-g));
+  }
+  /* A neutral light under the cluster, so the tiles sit on something rather than float. */
+  .soc__cluster::before {
+    content: "";
+    position: absolute;
+    /* A quarter of the cluster past each edge: at 320 the light still ends inside the section. */
+    inset: -25%;
+    z-index: -1;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--color-foreground) 5%, transparent), transparent);
+    pointer-events: none;
+  }
+  .soc__list { list-style: none; margin: 0; padding: 0; }
+  .soc__slot,
+  .soc__hub {
+    position: absolute;
+    width: var(--soc-s);
+    height: var(--soc-s);
+  }
+  .soc__slot {
+    left: calc(var(--x) * (var(--soc-s) + var(--soc-g)));
+    top: calc(var(--y) * (var(--soc-s) + var(--soc-g)));
+  }
+  .soc__hub {
+    left: calc(var(--soc-s) + var(--soc-g));
+    top: calc(var(--soc-s) + var(--soc-g));
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--color-border));
+    background: var(--lift-2);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-foreground) 8%, transparent);
+    color: var(--accent);
+  }
+
+  .soc__tile {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: linear-gradient(180deg, var(--lift-2), var(--lift));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-foreground) 6%, transparent);
+    color: var(--color-muted);
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-base) var(--ease-out-expo);
+  }
+  .soc__tile:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-md);
+    color: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  @media (hover: hover) {
+    .soc__tile:hover {
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+      transform: translateY(-2px);
+    }
+  }
+  .soc__tile:active { transform: scale(0.98); }
+
+  .soc__copy { max-width: 30rem; }
+  .soc__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.85rem, 3.6vw, 3rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  .soc__text {
+    margin: 0.9rem 0 0;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.5vw, 1.08rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .soc__tile:hover { transform: none; }
+  }
+</style>

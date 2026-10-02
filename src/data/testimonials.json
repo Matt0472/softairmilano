@@ -8,18 +8,20 @@
   },
   "items": [
     {
-      "author": "Carla R.",
-      "text": "Finalmente i nostri figli sono riusciti a fare questa esperienza a dir poco fantastica! Si sono divertiti tantissimo.",
-      "pages": [
-        "arcotag"
-      ]
-    },
-    {
       "author": "Joshua F.",
       "text": "Grandi gli organizzatori che spiegano tutto nei minimi dettagli. […] Davvero ottimo per prendere una boccata d'aria e scaricare la tensione della settimana. Sicuramente ci tornerò.",
       "pages": [
+        "home",
         "softair",
         "paintball"
+      ]
+    },
+    {
+      "author": "Carla R.",
+      "text": "Finalmente i nostri figli sono riusciti a fare questa esperienza a dir poco fantastica! Si sono divertiti tantissimo.",
+      "pages": [
+        "home",
+        "arcotag"
       ]
     },
     {

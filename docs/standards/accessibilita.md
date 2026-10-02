@@ -19,7 +19,10 @@
 - **A11Y-06** — **Skip link** "Salta al contenuto" funzionante.
 - **A11Y-07** — `prefers-reduced-motion` spegne il movimento non essenziale. Il contenuto che si muove
   da solo per più di 5 secondi (video in autoplay, animazioni in loop) ha un **controllo per metterlo in
-  pausa** (2.2.2).
+  pausa** (2.2.2). **Eccezione** (decisione dell'utente, 2 ott 2026): il video «Dentro l'azione» della
+  home parte sempre da solo, senza audio, appena è a schermo, anche con `prefers-reduced-motion` e prima
+  che il pulsante di pausa compaia sul video aperto; a mano si accende solo l'audio. La pausa resta, e
+  da tastiera si raggiunge in ogni momento. Registrata nel debito noto.
 - **A11Y-08** — Il **menu mobile** si apre e chiude da tastiera, si chiude con **Esc**, ha
   `aria-expanded` corretto sul pulsante e tiene il focus dentro finché è aperto (resto della pagina
   `inert`).

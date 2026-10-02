@@ -1,9 +1,9 @@
 ---
 // Key facts at a glance ("6–25 giocatori", "8+ anni"…), read as one phrase each
 // by assistive tech and by AI crawlers. Sits at the foot of the page hero.
-// The figures roll in like an odometer: each digit is a reel of CSS generated
-// content, so the DOM text stays the real value for screen readers and crawlers.
-// Pure CSS and transform only: no JS, no layout shift, static under reduced motion.
+// The figures roll in like an odometer (Odometer), one fact after the other.
+
+import Odometer from '../atoms/Odometer.astro';
 
 interface Fact {
   value: string;
@@ -20,18 +20,7 @@ const { facts, class: className } = Astro.props;
 <ul class:list={['facts', className]} role="list" style={`--n: ${facts.length}`}>
   {facts.map((f, i) => (
     <li class="facts__item" style={`--i: ${i}`}>
-      <span class="facts__value">
-        <span class="sr-only">{f.value}</span>
-        <span class="facts__roll" aria-hidden="true">
-          {[...f.value].map((ch, j) =>
-            /\d/.test(ch) ? (
-              <span class="facts__digit" style={`--d: ${ch}; --j: ${j}`}><span class="facts__reel" /></span>
-            ) : (
-              <span class="facts__glyph" data-g={ch} />
-            )
-          )}
-        </span>
-      </span>
+      <span class="facts__value"><Odometer value={f.value} /></span>
       <span class="facts__label">{f.label}</span>
     </li>
   ))}
@@ -47,6 +36,8 @@ const { facts, class: className } = Astro.props;
     border-top: 1px solid color-mix(in srgb, var(--color-foreground) 16%, transparent);
   }
   .facts__item {
+    /* Each figure rolls in just after its tick, one fact after the other. */
+    --odo-delay: calc(0.45s + var(--i, 0) * 0.12s);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -88,39 +79,7 @@ const { facts, class: className } = Astro.props;
     color: var(--color-foreground);
     text-shadow: 0 1px 12px color-mix(in srgb, var(--color-background) 80%, transparent);
   }
-  /* Odometer: one reel per digit, 0–9 twice, stopping on the digit after a full turn. The row is
-     a little taller than the 1em line so Oswald's digits are never clipped; the negative margin
-     keeps the value's box exactly as tall as plain text. */
-  .facts__roll {
-    --row: 1.15em;
-    display: inline-flex;
-    align-items: flex-start;
-    line-height: var(--row);
-    margin-block: calc((1em - var(--row)) / 2);
-  }
-  .facts__digit {
-    display: inline-block;
-    width: 1ch;
-    height: var(--row);
-    overflow: hidden;
-  }
-  .facts__reel {
-    display: block;
-    transform: translateY(calc(var(--row) * -1 * (10 + var(--d, 0))));
-    animation: facts-roll 1.5s var(--ease-out-expo) both;
-    animation-delay: calc(0.45s + var(--i, 0) * 0.12s + var(--j, 0) * 0.05s);
-  }
-  .facts__reel::before {
-    content: "0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9";
-    display: block;
-    white-space: pre;
-    text-align: center;
-  }
-  @keyframes facts-roll { from { transform: translateY(0); } }
-  .facts__glyph::before { content: attr(data-g); white-space: pre; }
-
   @media (prefers-reduced-motion: reduce) {
-    .facts__reel,
     .facts__item::before { animation: none; }
   }
 

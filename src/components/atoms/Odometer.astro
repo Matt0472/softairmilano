@@ -1,0 +1,64 @@
+---
+// A figure that rolls in like an odometer ("1.500", "6–25"): each digit is a reel of CSS
+// generated content, so the DOM text stays the real value for screen readers and crawlers.
+// Pure CSS and transform only: no JS, no layout shift, static under reduced motion. The parent
+// sets the type and the timing: --odo-delay, on any ancestor, is when the first reel starts; a
+// parent that reveals it later pauses the reels (animation-play-state) until then.
+
+interface Props {
+  value: string;
+}
+
+const { value } = Astro.props;
+---
+
+<span class="sr-only">{value}</span>
+<span class="odo" aria-hidden="true">
+  {[...value].map((ch, j) =>
+    /\d/.test(ch) ? (
+      <span class="odo__digit" style={`--d: ${ch}; --j: ${j}`}><span class="odo__reel" /></span>
+    ) : (
+      <span class="odo__glyph" data-g={ch} />
+    )
+  )}
+</span>
+
+<style is:global>
+  /* One reel per digit, 0–9 twice, stopping on the digit after a full turn. The row is a little
+     taller than a 1em line so Oswald's digits are never clipped; the negative margin keeps the
+     figure's box exactly as tall as plain text. The window is one line of the reel (1lh) and the
+     reel moves by twentieths of itself, so a reader's own line spacing (WCAG 1.4.12) changes the
+     rows and the step together and the right digit still shows. */
+  .odo {
+    display: inline-flex;
+    align-items: flex-start;
+    line-height: 1.15;
+    margin-block: calc((1em - 1lh) / 2);
+  }
+  .odo__digit {
+    display: inline-block;
+    width: 1ch;
+    height: 1lh;
+    overflow: hidden;
+  }
+  /* The entrance runs longer than the UI duration tokens on purpose: the figure should read as
+     composing, not flashing. */
+  .odo__reel {
+    display: block;
+    transform: translateY(calc(-5% * (10 + var(--d, 0))));
+    animation: odo-roll 1.5s var(--ease-out-expo) both;
+    animation-delay: calc(var(--odo-delay, 0s) + var(--j, 0) * 0.05s);
+  }
+  .odo__reel::before {
+    content: "0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9";
+    display: block;
+    white-space: pre;
+    text-align: center;
+  }
+  @keyframes odo-roll { from { transform: translateY(0); } }
+  .odo__glyph::before { content: attr(data-g); white-space: pre; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .odo__reel { animation: none; }
+  }
+</style>

@@ -1,64 +1,64 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Button from '../components/atoms/Button.astro';
-import Card from '../components/molecules/Card.astro';
 import Hero from '../components/organisms/Hero.astro';
-import VideoSection from '../components/organisms/VideoSection.astro';
+import ActionVideo from '../components/organisms/ActionVideo.astro';
 import ArenaIntro from '../components/organisms/ArenaIntro.astro';
 import ActivitiesStory from '../components/organisms/ActivitiesStory.astro';
+import Reviews from '../components/organisms/Reviews.astro';
+import OccasionMosaic from '../components/organisms/OccasionMosaic.astro';
+import CourseTeaser from '../components/organisms/CourseTeaser.astro';
+import TeaserBanner from '../components/organisms/TeaserBanner.astro';
+import SocialChannels from '../components/organisms/SocialChannels.astro';
+import RangerTeaser from '../components/organisms/RangerTeaser.astro';
+import FinalCta from '../components/organisms/FinalCta.astro';
+import Reveal from '../components/molecules/Reveal.astro';
 import home from '../data/home.json';
 import settings from '../data/settings.json';
+import { has } from '../lib/fields';
 
-const { title, hero, video, arena, intro, activities, occasions, rangerTeaser, finalCta } = home;
+const { seo, hero, video, arena, intro, activitiesTitle, activities, reviews, occasions, course, paintballTeaser, social, rangerTeaser, finalCta } = home;
+
+// The closing band repeats the page's own words: the activities and the arena's headline figure.
+const finalePhrases = [
+  ...(activities ?? []).map((a) => a?.title),
+  arena?.stat?.value && arena?.stat?.unit ? `${arena.stat.value} ${arena.stat.unit}` : '',
+].filter(has);
 ---
 
-<BaseLayout title={title}>
-  <!-- HERO -->
+<BaseLayout title={seo?.title} description={seo?.description} image={seo?.image} imageAlt={seo?.imageAlt}>
   <Hero {...hero} />
 
-  <!-- L'ARENA IN BREVE -->
+  {/* Dentro l'azione: the video that opens as the page scrolls. */}
+  <ActionVideo {...video} />
+
   <ArenaIntro {...arena} />
 
-  <!-- VIDEO -->
-  <VideoSection {...video} />
+  <ActivitiesStory title={activitiesTitle} intro={intro} items={activities} />
 
-  <!-- ATTIVITÀ (scrolling story, streaming militare) -->
-  <ActivitiesStory title="Le attività" intro={intro} items={activities} />
+  {/* Right after the activities, where someone looking for paintball is still choosing. A section after
+      the activities renders only when the client filled it in (CMS-10). */}
+  {paintballTeaser && has(paintballTeaser.title) && has(paintballTeaser.label) && has(paintballTeaser.href) && (
+    <TeaserBanner {...paintballTeaser} headingId="paintball-teaser-title" />
+  )}
 
-  <!-- OCCASIONI — TEMP "(DA COMPLETARE)" markers below flag sections still to be redesigned -->
-  <section class="border-t border-border">
-    <div class="shell py-16 md:py-20">
-      <h2 class="font-display text-2xl uppercase md:text-3xl">Occasioni <span class="text-base font-sans font-normal normal-case text-muted" aria-hidden="true">(DA COMPLETARE)</span></h2>
-      <p class="mt-2 max-w-2xl text-muted">
-        Non solo partite: il posto giusto per gruppi, feste e formazione.
-      </p>
-      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {occasions.map((o) => <Card title={o.title} description={o.desc} href={o.href} />)}
-      </div>
-    </div>
-  </section>
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} page="home" />}
 
-  <!-- RIMANDO ARENA OUTDOOR (RANGER) -->
-  <section class="shell py-8 md:py-12">
-    <div class="flex flex-col gap-6 rounded-lg border border-border bg-surface p-8 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h2 class="font-display text-2xl uppercase">{rangerTeaser.title} <span class="text-base font-sans font-normal normal-case text-muted" aria-hidden="true">(DA COMPLETARE)</span></h2>
-        <p class="mt-2 max-w-xl text-muted">{rangerTeaser.text}</p>
-      </div>
-      <div class="shrink-0">
-        <Button href={settings.rangerUrl} variant="secondary" target="_blank" rel="noopener">
-          {rangerTeaser.label}
-        </Button>
-      </div>
-    </div>
-  </section>
+  {occasions && has(occasions.title) && !!occasions.items?.length && <OccasionMosaic {...occasions} />}
 
-  <!-- CTA FINALE -->
-  <section id="prenota" class="shell py-20 text-center">
-    <h2 class="font-display text-3xl uppercase md:text-4xl">{finalCta.title} <span class="text-base font-sans font-normal normal-case text-muted" aria-hidden="true">(DA COMPLETARE)</span></h2>
-    <p class="mt-3 text-muted">{finalCta.subtitle}</p>
-    <div class="mt-6 flex justify-center">
-      <Button href={finalCta.href} variant="primary">{finalCta.label}</Button>
-    </div>
-  </section>
+  {course && has(course.title) && <CourseTeaser {...course} />}
+
+  {social && has(social.title) && <SocialChannels title={social.title} text={social.text} />}
+
+  {/* The outdoor arena (Ranger): the whole section links to its own site. */}
+  {rangerTeaser && has(rangerTeaser.title) && <RangerTeaser {...rangerTeaser} href={settings.rangerUrl} />}
+
+  {/* #prenota: every Prenota on the page lands here. */}
+  <FinalCta
+    title={finalCta?.title}
+    subtitle={finalCta?.subtitle}
+    writeLabel={finalCta?.writeLabel}
+    phrases={finalePhrases}
+  />
+
+  <Reveal />
 </BaseLayout>

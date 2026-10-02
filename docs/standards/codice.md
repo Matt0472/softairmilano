@@ -45,6 +45,12 @@
   fisarmonica di «Provate anche» (`ActivityLinks`, poche schede, scelta del cliente). Non combinare la proprietà `rotate` con
   un `transform: translate` sullo stesso elemento: l'ordine si inverte e l'elemento orbita invece di
   girare sul posto. Ogni animazione non essenziale si spegne con `prefers-reduced-motion` (`A11Y-07`).
+- **CODE-19** — Le animazioni **guidate dallo scroll** (`animation-timeline: view()` o una
+  `view-timeline` con nome) si scrivono solo con le **proprietà estese** (`animation-name`,
+  `animation-timing-function`, `animation-fill-mode`, `animation-timeline`, `animation-range`), mai con
+  la scorciatoia `animation`: il minifier la fonde con la timeline in una dichiarazione che Chrome
+  scarta, e l'animazione sparisce solo nella build (in sviluppo funziona). Dopo averle toccate si
+  controlla `dist/`.
 
 ## JavaScript client
 
