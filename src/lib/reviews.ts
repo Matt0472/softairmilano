@@ -1,5 +1,5 @@
 // The Google rating and the reviews, shared by the whole site (testimonials.json): the home hero
-// and every reviews section read the same rating, and each page shows the reviews tagged for it.
+// and every reviews section read the same rating, and every reviews section shows the same reviews.
 
 import testimonials from '../data/testimonials.json';
 
@@ -9,17 +9,16 @@ export interface Rating {
   count?: string;
   source?: string;
   url?: string;
+  /** The Trustindex page that lists every review: linked from each reviews section. */
+  trustindexUrl?: string;
+  /** Text of that link, e.g. «Leggi tutte le recensioni su Trustindex». */
+  trustindexLabel?: string;
 }
 
 export interface Review {
   author?: string;
   text?: string;
-  /** Pages the review belongs to (activity slugs, "paintball", "home"); ALL_PAGES or none: any page. */
-  pages?: string[];
 }
-
-const ALL_PAGES = 'all';
-const MAX_REVIEWS = 5;
 
 export const rating: Rating = testimonials.rating ?? {};
 
@@ -39,10 +38,7 @@ export function ratingReach(): string {
   return count ? [count, rating.source?.trim()].filter(Boolean).join(' ') : '';
 }
 
-/** The reviews for a page: those tagged for it first, then the general ones, at most five. */
-export function reviewsFor(page?: string): Review[] {
-  const items = ((testimonials.items ?? []) as Review[]).filter((r) => r?.text?.trim());
-  const tagged = page ? items.filter((r) => r.pages?.includes(page)) : [];
-  const general = items.filter((r) => !r.pages?.length || r.pages.includes(ALL_PAGES));
-  return [...new Set([...tagged, ...general])].slice(0, MAX_REVIEWS);
+/** Every review with a text, in the CMS order. */
+export function allReviews(): Review[] {
+  return ((testimonials.items ?? []) as Review[]).filter((r) => r?.text?.trim());
 }

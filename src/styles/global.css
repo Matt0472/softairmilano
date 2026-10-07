@@ -72,8 +72,9 @@
   --color-steel: #5b6b7a;
   --color-success: #34c759;
   --color-danger: #e5484d;
-  /* Ranger Softair Milano, the outdoor arena's own brand: only in the home's Ranger section (DES-12).
-     Earth is the warm veil over its photo, sand its body copy, amber a detail (the domain, one rule). */
+  /* Ranger Softair Milano, the outdoor arena's own brand: only in the home's Ranger section and the
+     footer's Ranger card (DES-12). Earth is the warm veil over its photo, sand its body copy, amber
+     a detail (the domain, one rule). */
   --color-ranger-earth: #140e09;
   --color-ranger-sand: #e1dad3;
   --color-ranger-amber: #e4a316;
@@ -268,7 +269,8 @@
     top: 1rem;
   }
 
-  /* Mobile menu: reliable show/hide via data-open, always hidden from lg up. */
+  /* Mobile menu: reliable show/hide via data-open. From lg up it exists only while the header is compact
+     (the pill nav does not fit, Header.astro). */
   .mobile-menu {
     display: none;
     flex-direction: column;
@@ -277,7 +279,7 @@
     display: flex;
   }
   @media (min-width: 1024px) {
-    .mobile-menu {
+    :not([data-nav-compact]) > .mobile-menu {
       display: none !important;
     }
   }

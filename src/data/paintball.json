@@ -24,7 +24,7 @@
   },
   "intro": {
     "title": "Softair o paintball: la differenza in breve",
-    "text": "Sono due giochi a squadre simili: cambia quello che si spara. Nel paintball sono sfere di vernice da circa 3 grammi, che macchiano e spesso lasciano lividi. Nel softair sono pallini di plastica da 6 mm e circa 0,2 grammi, sparati da repliche realistiche che per legge restano sotto 1 joule: fa meno male, non sporca e si gioca anche al chiuso. Per questo, per giocare a Milano in un'arena indoor, il softair è la scelta naturale.",
+    "text": "Sono due giochi a squadre simili: cambia quello che si spara. Nel paintball sono sfere di vernice da circa 3 grammi, che macchiano e spesso lasciano lividi. Nel softair sono pallini di plastica da 6 mm e da 0,20 a 0,30 grammi, sparati da repliche realistiche che per legge restano sotto 1 joule: fa meno male, non sporca e si gioca anche al chiuso. Per questo, per giocare a Milano in un'arena indoor, il softair è la scelta naturale.",
     "points": [
       {
         "title": "Fa meno male",
@@ -53,12 +53,12 @@
     "rows": [
       {
         "topic": "Cosa si spara",
-        "softair": "Pallini di plastica da 6 mm, circa 0,2 g",
+        "softair": "Pallini di plastica da 6 mm, da 0,20 a 0,30 g",
         "paintball": "Sfere di gelatina e vernice da circa 17 mm e 3 g"
       },
       {
         "topic": "Quando si viene colpiti",
-        "softair": "Una puntura breve: dopo pochi minuti è già dimenticata",
+        "softair": "Una puntura breve: dopo pochi secondi è già dimenticata",
         "paintball": "Una botta secca: lividi ed ematomi non sono rari"
       },
       {
@@ -78,13 +78,13 @@
       },
       {
         "topic": "Maschera",
-        "softair": "Anche a griglia o in due pezzi: non si appanna",
+        "softair": "Occhiali o griglia: quest'ultima non si appanna",
         "paintball": "Integrale con visiera: col fiatone si appanna"
       },
       {
         "topic": "Munizioni",
-        "softair": "Economiche: 300 colpi inclusi, partite lunghe",
-        "paintball": "Costose e finiscono in fretta"
+        "softair": "Più economiche",
+        "paintball": "Mediamente 8 volte più costose"
       },
       {
         "topic": "Le armi",
@@ -94,23 +94,23 @@
       {
         "topic": "Meteo",
         "softair": "Da noi si gioca al coperto, con pioggia o neve",
-        "paintball": "Quasi sempre all'aperto: dipende dal tempo"
+        "paintball": "Influenzato dalle condizioni meteo"
       },
       {
         "topic": "Come si capisce di essere colpiti",
         "softair": "Lo dichiara chi è colpito: conta la lealtà",
-        "paintball": "Lo dice la macchia di vernice"
+        "paintball": "Lo dice la macchia di vernice, ma dopo qualche colpo non si capisce più"
       }
     ]
   },
   "impact": {
     "title": "Fa più male il paintball o il softair?",
-    "text": "Il paintball. Una sfera da paintball pesa circa 15 volte un pallino da softair e colpisce con molta più energia: è una botta secca che spesso lascia il segno. Il pallino da softair è una puntura breve, che dopo pochi minuti è già dimenticata.",
+    "text": "Il paintball. Una sfera da paintball pesa da 10 a 15 volte un pallino da softair e colpisce con molta più energia: è una botta secca che spesso lascia il segno. Il pallino da softair è una puntura breve, che dopo pochi secondi è già dimenticata.",
     "note": "Le due sfere sono disegnate in proporzione tra loro.",
     "softair": {
       "name": "Softair",
       "diameterMm": 6,
-      "mass": "0,2 g",
+      "mass": "0,20–0,30 g",
       "energy": "< 1 J",
       "feel": "Una puntura"
     },
@@ -125,8 +125,8 @@
   "arena": {
     "title": "Cosa trovate a Softair Milano",
     "text": "Un villaggio militare al coperto di 1.500 m², con abitazioni, auto e torrette di vedetta, impianto audio ed effetti scenografici. Non un semplice sparatutto: missioni diverse una dopo l'altra, scelte in base al vostro gruppo e arbitrate dal nostro staff.",
-    "image": "/uploads/att-softair.jpeg",
-    "imageAlt": "Squadra di softair in tenuta tattica schierata lungo un muro dell'arena indoor di Softair Milano.",
+    "image": "/uploads/arena-villaggio.jpeg",
+    "imageAlt": "Giocatori in tenuta tattica su un fuoristrada con la rete, accanto a un muro giallo e a una torretta con le bandierine, nel villaggio dell'arena.",
     "missionsTitle": "Alcune missioni",
     "missions": [
       {
@@ -168,7 +168,7 @@
       },
       {
         "title": "Compilate i moduli",
-        "text": "I maggiorenni lo fanno online e ricevono un codice; i minorenni portano il modulo firmato da un genitore."
+        "text": "Sono obbligatori per tutti: i maggiorenni li compilano online e ricevono un codice, i minorenni portano il modulo firmato da un genitore."
       },
       {
         "title": "Briefing",
@@ -238,7 +238,7 @@
       },
       {
         "q": "Il softair fa male come il paintball?",
-        "a": "No. Un pallino da softair pesa circa 0,2 g contro i 3 g di una sfera da paintball e per legge resta sotto 1 joule: è una puntura breve, non una botta."
+        "a": "No. Un pallino da softair pesa da 0,20 a 0,30 g contro i 3 g di una sfera da paintball e per legge resta sotto 1 joule: è una puntura breve, non una botta."
       },
       {
         "q": "Il softair costa meno del paintball?",
@@ -254,7 +254,7 @@
       },
       {
         "q": "Da che età si gioca a softair?",
-        "a": "Dai 12 anni compiuti; i minorenni portano il modulo firmato da un genitore. Per i più piccoli ci sono l'arcotag, dagli 8 anni, e il Nerf, dai 6."
+        "a": "Dai 12 anni compiuti. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online, i minorenni portano quello firmato da un genitore. Per i più piccoli ci sono l'arcotag, dagli 8 anni, e il Nerf, dai 6."
       },
       {
         "q": "Si gioca anche d'inverno o se piove?",
@@ -267,7 +267,7 @@
     "text": "Provate l'arcotag: archi e frecce a punta morbida, dagli 8 anni, nella stessa arena. Perfetto per i gruppi misti e per i più piccoli.",
     "label": "Scopri l'arcotag",
     "href": "/arcotag",
-    "image": "/uploads/arcotag-hero.jpeg",
-    "imageAlt": "Due giocatori di arcotag con maschera protettiva tendono l'arco sopra una jeep con la rete, nell'arena indoor."
+    "image": "/uploads/att-arcotag.jpeg",
+    "imageAlt": "Giocatori di arcotag con maschera protettiva tendono l'arco da un fuoristrada coperto da una rete, nell'arena indoor."
   }
 }

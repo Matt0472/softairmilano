@@ -1,11 +1,14 @@
 ---
-// The social channels as a reticle: the site's crosshair mark in the middle and one channel on each
-// of its four arms, the cluster beside the copy (above it on phones). Each arm is a real link to
-// the profile in settings.social, opening a new tab; the logos are monochrome and take the accent
-// on hover and focus, never their brand colours (DES-04). A channel left empty in the CMS leaves
-// its arm empty; with none at all the section does not render.
+// The social channels as a reticle across the page column: the site's crosshair mark in the middle
+// and the channels on its arms, under a centred heading. From 768 the arms run the width of the
+// column, two channels on each side of the mark; on phones they close into a cross, one channel on
+// each arm. Each tile is a real link to the profile in settings.social, opening a new tab, with the
+// logo and the channel's name; the logos are monochrome and take the accent on hover and focus,
+// never their brand colours (DES-04). A channel left empty in the CMS leaves its arm empty; with
+// none at all the section does not render.
 
 import Icon from '../atoms/Icon.astro';
+import SectionHead from '../molecules/SectionHead.astro';
 import settings from '../../data/settings.json';
 import { has } from '../../lib/fields';
 
@@ -16,23 +19,27 @@ interface Props {
 }
 
 const { title, text, headingId = 'social-title' } = Astro.props;
-const hasTitle = has(title);
 
 const social: Partial<Record<'instagram' | 'facebook' | 'youtube' | 'tiktok', string>> = settings.social ?? {};
-// Arms in reading order: top, left, right, bottom (x, y in tile steps on a 3 × 3 grid).
+// Arms in reading order. `col`: the column on the wide rail (the mark holds the third); `x`, `y`:
+// the cell in the phone's 3 × 3 cross (top, left, right, bottom).
 const arms = [
-  { key: 'instagram', label: 'Instagram', x: 1, y: 0 },
-  { key: 'facebook', label: 'Facebook', x: 0, y: 1 },
-  { key: 'youtube', label: 'YouTube', x: 2, y: 1 },
-  { key: 'tiktok', label: 'TikTok', x: 1, y: 2 },
+  { key: 'instagram', label: 'Instagram', col: 1, x: 2, y: 1 },
+  { key: 'facebook', label: 'Facebook', col: 2, x: 1, y: 2 },
+  { key: 'youtube', label: 'YouTube', col: 4, x: 3, y: 2 },
+  { key: 'tiktok', label: 'TikTok', col: 5, x: 2, y: 3 },
 ] as const;
 const channels = arms.filter((c) => has(social[c.key]));
 ---
 
 {channels.length > 0 && (
-  <section class="soc band" aria-labelledby={hasTitle ? headingId : undefined}>
-    <div class="shell soc__inner">
-      <div class="soc__cluster">
+  <section class="soc band" aria-labelledby={has(title) ? headingId : undefined}>
+    <div class="shell">
+      <div data-reveal>
+        <SectionHead title={title} text={text} id={headingId} align="center" />
+      </div>
+
+      <div class="soc__reticle">
         {/* The site's mark (public/favicon.svg), drawn without its tile background. */}
         <span class="soc__hub" aria-hidden="true" data-reveal>
           <svg viewBox="10 10 44 44" width="40" height="40" fill="none" stroke="currentColor" stroke-width="4">
@@ -43,19 +50,16 @@ const channels = arms.filter((c) => has(social[c.key]));
         </span>
         <ul class="soc__list" role="list">
           {channels.map((c, i) => (
-            <li class="soc__slot" style={`--x: ${c.x}; --y: ${c.y}; --i: ${i + 1}`} data-reveal>
+            <li class="soc__slot" style={`--col: ${c.col}; --x: ${c.x}; --y: ${c.y}; --i: ${i + 1}`} data-reveal>
               <a class="soc__tile" href={social[c.key]} target="_blank" rel="noopener">
-                <Icon name={c.key} size={28} />
-                <span class="sr-only">{c.label} (si apre in una nuova scheda)</span>
+                <Icon name={c.key} size={32} class="soc__logo" />
+                <span class="soc__name">{c.label}</span>
+                <Icon name="arrowUpRight" size={16} class="soc__out" />
+                <span class="sr-only"> (si apre in una nuova scheda)</span>
               </a>
             </li>
           ))}
         </ul>
-      </div>
-
-      <div class="soc__copy" data-reveal style="--i: 2">
-        {hasTitle && <h2 class="soc__title" id={headingId}>{title}</h2>}
-        {has(text) && <p class="soc__text">{text}</p>}
       </div>
     </div>
   </section>
@@ -64,64 +68,54 @@ const channels = arms.filter((c) => has(social[c.key]));
 <style is:global>
   .soc {
     --accent: var(--color-accent);
-    /* Tile side and gap: the cluster is three tiles wide and three tall. */
-    --soc-s: 4rem;
-    --soc-g: 0.55rem;
-    padding-block: clamp(3.5rem, 7vw, 5.5rem) clamp(4rem, 8vw, 6rem);
-  }
-  @media (min-width: 768px) {
-    .soc { --soc-s: 4.75rem; --soc-g: 0.65rem; }
-  }
-  @media (min-width: 1280px) {
-    .soc { --soc-s: 5.5rem; --soc-g: 0.75rem; }
+    /* Phones: the side of a tile and the gap of the cross, three tiles each way. */
+    --soc-s: clamp(5rem, 25vw, 6.5rem);
+    --soc-g: 0.6rem;
+    /* How far the mark's upright arm reaches past the tiles. */
+    --soc-tick: 1.75rem;
+    padding-block: clamp(4.5rem, 10vw, 8rem) clamp(5rem, 11vw, 9rem);
   }
 
-  .soc__inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: clamp(2rem, 5vw, 2.75rem);
-    text-align: center;
-  }
-  @media (min-width: 768px) {
-    .soc__inner {
-      flex-direction: row;
-      justify-content: center;
-      gap: clamp(3rem, 7vw, 6rem);
-      text-align: start;
-    }
-  }
-
-  .soc__cluster {
+  /* The reticle spans the column; on phones its 3 × 3 cross sits in the middle of it. The list
+     shares the reticle's grid (subgrid), so the mark and the tiles line up in one set of tracks. */
+  .soc__reticle {
     position: relative;
-    flex: none;
-    width: calc(3 * var(--soc-s) + 2 * var(--soc-g));
-    height: calc(3 * var(--soc-s) + 2 * var(--soc-g));
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: repeat(3, var(--soc-s));
+    grid-template-rows: repeat(3, var(--soc-s));
+    gap: var(--soc-g);
+    justify-content: center;
+    margin-top: clamp(2.75rem, 6vw, 4.5rem);
   }
-  /* A neutral light under the cluster, so the tiles sit on something rather than float. */
-  .soc__cluster::before {
+  /* The arms: a hairline across the whole column and a short upright through the mark, under
+     the opaque tiles, so they show only between them. */
+  .soc__reticle::before,
+  .soc__reticle::after {
     content: "";
     position: absolute;
-    /* A quarter of the cluster past each edge: at 320 the light still ends inside the section. */
-    inset: -25%;
     z-index: -1;
-    background: radial-gradient(closest-side, color-mix(in srgb, var(--color-foreground) 5%, transparent), transparent);
+    background: var(--color-border);
     pointer-events: none;
   }
-  .soc__list { list-style: none; margin: 0; padding: 0; }
-  .soc__slot,
-  .soc__hub {
-    position: absolute;
-    width: var(--soc-s);
-    height: var(--soc-s);
+  .soc__reticle::before { left: 0; right: 0; top: 50%; height: 1px; }
+  .soc__reticle::after { top: calc(-1 * var(--soc-tick)); bottom: calc(-1 * var(--soc-tick)); left: 50%; width: 1px; }
+
+  .soc__list {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
-  .soc__slot {
-    left: calc(var(--x) * (var(--soc-s) + var(--soc-g)));
-    top: calc(var(--y) * (var(--soc-s) + var(--soc-g)));
-  }
+  .soc__slot { grid-column: var(--x); grid-row: var(--y); }
+
   .soc__hub {
-    left: calc(var(--soc-s) + var(--soc-g));
-    top: calc(var(--soc-s) + var(--soc-g));
+    grid-column: 2;
+    grid-row: 2;
     display: grid;
     place-items: center;
     border-radius: var(--radius-md);
@@ -132,20 +126,46 @@ const channels = arms.filter((c) => has(social[c.key]));
   }
 
   .soc__tile {
-    display: grid;
-    place-items: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
     width: 100%;
     height: 100%;
+    padding: 0.5rem 0.25rem;
     border-radius: var(--radius-md);
     border: 1px solid var(--color-border);
     background: linear-gradient(180deg, var(--lift-2), var(--lift));
     box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-foreground) 6%, transparent);
     color: var(--color-muted);
+    text-decoration: none;
     transition:
       color var(--duration-fast) var(--ease-out-expo),
       border-color var(--duration-fast) var(--ease-out-expo),
       transform var(--duration-base) var(--ease-out-expo);
   }
+  .soc__logo { flex: none; width: 28px; height: 28px; }
+  .soc__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.7rem;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  /* The way out: a small arrow in the tile's corner, from 768 where the tile has room for it. */
+  .soc__out {
+    display: none;
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    transition: transform var(--duration-fast) var(--ease-out-expo);
+  }
+
   .soc__tile:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
@@ -153,31 +173,50 @@ const channels = arms.filter((c) => has(social[c.key]));
     color: var(--accent);
     border-color: color-mix(in srgb, var(--accent) 55%, transparent);
   }
+  .soc__tile:focus-visible .soc__name { color: var(--accent); }
   @media (hover: hover) {
     .soc__tile:hover {
       color: var(--accent);
       border-color: color-mix(in srgb, var(--accent) 55%, transparent);
       transform: translateY(-2px);
     }
+    .soc__tile:hover .soc__name { color: var(--accent); }
+    .soc__tile:hover .soc__out { transform: translate(2px, -2px); }
   }
   .soc__tile:active { transform: scale(0.98); }
 
-  .soc__copy { max-width: 30rem; }
-  .soc__title {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(1.85rem, 3.6vw, 3rem);
-    line-height: 1.12;
-    letter-spacing: 0.01em;
-    text-wrap: balance;
+  /* From 768: one row across the column. The mark's column is the mark plus an arm each side;
+     the four tiles share the rest. */
+  @media (min-width: 768px) {
+    .soc {
+      --soc-row: clamp(7.5rem, 11vw, 10rem);
+      --soc-arm: clamp(1.5rem, 4vw, 3rem);
+    }
+    .soc__reticle {
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr))
+        calc(var(--soc-row) + 2 * var(--soc-arm))
+        repeat(2, minmax(0, 1fr));
+      grid-template-rows: var(--soc-row);
+      gap: clamp(0.75rem, 1.25vw, 1.25rem);
+      justify-content: stretch;
+    }
+    .soc__slot { grid-column: var(--col); grid-row: 1; }
+    .soc__hub {
+      grid-column: 3;
+      grid-row: 1;
+      justify-self: center;
+      width: var(--soc-row);
+      height: var(--soc-row);
+    }
+    .soc__hub svg { width: 52px; height: 52px; }
+    .soc__tile { gap: 0.75rem; padding: 1rem; }
+    .soc__logo { width: 32px; height: 32px; }
+    .soc__name { font-size: 0.85rem; letter-spacing: 0.14em; }
+    .soc__out { display: block; }
   }
-  .soc__text {
-    margin: 0.9rem 0 0;
-    color: var(--color-muted);
-    font-size: clamp(1rem, 1.5vw, 1.08rem);
-    line-height: 1.6;
-    text-wrap: pretty;
+  @media (min-width: 1024px) {
+    .soc__logo { width: 40px; height: 40px; }
   }
 
   @media (prefers-reduced-motion: reduce) {

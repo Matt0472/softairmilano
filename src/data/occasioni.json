@@ -1,0 +1,227 @@
+{
+  "seo": {
+    "title": "Feste di compleanno e addii al celibato a Milano | SoftAir Milano",
+    "description": "Feste di compleanno per grandi e bambini e addii al celibato e al nubilato a Milano: softair, arcotag o Nerf al coperto, fino a 30 giocatori, con sala feste.",
+    "image": "",
+    "imageAlt": ""
+  },
+  "hero": {
+    "eyebrow": "Feste di gruppo · Milano",
+    "title": "Compleanni e addii al celibato a Milano",
+    "subtitle": "Softair, arcotag o Nerf nella nostra arena al coperto, e si festeggia in sala feste.",
+    "image": "/uploads/occasioni-hero.jpeg",
+    "imageMobile": "/uploads/occasioni-hero-mobile.jpeg",
+    "imageAlt": "Su una cassa di legno dell'arena, a festa appena finita: una coroncina di carta dorata, frecce a punta morbida, una maschera protettiva e festoni, con un palloncino sgonfio a terra.",
+    "focus": "right",
+    "ctaPrimary": {
+      "label": "Richiedi un preventivo",
+      "href": "#richiesta"
+    },
+    "ctaSecondary": {
+      "label": "Come funziona",
+      "href": "#come-funziona"
+    },
+    "hudTag": "FESTE · MAX 30 · 6+"
+  },
+  "facts": [
+    {
+      "value": "30",
+      "label": "giocatori al massimo"
+    },
+    {
+      "value": "3",
+      "label": "attività a scelta"
+    },
+    {
+      "value": "6+",
+      "label": "anni"
+    },
+    {
+      "value": "1.500 m²",
+      "label": "al coperto"
+    }
+  ],
+  "birthdays": {
+    "title": "Compleanni",
+    "text": "Un compleanno alternativo, per adulti e bambini: 100% divertente e adatto a tutti. Si gioca a squadre nella nostra arena di Milano, poi la festa continua in sala.",
+    "image": "/uploads/occ-compleanno.jpeg",
+    "imageMobile": "",
+    "imageAlt": "Ragazzi con maschera protettiva e blaster in gommapiuma festeggiano a braccia alzate; il festeggiato porta una corona di carta.",
+    "itemsTitle": "In breve",
+    "items": [
+      {
+        "name": "Per chi",
+        "text": "Adulti e bambini, dai 6 anni in su."
+      },
+      {
+        "name": "Quanti",
+        "text": "Fino a 30 giocatori."
+      },
+      {
+        "name": "Attività",
+        "text": "Softair, arcotag o Nerf, da scegliere in base all'età."
+      },
+      {
+        "name": "Quando",
+        "text": "Mattina, pomeriggio o sera, con qualsiasi tempo: l'arena è coperta e illuminata."
+      }
+    ],
+    "invite": "",
+    "inviteLabel": "Scarica l'invito"
+  },
+  "bachelor": {
+    "title": "Addio al celibato e al nubilato",
+    "text": "Vuoi festeggiare in modo indimenticabile e adrenalinico il tuo addio al celibato o nubilato? Stessa arena, stesse attività e gruppi fino a 30 persone. Chiamaci per realizzare qualcosa di indimenticabile.",
+    "image": "/uploads/occ-addio.jpeg",
+    "imageAlt": "Un gruppo di amiche in tenuta da gioco ride intorno alla sposa, che porta un velo bianco sopra il casco."
+  },
+  "activities": {
+    "title": "Scegli l'attività",
+    "items": [
+      {
+        "title": "Softair",
+        "desc": "Dai 12 anni. Missioni a squadre nel villaggio militare.",
+        "image": "/uploads/att-softair.jpeg",
+        "imageMobile": "/uploads/att-softair-mobile.jpeg",
+        "href": "/softair"
+      },
+      {
+        "title": "Arcotag",
+        "desc": "Dagli 8 anni. Arco e frecce a punta morbida, a squadre.",
+        "image": "/uploads/att-arcotag.jpeg",
+        "imageMobile": "/uploads/att-arcotag-mobile.jpeg",
+        "href": "/arcotag"
+      },
+      {
+        "title": "Nerf",
+        "desc": "Dai 6 anni. Dardi in gommapiuma, per i più piccoli.",
+        "image": "/uploads/att-nerf.jpeg",
+        "imageMobile": "/uploads/att-nerf-mobile.jpeg",
+        "href": "/nerf"
+      }
+    ]
+  },
+  "partyRoom": {
+    "title": "Sala feste e catering",
+    "text": "Le sale per festeggiare sono due, una interna e una esterna. La torta puoi portarla tu, il catering lo prepariamo su richiesta, anche con merende personalizzate.",
+    "items": [
+      {
+        "title": "Dal lunedì al venerdì",
+        "text": "La sala è compresa nell'1 ora e 45: decidete voi quanto tempo giocare e quanto festeggiare. Oppure prolungate di un'ora.",
+        "stats": [
+          {
+            "value": "1 h 45",
+            "label": "tra partita e sala, briefing compreso"
+          },
+          {
+            "value": "70 €",
+            "label": "un'ora in più nella sala interna"
+          },
+          {
+            "value": "50 €",
+            "label": "un'ora in più nella sala esterna"
+          }
+        ]
+      },
+      {
+        "title": "Sabato e domenica",
+        "text": "La sala esterna è compresa nell'1 ora e 45: si gioca un po' meno per fare spazio alla festa.",
+        "stats": [
+          {
+            "value": "1 h 45",
+            "label": "in tutto, partita e sala esterna"
+          }
+        ]
+      }
+    ]
+  },
+  "booking": {
+    "title": "Come si prenota",
+    "text": "La prenotazione è obbligatoria e parte dalla richiesta in fondo alla pagina.",
+    "steps": [
+      {
+        "time": "",
+        "title": "Data, giocatori, attività",
+        "text": "Scegli il giorno, quanti sarete, fino a 30, e l'attività: softair, arcotag o Nerf."
+      },
+      {
+        "time": "",
+        "title": "Il dopo partita",
+        "text": "Dicci se vuoi la sala feste e il catering, per esempio merende personalizzate. La torta puoi portarla tu."
+      },
+      {
+        "time": "",
+        "title": "La nostra offerta",
+        "text": "Ti rispondiamo con la nostra migliore offerta per la tua festa."
+      }
+    ],
+    "notesTitle": "Da sapere",
+    "notes": [
+      "Prenotazione obbligatoria",
+      "Modulo obbligatorio per ogni giocatore",
+      "Arena non riscaldata né climatizzata: vestiti in base alla stagione"
+    ],
+    "notesNote": "Il modulo: online per i maggiorenni, su carta e firmato da un genitore per i minorenni.",
+    "link": {
+      "label": "Vai ai moduli",
+      "href": "/modulistica"
+    }
+  },
+  "reviews": {
+    "title": "Cosa dice chi ha giocato da noi"
+  },
+  "faq": {
+    "title": "Domande frequenti su feste e addii al celibato",
+    "items": [
+      {
+        "q": "Quante persone possono partecipare alla festa?",
+        "a": "Fino a 30 giocatori, sia per i compleanni sia per gli addii al celibato e al nubilato."
+      },
+      {
+        "q": "Da che età si può giocare?",
+        "a": "Dai 6 anni con il Nerf, dagli 8 con l'arcotag e dai 12 con il softair. Per una festa di bambini, scegli l'attività in base all'età del più piccolo."
+      },
+      {
+        "q": "Come funziona la sala feste?",
+        "a": "Le sale sono due, una interna e una esterna. Dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti: decidete voi come dividere il tempo tra gioco e festa, oppure prolungate di un'ora (70 € la sala interna, 50 € quella esterna). Il sabato e la domenica la sala esterna è compresa nell'1 ora e 45 minuti, riducendo il tempo di gioco."
+      },
+      {
+        "q": "Posso portare la torta?",
+        "a": "Sì, la torta puoi portarla tu. Il catering lo prepariamo su richiesta, anche con merende personalizzate."
+      },
+      {
+        "q": "Quanto costa una festa?",
+        "a": "Dipende dal giorno, dal numero di giocatori, dall'attività e da sala feste e catering: compila la richiesta di preventivo e ti rispondiamo con la nostra migliore offerta."
+      },
+      {
+        "q": "Quando si può fare la festa?",
+        "a": "La mattina, il pomeriggio o la sera, con qualsiasi tempo: l'arena è coperta e illuminata."
+      },
+      {
+        "q": "Si può organizzare qualcosa di speciale per un addio al celibato o al nubilato?",
+        "a": "Sì: chiamaci per realizzare qualcosa di indimenticabile. Il numero è in fondo alla pagina."
+      },
+      {
+        "q": "Serve un modulo per giocare?",
+        "a": "Sì, è obbligatorio per ogni giocatore: i maggiorenni lo compilano online, i minorenni portano quello su carta firmato da un genitore. Li trovi nella pagina Modulistica."
+      },
+      {
+        "q": "Come ci si veste?",
+        "a": "L'arena non è riscaldata né climatizzata: vestiti in base alla stagione."
+      },
+      {
+        "q": "Dove si trova l'arena?",
+        "a": "In Via Melegnano 26 a Settimo Milanese, alle porte di Milano: parcheggio facile e bus 433 dalla metro M1 Bisceglie."
+      },
+      {
+        "q": "Come si prenota?",
+        "a": "La prenotazione è obbligatoria. Compila la richiesta qui sotto con la data, il numero di giocatori e l'attività, e dicci se vuoi la sala feste e il catering: ti rispondiamo con la nostra migliore offerta. Se preferisci, chiamaci o scrivici: telefono ed email sono in fondo alla pagina."
+      }
+    ]
+  },
+  "request": {
+    "title": "Richiedi un preventivo",
+    "text": "Dicci la data, quanti siete e quale attività preferisci, e se vuoi la sala feste e il catering: ti rispondiamo con la nostra migliore offerta.",
+    "activity": "Festa o addio al celibato"
+  }
+}

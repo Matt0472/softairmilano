@@ -1,0 +1,124 @@
+{
+  "seo": {
+    "title": "Voucher regalo softair a Milano | SoftAir Milano",
+    "description": "Regala una partita di softair a Milano: voucher con noleggio attrezzatura a 30 € o per chi ha già il fucile a 15 € a giocatore. Valido 6 mesi.",
+    "image": "",
+    "imageAlt": ""
+  },
+  "hero": {
+    "hudTag": "VOUCHER · VALIDO 6 MESI",
+    "eyebrow": "Idea regalo",
+    "title": "Voucher regalo",
+    "subtitle": "Regala un'esperienza di gioco ai tuoi amici e familiari: scelgono loro il giorno e l'ora, entro 6 mesi.",
+    "cta": {
+      "label": "Acquista il voucher",
+      "href": "#acquista"
+    },
+    "ticketNote": "Valido 6 mesi · Data a scelta"
+  },
+  "types": {
+    "title": "Scegli il voucher",
+    "text": "Il prezzo è a giocatore: puoi regalare la partita a una persona o a tutto il gruppo.",
+    "includedTitle": "Comprende",
+    "items": [
+      {
+        "title": "Con noleggio attrezzatura",
+        "audience": "Per chi non ha l'attrezzatura: è compresa nel prezzo.",
+        "price": "30",
+        "unit": "€ a giocatore",
+        "included": [
+          "Una sessione di gioco, giorno e ora a scelta",
+          "Fucile con 300 colpi",
+          "Pettorina",
+          "Maschera protettiva"
+        ],
+        "note": "Ricarica extra da 300 colpi: 3 €"
+      },
+      {
+        "title": "Con il proprio fucile",
+        "audience": "Per chi ha già il fucile: nessuna attrezzatura fornita.",
+        "price": "15",
+        "unit": "€ a giocatore",
+        "included": [
+          "Una sessione di gioco, giorno e ora a scelta"
+        ],
+        "note": ""
+      }
+    ]
+  },
+  "steps": {
+    "title": "Come funziona",
+    "text": "",
+    "items": [
+      {
+        "time": "",
+        "title": "Lo acquisti",
+        "text": "Scegli il voucher e per quanti giocatori."
+      },
+      {
+        "time": "",
+        "title": "Lo regali",
+        "text": "Ad amici e familiari: a una persona o a tutto il gruppo."
+      },
+      {
+        "time": "",
+        "title": "Scelgono la data",
+        "text": "Chi lo riceve prenota il giorno e l'ora che preferisce, entro 6 mesi dall'acquisto."
+      },
+      {
+        "time": "",
+        "title": "Si gioca",
+        "text": "In arena, con il modulo di partecipazione compilato."
+      }
+    ],
+    "rulesTitle": "Prima di giocare",
+    "rules": [
+      "Dai 12 anni compiuti",
+      "Prenotazione obbligatoria",
+      "Modulo di partecipazione per tutti"
+    ],
+    "rulesLink": {
+      "label": "Vai alla modulistica",
+      "href": "/modulistica"
+    }
+  },
+  "purchase": {
+    "title": "Acquista il voucher",
+    "offlineText": "L'acquisto online arriva a breve: per ora chiamaci o scrivici.",
+    "onlineText": "Scegli il voucher e completa l'acquisto online.",
+    "button": "Acquista il voucher",
+    "note": "Il pagamento passa da TicketingHub, il nostro sistema di prenotazione: si carica solo quando lo apri.",
+    "callLabel": "Chiama",
+    "emailLabel": "Scrivi",
+    "emailSubject": "Voucher regalo"
+  },
+  "faq": {
+    "title": "Domande frequenti",
+    "items": [
+      {
+        "q": "Per quanto tempo è valido il voucher?",
+        "a": "Sei mesi dall'acquisto: entro questa data chi lo riceve prenota la sua partita."
+      },
+      {
+        "q": "Cosa comprende il voucher con noleggio attrezzatura?",
+        "a": "Il fucile con 300 colpi, la pettorina e la maschera protettiva, a 30 € a giocatore. Le ricariche extra da 300 colpi costano 3 € l'una."
+      },
+      {
+        "q": "E il voucher per chi ha già il fucile?",
+        "a": "Costa 15 € a giocatore e non comprende l'attrezzatura: chi lo riceve gioca con la propria."
+      },
+      {
+        "q": "Chi riceve il voucher può scegliere la data?",
+        "a": "Sì: sceglie il giorno e l'ora che preferisce e prenota la partita in una delle nostre arene, entro i 6 mesi di validità. La prenotazione è obbligatoria."
+      },
+      {
+        "q": "Da che età si può giocare?",
+        "a": "A softair si gioca dai 12 anni compiuti."
+      },
+      {
+        "q": "Serve un modulo per giocare?",
+        "a": "Sì, il modulo di partecipazione è obbligatorio per tutti: i maggiorenni lo compilano online prima di venire, i minorenni portano quello firmato da un genitore. Li trovi nella pagina Modulistica."
+      }
+    ]
+  }
+}

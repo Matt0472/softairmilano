@@ -14,6 +14,7 @@ import PriceTiers from '../components/organisms/PriceTiers.astro';
 import Reviews from '../components/organisms/Reviews.astro';
 import FaqAccordion from '../components/organisms/FaqAccordion.astro';
 import ActivityLinks from '../components/organisms/ActivityLinks.astro';
+import BookingRequest from '../components/organisms/BookingRequest.astro';
 import FinalCta from '../components/organisms/FinalCta.astro';
 import IncludedList from '../components/molecules/IncludedList.astro';
 import Trajectory from '../components/molecules/Trajectory.astro';
@@ -89,9 +90,14 @@ const crumbs = [
 ];
 // "Provate anche": the other activities, with the one-line description from the menu when there is one.
 const menuDesc = new Map(flattenNav(navigation.items as NavItem[]).map((n) => [n.href, 'desc' in n ? n.desc : undefined]));
+// Each card may carry its own photo for this gallery (`linkImage`), so it can differ from the home's.
 const relatedItems = home.activities
   .filter((a) => a.href !== path)
-  .map((a) => ({ ...a, desc: menuDesc.get(a.href) || a.desc }));
+  .map((a) => ({
+    ...a,
+    desc: menuDesc.get(a.href) || a.desc,
+    ...(has(a.linkImage) ? { image: a.linkImage, imageMobile: has(a.linkImageMobile) ? a.linkImageMobile : undefined } : {}),
+  }));
 const faqItems = (faq?.items ?? []).filter((f) => f.q?.trim() && f.a?.trim());
 const faqData = faqLd(faqItems);
 const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])];
@@ -121,11 +127,13 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
     <PriceTiers title={pricing.title} text={pricing.text} tiers={pricing.tiers} notes={pricing.notes} cta={data.hero.ctaPrimary} />
   )}
 
-  {reviews && has(reviews.title) && <Reviews title={reviews.title} page={activity} />}
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
 
   {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
 
   {related && has(related.title) && <ActivityLinks title={related.title} items={relatedItems} />}
+
+  <BookingRequest activity={data.name} />
 
   <FinalCta {...settings.finalCta} />
 

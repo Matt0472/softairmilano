@@ -1,0 +1,636 @@
+---
+// Booking request on the activity pages, team building and the parties page, right above the closing call to action, and on the contact
+// page, where no activity is preselected and the list starts on its last entry («Altro»): the visitor asks
+// for a day and a group size, and Web3Forms emails the request to the arena. It renders only when
+// settings.json holds the Web3Forms access key and richiesta.json a title (CMS-10). The key is
+// public by design (it can only deliver to the account's own inbox), so it ships in the page.
+// Progressive enhancement: without JS the form posts natively and the browser checks the
+// constraints; with JS it posts JSON with fetch, flags errors inline under a summary that takes
+// focus, and answers in place (A11Y-12). No captcha and no third-party script, only a honeypot.
+// The heading stays beside the form on wide screens; below 1024px it sits above it.
+
+import Button from '../atoms/Button.astro';
+import Icon from '../atoms/Icon.astro';
+import SectionHead from '../molecules/SectionHead.astro';
+import copy from '../../data/richiesta.json';
+import home from '../../data/home.json';
+import settings from '../../data/settings.json';
+import { has } from '../../lib/fields';
+import { telHref } from '../../lib/phone';
+
+interface Props {
+  /** The page's activity, preselected in the list. */
+  activity?: string;
+  /** The page's own heading and intro, over the form's shared ones (the contact page's «Scrivici»). */
+  title?: string;
+  text?: string;
+  headingId?: string;
+}
+
+interface FieldCopy { label?: string; error?: string }
+type Key = 'name' | 'phone' | 'email' | 'activity' | 'date' | 'people' | 'message';
+interface Field {
+  key: Key;
+  kind: 'input' | 'select' | 'textarea';
+  required?: boolean;
+  wide?: boolean;
+  attrs?: Record<string, string | number | undefined>;
+}
+
+const ENDPOINT = 'https://api.web3forms.com/submit';
+// Written for the `v` flag browsers compile `pattern` with: brackets, slash and dash escaped.
+const TEL_PATTERN = '[\\d\\s+.\\(\\)\\/\\-]{6,24}';
+const MAIL_PATTERN = '[^@\\s]+@[^@\\s]+\\.[^@\\s]+';
+
+const { activity, headingId = 'richiesta-title' } = Astro.props;
+const title = has(Astro.props.title) ? Astro.props.title : copy.title;
+const text = has(Astro.props.text) ? Astro.props.text : copy.text;
+const accessKey = settings.web3formsKey?.trim() ?? '';
+const show = has(accessKey) && has(title);
+
+const fields = copy.fields as Record<Key, FieldCopy> & { activity: FieldCopy & { other?: string }; people: FieldCopy & { max?: number } };
+const label = (k: Key) => fields[k]?.label?.trim() || '';
+// The email lists each answer under its label, so the client reads Italian; `email` keeps its name,
+// which Web3Forms uses as the reply-to address.
+const nameOf = (k: Key) => (k === 'email' ? 'email' : label(k) || k);
+
+// The activities in the site's own order (as on the home), from the activity pages themselves, so
+// a new page joins the list without touching this component.
+const pages = import.meta.glob<{ default: { name?: string } }>('../../data/activities/*.json', { eager: true });
+const order = home.activities.map((a) => a.href);
+const rank = (href: string) => (order.includes(href) ? order.indexOf(href) : order.length);
+const listed = Object.entries(pages)
+  .map(([file, mod]) => ({ href: `/${file.split('/').pop()!.replace(/\.json$/, '')}`, name: mod.default.name?.trim() ?? '' }))
+  .filter((a) => has(a.name))
+  .sort((a, b) => rank(a.href) - rank(b.href))
+  .map((a) => a.name);
+const other = fields.activity.other?.trim() ?? '';
+// A page outside the activity collection (team building, parties) brings its own entry, listed before «Altro».
+const own = activity?.trim() ?? '';
+const activities = has(own) && own !== other && !listed.includes(own) ? [...listed, own] : listed;
+const current = has(own) && activities.includes(own) ? own : other || activities[0];
+
+// The subject tags the request in the inbox with its activity: the page's here, the one chosen at
+// submit time once the script runs.
+const prefix = copy.emailSubject?.trim() ?? '';
+const subject = [prefix, current].filter(has).join(': ');
+const sender = copy.emailSender?.trim() || settings.siteName;
+// The page the request came from, as the email shows it ("/arcotag").
+const pagePath = Astro.url.pathname.replace(/(.)\/+$/, '$1');
+
+// Today in the arena's calendar; the script moves it to the visitor's today, as a build ages.
+const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(new Date());
+const maxPeople = Number(fields.people.max) > 0 ? Number(fields.people.max) : undefined;
+
+const list: Field[] = [
+  { key: 'name', kind: 'input', required: true, attrs: { type: 'text', autocomplete: 'name', autocapitalize: 'words', maxlength: 80 } },
+  { key: 'phone', kind: 'input', required: true, attrs: { type: 'tel', autocomplete: 'tel', pattern: TEL_PATTERN, maxlength: 24 } },
+  { key: 'email', kind: 'input', required: true, attrs: { type: 'email', autocomplete: 'email', pattern: MAIL_PATTERN, maxlength: 120, spellcheck: 'false' } },
+  { key: 'activity', kind: 'select' },
+  { key: 'date', kind: 'input', attrs: { type: 'date', min: today } },
+  { key: 'people', kind: 'input', attrs: { type: 'number', min: 1, max: maxPeople, step: 1, inputmode: 'numeric' } },
+  { key: 'message', kind: 'textarea', wide: true, attrs: { rows: 4, maxlength: 2000 } },
+];
+
+const { phone } = settings;
+const tel = telHref(phone);
+---
+
+{show && (
+  <section id="richiesta" class="req band" aria-labelledby={headingId} data-req>
+    <div class="req__inner shell">
+      <div class="req__intro">
+        <div data-reveal>
+          <SectionHead eyebrow={copy.eyebrow} title={title} text={text} id={headingId} />
+        </div>
+      </div>
+
+      <div class="req__panel" data-reveal style="--i: 1">
+        <form class="req__form" action={ENDPOINT} method="post" accept-charset="UTF-8">
+          <input type="hidden" name="access_key" value={accessKey} />
+          <input type="hidden" name="subject" value={subject} data-prefix={prefix} />
+          <input type="hidden" name="from_name" value={sender} />
+          <input type="hidden" name="pagina" value={pagePath} />
+          {/* Honeypot: people never reach it, bots that fill every field tick it and Web3Forms drops the request. */}
+          <input type="checkbox" name="botcheck" class="sr-only" tabindex="-1" aria-hidden="true" autocomplete="off" />
+
+          {/* Interface microcopy (CMS-02): it names what the list under it is. */}
+          <div class="req__summary" role="group" aria-labelledby="req-summary-title" tabindex="-1" data-req-summary hidden>
+            <p class="req__summary-title" id="req-summary-title">Prima di inviare, controlla:</p>
+            <ul class="req__summary-list" role="list"></ul>
+          </div>
+
+          {list.map((fd) => {
+            const id = `req-${fd.key}`;
+            const err = fields[fd.key]?.error?.trim() ?? '';
+            return (
+              <div class:list={['req__field', fd.wide && 'req__field--wide']}>
+                <label class="req__label" for={id}>
+                  {label(fd.key)}
+                  {!fd.required && fd.kind !== 'select' && <Fragment>{' '}<span class="req__opt">(facoltativo)</span></Fragment>}
+                </label>
+                {fd.kind === 'input' && (
+                  <input class="req__control" id={id} name={nameOf(fd.key)} required={fd.required} data-req-field {...fd.attrs} />
+                )}
+                {fd.kind === 'select' && (
+                  <div class="req__select">
+                    <select class="req__control" id={id} name={nameOf(fd.key)} data-req-field>
+                      {activities.map((a) => <option value={a} selected={a === current}>{a}</option>)}
+                      {has(other) && <option value={other} selected={other === current}>{other}</option>}
+                    </select>
+                    <Icon name="chevronDown" size={18} class="req__chev" />
+                  </div>
+                )}
+                {fd.kind === 'textarea' && (
+                  <textarea class="req__control req__control--area" id={id} name={nameOf(fd.key)} data-req-field {...fd.attrs}></textarea>
+                )}
+                {fd.kind === 'input' && <p class="req__error" id={`${id}-error`} hidden>{err}</p>}
+              </div>
+            );
+          })}
+
+          <div class="req__foot">
+            <div class="req__alert" role="alert" data-req-alert></div>
+            {/* Says «sending» aloud even when Enter was pressed in a field and focus stayed there (4.1.3). */}
+            <p class="sr-only" role="status" data-req-live></p>
+            <Button type="submit" variant="primary" class="req__submit" data-req-submit>
+              <span class="req__idle">{copy.submitLabel}</span>
+              {/* Status label while the request travels (CMS-02). */}
+              <span class="req__busy">Invio in corso</span>
+              <Icon name="arrowRight" size={20} class="req__arrow" />
+              <span class="req__spin" aria-hidden="true"></span>
+            </Button>
+            {has(copy.privacy) && <p class="req__privacy">{copy.privacy}</p>}
+          </div>
+        </form>
+
+        {/* Not a live region: the success message takes focus, so it is read once. */}
+        <div class="req__status" tabindex="-1" data-req-status></div>
+
+        <template data-req-success>
+          <div class="req__done">
+            <span class="req__done-mark" aria-hidden="true"><Icon name="check" size={26} /></span>
+            <h3 class="req__done-title">{copy.successTitle}</h3>
+            {has(copy.successText) && <p class="req__done-text">{copy.successText}</p>}
+          </div>
+        </template>
+        <template data-req-failure>
+          <p class="req__alert-text">{copy.failureText}</p>
+          {tel && (
+            <p class="req__alert-text">
+              {has(copy.failureCall) && `${copy.failureCall.trim()} `}<a class="req__tel" href={tel}>{phone}</a>
+            </p>
+          )}
+        </template>
+      </div>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .req {
+    --accent: var(--color-accent);
+    /* Error copy: the danger red lifted toward the text colour, so it reads at 4.5:1 or more on
+       either plane and either lift; the pure red is kept for borders and rules (A11Y-02). */
+    --req-danger: color-mix(in srgb, var(--color-danger) 65%, var(--color-foreground));
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  /* Wide screens: the heading on the left, held in view while the form on the right is filled in. */
+  .req__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    column-gap: clamp(2.5rem, 6vw, 7rem);
+    align-items: start;
+  }
+  .req__intro {
+    position: sticky;
+    top: clamp(1.5rem, 6vh, 4rem);
+  }
+  .req__panel { container-type: inline-size; }
+
+  .req__form {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.25rem, 2.4vw, 1.6rem) 1.25rem;
+  }
+  /* Two fields a row once the form is wide enough for a phone number and an email side by side. */
+  @container (width >= 34rem) {
+    .req__form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .req__field--wide,
+    .req__summary,
+    .req__foot { grid-column: 1 / -1; }
+  }
+
+  .req__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+  .req__label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.5rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+  }
+  .req__opt {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 0.82rem;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-muted);
+  }
+
+  /* Controls sit one step above the band (its --lift), outlined in steel: 3:1 against either plane,
+     so the field reads as a field (A11Y-02). They share the buttons' radius. */
+  .req__control {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-steel);
+    border-radius: var(--radius-md);
+    background: var(--lift);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-foreground) 4%, transparent);
+    color: var(--color-foreground);
+    font: inherit;
+    /* 16px or more: iOS zooms the page into any smaller field. */
+    font-size: 1rem;
+    line-height: 1.4;
+    transition:
+      border-color var(--duration-fast) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .req__control:hover { border-color: var(--color-muted); }
+  .req__control:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+    background: var(--lift-2);
+  }
+  .req__control[aria-invalid='true'] { border-color: var(--color-danger); }
+  .req__control[aria-invalid='true']:focus-visible { border-color: var(--accent); }
+  /* Autofill keeps the field's own surface instead of the browser's tint. */
+  .req__control:-webkit-autofill {
+    -webkit-text-fill-color: var(--color-foreground);
+    caret-color: var(--color-foreground);
+    box-shadow: inset 0 0 0 100vmax var(--lift);
+  }
+  .req__control--area {
+    min-height: 8.5rem;
+    resize: vertical;
+  }
+  .req__control[type='number'] { appearance: textfield; }
+  .req__control[type='number']::-webkit-inner-spin-button,
+  .req__control[type='number']::-webkit-outer-spin-button { appearance: none; margin: 0; }
+  /* iOS centres the date in its field: start it where the other fields start their text. */
+  .req__control::-webkit-date-and-time-value { text-align: start; }
+  .req__control::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.75; }
+
+  .req__select { position: relative; }
+  .req__select .req__control {
+    appearance: none;
+    padding-inline-end: 3rem;
+    cursor: pointer;
+  }
+  .req__chev {
+    position: absolute;
+    inset-inline-end: 1rem;
+    top: 50%;
+    translate: 0 -50%;
+    color: var(--accent);
+    pointer-events: none;
+  }
+
+  .req__error {
+    display: flex;
+    gap: 0.55rem;
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--req-danger);
+    text-wrap: pretty;
+  }
+  .req__error::before {
+    content: "";
+    flex: none;
+    width: 0.7rem;
+    height: 2px;
+    margin-top: 0.68em;
+    background: var(--color-danger);
+  }
+
+  /* Summary and send failure share one box: the red rule on the left, as the price rows carry the accent. */
+  .req__summary,
+  .req__alert:not(:empty) {
+    padding: 1rem 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--color-danger) 45%, var(--color-border));
+    border-radius: var(--radius-md);
+    background: var(--lift);
+    box-shadow: inset 3px 0 0 var(--color-danger);
+  }
+  .req__summary { scroll-margin-block: 2rem; }
+  .req__summary:focus { outline: none; }
+  .req__summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .req__summary-title {
+    margin: 0;
+    font-weight: 600;
+    color: var(--color-foreground);
+  }
+  .req__summary-list {
+    list-style: none;
+    margin: 0.35rem 0 0;
+    padding: 0;
+  }
+  .req__summary-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    color: var(--req-danger);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-danger) 60%, transparent);
+    text-underline-offset: 3px;
+    text-wrap: pretty;
+  }
+  .req__summary-list a:hover { color: var(--color-foreground); }
+
+  .req__foot {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 0.5rem;
+  }
+  .req__alert:not(:empty) {
+    align-self: stretch;
+    margin-bottom: 1.25rem;
+  }
+  .req__alert-text { margin: 0; color: var(--color-foreground); }
+  .req__tel {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-foreground);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 60%, transparent);
+    text-underline-offset: 4px;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .req__tel:hover { color: var(--color-accent-hover); }
+
+  .req__submit {
+    min-height: 3.5rem;
+    padding-inline: 1.75rem 1.5rem;
+    gap: 0.75rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+    transition:
+      background-color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .req__submit:active { transform: translateY(1px) scale(0.98); }
+  .req__arrow { transition: translate var(--duration-base) var(--ease-out-expo); }
+  .req__submit:hover .req__arrow { translate: 3px 0; }
+  .req__busy,
+  .req__spin { display: none; }
+
+  /* Sending: the label says so and a ring turns where the arrow was. aria-disabled, not disabled,
+     so the focused button keeps focus; the script ignores a second submit. */
+  .req__form[aria-busy='true'] .req__submit { cursor: progress; }
+  .req__form[aria-busy='true'] :is(.req__idle, .req__arrow) { display: none; }
+  .req__form[aria-busy='true'] .req__busy { display: inline; }
+  .req__form[aria-busy='true'] .req__spin {
+    display: inline-block;
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 2px solid currentColor;
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    /* Linear on purpose: a steady turn, not an entrance. Reduced motion stops it on its first frame. */
+    animation: req-spin calc(var(--duration-slow) * 1.75) linear infinite;
+  }
+  @keyframes req-spin {
+    to { transform: rotate(1turn); }
+  }
+
+  .req__privacy {
+    margin: 1rem 0 0;
+    max-width: 52ch;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+
+  /* Sent: the answer takes the form's place, with the accent rule of the site's lit rows. */
+  .req__status { scroll-margin-block: 2rem; }
+  .req__status:focus { outline: none; }
+  .req__done {
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--lift);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+  .req__done-mark {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--color-on-accent);
+    animation: req-done calc(var(--duration-slow) * 1.5) var(--ease-out-expo) both;
+  }
+  @keyframes req-done {
+    from { opacity: 0; transform: scale(0.6); }
+  }
+  .req__done-title {
+    margin: 1.25rem 0 0;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+  }
+  .req__done-text {
+    margin: 0.6rem 0 0;
+    max-width: 52ch;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.4vw, 1.1rem);
+    text-wrap: pretty;
+  }
+
+  @container (width < 34rem) {
+    .req__submit { width: 100%; }
+  }
+
+  @media (max-width: 1023px) {
+    .req__inner {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: clamp(2rem, 5vw, 2.75rem);
+    }
+    .req__intro { position: static; }
+  }
+</style>
+
+<script>
+  // Progressive enhancement: everything here sits on a form that already posts and validates natively.
+  type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+  const root = document.querySelector<HTMLElement>('[data-req]');
+  const form = root?.querySelector<HTMLFormElement>('form');
+
+  if (root && form) {
+    const controls = [...form.querySelectorAll<Control>('[data-req-field]')];
+    const summary = root.querySelector<HTMLElement>('[data-req-summary]')!;
+    const summaryList = summary.querySelector('ul')!;
+    const alertBox = root.querySelector<HTMLElement>('[data-req-alert]')!;
+    const status = root.querySelector<HTMLElement>('[data-req-status]')!;
+    const live = root.querySelector<HTMLElement>('[data-req-live]')!;
+    const submit = form.querySelector<HTMLElement>('[data-req-submit]')!;
+    const subject = form.querySelector<HTMLInputElement>('input[name="subject"]')!;
+    const activity = form.querySelector<HTMLSelectElement>('select');
+    const date = form.querySelector<HTMLInputElement>('input[type="date"]');
+    const fromTemplate = (name: string) =>
+      root.querySelector<HTMLTemplateElement>(`template[data-req-${name}]`)!.content.cloneNode(true);
+
+    form.noValidate = true;
+
+    // The min written at build time ages with the deploy: today in the visitor's own calendar.
+    if (date) {
+      const d = new Date();
+      date.min = [d.getFullYear(), d.getMonth() + 1, d.getDate()].map((n) => String(n).padStart(2, '0')).join('-');
+    }
+
+    // The email's subject names the activity chosen, not the one the page preselected.
+    const prefix = subject.dataset.prefix ?? '';
+    const subjectFor = (name: string) => (prefix ? `${prefix}: ${name}` : name);
+
+    // The browser's own checks, plus one the pattern cannot express: a phone number needs digits.
+    const isValid = (c: Control) =>
+      c.checkValidity() && !(c.type === 'tel' && c.value.trim() && c.value.replace(/\D/g, '').length < 6);
+    const errorOf = (c: Control) => document.getElementById(`${c.id}-error`);
+
+    // The message is linked only while it shows: a description is read even when its element is hidden.
+    const mark = (c: Control, bad: boolean) => {
+      const err = errorOf(c);
+      if (!err) return;
+      if (bad && !err.textContent?.trim()) err.textContent = c.validationMessage;
+      err.hidden = !bad;
+      if (bad) {
+        c.setAttribute('aria-invalid', 'true');
+        c.setAttribute('aria-describedby', err.id);
+      } else {
+        c.removeAttribute('aria-invalid');
+        c.removeAttribute('aria-describedby');
+      }
+    };
+
+    // A field is judged when the visitor leaves it having written in it, never while they type; a
+    // flagged field clears the moment it is right.
+    for (const c of controls) {
+      c.addEventListener('blur', () => {
+        if (c.value.trim() || c.hasAttribute('aria-invalid')) mark(c, !isValid(c));
+      });
+      c.addEventListener('input', () => {
+        if (c.hasAttribute('aria-invalid') && isValid(c)) mark(c, false);
+      });
+    }
+
+    const showSummary = (bad: Control[]) => {
+      summaryList.replaceChildren(
+        ...bad.map((c) => {
+          const a = document.createElement('a');
+          a.href = `#${c.id}`;
+          a.textContent = errorOf(c)?.textContent?.trim() || c.validationMessage;
+          // Straight to the field. The site-wide anchor handler would give it tabindex -1 and drop
+          // it from the tab order, so the click stops here.
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            c.focus();
+          });
+          const li = document.createElement('li');
+          li.append(a);
+          return li;
+        })
+      );
+      summary.hidden = false;
+      summary.focus();
+    };
+
+    let busy = false;
+
+    const send = async () => {
+      busy = true;
+      form.setAttribute('aria-busy', 'true');
+      submit.setAttribute('aria-disabled', 'true');
+      live.textContent = 'Invio in corso…';
+
+      if (activity?.value) subject.value = subjectFor(activity.value);
+      const data: Record<string, string> = {};
+      new FormData(form).forEach((v, k) => {
+        if (typeof v === 'string' && v.trim()) data[k] = v.trim();
+      });
+      // The email gives the day in words, as the visitor would say it.
+      if (date?.value) {
+        data[date.name] = new Intl.DateTimeFormat('it-IT', { dateStyle: 'full', timeZone: 'UTC' }).format(
+          new Date(`${date.value}T00:00:00Z`)
+        );
+      }
+
+      // A request that hangs is a failed one: the visitor gets the phone number instead of a spinner.
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 15000);
+      let sent = false;
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+          signal: ctrl.signal,
+        });
+        const body = await res.json().catch(() => null);
+        sent = res.ok && body?.success === true;
+      } catch {
+        sent = false;
+      }
+      clearTimeout(timer);
+
+      busy = false;
+      live.textContent = '';
+      form.removeAttribute('aria-busy');
+      submit.removeAttribute('aria-disabled');
+
+      if (sent) {
+        form.hidden = true;
+        status.replaceChildren(fromTemplate('success'));
+        status.focus();
+      } else {
+        alertBox.replaceChildren(fromTemplate('failure'));
+      }
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (busy) return;
+      alertBox.replaceChildren();
+      const bad = controls.filter((c) => !isValid(c));
+      controls.forEach((c) => mark(c, bad.includes(c)));
+      if (bad.length) {
+        showSummary(bad);
+        return;
+      }
+      summary.hidden = true;
+      void send();
+    });
+  }
+</script>

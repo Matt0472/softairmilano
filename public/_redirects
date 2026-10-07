@@ -1,3 +1,12 @@
 # Old WordPress URLs → new pages (Cloudflare Pages; ignored by the GitHub Pages preview)
 /partite-di-softair/ /softair/ 301
 /partite-di-softair /softair/ 301
+/softair-milano-cose/ /softair/ 301
+/softair-milano-cose /softair/ 301
+/teambulding/ /teambuilding/ 301
+/teambulding /teambuilding/ 301
+/partite-di-softair-teambulding/ /teambuilding/ 301
+/partite-di-softair-teambulding /teambuilding/ 301
+# The comparison page moved to a clearer address
+/paintball/ /softair-vs-paintball/ 301
+/paintball /softair-vs-paintball/ 301

@@ -1,0 +1,50 @@
+---
+// Contacts (/contatti): how to reach the arena, in the order a visitor needs it. The opening is the
+// contact sheet itself, the phone first (it books); then where the arena is, with Google's map only
+// on request and the ways in; the request form; the questions asked before a first visit; and the
+// closing section every page ends on, where the header's Prenota lands. Contact data comes only
+// from settings.json, the page's copy from contatti.json; a section the client empties disappears.
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactHero from '../components/organisms/ContactHero.astro';
+import GettingHere from '../components/organisms/GettingHere.astro';
+import BookingRequest from '../components/organisms/BookingRequest.astro';
+import FaqAccordion from '../components/organisms/FaqAccordion.astro';
+import FinalCta from '../components/organisms/FinalCta.astro';
+import Reveal from '../components/molecules/Reveal.astro';
+import page from '../data/contatti.json';
+import navigation from '../data/navigation.json';
+import settings from '../data/settings.json';
+import { has } from '../lib/fields';
+import { breadcrumbLd, faqLd } from '../lib/jsonld';
+import { flattenNav, type NavItem } from '../lib/nav';
+
+const { seo, hero, labels, directions, form, faq } = page;
+
+const path = '/contatti';
+// The page name in the trail is its menu label (single source for both).
+const pageName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === path)?.label || hero.title;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: pageName, href: path },
+];
+
+const faqItems = (faq?.items ?? []).filter((f) => has(f.q) && has(f.a));
+const faqData = faqLd(faqItems);
+const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])];
+---
+
+<BaseLayout title={seo.title} description={seo.description} image={seo.image} imageAlt={seo.imageAlt} jsonLd={jsonLd}>
+  <ContactHero {...hero} labels={labels} crumbs={crumbs} />
+
+  {directions && has(directions.title) && <GettingHere {...directions} />}
+
+  {/* No activity here: the list starts on «Altro», and the email names the page it came from. */}
+  <BookingRequest title={form?.title} text={form?.text} />
+
+  {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
+
+  <FinalCta {...settings.finalCta} />
+
+  <Reveal />
+</BaseLayout>

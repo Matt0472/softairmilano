@@ -1,0 +1,19 @@
+{
+  "seo": {
+    "title": "Pagina non trovata | SoftAir Milano",
+    "description": "La pagina che cerchi non esiste o è stata spostata. Torna alla home di SoftAir Milano o scegli un'attività."
+  },
+  "hudTag": "SCANSIONE · NESSUN CONTATTO",
+  "eyebrow": "Errore 404",
+  "title": "Bersaglio mancato",
+  "text": "Questa pagina è fuori mappa: non esiste o è stata spostata.",
+  "ctaPrimary": {
+    "label": "Prenota",
+    "href": "#prenota"
+  },
+  "ctaSecondary": {
+    "label": "Torna alla home",
+    "href": "/"
+  },
+  "destinationsTitle": "Riparti da qui"
+}

@@ -23,7 +23,7 @@ const { seo, hero, video, arena, intro, activitiesTitle, activities, reviews, oc
 <BaseLayout title={seo?.title} description={seo?.description} image={seo?.image} imageAlt={seo?.imageAlt}>
   <Hero {...hero} />
 
-  {/* Dentro l'azione: the video that opens as the page scrolls. */}
+  {/* Dentro l'azione: the wide video that plays while it is on screen. */}
   <ActionVideo {...video} />
 
   <ArenaIntro {...arena} />
@@ -36,7 +36,7 @@ const { seo, hero, video, arena, intro, activitiesTitle, activities, reviews, oc
     <TeaserBanner {...paintballTeaser} headingId="paintball-teaser-title" />
   )}
 
-  {reviews && has(reviews.title) && <Reviews title={reviews.title} page="home" />}
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
 
   {occasions && has(occasions.title) && !!occasions.items?.length && <OccasionMosaic {...occasions} />}
 
@@ -44,7 +44,7 @@ const { seo, hero, video, arena, intro, activitiesTitle, activities, reviews, oc
 
   {social && has(social.title) && <SocialChannels title={social.title} text={social.text} />}
 
-  {/* The outdoor arena (Ranger): the whole section links to its own site. */}
+  {/* The outdoor arena (Ranger): one card that links to its own site. */}
   {rangerTeaser && has(rangerTeaser.title) && <RangerTeaser {...rangerTeaser} href={settings.rangerUrl} />}
 
   {/* #prenota: every Prenota on the page lands here. The same block closes every page. */}

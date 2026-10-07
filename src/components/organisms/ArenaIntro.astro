@@ -1,15 +1,21 @@
 ---
-// "L'arena": the arena in one figure and four features. The surface ("1.500 m²") is the focal
-// point, rolling in like the inner heroes' facts (Odometer) when the section arrives, with the
-// radar sweeping behind it: the only thing here that keeps moving, and only while it is on screen.
-// The features stand in columns divided by hairlines, each opening on its emblem (picked in the
-// CMS) in a sight like the mission files' (ModeGrid); pointing at one locks the sight on. The
-// features are not links, so nothing promises a click. The section is the #arena anchor, the
-// target of the hero's secondary link. On the narrowest phones the features go one per row.
+// "L'arena": the arena in one figure, a few real photos and four features. The surface
+// ("1.500 m²") is the focal point, rolling in like the inner heroes' facts (Odometer) when the
+// section arrives, with the radar sweeping behind it: the only thing here that keeps moving, and
+// only while it is on screen. Under the intro, the arena's Google 360° tour opens in a new tab.
+// The photos (two to four, from the CMS) follow the figure in a mosaic whose spans vary with
+// their count; with none, the section goes without. The features stand in columns divided by
+// hairlines, each opening on its emblem (picked in the CMS) in a sight like the mission files'
+// (ModeGrid); pointing at one locks the sight on. Neither photos nor features are links, so
+// nothing promises a click. The section is the #arena anchor, the target of the hero's secondary
+// link. On the narrowest phones the features go one per row.
 
 import type { ComponentProps } from 'astro/types';
+import Button from '../atoms/Button.astro';
 import Icon from '../atoms/Icon.astro';
 import Odometer from '../atoms/Odometer.astro';
+import Picture from '../atoms/Picture.astro';
+import PhotoFrame from '../molecules/PhotoFrame.astro';
 import SectionHead from '../molecules/SectionHead.astro';
 import { has } from '../../lib/fields';
 
@@ -25,6 +31,10 @@ interface Feature {
   title: string;
   text?: string;
 }
+interface Photo {
+  image?: string;
+  imageAlt?: string;
+}
 interface Cta {
   label?: string;
   href?: string;
@@ -34,21 +44,37 @@ interface Props {
   text?: string;
   stat?: Stat;
   features: Feature[];
-  cta?: Cta;
+  photos?: Photo[];
+  /** The Google 360° tour, opened in a new tab. */
+  tour?: Cta;
   headingId?: string;
 }
 
 // The emblems the CMS offers (arena.features.icon in .pages.yml): any other value draws none.
 const EMBLEMS: IconName[] = ['hangar', 'roof', 'umbrella', 'bulb', 'floodlight', 'moon', 'cycle', 'layout', 'wrench', 'speaker', 'equalizer', 'note'];
 
-const { title, text, stat, features, cta, headingId = 'arena-title' } = Astro.props;
+const { title, text, stat, features, photos, tour, headingId = 'arena-title' } = Astro.props;
 const list = (features ?? [])
   .filter((f) => has(f?.title))
   .map((f) => ({ ...f, emblem: EMBLEMS.find((e) => e === f.icon) }));
 const hasTitle = has(title);
 const figure = has(stat?.value) ? stat : undefined;
-// A link emptied in the CMS (or not yet pointing anywhere) disappears instead of rendering blank.
-const link = has(cta?.label) && has(cta?.href) ? cta : undefined;
+// A link emptied in the CMS disappears instead of rendering blank.
+const tourLink = has(tour?.label) && has(tour?.href) ? tour : undefined;
+
+// The mosaic: column spans out of twelve (tablet and up) for each count, so no two neighbours
+// match and every row is full; four photos lay two rows as a brick. On portrait phones the first
+// photo, and the last when the count is even, runs the full width and the others pair up.
+const SPANS: Record<number, number[]> = { 1: [12], 2: [7, 5], 3: [5, 3, 4], 4: [7, 5, 5, 7] };
+const shots = (photos ?? []).filter((p) => has(p?.image)).slice(0, 4);
+const tiles = shots.map((p, i) => {
+  const span = SPANS[shots.length][i];
+  const full = i === 0 || (shots.length % 2 === 0 && i === shots.length - 1);
+  // Rendered width of the slot (PERF-04): the shell or half of it on portrait phones, its span
+  // of the shell (max 1520px, 1456px of content) from 600.
+  const sizes = `(max-width: 599px) ${full ? 'calc(100vw - 2.5rem)' : 'calc(50vw - 1.75rem)'}, (max-width: 1520px) ${Math.round((span * 100) / 12)}vw, ${Math.round((1456 * span) / 12)}px`;
+  return { ...p, span, full, sizes };
+});
 ---
 
 <section class="arena band" id="arena" aria-labelledby={hasTitle ? headingId : undefined} data-arena>
@@ -57,10 +83,16 @@ const link = has(cta?.label) && has(cta?.href) ? cta : undefined;
       <div class="arena__top">
         <div class="arena__intro">
           <SectionHead title={title} text={text} id={headingId} />
-          {link && (
-            <a class="arena__cta" href={link.href}>
-              {link.label}<Icon name="arrowRight" size={18} class="arena__arrow" />
-            </a>
+          {tourLink && (
+            <div class="arena__links">
+              {tourLink && (
+                <Button href={tourLink.href} variant="secondary" target="_blank" rel="noopener" class="arena__tour">
+                  {tourLink.label}
+                  <Icon name="arrowUpRight" size={18} class="arena__out" />
+                  <span class="sr-only"> (si apre in una nuova scheda)</span>
+                </Button>
+              )}
+            </div>
           )}
         </div>
         {figure && (
@@ -73,6 +105,17 @@ const link = has(cta?.label) && has(cta?.href) ? cta : undefined;
           </p>
         )}
       </div>
+
+      {tiles.length > 0 && (
+        <ul class="arena__photos" role="list" data-n={tiles.length}>
+          {tiles.map((p, i) => (
+            <li class:list={['arena__photo', p.full && 'arena__photo--full']} style={`--span: ${p.span}; --i: ${i}`} data-reveal>
+              <Picture src={p.image!} alt={p.imageAlt ?? ''} sizes={p.sizes} class="arena__img" />
+              <PhotoFrame />
+            </li>
+          ))}
+        </ul>
+      )}
 
       {list.length > 0 && (
         <ul class="arena__feats" role="list" style={`--n: ${list.length}`}>
@@ -119,26 +162,18 @@ const link = has(cta?.label) && has(cta?.href) ? cta : undefined;
   /* The copy stays above the radar, which lives in the figure's layer. */
   .arena__intro { grid-area: intro; position: relative; z-index: 2; }
 
-  .arena__cta {
-    display: inline-flex;
+  /* The intro's links: the tour, then "read more" when its page exists. */
+  .arena__links {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.55rem;
-    min-height: 44px;
-    margin-top: 1.5rem;
-    font-family: var(--font-display);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--color-foreground);
-    text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.45em;
-    transition: color var(--duration-fast) var(--ease-out-expo);
+    gap: 0.75rem 1.75rem;
+    margin-top: 1.75rem;
   }
-  .arena__cta:hover { color: var(--color-accent-hover); }
-  .arena__arrow { transition: transform var(--duration-fast) var(--ease-out-expo); }
-  .arena__cta:hover .arena__arrow { transform: translateX(4px); }
+  .arena__tour { min-height: 44px; }
+  .arena__tour:active { transform: translateY(1px); }
+  .arena__out { flex: none; transition: transform var(--duration-fast) var(--ease-out-expo); }
+  .arena__tour:hover .arena__out { transform: translate(2px, -2px); }
 
   /* The figure: the number in the display face, its unit in the accent, the label under it. */
   .arena__figure {
@@ -203,6 +238,37 @@ const link = has(cta?.label) && has(cta?.href) ? cta : undefined;
   }
   .arena.is-on .arena__radar { animation-play-state: running; }
   @keyframes arena-sweep { to { transform: rotate(360deg); } }
+
+  /* The photos: portrait phones pair them two to a row under a full-width lead; from 600 they
+     share twelve columns at one row height (SPANS in the frontmatter), so a landscape phone sees
+     a whole row at once. Each is a clipped, rounded box with the thin inner frame of the site's
+     content photos. */
+  .arena__photos {
+    position: relative;
+    z-index: 1;
+    list-style: none;
+    margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  }
+  .arena__photo {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    background: var(--lift);
+  }
+  .arena__photo--full { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+  .arena__photo picture,
+  .arena__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .arena__img { object-fit: cover; }
 
   /* Features: the hairlines are the plane showing through 1px gaps between opaque columns, so
      they follow any count; the colour stops 1px short of the outer edge. */
@@ -291,6 +357,20 @@ const link = has(cta?.label) && has(cta?.href) ? cta : undefined;
       align-content: start;
     }
     .arena__feat:has(.arena__sight) .arena__sight { grid-row: span 2; margin-bottom: 0; }
+  }
+
+  @media (min-width: 600px) {
+    .arena__photos {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-auto-rows: clamp(14rem, 27vw, 26rem);
+    }
+    /* Two rows: each a little lower, so the brick stays a strip of the section. */
+    .arena__photos[data-n="4"] { grid-auto-rows: clamp(12rem, 22vw, 21rem); }
+    .arena__photo,
+    .arena__photo--full { grid-column: span var(--span); aspect-ratio: auto; }
+    /* A lone photo keeps a wide frame rather than a sliver at one row height. */
+    .arena__photos[data-n="1"] { grid-auto-rows: auto; }
+    .arena__photos[data-n="1"] .arena__photo { aspect-ratio: 21 / 9; }
   }
 
   @media (min-width: 768px) {

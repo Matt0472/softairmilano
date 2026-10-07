@@ -39,7 +39,7 @@ const {
   alternative,
 } = page;
 
-const path = '/paintball';
+const path = '/softair-vs-paintball';
 // The page name in the trail is its menu label (single source for both).
 const pageName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === path)?.label || hero.title;
 const crumbs = [
@@ -88,7 +88,7 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
 
   {pricing && has(pricing.title) && !!pricing.tiers?.length && <PriceTiers {...pricing} cta={hero.ctaPrimary} />}
 
-  {reviews && has(reviews.title) && <Reviews title={reviews.title} page="paintball" />}
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
 
   {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
 

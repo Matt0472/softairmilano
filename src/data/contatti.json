@@ -1,0 +1,66 @@
+{
+  "seo": {
+    "title": "Contatti e come arrivare | SoftAir Milano",
+    "description": "Telefono, email, orari e indirizzo di SoftAir Milano, l'arena indoor di softair a Milano: la mappa, il parcheggio e come arrivare con la metro M1 e il bus 433.",
+    "image": "",
+    "imageAlt": ""
+  },
+  "hero": {
+    "eyebrow": "Arena indoor · Milano",
+    "title": "Contatti",
+    "subtitle": "Per prenotare o chiedere un'informazione, il modo più rapido è chiamarci. Puoi anche scriverci: ti ricontattiamo noi.",
+    "hudTag": "Linea diretta · 7 giorni su 7"
+  },
+  "labels": {
+    "phone": "Telefono",
+    "email": "Email",
+    "whatsapp": "WhatsApp",
+    "hours": "Orari",
+    "address": "Indirizzo",
+    "social": "Seguici"
+  },
+  "directions": {
+    "title": "Come raggiungerci",
+    "text": "L'arena è a Settimo Milanese, alle porte di Milano.",
+    "map": {
+      "button": "Mostra la mappa",
+      "note": "La mappa è di Google e si carica solo se la apri.",
+      "frameTitle": "Mappa di Google con la posizione di SoftAir Milano",
+      "openLabel": "Apri in Google Maps"
+    },
+    "car": {
+      "title": "In auto",
+      "text": "Il parcheggio è facile. Calcola il percorso da dove sei: il navigatore ti porta fino all'arena.",
+      "routeLabel": "Calcola il percorso"
+    },
+    "transit": {
+      "title": "Con i mezzi",
+      "text": "Da Milano prendi la metro M1, la linea rossa, fino a Bisceglie: da lì c'è l'autobus 433."
+    },
+    "outdoor": {
+      "title": "Cerchi l'arena all'aperto?",
+      "text": "La nostra arena nel bosco ha un altro indirizzo: lo trovi sul suo sito."
+    }
+  },
+  "form": {
+    "title": "Scrivici",
+    "text": "Una data, un gruppo o una domanda: compila il modulo e ti ricontattiamo noi, per telefono o via email."
+  },
+  "faq": {
+    "title": "Prima di venire",
+    "items": [
+      {
+        "q": "Bisogna prenotare?",
+        "a": "Sì, si gioca solo su prenotazione. Chiamaci o scrivici con il giorno, l'orario e il numero di giocatori. Le prenotazioni a meno di 4 ore dalla partita vanno confermate."
+      },
+      {
+        "q": "Posso annullare una prenotazione?",
+        "a": "Sì. Se annulli almeno una settimana prima, la caparra si recupera."
+      },
+      {
+        "q": "Cosa devo portare?",
+        "a": "Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online prima di venire, i minorenni portano quello firmato da un genitore. Vieni con maglietta a maniche lunghe o felpa, pantaloni lunghi e scarpe comode: l'arena non è riscaldata, d'inverno vestiti a strati."
+      }
+    ]
+  }
+}

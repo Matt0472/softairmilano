@@ -1,0 +1,111 @@
+---
+// "Loro hanno scelto noi": the companies that played with us, as a full-bleed strip of logos
+// drifting slowly across the page (Marquee: the strip itself stops and starts it, hover and focus
+// hold it, off screen it waits). Each logo's alt is the company name. With reduced motion the logos stand still, wrapped
+// in rows. Logos are delivered monochrome and light, so they all share one height and one tint. A
+// logo whose file is missing shows the company name instead, so the strip never shows a broken image.
+
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import sharp from 'sharp';
+import Marquee from '../molecules/Marquee.astro';
+import SectionHead from '../molecules/SectionHead.astro';
+import { has } from '../../lib/fields';
+
+interface Client {
+  name: string;
+  logo?: string;
+}
+interface Props {
+  title: string;
+  text?: string;
+  items: Client[];
+  headingId?: string;
+}
+
+const { title, text, items, headingId = 'clients-title' } = Astro.props;
+const hasTitle = has(title);
+
+const PUBLIC_DIR = join(process.cwd(), 'public');
+const list = await Promise.all(
+  (items ?? [])
+    .filter((c) => has(c?.name))
+    .map(async (c) => {
+      const file = has(c.logo) && c.logo.startsWith('/') ? join(PUBLIC_DIR, c.logo) : '';
+      if (!file || !existsSync(file)) return { name: c.name.trim() };
+      const { width, height } = await sharp(file).metadata();
+      return { name: c.name.trim(), logo: c.logo, width, height };
+    })
+);
+
+type Logo = (typeof list)[number];
+---
+
+{list.length > 0 && (
+  <section class="logos band" aria-labelledby={hasTitle ? headingId : undefined}>
+    <Marquee
+      rows={[list]}
+      pace={6}
+      labels={{
+        running: 'Loghi delle aziende in scorrimento. Premi Invio per fermarli',
+        stopped: 'Loghi delle aziende fermi. Premi Invio per farli ripartire',
+      }}
+      headClass="shell"
+      inertCopies={false}
+    >
+      <SectionHead slot="head" title={title} text={text} id={headingId} />
+      {(c: Logo) => (
+        <li class="logos__item">
+          {c.logo ? (
+            <img class="logos__img" src={c.logo} alt={c.name} width={c.width} height={c.height} loading="lazy" decoding="async" />
+          ) : (
+            <span class="logos__name">{c.name}</span>
+          )}
+        </li>
+      )}
+    </Marquee>
+  </section>
+)}
+
+<style is:global>
+  .logos {
+    /* One height for every logo: wide wordmarks and square marks read as one row. */
+    --logo-h: clamp(1.75rem, 2.6vw, 2.5rem);
+    padding-block: clamp(3.5rem, 7vw, 5.5rem) clamp(4rem, 8vw, 6.5rem);
+  }
+  /* Edge to edge, so the focus ring sits inside the strip. */
+  .logos .mq {
+    --mq-gap: clamp(2.75rem, 5.5vw, 5rem);
+    --mq-ring: -2px;
+  }
+  .logos .mq__rows { margin-top: clamp(2.25rem, 4.5vw, 3.5rem); }
+  /* Wrapped under reduced motion, the rows keep their distance. */
+  .logos .mq__set {
+    align-items: center;
+    row-gap: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  /* Each logo in its brand's own colours, or the brand's own variant for dark grounds, straight
+     on the page: one height for every mark, so wide wordmarks and square emblems read as one row. */
+  .logos__item {
+    flex: none;
+    display: flex;
+    align-items: center;
+    height: var(--logo-h);
+  }
+  .logos__img {
+    width: auto;
+    max-width: none;
+    height: var(--logo-h);
+  }
+  .logos__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: calc(var(--logo-h) * 0.62);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-muted);
+  }
+</style>

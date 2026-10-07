@@ -1,0 +1,245 @@
+---
+// Activities to pair with the day, run by a partner on its own site: equal cards, the photo on top
+// in the site's inner frame, then the name, a line and the partner's address with an outward arrow.
+// The whole card is one link, stretched from its title, so it has one short accessible name; a link
+// to another site opens in a new tab and says so. The heading comes first in the source, the photo
+// above it only on screen. Three cards share a row from 1024; tablets and landscape phones set each
+// card as a row (photo beside the copy), portrait phones stack them. A card without a photo keeps
+// its copy; one without a link stays a plain card, with no hover promise.
+
+import Icon from '../atoms/Icon.astro';
+import Picture from '../atoms/Picture.astro';
+import PhotoFrame from '../molecules/PhotoFrame.astro';
+import SectionHead from '../molecules/SectionHead.astro';
+import { has } from '../../lib/fields';
+
+interface Item {
+  title: string;
+  text?: string;
+  image?: string;
+  imageAlt?: string;
+  href?: string;
+}
+interface Props {
+  title: string;
+  text?: string;
+  items: Item[];
+  headingId?: string;
+}
+
+const { title, text, items, headingId = 'partners-title' } = Astro.props;
+const hasTitle = has(title);
+
+// Another site's address opens in a new tab, and its host (without "www.") tells where it leads.
+const hostOf = (href: string) => {
+  try {
+    return new URL(href).hostname.replace(/^www\./, '');
+  } catch {
+    return '';
+  }
+};
+const list = (items ?? [])
+  .filter((it) => has(it?.title))
+  .map((it) => {
+    const href = it.href?.trim() ?? '';
+    const external = /^https?:\/\//i.test(href);
+    return { ...it, href, external, host: external ? hostOf(href) : '' };
+  });
+
+// Never an empty cell: four cards go two by two, otherwise up to three a row.
+const cols = list.length === 4 ? 2 : Math.min(list.length, 3);
+const sizes = '(max-width: 599px) calc(100vw - 2.5rem), (max-width: 1023px) 40vw, (max-width: 1520px) 31vw, 480px';
+---
+
+{list.length > 0 && (
+  <section class="pcards band" aria-labelledby={hasTitle ? headingId : undefined}>
+    <div class="shell">
+      <SectionHead title={title} text={text} id={headingId} />
+
+      <ul class="pcards__grid" role="list" style={`--cols: ${cols}`}>
+        {list.map((it, i) => (
+          <li class:list={['pcards__card', has(it.href) && 'pcards__card--link']} data-reveal style={`--i: ${i % 3}`}>
+            <div class="pcards__body">
+              <h3 class="pcards__title">
+                {has(it.href) ? (
+                  <a class="pcards__link" href={it.href} target={it.external ? '_blank' : undefined} rel={it.external ? 'noopener' : undefined}>
+                    {it.title}
+                    {/* Interface microcopy (CMS-02). */}
+                    {it.external && <span class="sr-only"> (si apre in una nuova scheda)</span>}
+                  </a>
+                ) : (
+                  it.title
+                )}
+              </h3>
+              {has(it.text) && <p class="pcards__text">{it.text}</p>}
+              {has(it.host) && (
+                <p class="pcards__host">
+                  {it.host}
+                  <Icon name="arrowUpRight" size={16} class="pcards__out" />
+                </p>
+              )}
+            </div>
+            {has(it.image) && (
+              <div class="pcards__media">
+                <Picture src={it.image} alt={it.imageAlt ?? ''} sizes={sizes} class="pcards__img" />
+                <PhotoFrame />
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .pcards {
+    --accent: var(--color-accent);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  .pcards__grid {
+    list-style: none;
+    margin: clamp(2rem, 5vw, 3.25rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  /* Portrait phones: the photo on top, the copy under it. */
+  .pcards__card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "media" "body";
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--lift);
+  }
+
+  .pcards__media {
+    grid-area: media;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: var(--lift-2);
+  }
+  .pcards__media picture,
+  .pcards__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .pcards__img {
+    object-fit: cover;
+    transition: transform calc(var(--duration-slow) * 2) var(--ease-out-expo);
+  }
+
+  /* The address sits at the foot, so it lines up across a row of cards of different copy. */
+  .pcards__body {
+    grid-area: body;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  }
+  .pcards__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    transition: color var(--duration-base) var(--ease-out-expo);
+  }
+  .pcards__link {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* Stretched link: the whole card is the target. */
+  .pcards__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: var(--radius-lg);
+  }
+  .pcards__text {
+    margin: 0.6rem 0 0;
+    max-width: 44ch;
+    color: var(--color-muted);
+    font-size: 1rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+  .pcards__host {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: auto 0 0;
+    padding-top: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .pcards__out {
+    flex: none;
+    color: var(--accent);
+    transition: transform var(--duration-slow) var(--ease-out-expo);
+  }
+
+  /* Pointer and keyboard light the card the same way: tinted edge, lit title, the arrow nudged out,
+     the photo leaning in. */
+  .pcards__card--link {
+    transition:
+      border-color var(--duration-base) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .pcards__card--link:active { transform: translateY(1px) scale(0.99); }
+  @media (hover: hover) {
+    .pcards__card--link:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--color-border)); }
+    .pcards__card--link:hover .pcards__title { color: var(--color-accent-hover); }
+    .pcards__card--link:hover .pcards__out { transform: translate(2px, -2px); }
+    .pcards__card--link:hover .pcards__img { transform: scale(1.04); }
+  }
+  /* The ring goes round the card, the real target. */
+  .pcards__card:has(.pcards__link:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-color: color-mix(in srgb, var(--accent) 50%, var(--color-border));
+  }
+  @supports selector(:has(*)) {
+    .pcards__link:focus-visible { outline: none; }
+  }
+  .pcards__card:has(.pcards__link:focus-visible) .pcards__title { color: var(--color-accent-hover); }
+  .pcards__card:has(.pcards__link:focus-visible) .pcards__out { transform: translate(2px, -2px); }
+  .pcards__card:has(.pcards__link:focus-visible) .pcards__img { transform: scale(1.04); }
+
+  /* Tablets and landscape phones: each card a row, the photo beside the copy. */
+  @media (min-width: 600px) and (max-width: 1023px) {
+    .pcards__card {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      grid-template-rows: auto;
+      grid-template-areas: "media body";
+    }
+    /* The row's height comes from the copy; the photo fills it, never shorter than a strip. */
+    .pcards__media { aspect-ratio: auto; min-height: 10rem; }
+  }
+
+  @media (min-width: 1024px) {
+    .pcards__grid { grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pcards__card--link:hover .pcards__img,
+    .pcards__card:has(.pcards__link:focus-visible) .pcards__img,
+    .pcards__card--link:hover .pcards__out,
+    .pcards__card:has(.pcards__link:focus-visible) .pcards__out { transform: none; }
+  }
+</style>

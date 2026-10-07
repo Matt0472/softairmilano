@@ -4,46 +4,186 @@
     "value": 4.7,
     "count": "500+",
     "source": "recensioni su Google",
-    "url": ""
+    "url": "",
+    "trustindexUrl": "https://www.trustindex.io/reviews/www.softairmilano.it",
+    "trustindexLabel": "Leggi tutte le recensioni su Trustindex"
   },
   "items": [
     {
       "author": "Joshua F.",
-      "text": "Grandi gli organizzatori che spiegano tutto nei minimi dettagli. […] Davvero ottimo per prendere una boccata d'aria e scaricare la tensione della settimana. Sicuramente ci tornerò.",
-      "pages": [
-        "home",
-        "softair",
-        "paintball"
-      ]
+      "text": "Grandi gli organizzatori che spiegano tutto nei minimi dettagli. […] Davvero ottimo per prendere una boccata d'aria e scaricare la tensione della settimana. Sicuramente ci tornerò."
+    },
+    {
+      "author": "Davide S.",
+      "text": "Complimenti. Ho organizzato in questa struttura la festa di compleanno di mio figlio di 11 anni. Hanno giocato ad arcotag (usando arco e frecce). Si sono divertiti tantissimo. Consiglio vivamente."
+    },
+    {
+      "author": "Paolo L.",
+      "text": "Un pomeriggio di gioco e allegria. Apprezzatissimo dai bambini."
+    },
+    {
+      "author": "Jose H.",
+      "text": "Prima volta in questo campo ed è stata un'esperienza fantastica. […] Attrezzatura a noleggio in ottime condizioni e clima molto amichevole tra i giocatori. Se volete iniziare a praticare softair, questo è il posto giusto!"
+    },
+    {
+      "author": "Pietro G.",
+      "text": "I due ragazzi che lo gestiscono sono estremamente precisi e disponibili, fanno venire voglia di tornare."
+    },
+    {
+      "author": "Arianna M.",
+      "text": "Abbiamo partecipato come famiglia e ci siamo divertiti tantissimo in totale sicurezza. Il campo: davvero bello e ben ambientato al chiuso, con strutture come casette di legno, un pozzo e una torretta che rendono il gioco super immersivo e pieno di nascondigli strategici."
     },
     {
       "author": "Carla R.",
-      "text": "Finalmente i nostri figli sono riusciti a fare questa esperienza a dir poco fantastica! Si sono divertiti tantissimo.",
-      "pages": [
-        "home",
-        "arcotag"
-      ]
+      "text": "Finalmente i nostri figli sono riusciti a fare questa esperienza a dir poco fantastica! Si sono divertiti tantissimo."
+    },
+    {
+      "author": "Sofia M.",
+      "text": "Esperienza davvero super! Alex, il ragazzo di turno, è stato molto disponibile e attento nello spiegarci le regole del gioco, dandoci molti consigli e permettendoci di divertirci in sicurezza! Ci ha anche aiutato a vincere :) Super consigliato!"
+    },
+    {
+      "author": "Marco F.",
+      "text": "Posto grande con mappa bella. Sia aperta che con corridoi. Staff simpatico e coinvolgente con un sacco di idee."
+    },
+    {
+      "author": "A. G.",
+      "text": "Un modo alternativo per festeggiare il compleanno di mio figlio con i suoi amici. Ragazzi che gestiscono l'attività simpatici e alla mano."
+    },
+    {
+      "author": "Thomas",
+      "text": "Paradiso terrestre per il mio cervello, non c'è attività migliore: viva il softair!"
+    },
+    {
+      "author": "Auro C.",
+      "text": "È piaciuto molto, io e i miei figli ci siamo divertiti, il personale gentilissimo e molto disponibile dandoci utili informazioni per la sicurezza e l'uso dell'arma… Complimenti."
+    },
+    {
+      "author": "Stefania C.",
+      "text": "Pomeriggio organizzato con il 95% della mia famiglia presente: ci siamo divertiti un sacco! Veramente divertente, lo consiglio tantissimo, anche a chi è abituato a stare 8 ore davanti ad un pc!"
+    },
+    {
+      "author": "Christian",
+      "text": "Bellissima esperienza! Siamo andati tra colleghi per la prima volta e dopo una breve spiegazione delle regole e di come usare le repliche abbiamo subito iniziato a giocare. Consigliato assolutamente!"
+    },
+    {
+      "author": "Luis M.",
+      "text": "Non avevo mai avuto occasione di provare il softair ma dopo essere passato da Softair Milano me ne sono innamorato. I ragazzi del team che hanno accolto il nostro gruppo super simpatici, spiegazioni chiare e regole semplici."
+    },
+    {
+      "author": "Daniele G.",
+      "text": "Personale molto gentile ma anche diretto con le parole e i fatti, perché non si scherza con questo gioco!"
+    },
+    {
+      "author": "Obscure D.",
+      "text": "Io e mio figlio di 14 anni ci siamo trovati benissimo. Organizzazione chiara, briefing prepartita gestito in maniera professionale, campo di gioco dinamico e divertente e staff disponibile per consigli e assistenza a noi principianti. Grazie mille!"
+    },
+    {
+      "author": "Elisabetta T.",
+      "text": "Sponsorizzo assolutamente! Ottime attrezzature, ragazzi che assistono molto gentili e collaborativi anche con me che non ero proprio in target, e molto divertente tutto! Ideale per team building aziendali."
+    },
+    {
+      "author": "Zacchio",
+      "text": "È stata la prima volta che ho fatto softair e mi reputo molto soddisfatto, l'ambiente e gli altri ragazzi che erano lì sono stati molto comprensivi dell'esperienza di noi reclute. […] Esperienza da rifare!"
+    },
+    {
+      "author": "Lorenzo F.",
+      "text": "Campo abbastanza grande e spazioso, istruttori disponibili e simpatici. Consigliatissimo per chi vuole venire a provare il softair anche per la prima volta!"
     },
     {
       "author": "Francesco Z.",
-      "text": "Esperienza top, personale coinvolgente.",
-      "pages": [
-        "all"
-      ]
+      "text": "Esperienza top, personale coinvolgente."
+    },
+    {
+      "author": "Riccardo S.",
+      "text": "Esperienza meravigliosa! Siamo stati qui in 12 e ci siamo divertiti un botto. Ve lo consiglio!"
+    },
+    {
+      "author": "M. C.",
+      "text": "Prima esperienza e probabilmente non l'ultima: ci siamo divertiti tutti molto grazie alle modalità ed al personale disponibile."
+    },
+    {
+      "author": "Beatrice B.",
+      "text": "Fantastico. Torneremo sicuramente. Manuel simpaticissimo e molto bravo a spiegare, dato che era la prima volta che facevamo attività del genere. 10/10"
+    },
+    {
+      "author": "Lele G.",
+      "text": "Siamo andati in 10 persone per la prima volta e ci siamo divertiti tantissimo. […] Non pensi a nient'altro che giocare e divertirti. Staff accogliente e professionale."
+    },
+    {
+      "author": "Paul B.",
+      "text": "Esperienza super positiva, secondo team building e riconferma. Training perfetto, attrezzature adeguate e gran divertimento in sicurezza per tutti, a presto!"
+    },
+    {
+      "author": "Francesco G.",
+      "text": "Super divertente, personale molto professionale, si gioca in massima sicurezza… Gestito in maniera tale che anche i neofiti si sentano parte del team."
+    },
+    {
+      "author": "Andy P.",
+      "text": "Bellissimo posto per prendere parte a partite di CQB, ottimo staff molto simpatico e chiaro, repliche impeccabili."
     },
     {
       "author": "Andrea Z.",
-      "text": "Bell'arena, gioco divertentissimo!",
-      "pages": [
-        "all"
-      ]
+      "text": "Bell'arena, gioco divertentissimo!"
     },
     {
-      "author": "Mc",
-      "text": "Ci vado da anni ed è sempre divertente.",
-      "pages": [
-        "all"
-      ]
+      "author": "Matteo V.",
+      "text": "Bellissima esperienza, ci si sfoga e diverte molto. Grazie ad Alex, il ragazzo che ci ha seguiti, abbiamo migliorato molto l'esperienza con delle basi sul come muoversi sul campo."
+    },
+    {
+      "author": "Giovanni Z.",
+      "text": "Una giornata diversa dal solito passata all'insegna di: bandiere da rubare, colpi da schivare, valigette da trovare […] Consiglio di fare visita ai ragazzi della Softair Milano che con la loro professionalità ed humor all'inglese non vi faranno rimpiangere di aver passato il pomeriggio da loro."
+    },
+    {
+      "author": "Paolo A.",
+      "text": "Campo bellissimo e sempre con disposizioni diverse delle strutture mobili, che rendono uniche le giocate. Personale molto disponibile, simpatico e con esperienza. […] Sicuramente io e i miei amici ci torneremo."
+    },
+    {
+      "author": "Vincent B.",
+      "text": "Bellissima esperienza con amici e colleghi, contando l'arbitro che è stato molto chiaro e conciso nelle spiegazioni. Severo ma giusto."
+    },
+    {
+      "author": "Gaetano R.",
+      "text": "Sono di Genova ma per la seconda volta ho affrontato volentieri il viaggio, lo staff è molto gentile ma quando si tratta di sicurezza non lasciano spazio ad interpretazioni sbagliate, ci tornerò sicuramente."
+    },
+    {
+      "author": "Christian B.",
+      "text": "Mi sono trovato molto bene, ho utilizzato l'attrezzatura che mi è stata fornita dal campo e devo dire che hanno prodotti di ottima qualità, il personale è stato molto gentile e disponibile."
+    },
+    {
+      "author": "Carolina B.",
+      "text": "Esperienza molto divertente, personale molto gentile che ci mette passione nel proprio lavoro."
+    },
+    {
+      "author": "Mariolina G.",
+      "text": "Bellissima esperienza, abbiamo passato una serata diversa in compagnia catapultati in un campo di combattimento! Esperienza bella, divertente e diversa dal solito."
+    },
+    {
+      "author": "Vals",
+      "text": "Da maggio una certezza! Personale bravo e capace, ragazzi giovani con cui poter scambiare anche due chiacchiere tra un game e l'altro. Il campo indoor è fatto veramente bene."
+    },
+    {
+      "author": "Gabriele R.",
+      "text": "Frequentato da un paio di settimane con i miei amici, CQB molto dinamico […] con le nostre repliche abbiamo trovato il luogo adatto per intraprendere un percorso che si è rivelato essere una valida alternativa ai classici calcetti domenicali."
+    },
+    {
+      "author": "Tommaso N.",
+      "text": "Bel posto, bellissima esperienza per gruppi di amici e famiglie, il personale è molto simpatico e disponibile… Consigliato!"
+    },
+    {
+      "author": "Giandomenico G.",
+      "text": "Bellissima esperienza. Posto gestito da veri professionisti. Consigliato."
+    },
+    {
+      "author": "Joshua F.",
+      "text": "Bellissimo posto! Ottimo CQB indoor per poter fare migliaia di giocate, soprattutto con le torrette! Personale davvero in gamba! Ottimo anche per fare allenamenti! Da tornarci sicuramente!"
+    },
+    {
+      "author": "Edoardo G.",
+      "text": "La mappa è molto spaziosa e divertente da giocare con le varie modalità. I proiettili fanno poco male."
+    },
+    {
+      "author": "Mattia A.",
+      "text": "Ambientazione molto originale e curata nei minimi dettagli. Personale disponibile e alla mano. Esperienza piacevole garantita, anche per chi è alle prime armi."
     }
   ]
 }

@@ -44,7 +44,7 @@
   ],
   "intro": {
     "title": "Cos'è una partita di softair",
-    "text": "Il softair è un gioco di squadra con repliche di armi che sparano pallini da 6 mm: chi viene colpito lo dichiara ed esce dal gioco. Da noi non è un semplice sparatutto: in 1 ora e 45 minuti, briefing compreso, giocate diverse missioni una dopo l'altra, ispirate ai videogiochi del momento e ognuna con regole e obiettivi propri. Si gioca a Milano, in un villaggio militare indoor di 1.500 m², con lo staff che arbitra ogni partita.",
+    "text": "Il softair è un gioco di squadra con repliche di armi che sparano pallini da 6 mm. Da noi non è un semplice sparatutto: in 1 ora e 45 minuti, briefing compreso, giocate diverse missioni una dopo l'altra, ispirate ai videogiochi del momento, tra edifici, auto e torrette di vedetta. Ogni missione ha le sue regole e i suoi obiettivi, e tutto si basa sulla lealtà: chi viene colpito lo dichiara. Si gioca a Milano, in un villaggio militare indoor di 1.500 m², con lo staff che arbitra ogni partita.",
     "points": [
       {
         "title": "Anche alla prima volta",
@@ -61,14 +61,14 @@
     ]
   },
   "evening": {
-    "eyebrow": "Il vostro sabato sera",
+    "eyebrow": "",
     "title": "La vostra partita, un passo alla volta",
     "text": "Che siate in pochi o in 30, al resto pensiamo noi. Tra briefing e missioni, una partita dura 1 ora e 45 minuti in tutto.",
     "steps": [
       {
         "time": "Arrivo",
         "title": "Vi accogliamo",
-        "text": "Arrivate, vi preparate e ritirate l'attrezzatura: fucile, maschera e pettorina. I maggiorenni hanno già compilato il modulo online."
+        "text": "Arrivate e vi preparate: chi non ha l'attrezzatura ritira fucile, maschera e pettorina, chi porta la sua è subito pronto. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online prima di venire, i minorenni portano quello firmato da un genitore."
       },
       {
         "time": "Briefing",
@@ -132,8 +132,8 @@
     ]
   },
   "howto": {
-    "title": "Come si gioca",
-    "text": "Le squadre si affrontano tra edifici, auto e torrette di vedetta. Chi viene colpito lo dichiara ed esce dal gioco: il softair si basa sulla lealtà dei giocatori. La maschera si tiene sempre, dall'inizio alla fine.",
+    "title": "Sicurezza e attrezzatura",
+    "text": "La maschera si tiene sempre, dall'inizio alla fine, e lo staff arbitra ogni partita. Per legge le repliche softair restano sotto 1 joule: il colpo si sente, ma è leggero. Avete la vostra attrezzatura? Portatela: con il profilo Veterano siete subito in campo.",
     "includedTitle": "Attrezzatura inclusa",
     "included": [
       "Fucile softair",
@@ -157,19 +157,19 @@
       {
         "title": "Addio al celibato e al nubilato",
         "text": "Lo sposo (o la sposa) da scortare come un VIP o da braccare in un Highlander: un addio che non si dimentica.",
-        "href": "",
+        "href": "/occasioni",
         "featured": false
       },
       {
         "title": "Compleanni",
         "text": "Dai 12 anni in su: una festa da protagonisti, una missione dopo l'altra.",
-        "href": "",
+        "href": "/occasioni",
         "featured": false
       },
       {
         "title": "Team building",
         "text": "Strategia, comunicazione e fiducia nella squadra, con l'arena in esclusiva su richiesta.",
-        "href": "",
+        "href": "/teambuilding",
         "featured": false
       }
     ]
@@ -214,8 +214,9 @@
     "notes": [
       "Si parte da 8 giocatori: se siete meno, vi uniamo a un altro gruppo nello stesso orario.",
       "Ricarica da 300 colpi: 3 €. Granate: 6 €.",
-      "Fotografo professionista su preventivo.",
       "Tessera Élite: un timbro a partita, al quinto la successiva è gratis.",
+      "Temperatura: l'arena non è riscaldata né climatizzata, vestitevi in base alla stagione.",
+      "Sala feste: dal lunedì al venerdì è compresa nell'1 ora e 45 (decidete voi come dividere il tempo tra gioco e festa), oppure si prolunga di un'ora a 70 € nella sala interna o 50 € in quella esterna; sabato e domenica la sala esterna è compresa nell'1 ora e 45, riducendo il tempo di gioco.",
       "Prenotazione obbligatoria."
     ]
   },
@@ -227,7 +228,7 @@
     "items": [
       {
         "q": "Da che età si può giocare a softair?",
-        "a": "Dai 12 anni compiuti. I minorenni portano il modulo firmato da un genitore; i maggiorenni lo compilano online prima di venire."
+        "a": "Dai 12 anni compiuti. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online prima di venire, i minorenni portano quello firmato da un genitore."
       },
       {
         "q": "Quanti giocatori servono?",
@@ -260,6 +261,10 @@
       {
         "q": "Si gioca anche se piove?",
         "a": "Sì, l'arena è al coperto e illuminata: si gioca tutto l'anno, con qualsiasi tempo, anche di sera."
+      },
+      {
+        "q": "Si può festeggiare un compleanno?",
+        "a": "Sì. Le sale per la festa sono due, una interna e una esterna. Dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti: decidete voi come dividere il tempo tra gioco e festa, oppure prolungate di un'ora (70 € la sala interna, 50 € quella esterna). Il sabato e la domenica la sala esterna è compresa nell'1 ora e 45 minuti, riducendo il tempo di gioco. La torta potete portarla voi, il catering lo prepariamo su richiesta: trovi tutto nella pagina Occasioni."
       },
       {
         "q": "Come si prenota?",

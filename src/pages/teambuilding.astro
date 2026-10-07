@@ -1,0 +1,76 @@
+---
+// Team building for companies (/teambuilding). Its action is a quote request, not a booked slot:
+// the hero's primary button leads to the request form, which arrives with «Team building» chosen.
+// Why softair builds a team, the formats and the companies that chose them, how a session runs,
+// the activities to pair with it (behind a CMS switch) and what to know before coming. Every
+// section renders only when its data is present (CMS-10).
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/organisms/PageHero.astro';
+import AnswerBlock from '../components/organisms/AnswerBlock.astro';
+import ModeGrid from '../components/organisms/ModeGrid.astro';
+import StepTimeline from '../components/organisms/StepTimeline.astro';
+import ClientLogos from '../components/organisms/ClientLogos.astro';
+import PartnerCards from '../components/organisms/PartnerCards.astro';
+import Reviews from '../components/organisms/Reviews.astro';
+import FaqAccordion from '../components/organisms/FaqAccordion.astro';
+import BookingRequest from '../components/organisms/BookingRequest.astro';
+import FinalCta from '../components/organisms/FinalCta.astro';
+import IncludedList from '../components/molecules/IncludedList.astro';
+import Reveal from '../components/molecules/Reveal.astro';
+import page from '../data/teambuilding.json';
+import navigation from '../data/navigation.json';
+import settings from '../data/settings.json';
+import { has } from '../lib/fields';
+import { breadcrumbLd, faqLd } from '../lib/jsonld';
+import { flattenNav, type NavItem } from '../lib/nav';
+
+const { seo, hero, facts, intro, formats, clients, session, extras, reviews, faq, request } = page;
+
+const path = '/teambuilding';
+// The page name in the trail is its menu label (single source for both).
+const pageName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === path)?.label || hero.title;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: pageName, href: path },
+];
+
+const faqItems = (faq?.items ?? []).filter((f) => has(f.q) && has(f.a));
+const faqData = faqLd(faqItems);
+const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])];
+---
+
+<BaseLayout title={seo.title} description={seo.description} image={seo.image} imageAlt={seo.imageAlt || hero.imageAlt} jsonLd={jsonLd}>
+  <PageHero {...hero} focus={hero.focus === 'right' ? 'right' : 'center'} facts={facts} crumbs={crumbs} />
+
+  {intro && has(intro.title) && has(intro.text) && <AnswerBlock {...intro} />}
+
+  {formats && has(formats.title) && !!formats.items?.length && <ModeGrid {...formats} items={formats.items} />}
+
+  {/* Who chose the formats above, before how a session runs. */}
+  {clients && !!clients.items?.length && <ClientLogos title={clients.title} text={clients.text} items={clients.items} />}
+
+  {/* The hero's secondary button lands here. The options on request close the run of steps. */}
+  {session && has(session.title) && !!session.steps?.length && (
+    <StepTimeline title={session.title} text={session.text} steps={session.steps} id="come-funziona">
+      {!!session.options?.length && (
+        <IncludedList title={session.optionsTitle} items={session.options} note={session.optionsNote} layout="row" />
+      )}
+    </StepTimeline>
+  )}
+
+  {/* Off until the client confirms these activities still run. */}
+  {extras?.show && has(extras.title) && !!extras.items?.length && (
+    <PartnerCards title={extras.title} text={extras.text} items={extras.items} />
+  )}
+
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
+
+  {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
+
+  <BookingRequest activity={request?.activity} title={request?.title} text={request?.text} />
+
+  <FinalCta {...settings.finalCta} />
+
+  <Reveal />
+</BaseLayout>

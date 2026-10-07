@@ -19,6 +19,11 @@ const isActive = (href?: string): boolean =>
 const isItemActive = (it: NavItem): boolean =>
   it.children?.length ? it.children.some((c) => isActive(c.href)) : isActive(it.href);
 const ddId = (i: number) => `nav-dd-${i}`;
+// A dropdown in the right half of the pill opens leftwards, so its panel stays inside the viewport
+// wherever the client moves it.
+const ddAtEnd = (i: number) => i >= items.length / 2;
+// Without descriptions the panel is as wide as its longest label, not the 21rem the activities need.
+const ddHasDesc = (it: NavItem) => Boolean(it.children?.some((c) => c.desc));
 
 // Desktop items are 44px tall (RESP-04); the tighter padding below 1280 keeps the pill on one line (RESP-09).
 const navItemClass = 'flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-sm transition-colors xl:px-4';
@@ -27,20 +32,21 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
 
 {/* Floating nav overlaid on the full-bleed hero (no classic top bar). */}
 <header class="pointer-events-none absolute inset-x-0 top-0 z-50">
-  <div class="shell pointer-events-auto flex items-center justify-between gap-4 py-5">
-    <a href="/" class="inline-flex items-center [filter:drop-shadow(0_1px_10px_color-mix(in_srgb,var(--color-background)_60%,transparent))]">
+  <div class="shell pointer-events-auto flex items-center justify-between gap-4 py-5" data-nav-bar>
+    <a href="/" class="inline-flex shrink-0 items-center [filter:drop-shadow(0_1px_10px_color-mix(in_srgb,var(--color-background)_60%,transparent))]">
       <img src="/logo/logo-white-120.webp" alt={settings.siteName} width="121" height="120" class="h-12 w-auto" />
     </a>
 
-    {/* Desktop: pill nav */}
+    {/* Desktop: pill nav, while it fits on one line (see the inline script below) */}
     <nav
-      class="hidden items-center gap-0.5 rounded-full border border-foreground/10 bg-background/60 p-1 backdrop-blur-md lg:flex"
+      class="nav-pill hidden items-center gap-0.5 rounded-full border border-foreground/10 bg-background/60 p-1 backdrop-blur-md lg:flex"
       aria-label="Principale"
+      data-nav-pill
     >
       {
         items.map((it, i) =>
           it.children?.length ? (
-            <div class="nav-dd relative" data-dd>
+            <div class:list={['nav-dd relative', { 'nav-dd--end': ddAtEnd(i) }]} data-dd>
               <button
                 type="button"
                 class:list={[
@@ -57,7 +63,7 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
                 <Icon name="chevronDown" size={14} class="nav-dd__chevron" />
               </button>
 
-              <div id={ddId(i)} class="nav-dd__panel">
+              <div id={ddId(i)} class:list={['nav-dd__panel', { 'nav-dd__panel--fit': !ddHasDesc(it) }]}>
                 <ul class="nav-dd__list">
                   {it.children.map((c) => (
                     <li>
@@ -95,13 +101,14 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
     {showCta && (
       <a
         href={cta.href}
-        class="hidden min-h-11 items-center rounded-md bg-accent px-5 font-display text-sm font-semibold uppercase tracking-wide whitespace-nowrap text-on-accent transition-colors hover:bg-accent-hover lg:inline-flex"
+        class="nav-cta hidden min-h-11 shrink-0 items-center rounded-md bg-accent px-5 font-display text-sm font-semibold uppercase tracking-wide whitespace-nowrap text-on-accent transition-colors hover:bg-accent-hover lg:inline-flex"
+        data-nav-cta
       >
         {cta.label}
       </a>
     )}
 
-    {/* Mobile: floating pill toggle */}
+    {/* Mobile, and desktop while the pill does not fit: floating pill toggle */}
     <button
       id="menu-toggle"
       type="button"
@@ -115,10 +122,40 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
     </button>
   </div>
 
-  {/* Mobile: full-screen overlay menu. It scrolls natively on short phones, so Lenis leaves it alone. */}
+  {/*
+    Pill or Menu button, by measure rather than by breakpoint: the client can add menu items, so from lg up
+    the header turns compact whenever the pill would not fit on one line beside the logo and Prenota
+    (RESP-09). Inline, so the first check lands before the first paint (the bundled script below runs after
+    parsing); the observer repeats it on resize and when the web font replaces its fallback.
+  */}
+  <script is:inline>
+    (() => {
+      const header = document.currentScript.parentElement;
+      const bar = header.querySelector('[data-nav-bar]');
+      const pill = header.querySelector('[data-nav-pill]');
+      const cta = header.querySelector('[data-nav-cta]');
+      const fit = () => {
+        const s = getComputedStyle(bar);
+        const room = bar.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight);
+        const gap = parseFloat(s.columnGap);
+        // scrollWidth, plus the border: the compact pill is clipped to the header, its content is not.
+        const pillWidth = pill.scrollWidth + pill.offsetWidth - pill.clientWidth;
+        const need = bar.firstElementChild.offsetWidth + gap + pillWidth + (cta ? gap + cta.offsetWidth : 0);
+        const compact = pill.offsetWidth > 0 && need > room;
+        if (compact === header.hasAttribute('data-nav-compact')) return;
+        header.toggleAttribute('data-nav-compact', compact);
+        header.dispatchEvent(new Event('navfit'));
+      };
+      const observer = new ResizeObserver(fit);
+      observer.observe(bar);
+      observer.observe(pill);
+    })();
+  </script>
+
+  {/* Full-screen overlay menu (phones, and desktop while compact). It scrolls natively on short phones, so Lenis leaves it alone. */}
   <nav
     id="mobile-menu"
-    class="mobile-menu pointer-events-auto fixed inset-0 z-[70] overflow-y-auto overscroll-contain bg-background/98 backdrop-blur-md lg:hidden"
+    class="mobile-menu pointer-events-auto fixed inset-0 z-[70] overflow-y-auto overscroll-contain bg-background/98 backdrop-blur-md"
     data-open="false"
     data-lenis-prevent
     aria-label="Menu"
@@ -206,8 +243,8 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
       transform var(--duration-base) var(--ease-out-expo),
       visibility 0s linear var(--duration-base);
   }
-  /* The client can reorder the menu: a dropdown in last place opens leftwards so it stays under the pill. */
-  .nav-dd:last-child .nav-dd__panel { left: auto; right: 0; }
+  .nav-dd--end .nav-dd__panel { left: auto; right: 0; }
+  .nav-dd__panel--fit { width: max-content; min-width: 14rem; }
   /* Invisible bridge so the pointer can travel from the button to the panel without closing it. */
   .nav-dd__panel::before { content: ''; position: absolute; inset: -0.75rem 0 100% 0; }
   .nav-dd[data-open='true'] .nav-dd__panel {
@@ -243,6 +280,22 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
   }
   .nav-dd__link[aria-current='page'] .nav-dd__label { color: var(--color-accent); }
   .nav-dd__desc { font-size: 0.8125rem; line-height: 1.4; color: var(--color-muted); }
+
+  /* Compact header (the pill does not fit, see the inline script): from lg up the bar shows Prenota and the
+     Menu button, as on phones. The pill stays laid out but unseen and out of reach, so it can be measured. */
+  @media (min-width: 1024px) {
+    [data-nav-compact] .nav-pill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      max-width: 100%;
+      overflow: hidden;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    [data-nav-compact] .nav-cta { margin-left: auto; }
+    [data-nav-compact] #menu-toggle { display: inline-flex; }
+  }
 
   /* Mobile menu: the activities as a compact 2×2 group, so the list stays short on small phones. */
   .mm-group { width: 100%; max-width: 26rem; margin: 0.5rem 0 0.75rem; }
@@ -331,10 +384,13 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
     });
     // Focus goes back to the menu button, unless the link leads to a section of this page (handled above).
     for (const a of menu.querySelectorAll('a')) a.addEventListener('click', () => setOpen(false, !sectionFor(a)));
-    // The overlay is hidden from 1024px up: widening the window must not leave the page inert.
-    matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
-      if (e.matches) setOpen(false, false);
-    });
+    // From 1024px up the overlay is hidden unless the header is compact: losing it must not leave the page inert.
+    const desktop = matchMedia('(min-width: 1024px)');
+    const syncMenu = () => {
+      if (desktop.matches && !header.hasAttribute('data-nav-compact')) setOpen(false, false);
+    };
+    desktop.addEventListener('change', syncMenu);
+    header.addEventListener('navfit', syncMenu);
   }
 
   // Desktop dropdowns: click, hover (pointer devices only, with open/close delays) and keyboard.
@@ -406,6 +462,10 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
     }
     document.addEventListener('click', (e) => {
       if (isOpen() && !dd.contains(e.target as Node)) setOpen(false);
+    });
+    // The pill has been put away or brought back (compact header): no panel stays open across the switch.
+    header?.addEventListener('navfit', () => {
+      if (isOpen()) setOpen(false);
     });
   }
 </script>

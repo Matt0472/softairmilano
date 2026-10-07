@@ -5,10 +5,6 @@
       "href": "/"
     },
     {
-      "label": "L'arena",
-      "href": "/l-arena"
-    },
-    {
       "label": "Attività",
       "href": "",
       "children": [
@@ -43,16 +39,40 @@
       "href": "/corso-softair"
     },
     {
-      "label": "Gruppi & eventi",
+      "label": "Occasioni",
+      "href": "/occasioni"
+    },
+    {
+      "label": "Team building",
       "href": "/teambuilding"
     },
     {
       "label": "Softair VS Paintball",
-      "href": "/paintball"
+      "href": "/softair-vs-paintball"
     },
     {
-      "label": "Contatti",
-      "href": "/contatti"
+      "label": "Info",
+      "href": "",
+      "children": [
+        {
+          "label": "Modulistica",
+          "href": "/modulistica",
+          "badge": "",
+          "desc": "I moduli da compilare prima di giocare"
+        },
+        {
+          "label": "Voucher regalo",
+          "href": "/voucher-regalo",
+          "badge": "",
+          "desc": "Regala una partita"
+        },
+        {
+          "label": "Contatti",
+          "href": "/contatti",
+          "badge": "",
+          "desc": "Telefono, email, mappa e come arrivare"
+        }
+      ]
     }
   ],
   "cta": {

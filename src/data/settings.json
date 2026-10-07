@@ -1,6 +1,7 @@
 {
   "siteName": "SoftAir Milano",
   "siteUrl": "https://softairmilano.it",
+  "vatNumber": "11358200969",
   "defaultDescription": "SoftAir Milano: l'arena indoor per giocare a softair a Milano. Prenota la tua partita.",
   "defaultOgImage": "/og-default.svg",
   "footerTagline": "Arena indoor di softair a Milano. Missioni, adrenalina, squadra.",
@@ -15,22 +16,39 @@
     "addressRegion": "MI",
     "addressCountry": "IT"
   },
-  "openingHours": "Tutti i giorni dalle 10:00 alle 24:00, solo su prenotazione",
+  "openingHours": "Tutti i giorni dalle 14:00 alle 24:00, solo su prenotazione",
   "directions": "Parcheggio facile · Bus 433 dalla metro M1 Bisceglie",
   "rangerUrl": "https://www.rangersoftairmilano.it/",
   "finalCta": {
     "title": "Sei pronto a scendere in campo?",
     "subtitle": "Prenota la tua sessione di softair a Milano.",
     "writeLabel": "Scrivi",
-    "phrases": ["Softair", "Tiro dinamico", "Arcotag", "Nerf", "1.500 m²"]
+    "phrases": [
+      "Softair",
+      "Tiro dinamico",
+      "Arcotag",
+      "Nerf",
+      "1.500 m²"
+    ]
   },
   "footerRanger": {
     "title": "Anche all'aperto",
     "label": "Ranger Softair Milano",
     "text": "La nostra arena boschiva outdoor."
   },
+  "footerHeadings": {
+    "pages": "Scopri",
+    "contacts": "Contatti"
+  },
+  "footerLegal": [
+    { "label": "Privacy", "href": "/privacy" },
+    { "label": "Cookie", "href": "/cookie" },
+    { "label": "Termini", "href": "/termini" }
+  ],
   "ticketinghubId": "",
+  "ticketinghubVoucherId": "",
   "gaMeasurementId": "",
+  "web3formsKey": "4a73f363-0105-41e7-bfc3-68d38c7c90c7",
   "social": {
     "instagram": "https://www.instagram.com/softair.milano",
     "facebook": "https://www.facebook.com/softairmilano.it",

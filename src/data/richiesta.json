@@ -1,0 +1,43 @@
+{
+  "eyebrow": "",
+  "title": "Richiedi la tua data",
+  "text": "Dicci che giorno preferisci e in quanti siete: ti ricontattiamo noi, per telefono o via email.",
+  "fields": {
+    "name": {
+      "label": "Nome",
+      "error": "Scrivi il tuo nome."
+    },
+    "phone": {
+      "label": "Telefono",
+      "error": "Scrivi il tuo numero di telefono: almeno 6 cifre, spazi e prefisso vanno bene."
+    },
+    "email": {
+      "label": "Email",
+      "error": "Scrivi un indirizzo email completo, per esempio nome@esempio.it."
+    },
+    "activity": {
+      "label": "Attività",
+      "other": "Altro"
+    },
+    "date": {
+      "label": "Giorno preferito",
+      "error": "Scegli un giorno da oggi in poi."
+    },
+    "people": {
+      "label": "Numero di persone",
+      "max": 30,
+      "error": "Scrivi quante persone siete, da 1 a 30. Se siete di più, scrivilo nel messaggio."
+    },
+    "message": {
+      "label": "Messaggio"
+    }
+  },
+  "submitLabel": "Invia richiesta",
+  "privacy": "Usiamo i tuoi dati solo per rispondere alla richiesta.",
+  "successTitle": "Richiesta inviata",
+  "successText": "Grazie, l'abbiamo ricevuta. Ti ricontattiamo noi, per telefono o via email.",
+  "failureText": "La richiesta non è partita: riprova tra qualche istante.",
+  "failureCall": "Oppure chiamaci al",
+  "emailSubject": "Richiesta dal sito",
+  "emailSender": "Sito SoftAir Milano"
+}

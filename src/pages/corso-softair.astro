@@ -76,7 +76,7 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(courseData ? [courseData] 
     </StepTimeline>
   )}
 
-  {reviews && has(reviews.title) && <Reviews title={reviews.title} page="corso" />}
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
 
   {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
 

@@ -1,15 +1,15 @@
 {
   "name": "Arcotag",
   "seo": {
-    "title": "Arcotag Milano al coperto: serata tra amici | SoftAir Milano",
-    "description": "Arcotag a Milano in un'arena indoor di 1.500 m²: archi e frecce a punta morbida, fino a 30 giocatori, dagli 8 anni. La serata tra amici da prenotare.",
+    "title": "Arcotag Milano al coperto, per gruppi e feste | SoftAir Milano",
+    "description": "Arcotag a Milano in un'arena indoor di 1.500 m²: archi e frecce a punta morbida, fino a 30 giocatori, dagli 8 anni. Con gli amici, di giorno o di sera.",
     "image": "/uploads/arcotag-og.jpg",
     "imageAlt": "Due giocatori di arcotag con maschera protettiva tendono l'arco nell'arena indoor di Softair Milano."
   },
   "hero": {
     "eyebrow": "Arena indoor · Milano",
     "title": "Arcotag a Milano",
-    "subtitle": "Archi, frecce a punta morbida, due squadre e un'arena al coperto: la serata di gruppo che racconterete per settimane.",
+    "subtitle": "Archi, frecce a punta morbida, due squadre e un'arena al coperto: la sfida di gruppo che racconterete per settimane.",
     "image": "/uploads/arcotag-hero.jpeg",
     "imageMobile": "/uploads/arcotag-hero-mobile.jpeg",
     "imageAlt": "Due giocatori di arcotag con maschera protettiva tendono l'arco sopra una jeep con la rete, nell'arena indoor di Softair Milano.",
@@ -29,8 +29,8 @@
       "label": "giocatori al massimo"
     },
     {
-      "value": "60 min",
-      "label": "di battaglia"
+      "value": "1 h 45",
+      "label": "di gioco e briefing"
     },
     {
       "value": "8+",
@@ -43,7 +43,7 @@
   ],
   "intro": {
     "title": "Cos'è l'arcotag",
-    "text": "L'arcotag è una battaglia a squadre con archi e frecce a punta morbida: si colpiscono gli avversari per eliminarli, come nel softair, ma con l'arco. Gli archi hanno un sistema che rende facilissimo incoccare e tirare, quindi può giocare chiunque, anche chi non ha mai preso in mano un arco. Da noi si gioca a Milano, in un'arena indoor di 1.500 m², con missioni diverse una dopo l'altra.",
+    "text": "L'arcotag è una battaglia a squadre con archi e frecce a punta morbida, una missione dopo l'altra, ognuna con le sue regole: come nel softair, ma con l'arco. Gli archi hanno un sistema che rende facilissimo incoccare e tirare, quindi può giocare chiunque, anche chi non ha mai preso in mano un arco. Da noi si gioca a Milano, in un'arena indoor di 1.500 m², con missioni diverse una dopo l'altra.",
     "points": [
       {
         "title": "Nessuna esperienza",
@@ -60,35 +60,30 @@
     ]
   },
   "evening": {
-    "eyebrow": "Il vostro sabato sera",
-    "title": "La vostra serata, un passo alla volta",
-    "text": "Che siate in pochi o in 30, al resto pensiamo noi. Ecco come va una serata di arcotag.",
+    "eyebrow": "",
+    "title": "La vostra partita, un passo alla volta",
+    "text": "Che siate in pochi o in 30, al resto pensiamo noi. Tra briefing e gioco, una partita dura 1 ora e 45 minuti in tutto.",
     "steps": [
       {
         "time": "Arrivo",
         "title": "Vi accogliamo",
-        "text": "Arrivate, lasciate le giacche e ritirate l'attrezzatura. I maggiorenni hanno già compilato il modulo online."
+        "text": "Arrivate, lasciate le giacche e ritirate l'attrezzatura. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online prima di venire, i minorenni portano quello firmato da un genitore."
       },
       {
         "time": "Briefing",
         "title": "Regole e missioni",
-        "text": "Lo staff vi spiega come si usa l'arco, le regole e le missioni della serata."
+        "text": "Lo staff vi spiega come si usa l'arco, le regole e le missioni della partita."
       },
       {
-        "time": "60 minuti",
+        "time": "In campo",
         "title": "Battaglia",
-        "text": "Due squadre, i ripari, una missione dopo l'altra. Si corre, ci si copre, si tira: un'ora che vola."
-      },
-      {
-        "time": "+45 minuti",
-        "title": "Festa in saletta",
-        "text": "Se volete, la serata continua nella saletta: torta, rinfresco o catering, e tutte le frecce da raccontare."
+        "text": "Due squadre, i ripari, una missione dopo l'altra: si corre, ci si copre, si tira."
       }
     ]
   },
   "howto": {
     "title": "Come si gioca",
-    "text": "Due squadre si affrontano tra bunker e ripari: chi viene colpito da una freccia è eliminato, vince la squadra che resta in piedi o completa la missione. Le missioni cambiano durante la sessione, così nessuna partita è uguale all'altra.",
+    "text": "Due squadre si affrontano tra bunker e ripari, una missione dopo l'altra: ognuna ha le sue regole e i suoi obiettivi, così nessuna partita è uguale all'altra.",
     "includedTitle": "Tutto incluso",
     "included": [
       "Arco e frecce a punta morbida",
@@ -104,37 +99,37 @@
     "items": [
       {
         "title": "Serata tra amici",
-        "text": "L'alternativa al solito aperitivo: un'ora di battaglia, poi a cena con qualcosa da raccontare.",
+        "text": "L'alternativa al solito aperitivo: una battaglia ad arco, poi a cena con qualcosa da raccontare.",
         "href": "#prenota",
         "featured": true
       },
       {
         "title": "Compleanni",
-        "text": "Dagli 8 anni in su, con la saletta per la torta: la festa che ricordano i bambini e anche i grandi.",
-        "href": "",
+        "text": "Dagli 8 anni in su: la festa che ricordano i bambini e anche i grandi.",
+        "href": "/occasioni",
         "featured": false
       },
       {
         "title": "Addio al celibato e al nubilato",
         "text": "Lo sposo contro tutti, frecce morbide e nessun rischio per il grande giorno.",
-        "href": "",
+        "href": "/occasioni",
         "featured": false
       },
       {
         "title": "Team building",
         "text": "Fino a 20 persone, in arena o nella vostra location: strategia, comunicazione e risate.",
-        "href": "",
+        "href": "/teambuilding",
         "featured": false
       }
     ]
   },
   "pricing": {
     "title": "Prezzi dell'arcotag a Milano",
-    "text": "Prezzo a persona, attrezzatura inclusa. Cambia in base al giorno e all'orario. Il pomeriggio va dalle 14 alle 18 (l'ultima partita parte alle 18), la sera si comincia alle 20.",
+    "text": "Prezzo a persona, attrezzatura inclusa. Cambia in base al giorno e all'orario: il pomeriggio va dalle 14 alle 20 (l'ultima partita parte alle 18, alle 20 si esce), la sera si comincia alle 20.",
     "tiers": [
       {
         "label": "Pomeriggio",
-        "when": "Lun–ven, 14:00–18:00",
+        "when": "Lun–ven, 14:00–20:00",
         "price": "15",
         "unit": "€ a persona",
         "note": "",
@@ -159,6 +154,8 @@
     ],
     "notes": [
       "Da lunedì a venerdì si paga per almeno 8 persone, sabato e domenica per almeno 15: se siete meno, ad esempio in 5, si pagano comunque 8 o 15 quote.",
+      "Temperatura: l'arena non è riscaldata né climatizzata, vestitevi in base alla stagione.",
+      "Sala feste: dal lunedì al venerdì è compresa nell'1 ora e 45 (decidete voi come dividere il tempo tra gioco e festa), oppure si prolunga di un'ora a 70 € nella sala interna o 50 € in quella esterna; sabato e domenica la sala esterna è compresa nell'1 ora e 45, riducendo il tempo di gioco.",
       "Prenotazione obbligatoria."
     ]
   },
@@ -170,7 +167,7 @@
     "items": [
       {
         "q": "Da che età si può giocare ad arcotag?",
-        "a": "Dagli 8 anni compiuti. I minorenni portano il modulo firmato da un genitore."
+        "a": "Dagli 8 anni compiuti. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online prima di venire, i minorenni portano quello firmato da un genitore."
       },
       {
         "q": "Quanti giocatori servono?",
@@ -178,7 +175,7 @@
       },
       {
         "q": "Quanto dura una partita?",
-        "a": "60 minuti di gioco. Se prenotate la saletta, avete altri 45 minuti per festeggiare."
+        "a": "1 ora e 45 minuti in tutto, briefing compreso."
       },
       {
         "q": "Bisogna saper tirare con l'arco?",
@@ -198,7 +195,7 @@
       },
       {
         "q": "Possiamo festeggiare un compleanno?",
-        "a": "Sì: dopo la partita potete usare la saletta per 45 minuti, portare la torta o chiedere il nostro catering."
+        "a": "Sì. Le sale per la festa sono due, una interna e una esterna. Dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti: decidete voi come dividere il tempo tra gioco e festa, oppure prolungate di un'ora (70 € la sala interna, 50 € quella esterna). Il sabato e la domenica la sala esterna è compresa nell'1 ora e 45 minuti, riducendo il tempo di gioco. La torta potete portarla voi, il catering lo prepariamo su richiesta: trovi tutto nella pagina Occasioni."
       },
       {
         "q": "Come si prenota?",

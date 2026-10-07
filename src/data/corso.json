@@ -9,9 +9,9 @@
     "eyebrow": "Corso · stagione 2026–2027",
     "title": "Corso di softair a Milano",
     "subtitle": "Ogni mercoledì sera con un istruttore qualificato, per principianti ed esperti: migliori la tecnica e arrivi ai tornei.",
-    "image": "/uploads/scena-softair.jpeg",
-    "imageMobile": "",
-    "imageAlt": "Un giocatore di softair con casco, maschera protettiva e replica imbracciata avanza tra barricate di compensato, nella luce calda di una finestra.",
+    "image": "/uploads/corso-hero.jpeg",
+    "imageMobile": "/uploads/corso-hero-mobile.jpeg",
+    "imageAlt": "Un gruppo di principianti in tenuta da softair ascolta l'istruttore che spiega uno schema su una lavagna, nella luce delle finestre dell'arena.",
     "focus": "right",
     "ctaPrimary": {
       "label": "Prenota",
@@ -48,13 +48,13 @@
   },
   "intro": {
     "title": "Il corso in breve",
-    "text": "Il corso di softair di SoftAir Milano è aperto a principianti ed esperti, dai 16 anni. Si tiene ogni mercoledì dalle 21:00 alle 22:30, da ottobre 2026 a maggio 2027, nella nostra arena al coperto a Milano e nell'arena nel bosco di Ranger Softair Milano. Le lezioni le tiene un istruttore qualificato e, se non hai l'attrezzatura, la noleggi da noi."
+    "text": "Il corso di softair di SoftAir Milano è aperto a principianti ed esperti, dai 16 anni. Si tiene ogni mercoledì dalle 21:00 alle 22:30, da ottobre 2026 a maggio 2027 con una pausa in inverno, nella nostra arena al coperto a Milano e nell'arena nel bosco di Ranger Softair Milano. Le lezioni le tiene un istruttore qualificato e, se non hai l'attrezzatura, la noleggi da noi."
   },
   "trial": {
     "title": "La prova gratuita",
     "text": "Il primo allenamento è gratis e senza impegno: vieni a provare, conosci l'istruttore e il gruppo, poi decidi se iscriverti.",
-    "image": "",
-    "imageAlt": "",
+    "image": "/uploads/corso-prova.jpeg",
+    "imageAlt": "L'istruttore sistema la maschera a un principiante prima del primo allenamento, mentre altri due aspettano il loro turno.",
     "itemsTitle": "Da sapere",
     "items": [
       {
@@ -100,7 +100,7 @@
   },
   "calendar": {
     "title": "Il calendario 2026–2027",
-    "text": "Ogni mercoledì dalle 21:00 alle 22:30, in due parti. A corso iniziato non ci si iscrive: si entra all'inizio di una delle due parti, e il primo allenamento è gratis.",
+    "text": "Ogni mercoledì dalle 21:00 alle 22:30: un corso unico, da ottobre a maggio, con la pausa d'inverno in mezzo. A corso iniziato non ci si iscrive: si entra all'inizio della prima o della seconda parte, e il primo allenamento è gratis.",
     "steps": [
       {
         "time": "7 ott – 16 dic 2026",
@@ -149,6 +149,10 @@
       {
         "q": "Dove si fanno gli allenamenti?",
         "a": "Nella nostra arena al coperto, in Via Melegnano 26 a Settimo Milanese, e nell'arena nel bosco di Ranger Softair Milano."
+      },
+      {
+        "q": "Com'è la temperatura in arena?",
+        "a": "L'arena non è riscaldata né climatizzata: vestitevi in base alla stagione."
       }
     ]
   }

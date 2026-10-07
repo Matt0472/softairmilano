@@ -1,0 +1,151 @@
+---
+// Birthdays and bachelor/bachelorette parties (/occasioni). Like team building, its action is a quote
+// request: the hero's primary button leads to the request form, which arrives with the party chosen.
+// The two occasions open the page, each on its photo; then the activities to pick from (by age), the
+// party room and its weekday and weekend rules, how a party is booked with what to know before the
+// day, the reviews and the questions. Every section renders only when its data is present (CMS-10).
+
+import { existsSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/organisms/PageHero.astro';
+import SplitFeature from '../components/organisms/SplitFeature.astro';
+import ActivityLinks from '../components/organisms/ActivityLinks.astro';
+import ModeGrid from '../components/organisms/ModeGrid.astro';
+import StepTimeline from '../components/organisms/StepTimeline.astro';
+import Reviews from '../components/organisms/Reviews.astro';
+import FaqAccordion from '../components/organisms/FaqAccordion.astro';
+import BookingRequest from '../components/organisms/BookingRequest.astro';
+import FinalCta from '../components/organisms/FinalCta.astro';
+import Button from '../components/atoms/Button.astro';
+import Icon from '../components/atoms/Icon.astro';
+import IncludedList from '../components/molecules/IncludedList.astro';
+import Reveal from '../components/molecules/Reveal.astro';
+import page from '../data/occasioni.json';
+import navigation from '../data/navigation.json';
+import settings from '../data/settings.json';
+import { has } from '../lib/fields';
+import { breadcrumbLd, faqLd } from '../lib/jsonld';
+import { flattenNav, type NavItem } from '../lib/nav';
+import { telHref } from '../lib/phone';
+
+const { seo, hero, facts, birthdays, bachelor, activities, partyRoom, booking, reviews, faq, request } = page;
+
+const path = '/occasioni';
+// The page name in the trail is its menu label (single source for both).
+const pageName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === path)?.label || hero.title;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: pageName, href: path },
+];
+
+// The guests' invitation, when the client uploads one: the link says what it is and how much it
+// weighs ("PDF, 1,2 MB"), read from the file at build time, and a file that is not there gets no
+// link at all, as on /modulistica.
+const kb = 1024;
+const fileWeight = (bytes: number) =>
+  bytes < kb * kb ? `${Math.max(1, Math.round(bytes / kb))} KB` : `${(bytes / kb / kb).toFixed(1).replace('.', ',')} MB`;
+const inviteSrc = birthdays?.invite?.trim() ?? '';
+const inviteFile = inviteSrc.startsWith('/') ? join(process.cwd(), 'public', decodeURI(inviteSrc)) : '';
+const invite =
+  has(birthdays?.inviteLabel) && inviteFile && existsSync(inviteFile)
+    ? {
+        href: inviteSrc,
+        label: birthdays.inviteLabel,
+        meta: [inviteSrc.split('.').pop()?.toUpperCase(), fileWeight(statSync(inviteFile).size)].filter(has).join(', '),
+      }
+    : undefined;
+
+// «Chiamaci», says the bachelor party copy: the number from the site settings sits right under it.
+const { phone } = settings;
+const tel = telHref(phone);
+
+const faqItems = (faq?.items ?? []).filter((f) => has(f.q) && has(f.a));
+const faqData = faqLd(faqItems);
+const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])];
+const activityItems = (activities?.items ?? []).filter((a) => has(a.title) && has(a.image) && has(a.href));
+const notes = (booking?.notes ?? []).filter(has);
+const formsLink = has(booking?.link?.label) && has(booking?.link?.href) ? booking.link : undefined;
+---
+
+<BaseLayout title={seo.title} description={seo.description} image={seo.image} imageAlt={seo.imageAlt || hero.imageAlt} jsonLd={jsonLd}>
+  <PageHero {...hero} focus={hero.focus === 'right' ? 'right' : 'center'} facts={facts} crumbs={crumbs} />
+
+  {/* The two occasions, each built around its photo: without one the copy would sit beside an
+      empty column, so it waits. The second mirrors the first, its photo in the narrower column. */}
+  {birthdays && has(birthdays.title) && has(birthdays.image) && (
+    <SplitFeature
+      title={birthdays.title}
+      text={birthdays.text}
+      image={birthdays.image}
+      imageMobile={birthdays.imageMobile}
+      imageAlt={birthdays.imageAlt}
+      ratio="3 / 2"
+      itemsTitle={birthdays.itemsTitle}
+      items={birthdays.items}
+      headingId="compleanni-title"
+    >
+      {invite && (
+        <Button href={invite.href} variant="secondary" download="">
+          <Icon name="download" size={18} />
+          {invite.label}
+          <span class="font-sans text-sm font-normal normal-case tracking-normal text-muted">{invite.meta}</span>
+        </Button>
+      )}
+    </SplitFeature>
+  )}
+
+  {bachelor && has(bachelor.title) && has(bachelor.image) && (
+    <SplitFeature
+      title={bachelor.title}
+      text={bachelor.text}
+      image={bachelor.image}
+      imageAlt={bachelor.imageAlt}
+      ratio="3 / 2"
+      reverse
+      headingId="addio-title"
+    >
+      {tel && (
+        <Button href={tel} variant="secondary" class="tabular-nums" aria-label={`Chiama il ${phone}`}>
+          <Icon name="phone" size={18} />
+          {phone}
+        </Button>
+      )}
+    </SplitFeature>
+  )}
+
+  {activities && has(activities.title) && activityItems.length > 0 && (
+    <ActivityLinks title={activities.title} items={activityItems} headingId="attivita-title" />
+  )}
+
+  {partyRoom && has(partyRoom.title) && !!partyRoom.items?.length && (
+    <ModeGrid title={partyRoom.title} text={partyRoom.text} items={partyRoom.items} headingId="sala-title" />
+  )}
+
+  {/* The hero's secondary button lands here. What to know before the day closes the run of steps. */}
+  {booking && has(booking.title) && !!booking.steps?.length && (
+    <StepTimeline title={booking.title} text={booking.text} steps={booking.steps} id="come-funziona">
+      {notes.length > 0 && <IncludedList title={booking.notesTitle} items={notes} note={booking.notesNote} layout="row" />}
+      {formsLink && (
+        <div class="occ-forms">
+          <Button href={formsLink.href} variant="secondary">{formsLink.label}</Button>
+        </div>
+      )}
+    </StepTimeline>
+  )}
+
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
+
+  {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
+
+  <BookingRequest activity={request?.activity} title={request?.title} text={request?.text} />
+
+  <FinalCta {...settings.finalCta} />
+
+  <Reveal />
+</BaseLayout>
+
+<style>
+  /* The forms link under the "Da sapere" panel; on its own when the panel is empty. */
+  .occ-forms:not(:first-child) { margin-top: 1.25rem; }
+</style>

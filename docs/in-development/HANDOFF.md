@@ -199,23 +199,33 @@ Immagini social: `arcotag-og.jpg` e `paintball-og.jpg`, 1200×630.
 
 ## Dati dal cliente
 
-- **Età minima arcotag**: 8 anni (pagina arcotag, menu, modulistica del sito attuale) oppure 10 (`home.json`, pill «Dai 10 anni»)? Quando arriva la risposta, aggiornare anche la scritta tattica `hero.hudTag` di `arcotag.json`.
+- **Età minima arcotag**: **8 anni** (confermato dall'utente il 7 ott 2026; aggiornata anche la pill della home).
+- **Correzioni del 7 ott 2026** (dall'utente):
+  - **durata:** arcotag e Nerf durano come il softair, 1 ora e 45 tra briefing e gioco;
+  - **regole:** **non scrivere mai «chi viene colpito esce/è eliminato»**: ogni partita ha le sue regole (si esce subito, si hanno più vite, si rientra all'infinito), quindi non si specifica;
+  - **fotografo:** non c'è più, tolto ovunque;
+  - **moduli:** sono **obbligatori per tutti**; i maggiorenni li compilano online, i minorenni portano il modulo cartaceo firmato da un genitore;
+  - **pomeriggio** di arcotag e Nerf **dalle 14 alle 20**: l'ultima partita parte alle 18, alle 20 si esce;
+  - **saletta per le feste** (softair, arcotag e Nerf; raccontata solo nella pagina /occasioni, tolta da arcotag e Nerf). Regole corrette dall'utente il 7 ott sera, che sostituiscono le precedenti:
+    - le sale sono due, interna ed esterna;
+    - lun–ven: la saletta è compresa nell'1 h 45 (chi gioca decide come dividere il tempo tra gioco e saletta), oppure si prolunga di 1 ora a 70 € (sala interna) o 50 € (sala esterna);
+    - sab–dom: solo la sala esterna, compresa nell'1 h 45, riducendo il tempo di gioco.
 - **Prezzo Recluta**: 35 € (pagina più recente del sito attuale) o 30 €?
 - **Team building arcotag**: «fino a 20 persone», mentre il massimo dell'arcotag è 30 giocatori.
 - **Recensioni**: voto **4,7**, numero **«500+»** (profilo Google, letto dall'utente il 30 set 2026). **Il numero lo aggiorna a mano il cliente dal CMS**: niente Places API né build programmate (decisione dell'utente). Il vecchio «347» veniva dal widget Trustindex del sito attuale e, secondo l'utente, appartiene a un'altra attività (Bosco della Luna).
   - **Niente import da Google**: l'export Takeout del profilo non è recuperabile (né dall'utente né dal cliente). Restano le 5 recensioni vere del sito attuale (agosto 2024, testo originale, refusi corretti, nome e iniziale del cognome); le nuove le aggiunge il cliente dal CMS.
   - `rating.url` è vuoto: serve dal cliente il link al profilo Google (la riga «500+ recensioni su Google» diventa un link appena c'è).
 - **Turni, giorni e minimi** (dal cliente via l'utente, 30 set 2026, con una correzione successiva):
-  - **arcotag e Nerf**: pomeriggio dalle 14 alle 18 (le 18 sono l'inizio dell'ultima partita), sera dalle 20, turni lun–ven e sab–dom; minimo pagato 8 persone lun–ven e 15 sab–dom (in 5 si pagano comunque 8 o 15 quote); prezzi confermati: pomeriggio lun–ven 15 €, sera lun–ven 20 €, sab–dom 25 € (20 € oltre i 20);
-  - **softair**: come sul sito attuale. Tutti i giorni (vale `settings.openingHours`, «10–24»), si parte da 8 giocatori e sotto gli 8 «vi uniamo a un altro gruppo», nessun minimo pagato; Recluta del martedì = «martedì pomeriggio», senza orari. Stesse regole su /paintball;
-  - **tiro dinamico**: lun–ven negli stessi turni (14–18, dalle 20); sab–dom **solo su richiesta** (i campi sono per il softair, decide chi gestisce i turni); nessun minimo pagato, 1–8 persone;
+  - **arcotag e Nerf**: pomeriggio dalle 14 alle 20 (l'ultima partita parte alle 18, alle 20 si esce; aggiornato il 7 ott), sera dalle 20, turni lun–ven e sab–dom; minimo pagato 8 persone lun–ven e 15 sab–dom (in 5 si pagano comunque 8 o 15 quote); prezzi confermati: pomeriggio lun–ven 15 €, sera lun–ven 20 €, sab–dom 25 € (20 € oltre i 20);
+  - **softair**: come sul sito attuale. Tutti i giorni (vale `settings.openingHours`, «14–24» dal 7 ott 2026), si parte da 8 giocatori e sotto gli 8 «vi uniamo a un altro gruppo», nessun minimo pagato; Recluta del martedì = «martedì pomeriggio», senza orari. Stesse regole su /paintball;
+  - **tiro dinamico**: lun–ven **dalle 14 a mezzanotte** (aggiornato il 7 ott 2026); sab–dom **solo su richiesta** (i campi sono per il softair, decide chi gestisce i turni); nessun minimo pagato, 1–8 persone;
   - **massimo 30 giocatori** per softair, arcotag e Nerf.
 - **Numeri di giocatori**: non esistono e non si possono avere. **Non pubblicare statistiche nazionali** (per esempio «decine di migliaia di giocatori»: fonte non affidabile).
 - **Anzianità**: «attivi da oltre 10 anni» è confermato dall'utente.
 - **Località nei testi** (decisione dell'utente, 30 set 2026): sopratitoli e presentazioni dicono «Milano», non «Settimo Milanese». L'indirizzo vero (Via Melegnano 26, 20019 Settimo Milanese) resta in `settings.json`, nella sezione Prenota, nelle FAQ «Dove si trova…» e nel JSON-LD: una «Via Melegnano» esiste anche a Milano, e l'indirizzo sbagliato porterebbe i clienti altrove.
 - **Contenuti dell'arcotag**: nomi delle missioni, protezioni incluse.
 - **Nerf** (dall'utente: dai 6 anni, il resto come l'arcotag, quindi anche la maschera protettiva inclusa, che si vede nella foto `att-nerf`): mancano i nomi di eventuali missioni.
-- **Orari nella sezione Prenota**: `settings.openingHours` («tutti i giorni 10–24») è l'orario del softair e compare in ogni pagina; su arcotag, Nerf e tiro i turni stanno nella sezione prezzi. Da chiedere: a che ora parte l'ultima partita serale di arcotag, Nerf e tiro? Serve un orario per attività nella sezione Prenota?
+- **Orari nella sezione Prenota**: `settings.openingHours` («tutti i giorni 14–24») è l'orario del softair e compare in ogni pagina; su arcotag, Nerf e tiro i turni stanno nella sezione prezzi. Da chiedere: a che ora parte l'ultima partita serale di arcotag, Nerf e tiro? Serve un orario per attività nella sezione Prenota?
 - **Badge «Compleanni» del Nerf** sulla fascia Weekend (la più cara, minimo 15 quote): le feste si prenotano davvero lì?
 - **Schede «Perfetto per» senza link**: Compleanni, Addii al celibato/nubilato e Team building (softair, arcotag, Nerf) sono schede di solo testo finché le loro pagine non esistono; quando nascono `/festa-di-compleanno`, `/addio-al-celibato-nubilato` e `/teambuilding`, rimettere gli `href` nei JSON delle attività.
 - **Recensione di Carla R.** («i nostri figli…», agosto 2024): taggata solo arcotag, perché il Nerf sul sito compare dal 2026; non è chiaro se parli di arcotag o di softair.

@@ -1,0 +1,517 @@
+---
+// «Come raggiungerci»: where the arena is and how to get there. The map is Google's, so nothing of
+// it loads until the visitor asks for it: the click is the consent (CODE-09). Until then a
+// panel in the site's HUD language holds the map's exact place: a map grid, range rings closing
+// on a pin, the address and the button; the iframe waits inert in a <template>. Opening the address
+// in Google Maps, in a new tab, is always offered. Under the map, the ways in: by car, by public
+// transport, and the outdoor arena, which is somewhere else. The address and the outdoor arena's
+// link come from settings.json, the copy from the page's file; a way emptied in the CMS drops out.
+
+import Button from '../atoms/Button.astro';
+import Icon from '../atoms/Icon.astro';
+import SectionHead from '../molecules/SectionHead.astro';
+import settings from '../../data/settings.json';
+import { has } from '../../lib/fields';
+
+interface Way {
+  title?: string;
+  text?: string;
+}
+interface Props {
+  title: string;
+  text?: string;
+  map?: {
+    button?: string;
+    note?: string;
+    frameTitle?: string;
+    openLabel?: string;
+  };
+  car?: Way & { routeLabel?: string };
+  transit?: Way;
+  outdoor?: Way;
+  headingId?: string;
+}
+
+const { title, text, map = {}, car, transit, outdoor, headingId = 'where-title' } = Astro.props;
+const { address, siteName, rangerUrl } = settings;
+const ranger: { label?: string } = settings.footerRanger ?? {};
+
+const q = has(address) ? encodeURIComponent(address) : '';
+// Google's keyless embed, loaded only on request; the search and route links open Google Maps
+// itself (the app, on phones).
+const embedSrc = q ? `https://www.google.com/maps?q=${q}&output=embed` : '';
+const searchHref = q ? `https://www.google.com/maps/search/?api=1&query=${q}` : '';
+const routeHref = q ? `https://www.google.com/maps/dir/?api=1&destination=${q}` : '';
+const showMap = has(embedSrc) && has(map.button);
+
+// The arrow travels with the label's last word, so a wrapped label never leaves it alone.
+const splitLabel = (label: string) => {
+  const words = label.trim().split(/\s+/);
+  const last = words.pop()!;
+  return { lead: words.length ? `${words.join(' ')} ` : '', last };
+};
+
+const openLink = has(map.openLabel) ? splitLabel(map.openLabel) : undefined;
+
+const isWay = (w?: Way): w is Required<Way> => has(w?.title) && has(w?.text);
+const ways = [
+  isWay(car) && {
+    ...car,
+    link: has(car.routeLabel) && routeHref ? { ...splitLabel(car.routeLabel), href: routeHref } : undefined,
+  },
+  isWay(transit) && { ...transit, link: undefined },
+  isWay(outdoor) && has(rangerUrl) && has(ranger.label) && { ...outdoor, link: { ...splitLabel(ranger.label), href: rangerUrl } },
+].filter(Boolean) as { title: string; text: string; link?: { lead: string; last: string; href: string } }[];
+---
+
+<section class="where band" id="come-raggiungerci" aria-labelledby={headingId}>
+  <div class="shell">
+    <div data-reveal>
+      <SectionHead title={title} text={text} id={headingId} />
+    </div>
+
+    {showMap && (
+      <div class="where__map" data-map data-reveal style="--i: 1">
+        <div class="where__panel" data-map-panel>
+          <div class="where__idle" data-map-idle>
+            <div class="where__scope" aria-hidden="true">
+              <span class="where__grid"></span>
+              <span class="where__target">
+                <span class="where__ring where__ring--1"></span>
+                <span class="where__ring where__ring--2"></span>
+                <span class="where__ring where__ring--3"></span>
+                <span class="where__dot"></span>
+                <Icon name="mapPin" size={44} class="where__pin" />
+              </span>
+            </div>
+            <div class="where__card">
+              {has(siteName) && <p class="where__name">{siteName}</p>}
+              <p class="where__addr">{address}</p>
+              <Button type="button" variant="secondary" class="where__load" data-map-load>
+                <Icon name="map" size={20} class="where__load-icon" />
+                <span class="where__load-idle">{map.button}</span>
+                {/* Status label while the map loads (CMS-02). */}
+                <span class="where__load-busy">Caricamento della mappa</span>
+                <span class="where__spin" aria-hidden="true"></span>
+              </Button>
+              {has(map.note) && <p class="where__note">{map.note}</p>}
+            </div>
+          </div>
+          <template data-map-frame>
+            <iframe
+              class="where__frame"
+              src={embedSrc}
+              title={has(map.frameTitle) ? map.frameTitle : `${siteName}: ${address}`}
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              allowfullscreen
+            ></iframe>
+          </template>
+        </div>
+
+        {openLink && (
+          <a class="where__open" href={searchHref} target="_blank" rel="noopener">
+            <span>{openLink.lead}<span class="where__last">{openLink.last}<Icon name="arrowUpRight" size={18} /></span></span>
+            <span class="sr-only">(si apre in una nuova scheda)</span>
+          </a>
+        )}
+      </div>
+    )}
+
+    {ways.length > 0 && (
+      <ul class="where__ways" role="list" data-reveal style={`--n: ${ways.length}; --i: 2`}>
+        {ways.map((w) => (
+          <li class="where__way">
+            <h3 class="where__way-title">{w.title}</h3>
+            <p class="where__way-text">{w.text}</p>
+            {w.link && (
+              <a class="where__open where__way-link" href={w.link.href} target="_blank" rel="noopener">
+                <span>{w.link.lead}<span class="where__last">{w.link.last}<Icon name="arrowUpRight" size={18} /></span></span>
+                <span class="sr-only">(si apre in una nuova scheda)</span>
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</section>
+
+<style is:global>
+  .where {
+    --accent: var(--color-accent);
+    --ink: var(--color-background);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+
+  .where__map { margin-top: clamp(2rem, 4.5vw, 3rem); }
+
+  /* The map's place, the same before and after it loads (no shift, PERF-03). Phones get a taller
+     frame: the target above, the card below. The panel is the screen the map appears on, a step
+     darker than the band, framed like the site's media. */
+  .where__panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    height: clamp(28rem, 125vw, 34rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--ink);
+    view-timeline: --where-panel block;
+  }
+
+  .where__idle {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+  }
+  .where__idle[hidden] { display: none; }
+
+  /* --- The scope: a map grid and a target, centred on the pin (--tx, --ty). --- */
+  .where__scope {
+    --tx: 50%;
+    --ty: 30%;
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    pointer-events: none;
+  }
+  /* A square of whole tiles centred on the target, each scale shifted by half its cell so that
+     only the crosshair runs through the pin; it fades out with the distance from it (a mask reads
+     only alpha). Fixed in rem on purpose: the grid is a scale, it does not stretch with the panel. */
+  .where__grid {
+    --major: color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    --minor: color-mix(in srgb, var(--color-foreground) 4.5%, transparent);
+    position: absolute;
+    left: var(--tx);
+    top: var(--ty);
+    width: 192rem;
+    height: 192rem;
+    margin: -96rem 0 0 -96rem;
+    background-image:
+      linear-gradient(to right, var(--major) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--major) 1px, transparent 1px),
+      linear-gradient(to right, var(--minor) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--minor) 1px, transparent 1px);
+    background-size: 8rem 8rem, 8rem 8rem, 2rem 2rem, 2rem 2rem;
+    background-position: 4rem 4rem, 4rem 4rem, 1rem 1rem, 1rem 1rem;
+    mask-image: radial-gradient(circle at center, black 0, black 12rem, transparent 46rem);
+  }
+  .where__target {
+    position: absolute;
+    left: var(--tx);
+    top: var(--ty);
+    width: 0;
+    height: 0;
+  }
+  /* Range rings round the pin, fainter as they widen. Centred by margins, so the lock-on is a
+     free transform. */
+  .where__ring {
+    --size: 9rem;
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+    border: 1px solid color-mix(in srgb, var(--accent) var(--alpha, 40%), transparent);
+    border-radius: 50%;
+  }
+  .where__ring--2 { --size: 18rem; --alpha: 22%; }
+  .where__ring--3 { --size: 30rem; --alpha: 11%; border-style: dashed; }
+  /* The crosshair through the pin, with a gap where the pin stands. Across, it fades out within
+     the outer ring, so it never runs under the card beside it. */
+  .where__target::before,
+  .where__target::after {
+    --hair: color-mix(in srgb, var(--accent) 30%, transparent);
+    content: "";
+    position: absolute;
+  }
+  .where__target::before {
+    left: -15rem;
+    width: 30rem;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--hair) 30%, var(--hair) calc(50% - 2.25rem), transparent calc(50% - 2.25rem) calc(50% + 2.25rem), var(--hair) calc(50% + 2.25rem), var(--hair) 70%, transparent);
+  }
+  .where__target::after {
+    top: -60rem;
+    height: 120rem;
+    left: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--hair) 40%, var(--hair) calc(50% - 3.5rem), transparent calc(50% - 3.5rem) calc(50% + 1.5rem), var(--hair) calc(50% + 1.5rem), var(--hair) 60%, transparent);
+  }
+  /* The point on the ground and the pin standing on it: the panel's one light (DES-04, no halo). */
+  .where__dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px 1px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+  .where__pin {
+    position: absolute;
+    /* The icon's tip (12, 21.8 on its 24-unit grid) on the point. */
+    left: -22px;
+    top: -40px;
+    color: var(--accent);
+    fill: color-mix(in srgb, var(--ink) 70%, transparent);
+  }
+
+  /* --- The card --- */
+  .where__card {
+    position: relative;
+    width: 100%;
+    padding: 3rem clamp(1.25rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2.5rem);
+    /* On phones the card sits under the target: its own ground keeps the rings off the copy. */
+    background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--ink) 94%, transparent) 2.5rem);
+  }
+  .where__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    line-height: 1.3;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .where__addr {
+    margin: 0.5rem 0 0;
+    max-width: 16em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.45rem, 1.1rem + 1.4vw, 2.1rem);
+    line-height: 1.12;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  /* The secondary Button on its own dark chip; the atom keeps its colours, hover and focus ring. */
+  .where__load {
+    min-height: 48px;
+    margin-top: 1.4rem;
+    padding-inline: 1.25rem 1.5rem;
+    gap: 0.65rem;
+    background: color-mix(in srgb, var(--color-surface-2) 80%, transparent);
+    transition:
+      border-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .where__load svg { flex: none; color: var(--accent); }
+  .where__load:active { transform: translateY(1px) scale(0.98); }
+  .where__load-busy,
+  .where__spin { display: none; }
+  /* Loading: the label says so and a ring turns where the icon was. aria-disabled, not disabled,
+     so the focused button keeps focus until the map takes it. */
+  .where__panel.is-loading .where__load { cursor: progress; }
+  .where__panel.is-loading :is(.where__load-idle, .where__load-icon) { display: none; }
+  .where__panel.is-loading .where__load-busy { display: inline; }
+  .where__panel.is-loading .where__spin {
+    display: inline-block;
+    order: -1;
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 2px solid var(--accent);
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    /* Linear on purpose: a steady turn, not an entrance. Reduced motion stops it on its first frame. */
+    animation: where-spin calc(var(--duration-slow) * 1.75) linear infinite;
+  }
+  @keyframes where-spin {
+    to { transform: rotate(1turn); }
+  }
+  .where__note {
+    margin: 0.85rem 0 0;
+    max-width: 40ch;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+
+  /* --- The map, once asked for --- */
+  .where__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease-out-expo);
+  }
+  .where__panel.is-ready .where__frame { opacity: 1; }
+  .where__frame:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  .where__open {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--color-foreground);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 50%, transparent);
+    text-underline-offset: 5px;
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      text-decoration-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .where__last { white-space: nowrap; }
+  .where__open svg {
+    display: inline-block;
+    margin-left: 0.45rem;
+    vertical-align: -0.2em;
+    color: var(--accent);
+    transition: transform var(--duration-base) var(--ease-out-expo);
+  }
+  .where__open:hover { color: var(--color-accent-hover); text-decoration-color: var(--accent); }
+  .where__open:hover svg { transform: translate(2px, -2px); }
+  .where__open:active { transform: translateY(1px); }
+
+  /* --- The ways in: one ruled band, no cards. --- */
+  .where__ways {
+    list-style: none;
+    margin: clamp(2.25rem, 5vw, 3.5rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    border-top: 1px solid var(--color-border);
+  }
+  .where__way {
+    padding: 1.35rem 0 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .where__way-title {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(1.15rem, 1rem + 0.5vw, 1.4rem);
+    letter-spacing: 0.03em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .where__way-text {
+    margin: 0.55rem 0 0;
+    max-width: 38ch;
+    color: var(--color-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+  .where__way-link { margin-top: 0.4rem; }
+
+  /* Wider screens: the card beside the target, which moves right. */
+  @media (min-width: 640px) {
+    .where__panel { height: clamp(24rem, 40vw, 34rem); }
+    .where__scope { --tx: 74%; --ty: 50%; }
+    .where__idle { align-items: center; }
+    .where__card {
+      width: min(100%, 27rem);
+      padding: clamp(1.5rem, 4vw, 3.5rem);
+      background: none;
+    }
+  }
+  @media (min-width: 1024px) {
+    .where__scope { --tx: 68%; }
+    .where__card { width: min(100%, 32rem); }
+  }
+
+  @media (min-width: 768px) {
+    .where__ways {
+      grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
+    }
+    .where__way {
+      padding: 1.5rem clamp(1rem, 2.5vw, 2rem) 0 0;
+      border-bottom: 0;
+    }
+    .where__way + .where__way {
+      padding-left: clamp(1rem, 2.5vw, 2rem);
+      border-left: 1px solid var(--color-border);
+    }
+  }
+
+  /* Landscape phones: the panel stays inside the screen. */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .where__panel { height: min(24rem, 82svh); }
+    .where__card { padding-block: 1.25rem; }
+    .where__addr { font-size: 1.35rem; }
+    .where__load { margin-top: 1rem; }
+  }
+
+  /* The rings close on the pin once, as the panel comes into view: scroll-driven, so no script and
+     nothing per frame. Longhands only (CODE-19). Unsupported, or with reduced motion, they are
+     simply there. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .where__ring,
+      .where__pin {
+        animation-timing-function: var(--ease-out-expo);
+        animation-fill-mode: both;
+        animation-timeline: --where-panel;
+      }
+      .where__ring {
+        animation-name: where-lock;
+        animation-range: entry 15% cover 45%;
+      }
+      .where__ring--2 { animation-range: entry 25% cover 50%; }
+      .where__ring--3 { animation-range: entry 35% cover 55%; }
+      .where__pin {
+        animation-name: where-drop;
+        animation-range: entry 30% cover 45%;
+      }
+    }
+  }
+  @keyframes where-lock {
+    from { opacity: 0; transform: scale(1.35); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes where-drop {
+    from { opacity: 0; transform: translateY(-0.75rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .where__frame,
+    .where__open svg { transition: none; }
+  }
+</style>
+
+<script>
+  // Click to load: the iframe comes out of its <template> only now, so Google receives nothing
+  // before the visitor asks (CODE-09). Focus moves to the map once it shows, before the button it
+  // replaces disappears, so it never falls back to the page.
+  const root = document.querySelector<HTMLElement>('[data-map]');
+  const panel = root?.querySelector<HTMLElement>('[data-map-panel]');
+  const idle = root?.querySelector<HTMLElement>('[data-map-idle]');
+  const button = root?.querySelector<HTMLElement>('[data-map-load]');
+  const template = root?.querySelector<HTMLTemplateElement>('template[data-map-frame]');
+
+  if (panel && idle && button && template) {
+    let started = false;
+    button.addEventListener('click', () => {
+      if (started) return;
+      started = true;
+      panel.classList.add('is-loading');
+      button.setAttribute('aria-disabled', 'true');
+
+      const frame = (template.content.cloneNode(true) as DocumentFragment).querySelector('iframe')!;
+      let shown = false;
+      // A map that never reports back (a blocked network, a filter) still takes the panel, so the
+      // visitor is never left on a spinner.
+      const show = () => {
+        if (shown) return;
+        shown = true;
+        clearTimeout(timer);
+        panel.classList.remove('is-loading');
+        panel.classList.add('is-ready');
+        frame.focus({ preventScroll: true });
+        idle.hidden = true;
+      };
+      const timer = setTimeout(show, 8000);
+      frame.addEventListener('load', show, { once: true });
+      panel.append(frame);
+    });
+  }
+</script>

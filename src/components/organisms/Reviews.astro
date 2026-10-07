@@ -1,78 +1,116 @@
 ---
-// Social proof: the rating on the left, the first review as a pull quote and
-// the others as a ruled grid on the right. Reviews and rating are shared data
-// (testimonials.json, real Google reviews, via lib/reviews); the page sets the
-// title and says which page it is, so it gets the reviews tagged for it.
-// Stars are drawn only from a real score, filled to its exact fraction.
+// Social proof, the same on every page: the heading, then the score card beside the reviews, two
+// rows of cards drifting the opposite way (Marquee: the strip itself stops and starts them, hover
+// and focus hold them, off screen they wait, under reduced motion a strip scrolled by hand). The card is the rating as a
+// readout: the average in large figures, the stars, the verdict, how many reviews and where, and
+// the link to all of them on Trustindex (a plain link, no widget). Rating and reviews are shared
+// data (testimonials.json, real Google reviews, via lib/reviews); the page sets the title. Stars
+// are drawn only from a real score, filled to its exact fraction; each part of the card shows only
+// when its field is filled. Every review is shown once, the rows taking them in turn, so the two
+// never show the same one. Every card has one width and one height: a review longer than its lines
+// is cut with an ellipsis on screen only (the whole text stays for screen readers).
 
 import Icon from '../atoms/Icon.astro';
+import Marquee from '../molecules/Marquee.astro';
+import SectionHead from '../molecules/SectionHead.astro';
 import StarMeter from '../molecules/StarMeter.astro';
-import { formatScore, rating, ratingReach, ratingScore, reviewsFor } from '../../lib/reviews';
+import { has } from '../../lib/fields';
+import { allReviews, formatScore, rating, ratingReach, ratingScore, type Review } from '../../lib/reviews';
+import { keepShortWords } from '../../lib/typography';
 
 interface Props {
   title: string;
-  /** Page slug (activity slug, "paintball", "corso" or "home"): picks the reviews tagged for this page. */
-  page?: string;
   headingId?: string;
 }
 
-const { title, page, headingId = 'reviews-title' } = Astro.props;
-const [featured, ...others] = reviewsFor(page);
+const { title, headingId = 'reviews-title' } = Astro.props;
+
+// Two rows once each holds enough cards to run past the screen on its own; below that, one.
+const TWO_ROWS_FROM = 8;
+const reviews = allReviews();
+const rows =
+  reviews.length >= TWO_ROWS_FROM
+    ? [reviews.filter((_, i) => i % 2 === 0), reviews.filter((_, i) => i % 2 === 1)]
+    : [reviews];
 
 const score = ratingScore();
-const scoreText = score !== null ? formatScore(score) : '';
 const reach = ratingReach();
-const hasRating = score !== null || !!rating.label?.trim() || !!reach;
-const hasTitle = !!title?.trim();
+const hasLabel = has(rating.label);
+const hasMeta = score !== null || hasLabel || !!reach;
+// The link to every review shows only with both its address and its text (CMS-10). Its last word
+// keeps the arrow on its own line.
+const hasAll = has(rating.trustindexUrl) && has(rating.trustindexLabel);
+const allWords = (rating.trustindexLabel ?? '').trim().split(/\s+/);
+const allLast = allWords.pop();
+const allHead = allWords.join(' ');
+const hasCard = hasMeta || hasAll;
+const hasTitle = has(title);
 ---
 
-{featured && (
+{(hasCard || reviews.length > 0) && (
   <section class="rv band" aria-labelledby={hasTitle ? headingId : undefined}>
-    <div class="rv__inner shell">
-      <div class="rv__aside" data-reveal>
-        {hasTitle && <h2 class="rv__title" id={headingId}>{title}</h2>}
-        {hasRating && (
-          <div class="rv__rating">
+    <div class="shell">
+      {hasTitle && <SectionHead title={keepShortWords(title)} id={headingId} class="rv__head" />}
+
+      <div class:list={['rv__body', (!hasCard || !reviews.length) && 'rv__body--solo']}>
+        {hasCard && (
+          <div class:list={['rv__card', score === null && 'rv__card--no-score']} data-reveal>
             {score !== null && (
               <p class="rv__score">
-                <StarMeter score={score} />
-                <b class="rv__value">{scoreText}</b><span class="sr-only"> su 5</span>
+                <b class="rv__value">{formatScore(score)}</b><span class="sr-only"> su 5</span>
               </p>
             )}
-            {rating.label?.trim() && <p class="rv__label">{rating.label}</p>}
-            {!!reach && (
-              rating.url?.trim() ? (
-                <a class="rv__count rv__count--link" href={rating.url} target="_blank" rel="noopener">
-                  <b>{rating.count}</b> {rating.source}
-                  <Icon name="arrowUpRight" size={16} />
-                  <span class="sr-only">(si apre in una nuova scheda)</span>
+            {hasMeta && (
+              <div class="rv__meta">
+                {score !== null && <StarMeter score={score} size={20} />}
+                {hasLabel && <p class="rv__label">{rating.label}</p>}
+                {!!reach && (
+                  has(rating.url) ? (
+                    <a class="rv__count rv__count--link" href={rating.url} target="_blank" rel="noopener">
+                      <b>{rating.count}</b> {rating.source}
+                      <Icon name="arrowUpRight" size={16} />
+                      <span class="sr-only"> (si apre in una nuova scheda)</span>
+                    </a>
+                  ) : (
+                    <p class="rv__count"><b>{rating.count}</b> {rating.source}</p>
+                  )
+                )}
+              </div>
+            )}
+            {hasAll && (
+              <p class="rv__out">
+                <a class="rv__all" href={rating.trustindexUrl} target="_blank" rel="noopener">
+                  <span class="rv__all-text">{allHead && `${allHead} `}<span class="rv__nowrap">{allLast}<Icon name="arrowUpRight" size={18} /></span></span>
+                  <span class="sr-only"> (si apre in una nuova scheda)</span>
                 </a>
-              ) : (
-                <p class="rv__count"><b>{rating.count}</b> {rating.source}</p>
-              )
+              </p>
             )}
           </div>
         )}
-      </div>
 
-      <div class="rv__quotes" data-reveal style="--i: 1">
-        <figure class="rv__feature">
-          <Icon name="quote" size={36} class="rv__mark" />
-          <blockquote class="rv__feature-text"><p>{featured.text}</p></blockquote>
-          {featured.author?.trim() && <figcaption class="rv__by">{featured.author}</figcaption>}
-        </figure>
-
-        {others.length > 0 && (
-          <ul class="rv__grid" role="list">
-            {others.map((r) => (
-              <li class="rv__cell">
+        {reviews.length > 0 && (
+          <Marquee
+            class="rv__marquee"
+            rows={rows}
+            pace={20}
+            fill={6}
+            labels={{
+              running: 'Recensioni in scorrimento. Premi Invio per fermarle',
+              stopped: 'Recensioni ferme. Premi Invio per farle ripartire',
+              still: 'Recensioni: scorri di lato per leggerle tutte',
+            }}
+            still="scroll"
+          >
+            {(r: Review) => (
+              <li class="rv__item">
                 <figure class="rv__quote">
+                  <Icon name="quote" size={18} class="rv__mark" />
                   <blockquote><p>{r.text}</p></blockquote>
-                  {r.author?.trim() && <figcaption class="rv__by">{r.author}</figcaption>}
+                  {has(r.author) && <figcaption class="rv__by">{r.author}</figcaption>}
                 </figure>
               </li>
-            ))}
-          </ul>
+            )}
+          </Marquee>
         )}
       </div>
     </div>
@@ -82,58 +120,75 @@ const hasTitle = !!title?.trim();
 <style is:global>
   .rv {
     --accent: var(--color-accent);
+    /* One width and one height for every review card: the text gets this many lines, which holds
+       all but the longest reviews at full width. */
+    --rv-card: clamp(17.5rem, 88vw, 22rem);
+    --rv-lines: 7;
     padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
   }
-  .rv__inner {
-    display: grid;
-    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-    gap: clamp(2rem, 6vw, 6rem);
-    align-items: start;
+  .rv__head { margin-bottom: clamp(2rem, 4.5vw, 3.25rem); }
+  /* The narrowest phones get a line more, so the cards there cut no more reviews than elsewhere. */
+  @media (max-width: 359px) {
+    .rv { --rv-lines: 8; }
   }
 
-  .rv__title {
-    margin: 0;
+  /* Phones and tablets: the card, then the reviews. */
+  .rv__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2.25rem, 5vw, 3rem);
+  }
+
+  /* ---- Score card: one step above the band, so it reads as the rating on either plane ---- */
+  .rv__card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "value meta"
+      "all all";
+    align-items: center;
+    column-gap: 1.5rem;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--lift);
+  }
+  .rv__card--no-score { grid-template-columns: minmax(0, 1fr); grid-template-areas: "meta" "all"; }
+  .rv__score { grid-area: value; margin: 0; }
+  .rv__value {
+    display: block;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    line-height: 1.12;
-    letter-spacing: 0.01em;
-    text-wrap: balance;
-  }
-  .rv__rating {
-    margin-top: clamp(1.75rem, 4vw, 2.75rem);
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--color-border);
-  }
-  .rv__score {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin: 0;
-  }
-  .rv__value {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.35rem;
-    line-height: 1;
+    font-size: clamp(4rem, 7vw, 6.25rem);
+    /* The figures alone on their line: no accented capitals to clear, so the line can close on them. */
+    line-height: 0.9;
+    letter-spacing: -0.01em;
     font-variant-numeric: tabular-nums;
     color: var(--color-foreground);
   }
+  .rv__meta {
+    grid-area: meta;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+    min-width: 0;
+  }
   .rv__label {
-    margin: 0.9rem 0 0;
+    margin: 0.2rem 0 0;
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
-    line-height: 1;
+    font-weight: 600;
+    font-size: 1.15rem;
+    line-height: 1.12;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
+  /* Inline text, so «500+ recensioni su Google» wraps as one phrase on narrow cards. */
   .rv__count {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin: 0.6rem 0 0;
+    margin: 0;
     color: var(--color-muted);
     font-size: 0.95rem;
+    line-height: 1.45;
     text-decoration: none;
   }
   .rv__count b {
@@ -141,72 +196,157 @@ const hasTitle = !!title?.trim();
     font-weight: 600;
     font-variant-numeric: tabular-nums;
   }
-  .rv__count--link { min-height: 44px; transition: color var(--duration-fast) var(--ease-out-expo); }
+  .rv__count svg { display: inline-block; margin-left: 0.25rem; vertical-align: -0.15em; }
+  .rv__count--link {
+    display: inline-block;
+    min-height: 44px;
+    padding-block: 0.65rem;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
   .rv__count--link:hover { color: var(--color-accent-hover); }
 
-  .rv__feature { position: relative; margin: 0; }
-  .rv__mark { color: var(--accent); }
-  .rv__feature-text { margin: 1rem 0 0; }
-  .rv__feature-text p {
+  /* The way out to every review: under a hairline, the card's last line. */
+  .rv__out {
+    grid-area: all;
+    margin: clamp(1.25rem, 3vw, 1.75rem) 0 0;
+    padding-top: clamp(0.5rem, 1.5vw, 0.75rem);
+    border-top: 1px solid var(--color-border);
+  }
+  /* Inline, so on two lines the arrow still follows the last word; the padding makes the 44px target. */
+  .rv__all {
+    display: inline-block;
+    min-height: 44px;
+    padding-block: 0.6rem;
+    color: var(--color-foreground);
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .rv__all-text {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in srgb, var(--color-foreground) 35%, transparent);
+    text-underline-offset: 0.3em;
+    transition: text-decoration-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .rv__nowrap { white-space: nowrap; }
+  .rv__all svg {
+    display: inline-block;
+    margin-left: 0.3rem;
+    vertical-align: -0.2em;
+    color: var(--accent);
+    transition: transform var(--duration-base) var(--ease-out-expo);
+  }
+  .rv__all:hover { color: var(--color-accent-hover); }
+  .rv__all:hover .rv__all-text { text-decoration-color: currentColor; }
+  .rv__all:hover svg { transform: translate(2px, -2px); }
+  .rv__all:active { transform: translateY(1px); }
+
+  /* ---- The reviews: two rows of cards, full bleed until the card stands beside them ---- */
+  /* Edge to edge, so the focus ring sits inside the strip. */
+  .rv__marquee {
+    --mq-fade: clamp(1.25rem, 6vw, 3.5rem);
+    --mq-ring: -2px;
+    margin-inline: calc(-1 * var(--shell-gutter));
+  }
+  /* The card: the mark on top, a text area of fixed lines, the author on the foot. */
+  .rv__item {
+    flex: none;
+    display: flex;
+    width: var(--rv-card);
+  }
+  .rv__quote {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     margin: 0;
-    max-width: 30ch;
-    font-size: clamp(1.4rem, 2.8vw, 2.25rem);
-    font-weight: 500;
-    line-height: 1.3;
-    letter-spacing: -0.012em;
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--lift);
+  }
+  .rv__mark {
+    flex: none;
+    color: var(--accent);
+  }
+  .rv__quote blockquote {
+    height: calc(var(--rv-lines) * 1.6rem);
+    margin: 0.75rem 0 1rem;
+  }
+  .rv__quote p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--rv-lines);
+    overflow: hidden;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
     text-wrap: pretty;
   }
-  /* Author line: a short accent rule, then the name. */
+  /* Author line: a short rule, then the name. */
   .rv__by {
     display: flex;
     align-items: center;
     gap: 0.7rem;
-    margin-top: 1.25rem;
+    margin-top: auto;
+    overflow: hidden;
+    white-space: nowrap;
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-foreground);
   }
   .rv__by::before {
     content: "";
+    flex: none;
     width: 18px;
     height: 1px;
     background: var(--color-steel);
   }
 
-  .rv__grid {
-    list-style: none;
-    margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: clamp(1.5rem, 3vw, 2.5rem);
-  }
-  .rv__cell { border-top: 1px solid var(--color-border); padding-block: 1.25rem 1.5rem; }
-  /* An odd last review takes the whole row: no empty cell. */
-  .rv__cell:last-child:nth-child(odd) { grid-column: 1 / -1; }
-  .rv__quote { margin: 0; }
-  .rv__quote blockquote { margin: 0; }
-  .rv__quote p {
-    margin: 0;
-    font-size: 1.02rem;
-    line-height: 1.55;
-    /* Keeps every quote short on the page (the full text stays in the data). */
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
-    overflow: hidden;
-  }
-  .rv__quote .rv__by { margin-top: 0.75rem; font-size: 0.85rem; }
 
-  @media (max-width: 1023px) {
-    .rv__inner { grid-template-columns: minmax(0, 1fr); }
-    .rv__rating { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
-    .rv__label { margin: 0; font-size: 1.75rem; }
-    .rv__count { margin: 0; }
-    .rv__score { flex-basis: 100%; }
+  /* Tablets: the card becomes a strip, figures, readout and link on one line. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .rv__card { grid-template-columns: auto minmax(0, 1fr) minmax(0, 15rem); grid-template-areas: "value meta all"; }
+    .rv__card--no-score { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); grid-template-areas: "meta all"; }
+    .rv__out {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      margin: 0;
+      padding: 0 0 0 1.5rem;
+      border-top: 0;
+      border-left: 1px solid var(--color-border);
+    }
   }
-  @media (max-width: 599px) {
-    .rv__grid { grid-template-columns: minmax(0, 1fr); }
+
+  /* From 1024 the card takes a third of the row and the reviews drift beside it, inside the column. */
+  @media (min-width: 1024px) {
+    .rv__body {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      align-items: center;
+      gap: clamp(2rem, 3.5vw, 3.5rem);
+    }
+    .rv__body--solo { grid-template-columns: minmax(0, 1fr); }
+    .rv__card {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "value" "meta" "all";
+      row-gap: 1.25rem;
+    }
+    .rv__out { margin-top: 0.5rem; }
+    .rv__marquee {
+      --mq-fade: clamp(2rem, 5vw, 5rem);
+      --mq-ring: 4px;
+      margin-inline: 0;
+    }
+  }
+
+  /* Reduced motion: the strip scrolls by hand, its first card on the content's edge. */
+  @media (prefers-reduced-motion: reduce) {
+    .rv__marquee .mq__rows { padding-inline: var(--shell-gutter); }
+  }
+  @media (prefers-reduced-motion: reduce) and (min-width: 1024px) {
+    .rv__marquee .mq__rows { padding-inline: 0; }
   }
 </style>

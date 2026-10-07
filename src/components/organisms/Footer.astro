@@ -1,133 +1,510 @@
 ---
+// Site footer, the same on every page. The brand (logo, tagline, socials and the door to the
+// outdoor arena), then the menu regrouped into columns, then the contacts, then the fine print.
+// The columns are built from navigation.json, so a page the client adds to the menu shows up here
+// too: an item with a submenu becomes a column under its own label, the items without one share a
+// column whose heading is a CMS field. Headings, contacts and legal links come from settings.json.
+
 import navigation from '../../data/navigation.json';
 import settings from '../../data/settings.json';
 import Icon from '../atoms/Icon.astro';
 import type { NavItem } from '../../lib/nav';
+import { has } from '../../lib/fields';
 import { telHref } from '../../lib/phone';
 
-// Same rule as the header: an entry with neither a link nor sub-items has nothing to show.
-const items = (navigation.items as NavItem[])
-  .map((it) => ({ ...it, children: it.children?.filter((c) => c.label && c.href) }))
-  .filter((it) => it.label && (it.href || it.children?.length));
-const { siteName } = settings;
-const social: Partial<Record<'instagram' | 'facebook' | 'youtube' | 'tiktok', string>> = settings.social ?? {};
-const socials = [
-  { key: 'instagram', label: 'Instagram' },
-  { key: 'facebook', label: 'Facebook' },
-  { key: 'youtube', label: 'YouTube' },
-  { key: 'tiktok', label: 'TikTok' },
-] as const;
-const ranger: { title?: string; label?: string; text?: string } = settings.footerRanger ?? {};
-const tel = telHref(settings.phone);
-const year = new Date().getFullYear();
+interface Link {
+  label: string;
+  href: string;
+}
+interface Column {
+  title: string;
+  links: Link[];
+}
 
-// Every footer link is a 44px row (RESP-04); the rows replace the list gaps.
-const linkClass = 'flex min-h-11 w-fit min-w-11 items-center text-sm text-foreground transition-colors hover:text-accent';
+const { siteName, footerTagline, phone, email, address, openingHours, rangerUrl } = settings;
+const headings: { pages?: string; contacts?: string } = settings.footerHeadings ?? {};
+const ranger: { title?: string; label?: string; text?: string } = settings.footerRanger ?? {};
+const usable = (l: { label?: string; href?: string }): l is Link => has(l.label) && has(l.href);
+
+// Columns in menu order; the shared column sits where the first item without a submenu sits.
+// Home is left out: the logo already leads there.
+const columns: Column[] = [];
+let pages: Column | undefined;
+for (const it of (navigation.items as NavItem[]).filter((i) => has(i.label))) {
+  const children = (it.children ?? []).filter(usable);
+  if (children.length) {
+    columns.push({ title: it.label, links: children });
+  } else if (usable(it) && it.href !== '/') {
+    if (!pages) columns.push((pages = { title: headings.pages ?? '', links: [] }));
+    pages.links.push(it);
+  }
+}
+
+// Same rule as the header: the current page is marked, and only it is in the accent colour.
+const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isCurrent = (href: string): boolean =>
+  href === '/' ? current === '/' : current === href || current.startsWith(href + '/');
+
+const social: Partial<Record<'instagram' | 'facebook' | 'youtube' | 'tiktok', string>> = settings.social ?? {};
+const socials = (
+  [
+    { key: 'instagram', label: 'Instagram' },
+    { key: 'facebook', label: 'Facebook' },
+    { key: 'youtube', label: 'YouTube' },
+    { key: 'tiktok', label: 'TikTok' },
+  ] as const
+).filter((s) => has(social[s.key]));
+
+const tel = telHref(phone);
+const mapsHref = has(address) ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}` : '';
+const hasContacts = Boolean(tel) || has(email) || has(address) || has(openingHours);
+const hasRanger = has(rangerUrl) && has(ranger.label);
+// The arrow travels with the last word, so a narrow card never leaves it alone on a line.
+const rangerWords = (ranger.label ?? '').trim().split(/\s+/);
+const rangerLast = rangerWords.pop();
+const legal = ((settings.footerLegal ?? []) as { label?: string; href?: string }[]).filter(usable);
+const year = new Date().getFullYear();
+// The VAT number sits beside the copyright, as the law asks of a business site.
+const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${settings.vatNumber}` : ''].filter(Boolean).join(' · ');
 ---
 
-<footer class="mt-24 border-t border-border bg-surface">
-  {/* From xl the menu splits in two columns, so its track is a little wider than the others. */}
-  <div class="shell grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-[1fr_1.25fr_1fr_1fr]">
-    <div class="min-w-0">
-      <a href="/" class="inline-block" aria-label={`${siteName} — home`}>
-        <img src="/logo/logo-white-120.webp" alt={siteName} width="121" height="120" class="h-14 w-auto" />
-      </a>
-      {settings.footerTagline && <p class="mt-3 max-w-xs text-sm text-muted">{settings.footerTagline}</p>}
-
-      {/* Pulled left by the icon's inset, so the glyph lines up with the text above. */}
-      <div class="mt-3 -ml-3 flex items-center">
-        {socials.filter((s) => social[s.key]).map((s) => (
-          <a
-            href={social[s.key]}
-            target="_blank"
-            rel="noopener"
-            aria-label={s.label}
-            class="inline-flex size-11 items-center justify-center text-muted transition-colors hover:text-accent"
-          >
-            <Icon name={s.key} size={20} />
-          </a>
-        ))}
-      </div>
-    </div>
-
-    <div class="min-w-0">
-      <h3 class="text-xs uppercase tracking-wider text-muted">Menu</h3>
-      <ul class="mt-1 columns-2 gap-x-6 lg:columns-1 xl:columns-2">
-        {
-          items.map((it) =>
-            it.children?.length ? (
-              <li class="break-inside-avoid">
-                <span class="flex min-h-11 items-center text-sm text-muted">{it.label}</span>
-                <ul class="border-l border-border pl-3">
-                  {it.children.map((c) => (
-                    <li>
-                      <a href={c.href} class={linkClass}>{c.label}</a>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ) : (
-              <li class="break-inside-avoid">
-                <a href={it.href} class={linkClass}>{it.label}</a>
-              </li>
-            )
-          )
-        }
-      </ul>
-    </div>
-
-    <div class="min-w-0">
-      <h3 class="text-xs uppercase tracking-wider text-muted">Contatti</h3>
-      <ul class="mt-1 text-sm">
-        {settings.email && <li><a href={`mailto:${settings.email}`} class:list={[linkClass, 'wrap-anywhere']}>{settings.email}</a></li>}
-        {tel && <li><a href={tel} class={linkClass}>{settings.phone}</a></li>}
-        {settings.address && <li class="py-3 text-muted wrap-anywhere">{settings.address}</li>}
-      </ul>
-    </div>
-
-    {settings.rangerUrl && ranger.label && (
-      <div class="min-w-0">
-        {ranger.title && <h3 class="text-xs uppercase tracking-wider text-muted">{ranger.title}</h3>}
-        <a
-          href={settings.rangerUrl}
-          target="_blank"
-          rel="noopener"
-          class="mt-1 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-foreground transition-colors hover:text-accent"
-        >
-          {ranger.label}
-          <Icon name="arrowUpRight" size={16} />
-          <span class="sr-only">(si apre in una nuova scheda)</span>
+<footer class="foot">
+  <div class="shell foot__main">
+    <div class="foot__brand">
+      <div class="foot__id">
+        <a href="/" class="foot__logo" aria-label={`${siteName} — home`}>
+          <img src="/logo/logo-white-120.webp" alt="" width="121" height="120" loading="lazy" decoding="async" />
         </a>
-        {ranger.text && <p class="text-sm text-muted">{ranger.text}</p>}
+        {has(footerTagline) && <p class="foot__tagline">{footerTagline}</p>}
+        {socials.length > 0 && (
+          <ul class="foot__socials" role="list">
+            {socials.map((s) => (
+              <li>
+                <a class="foot__social" href={social[s.key]} target="_blank" rel="noopener">
+                  <Icon name={s.key} size={18} />
+                  <span class="sr-only">{s.label} (si apre in una nuova scheda)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {hasRanger && (
+        <div class="foot__ranger">
+          {has(ranger.title) && <h2 class="foot__label">{ranger.title}</h2>}
+          <a class="foot__ranger-link" href={rangerUrl} target="_blank" rel="noopener">
+            {rangerWords.length > 0 && `${rangerWords.join(' ')} `}<span class="foot__ranger-last">{rangerLast}<Icon name="arrowUpRight" size={18} /></span>
+            <span class="sr-only"> (si apre in una nuova scheda)</span>
+          </a>
+          {has(ranger.text) && <p class="foot__ranger-text">{ranger.text}</p>}
+        </div>
+      )}
+    </div>
+
+    {columns.length > 0 && (
+      <nav class="foot__nav" aria-label="Mappa del sito">
+        {columns.map((col) => (
+          <div class="foot__group">
+            {has(col.title) && <h2 class="foot__label">{col.title}</h2>}
+            <ul class="foot__list" role="list">
+              {col.links.map((l) => (
+                <li>
+                  <a class="foot__link" href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
+    )}
+
+    {hasContacts && (
+      <div class="foot__contacts">
+        {has(headings.contacts) && <h2 class="foot__label">{headings.contacts}</h2>}
+        <address class="foot__list foot__list--contacts">
+          {tel && (
+            <a class="foot__link foot__row" href={tel}>
+              <Icon name="phone" size={16} />
+              <span>{phone}</span>
+            </a>
+          )}
+          {has(email) && (
+            <a class="foot__link foot__row" href={`mailto:${email}`}>
+              <Icon name="mail" size={16} />
+              <span>{email}</span>
+            </a>
+          )}
+          {has(address) && (
+            <a class="foot__link foot__row" href={mapsHref} target="_blank" rel="noopener">
+              <Icon name="mapPin" size={16} />
+              <span>{address}<span class="sr-only"> (apre Google Maps in una nuova scheda)</span></span>
+            </a>
+          )}
+          {has(openingHours) && (
+            <p class="foot__row foot__hours">
+              <Icon name="clock" size={16} />
+              <span>{openingHours}</span>
+            </p>
+          )}
+        </address>
       </div>
     )}
   </div>
 
-  <div class="border-t border-border">
-    {/* The right padding keeps the last legal link clear of the fixed back-to-top button (44px, 20px from the edge). */}
-    <div class="shell grid gap-x-4 py-3 text-xs text-muted md:grid-cols-3 md:items-center md:pr-20">
-      <span class="flex min-h-11 items-center md:justify-self-start">© {year} {siteName}</span>
-      <span class="inline-flex items-center gap-1 md:justify-self-center">
+  <div class="foot__bar">
+    <div class="shell foot__bar-in">
+      <p class="foot__copy">{copy}</p>
+      <p class="foot__credit">
         Made with
-        <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" class="text-accent" role="img" aria-label="cuore">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" class="foot__heart" role="img" aria-label="cuore">
           <path d="M12 21s-6.7-4.35-9.5-8.28C.9 10.3 1.6 6.9 4.3 5.6c1.9-.9 4.1-.3 5.3 1.3L12 9l2.4-2.1c1.2-1.6 3.4-2.2 5.3-1.3 2.7 1.3 3.4 4.7 1.8 7.12C18.7 16.65 12 21 12 21z"></path>
         </svg>
         by
-        <a
-          href="https://mapped-dev.it"
-          target="_blank"
-          rel="noopener"
-          class="inline-flex min-h-11 items-center font-medium text-foreground transition-colors hover:text-accent"
-        >
-          Mattia Pedone
+        <a class="foot__author" href="https://mapped-dev.it" target="_blank" rel="noopener">
+          Mattia Pedone<span class="sr-only"> (si apre in una nuova scheda)</span>
         </a>
-      </span>
-
-      <nav class="flex gap-3 md:justify-self-end" aria-label="Note legali">
-        <a href="/privacy" class="inline-flex min-h-11 min-w-11 items-center justify-center transition-colors hover:text-foreground">Privacy</a>
-        <a href="/cookie" class="inline-flex min-h-11 min-w-11 items-center justify-center transition-colors hover:text-foreground">Cookie</a>
-        <a href="/termini" class="inline-flex min-h-11 min-w-11 items-center justify-center transition-colors hover:text-foreground">Termini</a>
-      </nav>
+      </p>
+      {legal.length > 0 && (
+        <nav class="foot__legal-nav" aria-label="Note legali">
+          <ul class="foot__legal" role="list">
+            {legal.map((l) => (
+              <li><a class="foot__fine" href={l.href}>{l.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+      )}
     </div>
   </div>
 </footer>
+
+<style>
+  .foot {
+    /* Gap between the column tracks; the brand row reuses it so the Ranger card lines up with a column. */
+    --col-gap: 2rem;
+    /* Heading to its first row, the same in every column (the menu's subgrid and the contacts). */
+    --label-gap: 0.5rem;
+    margin-top: 6rem;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  /* Phone: one stack. 768: brand row, three menu columns, contacts in two. 1024: menu and contacts
+     side by side under the brand. 1280: brand, menu and contacts in one row. */
+  .foot__main {
+    position: relative;
+    display: grid;
+    gap: 3rem var(--col-gap);
+    padding-block: 3.5rem 3rem;
+  }
+  /* The site's opening of a raised plane: a short accent seam on the top rule, at the content's edge. */
+  .foot__main::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: var(--shell-gutter);
+    width: clamp(3rem, 7vw, 6rem);
+    height: 2px;
+    background: var(--color-accent);
+    transform-origin: left center;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .foot__main::before {
+        animation-name: band-seam;
+        animation-timing-function: var(--ease-out-expo);
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 35%;
+      }
+    }
+  }
+
+  /* Brand: the identity, then the outdoor arena as a card of its own (it leads to another site). */
+  .foot__brand {
+    display: grid;
+    gap: 2rem;
+    align-content: start;
+  }
+  .foot__id { min-width: 0; }
+  .foot__logo { display: inline-block; }
+  .foot__logo img { display: block; width: auto; height: 3.5rem; }
+  .foot__tagline {
+    max-width: 32ch;
+    margin: 1.25rem 0 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+  .foot__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .foot__social {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    color: var(--color-muted);
+  }
+  .foot__social:hover { border-color: var(--color-accent); color: var(--color-accent); }
+  .foot__social:active { translate: 0 1px; }
+
+  /* The outdoor arena is another place, so its card wears the Ranger brand (DES-12), quietly: a warm
+     earth surface, sand text, amber only in the short rule on its top edge and in the arrow. The
+     focus ring stays cyan, as everywhere on the site. */
+  .foot__ranger {
+    position: relative;
+    min-width: 0;
+    padding: 1rem 1.25rem 1.1rem;
+    border: 1px solid color-mix(in srgb, var(--color-ranger-sand) 18%, transparent);
+    border-radius: var(--radius-md);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-ranger-amber) 8%, var(--color-ranger-earth)),
+      var(--color-ranger-earth)
+    );
+    color: var(--color-ranger-sand);
+  }
+  .foot__ranger::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 1.25rem;
+    width: 1.75rem;
+    height: 2px;
+    background: var(--color-ranger-amber);
+  }
+  .foot__ranger:hover { border-color: color-mix(in srgb, var(--color-ranger-amber) 55%, transparent); }
+  .foot__ranger:active { translate: 0 1px; }
+  /* The whole card is the link, so the focus ring goes round the card. */
+  .foot__ranger:has(.foot__ranger-link:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .foot__ranger .foot__label { color: color-mix(in srgb, var(--color-ranger-sand) 65%, transparent); }
+  .foot__ranger-link {
+    display: block;
+    margin-top: 0.5rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--color-ranger-sand);
+    text-decoration: none;
+  }
+  .foot__ranger-link:focus-visible { outline: none; }
+  .foot__ranger-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .foot__ranger-last { white-space: nowrap; }
+  .foot__ranger-link :global(svg) {
+    display: inline-block;
+    margin-left: 0.35rem;
+    vertical-align: -0.2em;
+    color: var(--color-ranger-amber);
+    transition: transform var(--duration-base) var(--ease-out-expo);
+  }
+  .foot__ranger:hover .foot__ranger-link :global(svg) { transform: translate(2px, -2px); }
+  .foot__ranger-text {
+    margin: 0.25rem 0 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--color-ranger-sand) 72%, transparent);
+  }
+
+  /* Column headings: the site's group label (as in the mobile menu), one step brighter than the links. */
+  .foot__label {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--color-foreground);
+  }
+
+  /* Menu: two columns on a phone, one column per group from 768. Each group takes two rows of the
+     nav's grid (subgrid), so the lists start on one line even when a heading wraps. */
+  .foot__nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 1.5rem;
+    /* Not stretched to the brand column's height, which would spread the heading and list rows. */
+    align-self: start;
+    min-width: 0;
+  }
+  .foot__group {
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+    row-gap: var(--label-gap);
+    align-content: start;
+    min-width: 0;
+  }
+  .foot__group > .foot__list:only-child { grid-row: 2; }
+
+  .foot__list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-style: normal;
+  }
+  /* Every link is a 44px row (RESP-04): the rows are the list's rhythm, no extra gaps. */
+  .foot__link {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--color-muted);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+  }
+  .foot__link:hover { color: var(--color-foreground); text-decoration-color: var(--color-accent); }
+  .foot__link:active { translate: 0 1px; }
+  .foot__link[aria-current='page'] { color: var(--color-accent); }
+
+  /* Contacts: an icon and a line each; a line that wraps keeps its icon on the first row. */
+  .foot__contacts { align-self: start; min-width: 0; }
+  .foot__contacts .foot__label { margin-bottom: var(--label-gap); }
+  .foot__row {
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding-block: calc((2.75rem - 1lh) / 2);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+  .foot__row :global(svg) {
+    flex: none;
+    margin-top: calc((1lh - 16px) / 2);
+    color: var(--color-muted);
+  }
+  .foot__link.foot__row:hover :global(svg) { color: var(--color-accent); }
+  .foot__hours {
+    display: flex;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--color-muted);
+  }
+
+  /* Fine print: ©, credit, legal links, in reading order. Stacked on a phone, three columns from 768. */
+  .foot__bar { border-top: 1px solid var(--color-border); }
+  .foot__bar-in {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-block: 0.75rem 1rem;
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+  }
+  .foot__copy {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    margin: 0;
+  }
+  .foot__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .foot__fine,
+  .foot__author {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+  }
+  .foot__fine { color: var(--color-muted); }
+  .foot__author { font-weight: 500; color: var(--color-foreground); }
+  .foot__fine:hover,
+  .foot__author:hover { color: var(--color-foreground); text-decoration-color: var(--color-accent); }
+  .foot__fine:active,
+  .foot__author:active { translate: 0 1px; }
+  .foot__credit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0;
+  }
+  .foot__heart { color: var(--color-accent); }
+
+  @media (min-width: 768px) {
+    .foot { --col-gap: 2.5rem; }
+    .foot__main { padding-block: 4.5rem 4rem; row-gap: 3.5rem; }
+    .foot__nav {
+      grid-template-columns: none;
+      grid-template-rows: auto auto;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+      column-gap: var(--col-gap);
+    }
+    /* Equal side tracks, so the credit sits on the page's centre whatever the sides hold. */
+    .foot__bar-in {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      column-gap: 1rem;
+      padding-block: 0.5rem;
+    }
+    .foot__copy { justify-self: start; }
+    .foot__credit { justify-self: center; }
+    /* With the gutter, the links end 5rem from the edge: clear of the fixed back-to-top button
+       (44px, 20px in). A margin on this side only keeps the centre true. */
+    .foot__legal-nav { justify-self: end; margin-right: 3rem; }
+    .foot__legal { justify-content: flex-end; column-gap: 1rem; }
+  }
+
+  /* 768–1023: the card sits over the third menu column; the contacts split in two. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .foot__brand {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: start;
+    }
+    .foot__id { grid-column: span 2; }
+    .foot__list--contacts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+    }
+  }
+
+  /* 1024–1279: the brand row shares the columns below it, so the card sits over the contacts. */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .foot__main { grid-template-columns: minmax(0, 2.6fr) minmax(0, 1.4fr); }
+    .foot__brand {
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+      align-items: start;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .foot { --col-gap: clamp(2.5rem, 4vw, 4.5rem); }
+    .foot__main { grid-template-columns: minmax(0, 1.3fr) minmax(0, 3fr) minmax(0, 1.3fr); }
+    .foot__nav { column-gap: 2rem; }
+  }
+</style>

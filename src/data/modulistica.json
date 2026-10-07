@@ -1,0 +1,59 @@
+{
+  "seo": {
+    "title": "Modulistica: i moduli per giocare | SoftAir Milano",
+    "description": "I moduli obbligatori per giocare a softair, arcotag, Nerf e tiro dinamico a Milano: online per i maggiorenni, da stampare e far firmare per i minorenni.",
+    "image": "",
+    "imageAlt": ""
+  },
+  "hero": {
+    "hudTag": "MODULI · ONLINE · PDF",
+    "eyebrow": "Prima di giocare",
+    "title": "Modulistica",
+    "subtitle": "Il modulo è obbligatorio per ogni partecipante, in tutte le attività: softair, arcotag, Nerf e tiro dinamico."
+  },
+  "adults": {
+    "title": "Maggiorenni",
+    "text": "Tutto online, prima di venire.",
+    "steps": [
+      "Compila il modulo online.",
+      "Ricevi via email un codice.",
+      "Il giorno della partita, mostra il codice in arena."
+    ],
+    "ctaLabel": "Compila il modulo online",
+    "url": "https://forms.monday.com/forms/7013bb80d05b9fa3df0a9e67a305b38f?r=use1"
+  },
+  "minors": {
+    "title": "Minorenni",
+    "text": "Su carta, firmato da un genitore.",
+    "steps": [
+      "Scarica il modulo e stampalo.",
+      "Fallo firmare a un genitore o a chi ne fa le veci, e allega la fotocopia fronte/retro del suo documento d'identità.",
+      "Il giorno della partita, portalo in arena."
+    ],
+    "ctaLabel": "Scarica il modulo",
+    "file": "/uploads/modulistica-minorenni.pdf"
+  },
+  "ready": {
+    "title": "Arriva con i moduli già compilati",
+    "text": "Così all'ingresso si fa in fretta e non perdi tempo di gioco.",
+    "agesTitle": "Età minima",
+    "ages": [
+      {
+        "value": "12+",
+        "label": "Softair"
+      },
+      {
+        "value": "12+",
+        "label": "Tiro dinamico"
+      },
+      {
+        "value": "8+",
+        "label": "Arcotag"
+      },
+      {
+        "value": "6+",
+        "label": "Nerf"
+      }
+    ]
+  }
+}

@@ -1,13 +1,10 @@
 ---
-// "Dentro l'azione": the home's video, opening as you scroll. Title and text sit above; the clip
-// starts as a pill under them and widens to the full page width while the stage is pinned, then
-// the camera readout (REC · CAM 01), the controls and the channel's YouTube chip lock on.
-// Scroll-driven CSS on transform and opacity only. Native self-hosted <video> on Cloudflare R2
-// (MEDIA-07), muted and looping: it plays whenever it is on screen, even with reduced motion and
-// before the pause button shows (the user's call, known debt against A11Y-07); only the sound
-// waits for a tap. A vertical 4:5 cut, when set, plays on portrait phones and pins there too.
-// Static in full, frame open, with reduced motion, on short screens (RESP-07) and wherever
-// scroll-driven animations or style queries are missing.
+// "Dentro l'azione": the home's video, wide from the start. Title and text sit above; under them
+// the clip runs across the page in a cinema frame, with the camera readout (REC · CAM 01), the
+// controls and the channel's YouTube chip always on it. A vertical 4:5 cut, when set, plays on
+// portrait phones. Native self-hosted <video> on Cloudflare R2 (MEDIA-07), muted and looping: it
+// plays whenever the frame is on screen, even with reduced motion (known debt, A11Y-07), and
+// pauses when it leaves; only the sound waits for a tap.
 
 import Icon from '../atoms/Icon.astro';
 import Picture from '../atoms/Picture.astro';
@@ -51,65 +48,56 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
     aria-labelledby={hasTitle ? headingId : undefined}
     data-action
   >
-    <div class="action__track" data-track>
-      <span class="action__probe" aria-hidden="true" data-probe></span>
-      <div class="action__stage">
-        <div class="shell">
-          <SectionHead title={title} text={text} id={headingId} align="center" />
+    <div class="shell" data-reveal>
+      <SectionHead title={title} text={text} id={headingId} align="center" />
+    </div>
+
+    <div class="action__fit" data-reveal style="--i: 1">
+      <div class="action__box" data-box>
+        <div class="action__frame">
+          {has(poster) && (
+            <Picture src={poster} srcMobile={stillMobile} alt="" mobileMedia={portraitMedia} class="action__poster" />
+          )}
+          <video
+            class="action__video"
+            muted
+            loop
+            playsinline
+            preload="none"
+            aria-label={has(videoAlt) ? videoAlt : hasTitle ? title : undefined}
+            data-video
+          >
+            {portrait && <source src={videoSrcMobile} type="video/mp4" media={portraitMedia} />}
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+          <div class="action__hud" aria-hidden="true">
+            <span class="corners action__corners"></span>
+            <span class="action__rec"><span class="action__dot"></span>REC · CAM 01</span>
+          </div>
         </div>
 
-        <div class="action__fit">
-          <div class="action__box" data-box>
-            <div class="action__frame">
-              {has(poster) && (
-                <Picture src={poster} srcMobile={stillMobile} alt="" mobileMedia={portraitMedia} class="action__poster" />
-              )}
-              <video
-                class="action__video"
-                muted
-                loop
-                playsinline
-                preload="none"
-                aria-label={has(videoAlt) ? videoAlt : hasTitle ? title : undefined}
-                data-video
-              >
-                {portrait && <source src={videoSrcMobile} type="video/mp4" media={portraitMedia} />}
-                <source src={videoSrc} type="video/mp4" />
-              </video>
-              <span class="action__cap action__cap--tl" aria-hidden="true"></span>
-              <span class="action__cap action__cap--tr" aria-hidden="true"></span>
-              <span class="action__cap action__cap--bl" aria-hidden="true"></span>
-              <span class="action__cap action__cap--br" aria-hidden="true"></span>
-              <div class="action__hud" aria-hidden="true">
-                <span class="corners action__corners"></span>
-                <span class="action__rec"><span class="action__dot"></span>REC · CAM 01</span>
-              </div>
-            </div>
+        {youtubeUrl && (
+          <a
+            class="action__yt"
+            href={youtubeUrl}
+            target="_blank"
+            rel="noopener"
+            aria-label={`${youtubeText}: canale YouTube di ${settings.siteName} (si apre in una nuova scheda)`}
+          >
+            <Icon name="youtube" size={20} />
+            <span>{youtubeText}</span>
+          </a>
+        )}
 
-            {youtubeUrl && (
-              <a
-                class="action__yt"
-                href={youtubeUrl}
-                target="_blank"
-                rel="noopener"
-                aria-label={`${youtubeText}: canale YouTube di ${settings.siteName} (si apre in una nuova scheda)`}
-              >
-                <Icon name="youtube" size={20} />
-                <span>{youtubeText}</span>
-              </a>
-            )}
-
-            <div class="action__controls">
-              <button class="action__btn" type="button" aria-label="Avvia il video" data-play>
-                <Icon name="pause" size={20} class="action__ico action__ico--pause" />
-                <Icon name="play" size={20} class="action__ico action__ico--play" />
-              </button>
-              <button class="action__btn" type="button" aria-label="Attiva l'audio" data-sound>
-                <Icon name="speakerOff" size={20} class="action__ico action__ico--muted" />
-                <Icon name="speaker" size={20} class="action__ico action__ico--sound" />
-              </button>
-            </div>
-          </div>
+        <div class="action__controls">
+          <button class="action__btn" type="button" aria-label="Avvia il video" data-play>
+            <Icon name="pause" size={20} class="action__ico action__ico--pause" />
+            <Icon name="play" size={20} class="action__ico action__ico--play" />
+          </button>
+          <button class="action__btn" type="button" aria-label="Attiva l'audio" data-sound>
+            <Icon name="speakerOff" size={20} class="action__ico action__ico--muted" />
+            <Icon name="speaker" size={20} class="action__ico action__ico--sound" />
+          </button>
         </div>
       </div>
     </div>
@@ -124,21 +112,19 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
     --chip: color-mix(in srgb, var(--color-background) 82%, transparent);
     /* The wide frame: the picture of the wide cut (1920×756). A taller file is cover-cropped. */
     --ratio: 2.54;
-    /* How small the pill starts, as a share of the open frame. */
-    --s0: 0.34;
     /* The readout's corners sit this far inside the frame; the REC chip and the controls nest
        inside them. */
     --hud-inset: clamp(0.75rem, 1.6vw, 1.25rem);
     --hud-pad: calc(var(--hud-inset) + 0.75rem);
     /* The buttons' size (A11Y-09): the chip matches their height and keeps clear of them. */
     --btn: 44px;
-    padding-bottom: clamp(4.5rem, 10vw, 8rem);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
   }
   @media (max-width: 767px) and (orientation: portrait) {
-    .action--portrait { --ratio: 0.8; --s0: 0.5; }
+    .action--portrait { --ratio: 0.8; }
   }
 
-  .action__stage { padding-top: clamp(4rem, 9vw, 7rem); }
+  /* The frame runs wider than the text column: the page width less its gutters. */
   .action__fit {
     margin-top: clamp(1.75rem, 4vw, 2.75rem);
     padding-inline: var(--shell-gutter);
@@ -146,18 +132,17 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
   .action__box {
     position: relative;
     width: 100%;
+    /* On a short, wide screen the frame narrows until the whole of it fits the screen. */
+    max-width: calc((100svh - 6rem) * var(--ratio));
     margin-inline: auto;
     aspect-ratio: var(--ratio);
-    /* The caps size themselves on the frame's short side (cq units). */
-    container-type: size;
+    /* The chip and the controls rearrange on the frame's own width (container queries below). */
+    container-type: inline-size;
   }
 
-  /* Not clipped: the video rounds its own corners, so the caps can overhang its edges. The pill
-     hangs from the top, just under the heading, and grows down. */
   .action__frame {
     position: absolute;
     inset: 0;
-    transform-origin: 50% 0;
   }
   /* The poster lies under the video, which paints nothing until its first frame. */
   .action__frame > picture,
@@ -173,31 +158,11 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
   }
   .action__poster { background: var(--color-surface-2); }
 
-  /* Round ends of the pill: a square as deep as half the frame's short side, painted in the band
-     colour outside a quarter circle. At full size they make the frame a pill; shrunk to the
-     frame's own radius they vanish into it. They overhang the frame by --bleed, so no
-     anti-aliased sliver of video shows along the pill's edge. Only shown while the stage is pinned. */
-  .action__cap {
-    --cap: min(50cqw, 50cqh);
-    --bleed: 2px;
-    --b: calc(100% - var(--bleed));
-    position: absolute;
-    z-index: 2;
-    display: none;
-    width: calc(var(--cap) + var(--bleed));
-    height: calc(var(--cap) + var(--bleed));
-    pointer-events: none;
-  }
-  .action__cap--tl { top: calc(var(--bleed) * -1); left: calc(var(--bleed) * -1); transform-origin: var(--bleed) var(--bleed); background: radial-gradient(circle var(--cap) at 100% 100%, transparent calc(100% - 1px), var(--plane)); }
-  .action__cap--tr { top: calc(var(--bleed) * -1); right: calc(var(--bleed) * -1); transform-origin: var(--b) var(--bleed); background: radial-gradient(circle var(--cap) at 0 100%, transparent calc(100% - 1px), var(--plane)); }
-  .action__cap--bl { bottom: calc(var(--bleed) * -1); left: calc(var(--bleed) * -1); transform-origin: var(--bleed) var(--b); background: radial-gradient(circle var(--cap) at 100% 0, transparent calc(100% - 1px), var(--plane)); }
-  .action__cap--br { bottom: calc(var(--bleed) * -1); right: calc(var(--bleed) * -1); transform-origin: var(--b) var(--b); background: radial-gradient(circle var(--cap) at 0 0, transparent calc(100% - 1px), var(--plane)); }
-
   /* Camera readout: four L-shaped corners in one layer, and the REC chip. */
   .action__hud {
     position: absolute;
     inset: 0;
-    z-index: 3;
+    z-index: 1;
     pointer-events: none;
   }
   .action__corners {
@@ -235,10 +200,10 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
   }
   @keyframes action-blink { 50% { opacity: 0.25; } }
 
-  /* Controls: outside the scaled frame, so they keep their size; over its foot, on the right. */
+  /* Controls: over the frame's foot, on the right. */
   .action__controls {
     position: absolute;
-    z-index: 4;
+    z-index: 2;
     right: var(--hud-pad);
     bottom: var(--hud-pad);
     display: flex;
@@ -283,7 +248,7 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
      Monochrome logo, accent on hover, like the social tiles (DES-04). */
   .action__yt {
     position: absolute;
-    z-index: 4;
+    z-index: 2;
     left: var(--hud-pad);
     bottom: var(--hud-pad);
     display: flex;
@@ -330,130 +295,16 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
   @media (max-width: 399px) {
     .action:not(.action--portrait) .action__rec { display: none; }
   }
-
-  .action__probe { display: none; }
-
-  /*
-    Pinned stage (tall enough screens, motion allowed, scroll-driven animations): the track gives
-    the scroll its length, the stage stays put and the frame grows to fill what the heading leaves.
-    The flag is set per orientation, the layout keyed on it with a style query, so the rules are
-    written once. The ranges run on the track: the pill grows from just before the pin to past its
-    middle, then the readout and the controls lock on and the frame holds open until it leaves.
-    Linear on purpose: the scroll is the clock, and Lenis already eases it.
-    Longhand properties only (CODE-19).
-  */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) and (min-height: 560px) and (orientation: landscape) {
-      .action { --pin: 1; }
-    }
-    @media (prefers-reduced-motion: no-preference) and (min-height: 560px) and (max-width: 767px) and (orientation: portrait) {
-      .action--portrait { --pin: 1; }
-    }
-
-    @container style(--pin: 1) {
-      /* Inset 0: the timeline spans the whole viewport, not the root's scroll-padding, so the
-         ranges below and the probe share one geometry. */
-      .action__track {
-        position: relative;
-        height: 230svh;
-        view-timeline: --action block;
-        view-timeline-inset: 0;
-      }
-      .action__stage {
-        position: sticky;
-        top: 0;
-        height: 100svh;
-        display: flex;
-        flex-direction: column;
-        padding-block: clamp(3rem, 10svh, 6rem) clamp(1.5rem, 5svh, 3rem);
-      }
-      .action__fit {
-        flex: 1;
-        min-height: 0;
-        container-type: size;
-        display: grid;
-        place-items: center;
-      }
-      .action__box { width: min(100cqw, 100cqh * var(--ratio)); }
-      /* Portrait phones: the 4:5 frame takes the stage's whole height, so its foot (and the
-         controls) stays clear of the fixed back-to-top button (44px, 20px off the edge). */
-      @media (max-width: 767px) and (orientation: portrait) {
-        .action__stage { padding-bottom: 4.5rem; }
-      }
-      /* Short phones (RESP-07): less air above the heading, so the frame keeps its size. */
-      @media (max-width: 767px) and (orientation: portrait) and (max-height: 700px) {
-        .action__stage { padding-top: 2.5rem; }
-        .action__fit { margin-top: 1.25rem; }
-      }
-
-      .action__frame,
-      .action__cap,
-      .action__hud,
-      .action__corners,
-      .action__controls,
-      .action__yt {
-        animation-timing-function: linear;
-        animation-fill-mode: both;
-        animation-timeline: --action;
-      }
-      .action__frame { animation-name: action-open; }
-      .action__cap { display: block; animation-name: action-cap; }
-      .action__frame,
-      .action__cap { animation-range: entry 80% contain 55%; }
-      .action__hud { animation-name: action-lock; }
-      .action__corners { animation-name: action-corners; }
-      .action__controls { animation-name: action-controls; transform-origin: 100% 100%; }
-      .action__yt { animation-name: action-controls; transform-origin: 0 100%; }
-      /* The lock range: its end (contain 60%) is where the probe below starts. */
-      .action__hud,
-      .action__corners,
-      .action__controls,
-      .action__yt { animation-range: contain 48% contain 60%; }
-      /* A keyboard user reaching the controls early sees them (the script also opens the frame). */
-      .action__controls:focus-within,
-      .action__yt:focus-visible { opacity: 1 !important; transform: none !important; }
-
-      /* From the end of the lock range to the end of the track: the scroll position where the
-         controls are fully in, where the keyboard jump lands. `contain p%` is the track's top
-         plus p of (its height − the viewport). */
-      .action__probe {
-        display: block;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 1px;
-        top: calc((100% - 100svh) * 0.6);
-        pointer-events: none;
-        visibility: hidden;
-      }
-    }
-  }
-  @keyframes action-open { from { transform: scale(var(--s0)); } }
-  /* The caps stay full (a pill) for most of the growth, then square up to the frame's radius. */
-  @keyframes action-cap {
-    0%, 55% { transform: none; }
-    100% { transform: scale(var(--cap-end, 0.06)); }
-  }
-  @keyframes action-lock { from { opacity: 0; } }
-  /* Scaled to nothing until the reveal starts, so the hidden buttons cannot be hit by a stray
-     click; then they settle in with the readout. */
-  @keyframes action-controls {
-    0% { opacity: 0; transform: scale(0); }
-    1% { opacity: 0; transform: scale(0.9); }
-  }
-  @keyframes action-corners { from { transform: scale(1.04); } }
 </style>
 
 <script>
   const root = document.querySelector<HTMLElement>('[data-action]');
+  const box = root?.querySelector<HTMLElement>('[data-box]');
   const video = root?.querySelector<HTMLVideoElement>('[data-video]');
   const playBtn = root?.querySelector<HTMLButtonElement>('[data-play]');
   const soundBtn = root?.querySelector<HTMLButtonElement>('[data-sound]');
 
-  if (root && video && playBtn && soundBtn) {
-    const track = root.querySelector<HTMLElement>('[data-track]')!;
-    const box = root.querySelector<HTMLElement>('[data-box]')!;
-    const probe = root.querySelector<HTMLElement>('[data-probe]')!;
+  if (root && box && video && playBtn && soundBtn) {
     let userPaused = false;
 
     const sync = () => {
@@ -467,11 +318,9 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
     sync();
 
     const play = () => void video.play().catch(() => {});
-    // The CSS pins the stage (and makes the track tall) only where the story runs.
-    const pinned = () => track.offsetHeight > innerHeight * 1.5;
 
-    // Fetch and play while the frame is on screen, pill or open. Leaving pauses without counting
-    // as the visitor's pause, so it resumes on the way back.
+    // Fetch and play while the frame is on screen. Leaving pauses without counting as the
+    // visitor's pause, so it resumes on the way back.
     new IntersectionObserver(([e]) => {
       if (e.isIntersecting) {
         if (!userPaused) play();
@@ -487,28 +336,6 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
     soundBtn.addEventListener('click', () => {
       video.muted = !video.muted;
       if (!video.muted && video.paused) { userPaused = false; play(); }
-    });
-
-    // The caps end at the video's own radius: their last scale is that radius over their size,
-    // a ratio CSS cannot divide out. Measured on resize only.
-    const fitCaps = () => {
-      const cap = Math.min(box.clientWidth, box.clientHeight) / 2;
-      const radius = parseFloat(getComputedStyle(video).borderTopLeftRadius) || 0;
-      if (cap > 0) root.style.setProperty('--cap-end', String(Math.min(1, radius / cap)));
-    };
-    new ResizeObserver(fitCaps).observe(box);
-
-    // Tabbing into the chip or the controls before the frame has opened jumps the scroll to where
-    // they have locked on (the probe), so the focused control is not floating beside a pill. A
-    // jump, not a glide. Keyboard focus only: a click lands on controls that are already there.
-    // They are the box's only focusable children (the video has no native controls).
-    box.addEventListener('focusin', (e) => {
-      if (!pinned() || !(e.target as HTMLElement).matches(':focus-visible')) return;
-      const open = Math.ceil(probe.getBoundingClientRect().top + scrollY) + 2;
-      if (scrollY >= open) return;
-      const lenis = (window as any).__lenis;
-      if (lenis) lenis.scrollTo(open, { immediate: true });
-      else scrollTo({ top: open });
     });
   }
 </script>

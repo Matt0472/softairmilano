@@ -265,7 +265,10 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
     margin: clamp(1.75rem, 3vw, 2.25rem) 0 0;
     padding: 0;
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    /* One value column per file, every value starting on its left edge. Its floor fits "12+" at the
+       largest size, so the labels also line up across the files of a row; a wider value widens only
+       its own file's column. */
+    grid-template-columns: minmax(2.25rem, max-content) minmax(0, 1fr);
     column-gap: 0.9rem;
   }
   .modes__stat {
@@ -277,7 +280,7 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
     border-top: 1px solid var(--color-border);
   }
   .modes__value {
-    justify-self: end;
+    justify-self: start;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: clamp(1.35rem, 2vw, 1.6rem);

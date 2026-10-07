@@ -1,0 +1,260 @@
+---
+// Items drifting slowly sideways in one or more rows, the edges fading out; row after row runs the
+// other way. Shared by the client logos and the reviews. Each row's first set is the real list; the
+// copies after it only close the loop, so they are hidden from assistive tech (and inert, unless the
+// parent keeps them hoverable).
+// No visible controls: the strip itself is the control (WCAG 2.2.2). It is one focusable element
+// whose name says what it does; a click, a tap, Enter or Space stops it or starts it again, and the
+// name follows (no live announcements). A mouse over it holds it, and so does keyboard focus on
+// it; a click or key while held starts it under the pointer or focus, so the strip always does what
+// the visitor sees it is about to do. Off screen it waits. With reduced motion nothing moves and
+// each row shows its first set only: wrapped in centred rows inside the page column
+// (`still="wrap"`, nothing to focus), or as one strip scrolled by hand, keyboard included
+// (`still="scroll"`).
+// The parent renders each item through a callback slot, called once per item, and may put a
+// heading above the rows in the `head` slot:
+// <Marquee rows={[a, b]} ...><SectionHead slot="head" ... />{(item) => <li>…</li>}</Marquee>
+
+interface Props {
+  /** The items of each row. */
+  rows: unknown[][];
+  /** Seconds each item takes to pass: a long row drifts as calmly as a short one. */
+  pace: number;
+  /** The strip's accessible name while drifting, once stopped, and (`scroll`) under reduced motion. */
+  labels: { running: string; stopped: string; still?: string };
+  /** What reduced motion shows: the first set wrapped in rows, or one strip scrolled by hand. */
+  still?: 'wrap' | 'scroll';
+  /** Items a row needs before it loops, so one set always runs past the widest screen. */
+  fill?: number;
+  /** Copies are inert, so nothing in them can be reached. A parent whose items hold no controls can
+      keep them live, so its hover styles work on every copy (inert content ignores the pointer). */
+  inertCopies?: boolean;
+  class?: string;
+  /** Classes of the bar that holds the `head` slot. */
+  headClass?: string;
+}
+
+const {
+  rows,
+  pace,
+  labels,
+  still = 'wrap',
+  fill = 16,
+  inertCopies = true,
+  class: className,
+  headClass,
+} = Astro.props;
+
+// Each row rendered once, then repeated: the loop moves by exactly one set, so the seam never shows.
+const lines = await Promise.all(
+  rows
+    .filter((row) => row.length > 0)
+    .map(async (row) => ({
+      html: (await Promise.all(row.map((item) => Astro.slots.render('default', [item])))).join(''),
+      count: row.length,
+      copies: Math.max(2, Math.ceil(fill / row.length)),
+    }))
+);
+---
+
+{lines.length > 0 && (
+  <div
+    class:list={['mq', `mq--${still}`, className]}
+    style={`--mq-pace: ${pace}s`}
+    data-marquee
+    data-running={labels.running}
+    data-stopped={labels.stopped}
+    data-still={labels.still}
+  >
+    {Astro.slots.has('head') && (
+      <div class:list={['mq__head', headClass]} data-reveal>
+        <slot name="head" />
+      </div>
+    )}
+
+    <div class="mq__rows" role="group" tabindex="0" aria-label={labels.running} data-marquee-strip>
+      {lines.map((line) => (
+        <div class="mq__row" style={`--mq-n: ${line.count}; --mq-copies: ${line.copies}`}>
+          <div class="mq__track">
+            {Array.from({ length: line.copies }, (_, copy) =>
+              copy === 0 ? (
+                <ul class="mq__set" role="list" set:html={line.html} />
+              ) : (
+                <ul class="mq__set" aria-hidden="true" inert={inertCopies} set:html={line.html} />
+              )
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+<style is:global>
+  .mq {
+    /* Space between items (each set also carries it after its last item), the width of the fades,
+       and where the focus ring sits (inside the strip when it runs edge to edge). */
+    --mq-gap: 1rem;
+    --mq-fade: clamp(2rem, 9vw, 9rem);
+    --mq-ring: 4px;
+  }
+
+  .mq__rows {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--mq-gap);
+    cursor: pointer;
+  }
+  .mq__rows:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: var(--mq-ring);
+  }
+  /* Each row's edges fade into the band (a mask, so only alpha matters). */
+  .mq__row {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, black var(--mq-fade), black calc(100% - var(--mq-fade)), transparent);
+  }
+  .mq__track {
+    display: flex;
+    width: max-content;
+    animation-name: mq-drift;
+    /* Linear on purpose: a steady drift, not an entrance. */
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: calc(var(--mq-n) * var(--mq-pace));
+  }
+  .mq__row:nth-child(even) .mq__track { animation-direction: reverse; }
+  @keyframes mq-drift {
+    to { transform: translateX(calc(-100% / var(--mq-copies))); }
+  }
+  .mq.is-paused .mq__track { animation-play-state: paused; }
+  /* Before the script runs (or without it), a mouse over the strip and keyboard focus on it still
+     hold it. Only a mouse hovers: a tap would leave a touch screen "hovering". */
+  .mq:not(.is-live) .mq__rows:focus-visible .mq__track { animation-play-state: paused; }
+  @media (hover: hover) {
+    .mq:not(.is-live) .mq__rows:hover .mq__track { animation-play-state: paused; }
+  }
+
+  .mq__set {
+    display: flex;
+    gap: var(--mq-gap);
+    margin: 0;
+    padding: 0 var(--mq-gap) 0 0;
+    list-style: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mq__rows { cursor: auto; }
+    .mq__row { mask-image: none; }
+    .mq__track {
+      width: auto;
+      animation-name: none;
+    }
+    .mq__set { padding: 0; }
+    .mq__set[aria-hidden] { display: none; }
+
+    /* Static in full: one set, wrapped in centred rows inside the page column. */
+    .mq--wrap .mq__row {
+      width: 100%;
+      max-width: var(--shell-max);
+      margin-inline: auto;
+      padding-inline: var(--shell-gutter);
+    }
+    .mq--wrap .mq__set {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* One strip the visitor scrolls sideways; the rows move together. */
+    .mq--scroll .mq__rows {
+      grid-template-columns: max-content;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+    }
+    .mq--scroll .mq__row { overflow: visible; }
+  }
+</style>
+
+<script>
+  // The strip as its own control (see the header).
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-marquee]').forEach((root) => {
+    const strip = root.querySelector<HTMLElement>('[data-marquee-strip]');
+    if (!strip) return;
+    const { running = '', stopped: stoppedLabel = '', still } = root.dataset;
+
+    // Nothing moves: a strip scrolled by hand keeps its focus, under the name that says so; wrapped
+    // rows have nothing to focus.
+    if (reduce) {
+      if (root.classList.contains('mq--scroll')) {
+        strip.setAttribute('aria-label', still ?? '');
+      } else {
+        strip.removeAttribute('tabindex');
+        strip.removeAttribute('role');
+        strip.removeAttribute('aria-label');
+      }
+      return;
+    }
+
+    let stopped = false;
+    let pointer = false;
+    let focused = false;
+    // A click or key while held starts the strip there: it beats the hold until the hold ends.
+    let override = false;
+    let away = true;
+
+    const held = () => stopped || ((pointer || focused) && !override);
+    const sync = () => {
+      root.classList.toggle('is-paused', away || held());
+      strip.setAttribute('aria-label', held() ? stoppedLabel : running);
+    };
+    const toggle = () => {
+      if (held()) {
+        stopped = false;
+        override = true;
+      } else {
+        stopped = true;
+      }
+      sync();
+    };
+    const release = () => {
+      if (!pointer && !focused) override = false;
+      sync();
+    };
+
+    strip.addEventListener('click', toggle);
+    strip.addEventListener('keydown', (e) => {
+      if (e.target !== strip || (e.key !== 'Enter' && e.key !== ' ')) return;
+      e.preventDefault();
+      toggle();
+    });
+    strip.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      pointer = true;
+      sync();
+    });
+    strip.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      pointer = false;
+      release();
+    });
+    // Only keyboard focus holds: a click or tap also focuses the strip, and must only toggle it.
+    strip.addEventListener('focus', () => {
+      focused = strip.matches(':focus-visible');
+      sync();
+    });
+    strip.addEventListener('blur', () => {
+      focused = false;
+      release();
+    });
+
+    new IntersectionObserver(([entry]) => {
+      away = !entry.isIntersecting;
+      sync();
+    }).observe(root);
+
+    root.classList.add('is-live');
+    sync();
+  });
+</script>

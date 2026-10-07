@@ -68,7 +68,7 @@
       {
         "time": "Arrivo",
         "title": "Vi accogliamo",
-        "text": "Arrivate e ritirate la replica, oppure preparate la vostra."
+        "text": "Arrivate e ritirate la replica, oppure preparate la vostra. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online prima di venire, i minorenni portano quello firmato da un genitore."
       },
       {
         "time": "Prima di partire",
@@ -186,7 +186,7 @@
   },
   "pricing": {
     "title": "Prezzi del tiro dinamico",
-    "text": "Stesso prezzo con la vostra attrezzatura o con i nostri fucili a noleggio. Si gioca dal lunedì al venerdì: il pomeriggio dalle 14 alle 18 (l'ultimo turno parte alle 18) e la sera dalle 20.",
+    "text": "Stesso prezzo con la vostra attrezzatura o con i nostri fucili a noleggio. Si gioca dal lunedì al venerdì, dalle 14 a mezzanotte.",
     "tiers": [
       {
         "label": "Da soli o in due",
@@ -207,6 +207,7 @@
     ],
     "notes": [
       "Sabato e domenica solo su richiesta: i campi sono riservati al softair, e ogni richiesta va confermata dallo staff.",
+      "Temperatura: l'arena non è riscaldata né climatizzata, vestitevi in base alla stagione.",
       "Prenotazione obbligatoria."
     ]
   },
@@ -218,7 +219,7 @@
     "items": [
       {
         "q": "Da che età si può fare tiro dinamico?",
-        "a": "Dai 12 anni compiuti, come il softair. I minorenni portano il modulo firmato da un genitore."
+        "a": "Dai 12 anni compiuti, come il softair. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online prima di venire, i minorenni portano quello firmato da un genitore."
       },
       {
         "q": "Si può giocare da soli?",
@@ -230,7 +231,7 @@
       },
       {
         "q": "Quando si può fare tiro dinamico?",
-        "a": "Dal lunedì al venerdì, il pomeriggio dalle 14 alle 18 e la sera dalle 20. Sabato e domenica solo su richiesta, perché i campi sono riservati al softair: ogni richiesta va confermata dallo staff."
+        "a": "Dal lunedì al venerdì, dalle 14 a mezzanotte. Sabato e domenica solo su richiesta, perché i campi sono riservati al softair: ogni richiesta va confermata dallo staff."
       },
       {
         "q": "Posso usare la mia replica?",

@@ -1,0 +1,290 @@
+{
+  "seo": {
+    "title": "Team building a Milano con il softair | SoftAir Milano",
+    "description": "Team building aziendale a Milano con il softair: missioni a squadre in un'arena indoor di 1.500 m², fino a 30 persone, arbitrate dal nostro staff.",
+    "image": "",
+    "imageAlt": ""
+  },
+  "hero": {
+    "eyebrow": "Per le aziende · Milano",
+    "title": "Team building a Milano",
+    "subtitle": "Missioni di softair in un'arena al coperto, dove si vince solo con strategia, comunicazione e fiducia.",
+    "image": "/uploads/occ-teambuilding.jpeg",
+    "imageMobile": "",
+    "imageAlt": "Colleghi in tenuta da softair studiano lo schema della missione disegnato su un foglio, chini su una cassa, prima di entrare in campo.",
+    "focus": "center",
+    "ctaPrimary": {
+      "label": "Richiedi un preventivo",
+      "href": "#richiesta"
+    },
+    "ctaSecondary": {
+      "label": "Come funziona",
+      "href": "#come-funziona"
+    },
+    "hudTag": "TEAM BUILDING · MAX 30 · 12+"
+  },
+  "facts": [
+    {
+      "value": "30",
+      "label": "persone al massimo"
+    },
+    {
+      "value": "1 h 45",
+      "label": "di gioco e briefing"
+    },
+    {
+      "value": "1.500 m²",
+      "label": "al coperto"
+    },
+    {
+      "value": "12+",
+      "label": "anni"
+    }
+  ],
+  "intro": {
+    "title": "Perché il softair fa squadra",
+    "text": "Il softair rafforza la coesione, la comunicazione e la fiducia in un team di lavoro, perché in campo nessuno vince da solo. Divisi in due squadre, dovete agire insieme e trovare la strategia migliore per completare la missione e battere la squadra avversaria. È adatto a tutti e si gioca in totale sicurezza: le protezioni le forniamo noi e lo staff arbitra ogni missione.",
+    "points": [
+      {
+        "title": "Coraggio",
+        "text": "Prendere l'iniziativa e uscire allo scoperto quando la squadra ne ha bisogno."
+      },
+      {
+        "title": "Condivisione",
+        "text": "Informazioni, ruoli e obiettivi si mettono in comune, dal briefing all'ultima missione."
+      },
+      {
+        "title": "Tattica",
+        "text": "Il piano si decide insieme e si adatta mentre la missione cambia."
+      },
+      {
+        "title": "Collaborazione",
+        "text": "Ognuno ha il suo compito: la missione riesce solo se tutti fanno la propria parte."
+      },
+      {
+        "title": "Lealtà",
+        "text": "Il gioco si regge sull'onestà di ciascuno, con lo staff che arbitra ogni missione."
+      }
+    ]
+  },
+  "formats": {
+    "eyebrow": "",
+    "title": "Tre formule per la vostra squadra",
+    "text": "Scegliete in base a quanti siete e a dove volete giocare: al resto pensiamo noi.",
+    "items": [
+      {
+        "title": "Partite di softair",
+        "text": "Missioni a squadre nel nostro villaggio militare al coperto, una dopo l'altra, fino allo scontro finale.",
+        "icon": "users",
+        "stats": [
+          {
+            "value": "20",
+            "label": "persone al massimo"
+          },
+          {
+            "value": "12+",
+            "label": "anni"
+          }
+        ]
+      },
+      {
+        "title": "Torneo di softair",
+        "text": "Le squadre si sfidano in un torneo nella nostra arena: la formula per i gruppi più numerosi.",
+        "icon": "trophy",
+        "stats": [
+          {
+            "value": "30",
+            "label": "persone al massimo"
+          },
+          {
+            "value": "12+",
+            "label": "anni"
+          }
+        ]
+      },
+      {
+        "title": "Arcotag",
+        "text": "Arco e frecce a punta morbida, per una sfida a squadre nella nostra arena oppure in un'altra location.",
+        "icon": "target",
+        "stats": [
+          {
+            "value": "20",
+            "label": "persone al massimo"
+          },
+          {
+            "value": "8+",
+            "label": "anni"
+          }
+        ]
+      }
+    ]
+  },
+  "clients": {
+    "title": "Loro hanno scelto noi",
+    "text": "",
+    "items": [
+      {
+        "name": "Decathlon",
+        "logo": "/uploads/clienti/decathlon.png"
+      },
+      {
+        "name": "MediaWorld",
+        "logo": "/uploads/clienti/mediaworld.png"
+      },
+      {
+        "name": "Reply",
+        "logo": "/uploads/clienti/reply.png"
+      },
+      {
+        "name": "Croce Rossa Italiana",
+        "logo": "/uploads/clienti/croce-rossa.png"
+      },
+      {
+        "name": "Doctolib",
+        "logo": "/uploads/clienti/doctolib.png"
+      },
+      {
+        "name": "Mediaset",
+        "logo": "/uploads/clienti/mediaset.png"
+      },
+      {
+        "name": "Commvault",
+        "logo": "/uploads/clienti/commvault.png"
+      },
+      {
+        "name": "Fondocasa",
+        "logo": "/uploads/clienti/fondocasa.png"
+      },
+      {
+        "name": "TEC Cargo Italia",
+        "logo": "/uploads/clienti/tec-cargo.png"
+      },
+      {
+        "name": "Tesla",
+        "logo": "/uploads/clienti/tesla.png"
+      },
+      {
+        "name": "Vodafone",
+        "logo": "/uploads/clienti/vodafone.png"
+      }
+    ]
+  },
+  "session": {
+    "title": "Come si svolge",
+    "text": "1 ora e 45 minuti in tutto, briefing compreso, con lo staff che arbitra dall'inizio alla fine.",
+    "steps": [
+      {
+        "time": "Briefing",
+        "title": "Regole e sicurezza",
+        "text": "Vi diamo tutte le protezioni e lo staff vi spiega regole, sicurezza e missioni della partita."
+      },
+      {
+        "time": "Missioni",
+        "title": "Una dopo l'altra",
+        "text": "Ogni missione ha le sue regole e i suoi obiettivi: la squadra decide insieme come completarla."
+      },
+      {
+        "time": "Vantaggi",
+        "title": "Ogni obiettivo conta",
+        "text": "Gli obiettivi raggiunti danno alla squadra un vantaggio nelle missioni successive e nello scontro finale."
+      },
+      {
+        "time": "Finale",
+        "title": "Lo scontro finale",
+        "text": "Le due squadre si affrontano un'ultima volta, con tutti i vantaggi conquistati lungo la partita."
+      }
+    ],
+    "optionsTitle": "Su richiesta",
+    "options": [
+      "Una sessione di training di 1 ora prima dell'attività, con un formatore esperto",
+      "Un'ora di gioco in più",
+      "Catering"
+    ],
+    "optionsNote": "Indicatele nella richiesta di preventivo. L'arena non è riscaldata né climatizzata: vestitevi in base alla stagione."
+  },
+  "extras": {
+    "show": true,
+    "title": "Da abbinare al team building",
+    "text": "Altre attività di squadra da aggiungere alla giornata, su richiesta.",
+    "items": [
+      {
+        "title": "Escape room",
+        "text": "Cinque stanze da cui uscire risolvendo enigmi insieme, a 10 minuti dall'arena.",
+        "image": "/uploads/abbinabili-escape-room.jpg",
+        "imageAlt": "Una fila di chiavi antiche appese a una parete di legno scuro, con la scritta «Escape Room».",
+        "href": "https://www.enigmaroom.it/escape-room-milano/"
+      },
+      {
+        "title": "Enigma Bomb",
+        "text": "Fino a 40 persone, nella nostra arena oppure in un'altra location.",
+        "image": "/uploads/abbinabili-bomb-delivery.jpg",
+        "imageAlt": "Un fungo atomico rosso in un cielo in fiamme, con il logo «Bomb Delivery» e una freccia tratteggiata.",
+        "href": "https://www.enigmaroom.it/escape-from-where-you-are-bomb-delivery/"
+      },
+      {
+        "title": "Mistero di Milano",
+        "text": "All'aperto, nel centro di Milano, in zona Duomo.",
+        "image": "/uploads/abbinabili-mistero-di-milano.jpg",
+        "imageAlt": "Piazza del Duomo di Milano avvolta dal fumo sotto un cielo in tempesta, con la scritta «Il Mistero di Milano».",
+        "href": "https://www.enigmaroom.it/escape-game-il-mistero-di-milano/"
+      }
+    ]
+  },
+  "reviews": {
+    "title": "Cosa dice chi ha giocato da noi"
+  },
+  "faq": {
+    "title": "Domande frequenti sul team building",
+    "items": [
+      {
+        "q": "Quante persone possono partecipare?",
+        "a": "Fino a 20 persone con le partite di softair o con l'arcotag, fino a 30 con il torneo di softair."
+      },
+      {
+        "q": "Quanto dura il team building?",
+        "a": "Una sessione di softair dura 1 ora e 45 minuti in tutto, briefing compreso. Su richiesta si aggiungono un'ora di addestramento prima, con un istruttore esperto, o un'ora di gioco in più."
+      },
+      {
+        "q": "Quanto costa?",
+        "a": "Dipende dalla formula, dal numero di persone e dalle opzioni che scegliete: compilate la richiesta di preventivo e vi ricontattiamo noi."
+      },
+      {
+        "q": "Va bene per tutto il team, anche per chi non ha mai giocato?",
+        "a": "Sì. Il softair è adatto a tutti, donne e uomini, e si gioca in totale sicurezza: le protezioni le forniamo noi, il briefing spiega regole e sicurezza e lo staff arbitra ogni missione. Anzi, spesso le più agguerrite sono proprio le colleghe."
+      },
+      {
+        "q": "Da che età si può partecipare?",
+        "a": "Dai 12 anni per il softair e dagli 8 per l'arcotag. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online, i minorenni portano quello firmato da un genitore."
+      },
+      {
+        "q": "Cosa si può aggiungere alla giornata?",
+        "a": "Su richiesta, un'ora di addestramento prima dell'attività con un istruttore esperto, un'ora di gioco in più e il catering. Indicatelo nella richiesta di preventivo."
+      },
+      {
+        "q": "Si può fare fuori dall'arena?",
+        "a": "Sì, con l'arcotag: si gioca nella nostra arena oppure in un'altra location. Le partite e il torneo di softair si giocano in arena."
+      },
+      {
+        "q": "Cosa devono indossare i partecipanti?",
+        "a": "Maglietta a maniche lunghe, pantaloni lunghi, scaldacollo, scarpe comode e guanti aderenti. L'arena non è riscaldata né climatizzata: d'inverno meglio vestirsi a strati."
+      },
+      {
+        "q": "Si gioca anche se piove?",
+        "a": "Sì, l'arena è al coperto e illuminata: il team building si fa con qualsiasi tempo."
+      },
+      {
+        "q": "Dove si trova l'arena?",
+        "a": "In Via Melegnano 26 a Settimo Milanese, alle porte di Milano: parcheggio facile e bus 433 dalla metro M1 Bisceglie."
+      },
+      {
+        "q": "Come si prenota?",
+        "a": "La prenotazione è obbligatoria. Compilate la richiesta di preventivo qui sotto e vi ricontattiamo noi; se preferite, chiamateci o scriveteci: telefono ed email sono in fondo alla pagina."
+      }
+    ]
+  },
+  "request": {
+    "title": "Richiedi un preventivo",
+    "text": "Diteci quanti siete, che giorno preferite e quale formula vi interessa, con le eventuali opzioni: vi ricontattiamo noi con il preventivo.",
+    "activity": "Team building"
+  }
+}

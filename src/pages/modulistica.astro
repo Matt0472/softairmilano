@@ -1,0 +1,540 @@
+---
+// The participation forms (/modulistica, the same address as the old site): every player needs
+// one, in every activity. A text-only opening, so the two ways to hand it in are on the first
+// screen: adults fill it in online (a new tab), minors download the PDF to print and have signed.
+// Then the advice to arrive with it done and the minimum ages; the questions go to the closing
+// section shared by every page, which already carries the phone and the email, and which the
+// header's Prenota points to (#prenota).
+
+import { existsSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import type { ComponentProps } from 'astro/types';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/atoms/Icon.astro';
+import Breadcrumb from '../components/molecules/Breadcrumb.astro';
+import FactStrip from '../components/molecules/FactStrip.astro';
+import HudFrame from '../components/molecules/HudFrame.astro';
+import Reveal from '../components/molecules/Reveal.astro';
+import FinalCta from '../components/organisms/FinalCta.astro';
+import page from '../data/modulistica.json';
+import navigation from '../data/navigation.json';
+import settings from '../data/settings.json';
+import { has } from '../lib/fields';
+import { breadcrumbLd } from '../lib/jsonld';
+import { flattenNav, type NavItem } from '../lib/nav';
+
+type IconName = ComponentProps<typeof Icon>['name'];
+
+const { seo, hero, adults, minors, ready } = page;
+
+const path = '/modulistica';
+// The page name in the trail is its menu label (single source for both).
+const pageName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === path)?.label || hero.title;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: pageName, href: path },
+];
+const jsonLd = [breadcrumbLd(crumbs, Astro.site)];
+
+// The download says what it is and how much it weighs ("PDF, 242 KB"), read from the file at
+// build time so the label follows a PDF the client replaces. The CMS picks it from the site's
+// uploads; a file that is not there gets no link at all: a broken download is worse than none.
+const kb = 1024;
+const fileWeight = (bytes: number) =>
+  bytes < kb * kb ? `${Math.max(1, Math.round(bytes / kb))} KB` : `${(bytes / kb / kb).toFixed(1).replace('.', ',')} MB`;
+const download = (src?: string): { href: string; meta: string } | undefined => {
+  if (!has(src) || !src.trim().startsWith('/')) return undefined;
+  const href = src.trim();
+  const file = join(process.cwd(), 'public', decodeURI(href));
+  if (!existsSync(file)) return undefined;
+  const type = href.split('.').pop()?.toUpperCase() ?? '';
+  const weight = fileWeight(statSync(file).size);
+  return { href, meta: type ? `${type}, ${weight}` : weight };
+};
+
+interface Action {
+  label: string;
+  href: string;
+  meta: string;
+  icon: IconName;
+  external: boolean;
+}
+interface FormCard {
+  key: string;
+  icon: IconName;
+  title?: string;
+  text?: string;
+  steps: string[];
+  action?: Action;
+}
+
+// Each card shows once it has a title; its button once it has both a label and a target (CMS-10).
+const file = download(minors?.file);
+const cards: FormCard[] = [
+  {
+    key: 'adults',
+    icon: 'smartphone',
+    title: adults?.title,
+    text: adults?.text,
+    steps: adults?.steps ?? [],
+    action:
+      has(adults?.ctaLabel) && has(adults?.url)
+        ? { label: adults.ctaLabel, href: adults.url.trim(), meta: 'Si apre in una nuova scheda', icon: 'arrowUpRight', external: true }
+        : undefined,
+  },
+  {
+    key: 'minors',
+    icon: 'filePen',
+    title: minors?.title,
+    text: minors?.text,
+    steps: minors?.steps ?? [],
+    action:
+      has(minors?.ctaLabel) && file
+        ? { label: minors.ctaLabel, href: file.href, meta: file.meta, icon: 'download', external: false }
+        : undefined,
+  },
+]
+  .filter((c) => has(c.title))
+  .map((c) => ({ ...c, steps: c.steps.filter(has) }));
+
+const ages = (ready?.ages ?? []).filter((a) => has(a?.value) && has(a?.label));
+const hasReady = has(ready?.title) || ages.length > 0;
+const pad = (n: number) => String(n + 1).padStart(2, '0');
+---
+
+<BaseLayout title={seo.title} description={seo.description} image={seo.image} imageAlt={seo.imageAlt} jsonLd={jsonLd}>
+  <section class="docs band" aria-labelledby="docs-title">
+    <HudFrame tag={hero.hudTag} />
+
+    <div class="docs__inner shell">
+      <Breadcrumb items={crumbs} class="docs__crumbs" />
+
+      <div class="docs__head">
+        <div>
+          {has(hero.eyebrow) && <p class="docs__eyebrow">{hero.eyebrow}</p>}
+          <h1 class="docs__title" id="docs-title">{hero.title}</h1>
+        </div>
+        {has(hero.subtitle) && <p class="docs__lede">{hero.subtitle}</p>}
+      </div>
+
+      {cards.length > 0 && (
+        <div class="docs__cards" style={`--n: ${cards.length}`}>
+          {cards.map((c, i) => (
+            <article class="doc" aria-labelledby={`doc-${c.key}-title`} data-reveal style={`--i: ${i}`}>
+              <div class="doc__head">
+                <h2 class="doc__title" id={`doc-${c.key}-title`}>{c.title}</h2>
+                <span class="doc__emblem" aria-hidden="true"><Icon name={c.icon} size={26} /></span>
+              </div>
+              {has(c.text) && <p class="doc__text">{c.text}</p>}
+              {c.steps.length > 0 && (
+                <ol class="doc__steps" role="list">
+                  {c.steps.map((s, j) => (
+                    <li class="doc__step">
+                      <span class="doc__num" aria-hidden="true">{pad(j)}</span>
+                      <span>{s}</span>
+                    </li>
+                  ))}
+                </ol>
+              )}
+              {c.action && (
+                <a
+                  class="doc__action"
+                  href={c.action.href}
+                  {...(c.action.external ? { target: '_blank', rel: 'noopener' } : { download: '' })}
+                >
+                  <span class="doc__action-text">
+                    {/* The comma only makes screen readers pause between the label and the meta. */}
+                    <span class="doc__action-label">{c.action.label}{has(c.action.meta) && <span class="sr-only">,</span>}</span>
+                    {has(c.action.meta) && <span class="doc__action-meta">{c.action.meta}</span>}
+                  </span>
+                  <span class="doc__action-go"><Icon name={c.action.icon} size={20} /></span>
+                </a>
+              )}
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  {hasReady && (
+    <section class="ready band" aria-labelledby={has(ready.title) ? 'ready-title' : undefined}>
+      <div class="ready__inner shell">
+        {has(ready.title) && (
+          <div class="ready__copy" data-reveal>
+            <h2 class="ready__title" id="ready-title">{ready.title}</h2>
+            {has(ready.text) && <p class="ready__text">{ready.text}</p>}
+          </div>
+        )}
+        {ages.length > 0 && (
+          <div class="ready__ages" data-inview>
+            {has(ready.agesTitle) && <h3 class="ready__ages-title">{ready.agesTitle}</h3>}
+            <FactStrip facts={ages} class="ready__facts" />
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
+  {/* #prenota: the closing section of every page, with the phone and the email for any question. */}
+  <FinalCta {...settings.finalCta} />
+
+  <Reveal />
+</BaseLayout>
+
+<style is:global>
+  .docs {
+    --accent: var(--color-accent);
+    /* Room for the floating header (logo 48px + 20px padding each side), as in PageHero; the HUD
+       readout sits on the breadcrumb's row, right-aligned with the page column like the header's
+       Prenota. */
+    --docs-top: 5.75rem;
+    --hud-tag-top: calc(var(--docs-top) + 0.55rem);
+    --hud-tag-right: calc(max(0px, (100% - var(--shell-max)) / 2) + var(--shell-gutter));
+    --hud-tag-bottom: auto;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  /* A soft, neutral light behind the title, as on the contact page: depth, not a halo. */
+  .docs::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(55% 60% at 12% 18%, color-mix(in srgb, var(--color-foreground) 6%, transparent), transparent 70%);
+  }
+  /* The scan runs under the copy and the cards; the corners and the readout sit above. */
+  .docs .hud__scan { z-index: 0; }
+  .docs .hud__corners,
+  .docs .hud__tag { z-index: 2; }
+  /* Below desktop the header's logo and Menu pill fill the top corners: the frame's top pair
+     drops under them, as in the 404. */
+  @media (max-width: 1023px) {
+    .docs .hud__corners { top: 5.5rem; }
+  }
+
+  .docs__inner {
+    position: relative;
+    z-index: 1;
+    /* The bottom clears the frame's lower corners (18px inset + 34px). */
+    padding-block: var(--docs-top) clamp(4rem, 8vw, 5.5rem);
+  }
+  /* The trail's first label lines up with the headline: the link's own padding hangs outside. */
+  .docs__crumbs { margin-left: -0.375rem; }
+
+  /* --- Opening: eyebrow and headline, the lede beside them from desktop --- */
+  .docs__head {
+    display: grid;
+    gap: 1.4rem;
+    margin-top: clamp(1.25rem, 4vw, 2.5rem);
+  }
+  .docs__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(0.75rem, 1.4vw, 0.85rem);
+    line-height: 1.3;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .docs__eyebrow::before {
+    content: "";
+    flex: none;
+    width: 30px;
+    height: 2px;
+    background: var(--accent);
+  }
+  /* The page's largest text and its LCP: it never gets an entrance (DES-08). The contact page's
+     scale for a short title, a touch smaller at the narrowest phones so the one word fits. */
+  .docs__title {
+    margin: 0;
+    max-width: 8.8em;
+    font-weight: 700;
+    font-size: clamp(2.75rem, 1.5rem + 7vw, 8rem);
+    line-height: 0.94;
+    letter-spacing: 0.005em;
+    text-wrap: balance;
+  }
+  /* The inner pages' accent rule under the headline: a pseudo-element, so the H1 itself stays
+     still. Hero choreography, longer than the UI duration tokens on purpose. */
+  .docs__title::after {
+    content: "";
+    display: block;
+    width: clamp(64px, 18vw, 160px);
+    height: 5px;
+    margin-top: 0.45rem;
+    background: var(--accent);
+    transform-origin: left;
+    animation: docs-wipe 0.7s var(--ease-out-expo) 0.35s both;
+  }
+  @keyframes docs-wipe { from { transform: scaleX(0); } }
+  .docs__lede {
+    margin: 0;
+    max-width: 30em;
+    font-size: clamp(1.05rem, 0.95rem + 0.45vw, 1.3rem);
+    line-height: 1.55;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+
+  /* --- The two forms --- */
+  .docs__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(0.75rem, 1.5vw, 1.25rem);
+    margin-top: clamp(2.25rem, 5vw, 3.5rem);
+  }
+  .doc {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--lift);
+  }
+  .doc__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .doc__title {
+    margin: 0;
+    padding-top: 0.2rem;
+    font-weight: 700;
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.6rem);
+    letter-spacing: 0.01em;
+  }
+  /* Square: an emblem of the way in. The round chip at the foot is the control. */
+  .doc__emblem {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--color-border));
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+    color: var(--accent);
+  }
+  .doc__text {
+    margin: 0.5rem 0 0;
+    color: var(--color-muted);
+    font-size: 1.05rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  /* Hairlines between the steps only, so the two lists still end cleanly when one runs longer. */
+  .doc__steps {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+  }
+  .doc__step {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    align-items: baseline;
+    padding-block: 0.8rem;
+    border-top: 1px solid var(--color-border);
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+  .doc__num {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+  }
+
+  /* The card's one action, docked at its foot: label and what to expect on the left, the round
+     chip of the site's "go" links on the right. Subordinate to Prenota (DES-05): no fill. */
+  .doc__action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4rem;
+    margin-top: 1.75rem;
+    padding: 0.7rem 0.7rem 0.7rem 1.15rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--color-border));
+    border-radius: var(--radius-md);
+    background: var(--lift-2);
+    color: var(--color-foreground);
+    text-decoration: none;
+    transition:
+      border-color var(--duration-base) var(--ease-out-expo),
+      background-color var(--duration-base) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .doc__action-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .doc__action-label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem);
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    transition: color var(--duration-base) var(--ease-out-expo);
+  }
+  .doc__action-meta {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .doc__action-go {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+    color: var(--accent);
+    transition:
+      background-color var(--duration-base) var(--ease-out-expo),
+      border-color var(--duration-base) var(--ease-out-expo),
+      color var(--duration-base) var(--ease-out-expo);
+  }
+  .doc__action-go svg { transition: transform var(--duration-slow) var(--ease-out-expo); }
+  /* Hover only where there is a pointer, so a tap never leaves the action stuck lit; keyboard
+     focus gets the same light. The arrow says where the action goes: out, or down to the device. */
+  @media (hover: hover) {
+    .doc__action:hover {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 7%, var(--lift-2));
+    }
+    .doc__action:hover .doc__action-label { color: var(--color-accent-hover); }
+    .doc__action:hover .doc__action-go {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--color-on-accent);
+    }
+    .doc__action[target]:hover .doc__action-go svg { transform: translate(2px, -2px); }
+    .doc__action[download]:hover .doc__action-go svg { transform: translateY(2px); }
+  }
+  .doc__action:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-md);
+  }
+  .doc__action:focus-visible .doc__action-go {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--color-on-accent);
+  }
+  .doc__action:active { transform: translateY(1px) scale(0.99); }
+
+  /* Two cards side by side from tablets: one shared row per part (head, line, steps, action), so
+     the steps start and the actions sit at the same height in both. */
+  @media (min-width: 768px) {
+    .docs__cards {
+      grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
+      grid-template-rows: repeat(4, auto);
+      row-gap: 0;
+    }
+    @supports (grid-template-rows: subgrid) {
+      .doc {
+        display: grid;
+        grid-row: span 4;
+        grid-template-rows: subgrid;
+      }
+      /* Each part keeps its row when the client empties the one above it. */
+      .doc__head { grid-row: 1; }
+      .doc__text { grid-row: 2; }
+      .doc__steps { grid-row: 3; align-self: start; }
+      .doc__action { grid-row: 4; align-self: stretch; }
+    }
+  }
+
+  /* Desktop: the lede beside the headline, on its foot. */
+  @media (min-width: 1024px) {
+    /* The title's column is as wide as its longest word needs, up to 62%: a one-word title
+       never runs under the lede, a long one wraps. */
+    .docs__head {
+      grid-template-columns: fit-content(62%) minmax(0, 1fr);
+      align-items: end;
+      column-gap: clamp(2rem, 5vw, 6rem);
+    }
+    /* Bottom-aligned with the title's last line, above its accent rule. */
+    .docs__lede { padding-bottom: 1.1rem; }
+  }
+
+  /* Landscape phones: the frame's top pair and the readout have no room under the header, and a
+     smaller headline brings the first card's action up. */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .docs { --docs-top: 4.75rem; }
+    .docs .hud__corner--tl,
+    .docs .hud__corner--tr,
+    .docs .hud__tag { display: none; }
+    .docs__head { margin-top: 1rem; }
+    .docs__title { max-width: none; font-size: clamp(2rem, 11vh, 2.75rem); }
+    .docs__eyebrow { margin-bottom: 0.6rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .docs__title::after { animation: none; }
+    .doc__action,
+    .doc__action-go,
+    .doc__action-go svg { transition: none; }
+  }
+
+  /* --- Arrive ready, and the minimum ages --- */
+  .ready {
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+  .ready__inner {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 3.5rem);
+  }
+  /* In em, not ch: the fallback face's "0" is narrower and would rewrap it (PERF-03). */
+  .ready__title {
+    margin: 0;
+    max-width: 11em;
+    font-weight: 700;
+    font-size: clamp(2rem, 5.5vw, 3.4rem);
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  .ready__text {
+    margin: 1.1rem 0 0;
+    max-width: 40ch;
+    color: var(--color-muted);
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+  .ready__ages-title {
+    margin: 0 0 1rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    letter-spacing: 0.22em;
+    color: var(--color-muted);
+  }
+  /* The ages roll in when the band is reached, not at page load, where nobody would see them. */
+  .ready__ages.is-armed:not(.is-in) .odo__reel,
+  .ready__ages.is-armed:not(.is-in) .facts__item::before { animation-play-state: paused; }
+
+  @media (min-width: 1024px) {
+    .ready__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: end;
+      column-gap: clamp(3rem, 6vw, 6rem);
+    }
+    .ready__ages { padding-bottom: 0.35rem; }
+  }
+</style>

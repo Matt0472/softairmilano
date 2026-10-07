@@ -1,0 +1,490 @@
+---
+// Not found: one screen in the site's sight language, with no photo. The sight's search ends
+// within five seconds, so it needs no pause control (A11Y-07); with reduced motion it rests on
+// the zero. The ways out are the shared Prenota section (so the header's Prenota works here too),
+// the home and the built pages the menu lists. Never indexed and no canonical: the page answers
+// at any missing address (BaseLayout `noindex`).
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/atoms/Button.astro';
+import Icon from '../components/atoms/Icon.astro';
+import HudFrame from '../components/molecules/HudFrame.astro';
+import FinalCta from '../components/organisms/FinalCta.astro';
+import page from '../data/notfound.json';
+import navigation from '../data/navigation.json';
+import settings from '../data/settings.json';
+import { has } from '../lib/fields';
+import { flattenNav, type NavItem } from '../lib/nav';
+import { keepShortWords } from '../lib/typography';
+
+interface Cta {
+  label?: string;
+  href?: string;
+}
+
+const { seo, hudTag, eyebrow, title, text, ctaPrimary, ctaSecondary, destinationsTitle } = page;
+
+// A button emptied in the CMS disappears instead of rendering blank (CMS-10).
+const isComplete = (c?: Cta): c is Required<Cta> => has(c?.label) && has(c?.href);
+const primary = isComplete(ctaPrimary) ? ctaPrimary : undefined;
+const secondary = isComplete(ctaSecondary) ? ctaSecondary : undefined;
+
+// The routes this build has: every page file but the dynamic ones, plus one per activity file
+// (the [activity] template). A menu entry whose page is not built yet stays out of the list, so
+// the way out never leads to another 404.
+const slug = (file: string) => file.split('/').pop()!.replace(/\.(astro|json)$/, '');
+const pageRoutes = Object.keys(import.meta.glob('./**/*.astro'))
+  .filter((file) => !file.includes('['))
+  .map((file) => file.slice(1).replace(/\.astro$/, '').replace(/\/?index$/, '') || '/');
+const activityRoutes = Object.keys(import.meta.glob('../data/activities/*.json')).map((file) => `/${slug(file)}`);
+const routes = new Set([...pageRoutes, ...activityRoutes]);
+const route = (href: string) => href.replace(/\/+$/, '') || '/';
+
+// Every page in the menu that exists, the home aside: it has its own button.
+const destinations = flattenNav(navigation.items as NavItem[])
+  .map((it) => ({ label: it.label, href: it.href ?? '', desc: 'desc' in it ? it.desc : undefined }))
+  .filter((d) => has(d.label) && has(d.href) && route(d.href) !== '/' && routes.has(route(d.href)))
+  // The arrow travels with the label's last word, so a wrapped label never leaves it alone.
+  .map((d) => {
+    const words = d.label.trim().split(/\s+/);
+    const last = words.pop()!;
+    return { ...d, lead: words.length ? `${words.join(' ')} ` : '', last };
+  });
+// One row on wide screens up to six pages; past that, rows as even as the count allows.
+const cols = Math.ceil(destinations.length / Math.ceil(destinations.length / 6));
+const listId = 'lost-dest-title';
+---
+
+<BaseLayout title={seo?.title} description={seo?.description} noindex>
+  <section class="lost" aria-labelledby="lost-title">
+    <HudFrame tag={hudTag} />
+
+    <div class="lost__body shell">
+      <div class="lost__copy">
+        {has(eyebrow) && <p class="lost__eyebrow">{eyebrow}</p>}
+        <h1 class="lost__title" id="lost-title">{keepShortWords(title)}</h1>
+        {has(text) && <p class="lost__text">{text}</p>}
+        {(primary || secondary) && (
+          <div class="lost__cta">
+            {primary && <Button href={primary.href} variant="primary" class="lost__btn">{primary.label}</Button>}
+            {secondary && <Button href={secondary.href} variant="secondary" class="lost__btn">{secondary.label}</Button>}
+          </div>
+        )}
+      </div>
+
+      <div class="lost__scope" aria-hidden="true">
+        <span class="lost__code">404</span>
+        <span class="lost__sight">
+          <svg class="lost__reticle" viewBox="-50 -50 100 100">
+            <circle class="lost__ring" r="46"></circle>
+            <path class="lost__post" d="M-46 0H-24M24 0H46M0-46V-24M0 24V46"></path>
+            <path class="lost__hair" d="M-24 0H-5M5 0H24M0-24V-5M0 5V24M-12-2.5V2.5M12-2.5V2.5M-2.5-12H2.5M-2.5 12H2.5"></path>
+            <circle class="lost__dot" r="1.6"></circle>
+          </svg>
+          <span class="lost__ping"></span>
+        </span>
+      </div>
+
+      {destinations.length > 0 && (
+        <nav
+          class="lost__dest"
+          aria-labelledby={has(destinationsTitle) ? listId : undefined}
+          aria-label={has(destinationsTitle) ? undefined : 'Pagine del sito'}
+        >
+          {has(destinationsTitle) && <h2 class="lost__dest-title" id={listId}>{destinationsTitle}</h2>}
+          <ul class="lost__list" role="list" style={`--cols: ${cols}`}>
+            {destinations.map((d, i) => (
+              <li class="lost__item" style={`--i: ${i}`}>
+                <a class="lost__link" href={d.href}>
+                  <span class="lost__label">{d.lead}<span class="lost__last">{d.last}<Icon name="arrowRight" size={18} class="lost__arrow" /></span></span>
+                  {has(d.desc) && <span class="lost__desc">{d.desc}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </div>
+  </section>
+
+  {/* #prenota: the closing section of every page, where the Prenota buttons land. */}
+  <FinalCta {...settings.finalCta} />
+</BaseLayout>
+
+<style is:global>
+  .lost {
+    --accent: var(--color-accent);
+    /* Room for the floating header (logo 48px + 20px padding each side), as in PageHero. */
+    --lost-top: 5.75rem;
+    /* The HUD readout sits under the header, right-aligned with the page column like the
+       header's Prenota; the bottom belongs to the list. */
+    --hud-tag-top: calc(var(--lost-top) + 0.55rem);
+    --hud-tag-right: calc(max(0px, (100% - var(--shell-max)) / 2) + var(--shell-gutter));
+    --hud-tag-bottom: auto;
+    /* The readout's type size; the sight and its search are measured in it (em). */
+    --code-size: clamp(8rem, 40vw, 16rem);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    min-height: 100svh;
+    background: var(--color-background);
+  }
+  /* The scan runs under the copy; the corners and the readout sit above it. */
+  .lost .hud__scan { z-index: 0; }
+  .lost .hud__corners,
+  .lost .hud__tag { z-index: 2; }
+  /* Below desktop the header's logo and Menu pill fill the top corners: the frame's top pair
+     drops under them, as in the home's hero. */
+  @media (max-width: 1023px) {
+    .lost .hud__corners { top: 5.5rem; }
+  }
+
+  /* Phones and tablets: the readout first, under the frame's top corners, then the copy and
+     the list. Desktop: copy and readout side by side, the list along the foot of the screen. */
+  .lost__body {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "scope" "copy" "dest";
+    align-content: start;
+    padding-block: 8rem clamp(4.5rem, 9vw, 6rem);
+  }
+
+  /* --- Copy --- */
+  .lost__copy {
+    grid-area: copy;
+    position: relative;
+    z-index: 1;
+    max-width: 40rem;
+    margin-top: clamp(1.75rem, 5vw, 2.75rem);
+  }
+  .lost__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    line-height: 1.3;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--accent);
+    animation: lost-rise calc(var(--duration-slow) * 2) var(--ease-out-expo) 0.05s both;
+  }
+  .lost__eyebrow::before {
+    content: "";
+    flex: none;
+    width: 30px;
+    height: 2px;
+    background: var(--accent);
+  }
+  /* The headline is the page's largest text, so it never gets an entrance (DES-08). */
+  .lost__title {
+    margin: 0;
+    max-width: 12ch;
+    font-weight: 700;
+    font-size: clamp(2.6rem, 1.5rem + 5vw, 6rem);
+    line-height: 0.98;
+    letter-spacing: 0.005em;
+    text-wrap: balance;
+  }
+  .lost__text {
+    margin: 1.25rem 0 0;
+    max-width: 38ch;
+    font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+  .lost__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    animation: lost-rise calc(var(--duration-slow) * 2) var(--ease-out-expo) 0.35s both;
+  }
+  .lost__btn { min-height: 44px; }
+  .lost__btn:active { transform: translateY(1px); }
+
+  /* --- The readout and its sight --- */
+  .lost__scope {
+    /* The search's timing: the ping goes out as the last leg settles. */
+    --search-delay: 0.5s;
+    --search: calc(var(--duration-slow) * 8.5);
+    grid-area: scope;
+    position: relative;
+    justify-self: start;
+    font-size: var(--code-size);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  /* A soft, neutral light behind the figure: depth, not a halo. */
+  .lost__scope::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -45% -40%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--color-foreground) 6%, transparent), transparent);
+  }
+  /* Outlined figures, a step lighter than the ground: the map the page is missing from. */
+  .lost__code {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: color-mix(in srgb, var(--color-foreground) 5%, var(--color-background));
+    -webkit-text-stroke: 1.5px color-mix(in srgb, var(--color-foreground) 30%, transparent);
+  }
+
+  /* Centred on the zero by margins (no translate), so the search is a free transform. --cy is the
+     figures' optical centre in Oswald, whose metrics the fallback face shares (PERF-03). */
+  .lost__sight {
+    --size: 0.96em;
+    --cy: 0.54em;
+    position: absolute;
+    left: 50%;
+    top: var(--cy);
+    width: var(--size);
+    height: var(--size);
+    margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+    animation: lost-search var(--search) var(--ease-out-expo) var(--search-delay) both;
+  }
+  /* The sight's crosshair runs on past the ring and fades out, with a gap where the ring is. A
+     line reaching --k sights beyond each side is 1 + 2k sights long, and the ring (4–96% of the
+     sight) leaves the gap from (k + 0.04) / (1 + 2k) to (k + 0.96) / (1 + 2k). Across it runs
+     far; up and down it stops short of the header, the copy and the list. */
+  .lost__sight::before,
+  .lost__sight::after {
+    --hairline: color-mix(in srgb, var(--accent) 32%, transparent);
+    --gap-a: calc((var(--k) + 0.04) / (1 + 2 * var(--k)) * 100%);
+    --gap-b: calc((var(--k) + 0.96) / (1 + 2 * var(--k)) * 100%);
+    --fade: calc(var(--gap-a) * 0.55);
+    content: "";
+    position: absolute;
+    background: linear-gradient(var(--dir), transparent, var(--hairline) var(--fade), var(--hairline) var(--gap-a), transparent var(--gap-a) var(--gap-b), var(--hairline) var(--gap-b), var(--hairline) calc(100% - var(--fade)), transparent);
+  }
+  .lost__sight::before {
+    --k: 1.5;
+    --dir: 90deg;
+    top: 50%;
+    left: calc(var(--k) * -100%);
+    right: calc(var(--k) * -100%);
+    height: 1px;
+    margin-top: -0.5px;
+  }
+  .lost__sight::after {
+    --k: var(--k-up, 0.35);
+    --dir: 180deg;
+    left: 50%;
+    top: calc(var(--k) * -100%);
+    bottom: calc(var(--k) * -100%);
+    width: 1px;
+    margin-left: -0.5px;
+  }
+  .lost__reticle {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .lost__reticle :is(circle, path) {
+    fill: none;
+    stroke: color-mix(in srgb, var(--accent) 75%, transparent);
+    vector-effect: non-scaling-stroke;
+  }
+  .lost__ring { stroke-width: 1.5; }
+  .lost__post { stroke-width: 3; }
+  .lost__hair { stroke-width: 1; }
+  /* The sight's own light: the only glow here. */
+  .lost__reticle .lost__dot {
+    fill: var(--accent);
+    stroke: none;
+    filter: drop-shadow(0 0 3px var(--accent));
+  }
+  /* One ping when the sight comes to rest: it goes out and nothing answers. */
+  .lost__ping {
+    position: absolute;
+    inset: 4%;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: lost-ping calc(var(--duration-slow) * 3) var(--ease-out-expo) calc(var(--search-delay) + var(--search) * 0.85) forwards;
+  }
+
+  /* --- Destinations --- */
+  .lost__dest {
+    grid-area: dest;
+    margin-top: clamp(3rem, 8vw, 4rem);
+  }
+  .lost__dest-title {
+    margin: 0 0 1rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    letter-spacing: 0.22em;
+    color: var(--color-muted);
+  }
+  .lost__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .lost__item {
+    border-top: 1px solid var(--color-border);
+    animation: lost-rise calc(var(--duration-slow) * 2) var(--ease-out-expo) calc(0.5s + var(--i, 0) * 60ms) both;
+  }
+  .lost__link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-height: 44px;
+    padding: 1rem 0 1.1rem;
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+  /* The pointed page: an accent bar runs along its hairline. */
+  .lost__link::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--duration-slow) var(--ease-out-expo);
+  }
+  .lost__link:active { transform: translateY(1px); }
+  .lost__label {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.1rem, 1rem + 0.3vw, 1.25rem);
+    line-height: 1.25;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .lost__last { white-space: nowrap; }
+  .lost__arrow {
+    display: inline-block;
+    margin-left: 0.5rem;
+    vertical-align: -0.15em;
+    color: var(--accent);
+    transition: transform var(--duration-base) var(--ease-out-expo);
+  }
+  .lost__desc {
+    max-width: 34ch;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+  .lost__link:is(:hover, :focus-visible)::before { transform: scaleX(1); }
+  .lost__link:hover .lost__label { color: var(--color-accent-hover); }
+  .lost__link:hover .lost__arrow { transform: translateX(4px); }
+
+  @keyframes lost-rise {
+    from { opacity: 0; transform: translate3d(0, 1.25rem, 0); }
+  }
+  /* The search: in from the left, onto the first four (nothing), the second (nothing), then
+     the rest on the zero. Each leg starts fast and settles, as a sight snaps between marks. */
+  @keyframes lost-search {
+    0% { transform: translate(-1.9em, -0.35em); opacity: 0; }
+    10% { opacity: 1; }
+    30%, 38% { transform: translate(-0.55em, 0.06em); }
+    62%, 70% { transform: translate(0.55em, -0.08em); }
+    100% { transform: none; opacity: 1; }
+  }
+  @keyframes lost-ping {
+    0% { opacity: 0.7; transform: scale(0.7); }
+    100% { opacity: 0; transform: scale(1.7); }
+  }
+
+  /* Small tablets: the list in two columns. */
+  @media (min-width: 600px) {
+    .lost__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: clamp(1.25rem, 3vw, 2rem);
+    }
+  }
+
+  /* Desktop: copy on the left, the readout centred in the space on the right, the list along
+     the foot of the screen in one row (or even rows). */
+  @media (min-width: 1024px) {
+    .lost {
+      --code-size: clamp(11rem, 17vw, 20rem);
+    }
+    .lost__sight { --k-up: 0.55; }
+    .lost__body {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      grid-template-rows: minmax(0, 1fr) auto;
+      grid-template-areas: "copy scope" "dest dest";
+      column-gap: clamp(2rem, 4vw, 4rem);
+      align-items: center;
+      padding-block: calc(var(--lost-top) + 3.25rem) 4.5rem;
+    }
+    .lost__copy { margin-top: 0; }
+    .lost__scope { justify-self: center; }
+    .lost__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-bottom: 0;
+    }
+    .lost__link { padding-right: 1.5rem; }
+    .lost__link::before { right: 1.5rem; }
+  }
+  @media (min-width: 1280px) {
+    .lost__list {
+      grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+      column-gap: 0;
+    }
+  }
+
+  /* Landscape phones: copy and readout side by side and small, so the buttons stay in the first
+     screen; the frame's top pair and the readout have no room under the header. */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .lost {
+      --code-size: clamp(6rem, 42vh, 9rem);
+    }
+    .lost .hud__corner--tl,
+    .lost .hud__corner--tr,
+    .lost .hud__tag { display: none; }
+    .lost__body {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: "copy scope" "dest dest";
+      column-gap: 2rem;
+      align-items: center;
+      padding-block: 5rem 3.5rem;
+    }
+    .lost__copy { margin-top: 0; }
+    .lost__eyebrow { margin-bottom: 0.6rem; }
+    .lost__title {
+      max-width: none;
+      font-size: clamp(1.9rem, 9vh, 2.4rem);
+    }
+    .lost__text { margin-top: 0.6rem; }
+    .lost__cta { margin-top: 1rem; }
+  }
+
+  /* Reduced motion: the sight rests on the zero, the ping never goes out, nothing rises. */
+  @media (prefers-reduced-motion: reduce) {
+    .lost__sight,
+    .lost__eyebrow,
+    .lost__cta,
+    .lost__item { animation: none; }
+    .lost__ping { display: none; }
+    .lost__link::before,
+    .lost__arrow { transition: none; }
+  }
+</style>
