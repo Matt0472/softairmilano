@@ -9,7 +9,7 @@
     "image": "/uploads/hero-mira.jpeg",
     "imageMobile": "/uploads/hero-mira-mobile.jpeg",
     "imageAlt": "Giocatore di softair in tenuta tattica che prende la mira nella luce di un'arena indoor.",
-    "eyebrow": "Arena indoor · Milano",
+    "eyebrow": "Softair indoor a Milano",
     "title": "Diventa protagonista di un film d'azione",
     "subtitle": "Per tutti, anche se non hai mai preso in mano un fucile: lo staff ti guida, tu ti diverti.",
     "ctaPrimary": {
@@ -205,6 +205,15 @@
         "featured": false
       }
     ]
+  },
+  "voucher": {
+    "eyebrow": "Idea regalo",
+    "title": "Regala una partita di softair",
+    "text": "Chi riceve il voucher sceglie il giorno e l'ora, entro 6 mesi. Il giorno della partita lo porta stampato in arena.",
+    "cta": {
+      "label": "Scopri il voucher",
+      "href": "/voucher-regalo"
+    }
   },
   "course": {
     "eyebrow": "",

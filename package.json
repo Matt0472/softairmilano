@@ -4,10 +4,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run immagini && astro dev",
-    "build": "npm run immagini && astro build",
+    "dev": "npm run immagini && npm run manuale && astro dev",
+    "build": "npm run immagini && npm run manuale && astro build",
     "preview": "astro preview",
     "immagini": "node scripts/ottimizza-immagini.mjs",
+    "manuale": "node scripts/genera-manuale.mjs",
     "astro": "astro"
   },
   "dependencies": {
@@ -17,7 +18,8 @@
     "@tailwindcss/vite": "^4.0.0",
     "astro": "^7.2.0",
     "lenis": "^1.3.26",
-    "tailwindcss": "^4.0.0"
+    "tailwindcss": "^4.0.0",
+    "vanilla-cookieconsent": "^3.1.0"
   },
   "devDependencies": {
     "sharp": "^0.35.3"

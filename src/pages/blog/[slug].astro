@@ -1,0 +1,121 @@
+---
+// One blog article (/blog/<file name>), always the same structure whatever the client writes: the
+// text-only opening (trail, title, the summary as lede, date and reading time), the cover, the
+// text in the long-text typography shared with the legal pages, then «Altri articoli» (the three
+// newest others) and the closing section every page ends on. Only published articles get a page,
+// none when the blog itself is off (src/lib/blog.ts, src/lib/pages.ts).
+
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Picture from '../../components/atoms/Picture.astro';
+import PhotoFrame from '../../components/molecules/PhotoFrame.astro';
+import Prose from '../../components/molecules/Prose.astro';
+import BlogPosts from '../../components/organisms/BlogPosts.astro';
+import FinalCta from '../../components/organisms/FinalCta.astro';
+import TextHero from '../../components/organisms/TextHero.astro';
+import blog from '../../data/blog.json';
+import navigation from '../../data/navigation.json';
+import settings from '../../data/settings.json';
+import { coverOf, formatDate, getPosts, isoDate, postHref, readingMinutes, type Post } from '../../lib/blog';
+import { has } from '../../lib/fields';
+import { blogPostingLd, breadcrumbLd } from '../../lib/jsonld';
+import { flattenNav, type NavItem } from '../../lib/nav';
+
+export const getStaticPaths = (async () =>
+  (await getPosts()).map((post) => ({ params: { slug: post.id }, props: { post } }))) satisfies GetStaticPaths;
+
+const { post } = Astro.props as { post: Post };
+const { Content } = await render(post);
+const { title, description, date, imageAlt } = post.data;
+const cover = coverOf(post);
+const href = postHref(post);
+const others = (await getPosts()).filter((p) => p.id !== post.id).slice(0, 3);
+
+const blogName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === '/blog')?.label || blog.hero.title;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: blogName, href: '/blog' },
+  { label: title, href },
+];
+// The site's name follows the title only while the whole stays short enough for search results.
+const branded = `${title} | ${settings.siteName}`;
+const pageTitle = branded.length <= 65 ? branded : title;
+const jsonLd = [
+  breadcrumbLd(crumbs, Astro.site),
+  blogPostingLd({ title, description, date: isoDate(date), href, image: cover }, Astro.site, settings.siteUrl),
+];
+---
+
+<BaseLayout
+  title={pageTitle}
+  ogType="article"
+  publishedTime={isoDate(date)}
+  description={description}
+  image={cover}
+  imageAlt={cover ? imageAlt : undefined}
+  jsonLd={jsonLd}
+  preloadBodyFont
+>
+  <article class="article band" aria-labelledby="article-title">
+    {/* Compact: an article's title is a sentence, the summary stands beside it from desktop. */}
+    <TextHero title={title} subtitle={description} hudTag={blog.hero.hudTag} crumbs={crumbs} headingId="article-title" compact>
+      {/* Interface microcopy (CMS-02): the reading time's unit. */}
+      <p class="article__meta">
+        <time datetime={isoDate(date)}>{formatDate(date)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{readingMinutes(post.body)} min di lettura</span>
+      </p>
+    </TextHero>
+
+    <div class="article__inner shell">
+      {cover && (
+        <div class="article__cover">
+          <Picture src={cover} alt={imageAlt ?? ''} sizes="(max-width: 1023px) calc(100vw - 2.5rem), 60rem" eager class="article__img" />
+          <PhotoFrame />
+        </div>
+      )}
+      <Prose class="article__body">
+        <Content />
+      </Prose>
+    </div>
+  </article>
+
+  <BlogPosts title={blog.moreTitle} posts={has(blog.moreTitle) ? others : []} readMore={blog.readMore} headingId="more-title" />
+
+  <FinalCta {...settings.finalCta} />
+</BaseLayout>
+
+<style is:global>
+  .article__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
+    margin: 1.5rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+  }
+
+  .article__inner {
+    padding-block: 0 clamp(4.5rem, 10vw, 8rem);
+  }
+  /* Wider than the text, on the same left edge: the photo leads, the column reads. */
+  .article__cover {
+    position: relative;
+    overflow: hidden;
+    max-width: 60rem;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-2);
+  }
+  .article__cover picture,
+  .article__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .article__img { object-fit: cover; }
+  .article__cover + .article__body { margin-top: clamp(2.5rem, 6vw, 4rem); }
+</style>

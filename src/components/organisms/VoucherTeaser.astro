@@ -1,0 +1,205 @@
+---
+// The gift voucher, in brief: the voucher drawn as on its own page, beside a short pitch, what each
+// voucher costs and the link to the voucher page, where it is bought. The pitch is the section's
+// own copy; the drawing and the prices are the voucher page's (voucher.json), so a price or the
+// voucher's name changes in one place. Desktop sets the voucher left of the copy; smaller screens
+// put it between the heading and the details. The drawing stands still: the section's reveal
+// brings it in with the rest.
+
+import Button from '../atoms/Button.astro';
+import Icon from '../atoms/Icon.astro';
+import SectionHead from '../molecules/SectionHead.astro';
+import VoucherTicket from '../molecules/VoucherTicket.astro';
+import voucherPage from '../../data/voucher.json';
+import settings from '../../data/settings.json';
+import { has } from '../../lib/fields';
+import { keepShortWords } from '../../lib/typography';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+  cta?: { label?: string; href?: string };
+  headingId?: string;
+}
+
+const { eyebrow, title, text, cta, headingId = 'voucher-teaser-title' } = Astro.props;
+const hasCta = has(cta?.label) && has(cta?.href);
+
+const ticket = voucherPage.hero;
+// The vouchers as the voucher page lists them: one with a name and a price shows.
+const prices = (voucherPage.types?.items ?? []).filter((v) => has(v?.title) && has(v?.price));
+const hasBody = has(text) || prices.length > 0 || hasCta;
+---
+
+{has(title) && (
+  <section class="vgift band" aria-labelledby={headingId}>
+    <div class="vgift__inner shell">
+      <div class="vgift__head" data-reveal>
+        <SectionHead eyebrow={eyebrow} title={keepShortWords(title)} id={headingId} />
+      </div>
+
+      {has(ticket?.title) && (
+        <div class="vgift__art" data-reveal style="--i: 1">
+          <VoucherTicket title={ticket.title} note={ticket.ticketNote} brand={settings.siteName} />
+        </div>
+      )}
+
+      {hasBody && (
+        <div class="vgift__body" data-reveal style="--i: 2">
+          {has(text) && <p class="vgift__text">{keepShortWords(text)}</p>}
+          {prices.length > 0 && (
+            <ul class="vgift__prices" role="list">
+              {prices.map((v) => (
+                <li class="vgift__price">
+                  <span class="vgift__kind">{v.title}</span>
+                  <span class="vgift__amount">
+                    <span class="vgift__num">{v.price}</span>
+                    {has(v.unit) && <span class="vgift__unit">{v.unit}</span>}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {hasCta && (
+            <Button href={cta!.href} variant="secondary" class="vgift__link">
+              {cta!.label}
+              <Icon name="arrowRight" size={18} />
+            </Button>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .vgift {
+    --accent: var(--color-accent);
+    --hairline: color-mix(in srgb, var(--color-foreground) 12%, transparent);
+    /* The voucher's light runs wider than a phone: clipped at the band's sides only, so the seam
+       on its top edge stays whole. */
+    overflow-x: clip;
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
+  }
+  .vgift__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "head" "art" "body";
+  }
+  .vgift__head { grid-area: head; }
+  /* Text, prices and button share one measure, so the hairlines end where the text does. */
+  .vgift__body {
+    grid-area: body;
+    max-width: 32rem;
+  }
+
+  /* The voucher, centred under the heading, on a soft light of its own: depth, not a halo. */
+  .vgift__art {
+    grid-area: art;
+    position: relative;
+    isolation: isolate;
+    justify-self: center;
+    width: min(100%, 30rem);
+    margin-block: clamp(2.5rem, 9vw, 3.5rem);
+  }
+  .vgift__art::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -30% -20%;
+    pointer-events: none;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--color-foreground) 6%, transparent), transparent);
+  }
+
+  .vgift__text {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  /* What each voucher costs, as a price list: the name on the left (on two lines where the row is
+     narrow, its first line on the price's baseline), the prices in one column on the right;
+     hairlines between the rows and round the list. */
+  .vgift__prices {
+    list-style: none;
+    margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+    padding: 0;
+  }
+  .vgift__price {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: 1.25rem;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .vgift__price:first-child { border-top: 1px solid var(--hairline); }
+  .vgift__kind {
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--color-foreground);
+    text-wrap: balance;
+  }
+  .vgift__amount {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    white-space: nowrap;
+  }
+  .vgift__num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.9rem, 1.5rem + 1.2vw, 2.4rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+  }
+  .vgift__unit {
+    font-size: 0.95rem;
+    line-height: 1.25;
+    color: var(--color-muted);
+  }
+
+  /* The secondary Button with its arrow, as in the course section; the atom keeps its colours and hover. */
+  .vgift__link {
+    gap: 0.6rem;
+    min-height: 48px;
+    margin-top: clamp(1.75rem, 3vw, 2.25rem);
+    padding-inline: 1.4rem;
+    transition:
+      border-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .vgift__link svg { flex: none; transition: transform var(--duration-slow) var(--ease-out-expo); }
+  .vgift__link:hover svg,
+  .vgift__link:focus-visible svg { transform: translateX(4px); }
+  .vgift__link:active { transform: translateY(1px); }
+
+  /* Desktop: the voucher on the left, the heading and the details stacked on the right and centred
+     against it as one block. */
+  @media (min-width: 1024px) {
+    .vgift__inner {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      grid-template-areas: "art head" "art body";
+      column-gap: clamp(3rem, 7vw, 8rem);
+    }
+    .vgift__head { align-self: end; }
+    .vgift__body { align-self: start; margin-top: clamp(1.25rem, 2vw, 1.5rem); }
+    .vgift__art {
+      align-self: center;
+      justify-self: start;
+      width: min(100%, 36rem);
+      margin-block: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vgift__link:hover svg,
+    .vgift__link:focus-visible svg { transform: none; }
+  }
+</style>

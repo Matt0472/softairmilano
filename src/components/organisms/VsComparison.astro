@@ -1,9 +1,11 @@
 ---
 // Softair VS Paintball, point by point: a real table with explicit ARIA roles,
 // because the grid display drops native table semantics in some browsers.
-// Only the softair column carries the accent.
+// Only the softair column carries the accent. On phones each answer carries its
+// own side's tag, a visual copy of the column head that assistive tech skips.
 
 import SectionHead from '../molecules/SectionHead.astro';
+import { has } from '../../lib/fields';
 
 interface Row {
   topic: string;
@@ -58,8 +60,14 @@ const hasTitle = !!title?.trim();
             {list.map((r) => (
               <tr class="vs__row" role="row">
                 <th class="vs__topic" role="rowheader" scope="row">{r.topic}</th>
-                <td class="vs__cell vs__cell--s" role="cell">{r.softair}</td>
-                <td class="vs__cell vs__cell--p" role="cell">{r.paintball}</td>
+                <td class="vs__cell vs__cell--s" role="cell">
+                  {has(softairLabel) && <span class="vs__tag" aria-hidden="true">{softairLabel}</span>}
+                  {r.softair}
+                </td>
+                <td class="vs__cell vs__cell--p" role="cell">
+                  {has(paintballLabel) && <span class="vs__tag" aria-hidden="true">{paintballLabel}</span>}
+                  {r.paintball}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -152,10 +160,22 @@ const hasTitle = !!title?.trim();
     color: var(--color-foreground);
   }
   .vs__cell {
-    font-size: clamp(0.97rem, 1.3vw, 1.06rem);
+    font-size: clamp(1rem, 1.3vw, 1.06rem);
     line-height: 1.5;
     text-wrap: pretty;
   }
+  .vs__tag {
+    display: none;
+    margin-bottom: 0.35rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    line-height: 1.2;
+  }
+  .vs__cell--s .vs__tag { color: var(--accent); }
+  .vs__cell--p .vs__tag { color: var(--color-muted); }
   .vs__cell--s {
     color: var(--color-foreground);
     background: color-mix(in srgb, var(--accent) 9%, var(--lift));
@@ -175,46 +195,37 @@ const hasTitle = !!title?.trim();
     .vs__topic { font-size: 0.82rem; }
   }
 
-  /* Phones: topic on its own line, then the two answers side by side under a
-     sticky header that keeps "which side is which" in view. */
+  /* Phones: two columns of sentences are too narrow to read, so each row stacks:
+     the topic, the softair answer on its panel, the paintball answer under it.
+     Each answer shows its tag, so the column head leaves the screen but stays in
+     the table for screen readers. */
   @media (max-width: 767px) {
-    .vs__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-    .vs__row > * { padding: 0.85rem 0.9rem; }
     .vs__thead {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      background: var(--plane);
-      box-shadow: 0 1px 0 var(--color-border);
-    }
-    .vs__row--head > * { padding-block: 0.9rem; }
-    .vs__corner {
       position: absolute;
       width: 1px;
       height: 1px;
-      padding: 0;
       overflow: hidden;
       clip-path: inset(50%);
+      white-space: nowrap;
     }
-    .vs__label { font-size: clamp(1.35rem, 6.4vw, 1.9rem); }
-    .vs__label--p,
-    .vs__cell--p { padding-left: 1.6rem; }
-    .vs__badge { width: 38px; height: 38px; font-size: 0.82rem; }
+    .vs__row {
+      grid-template-columns: minmax(0, 1fr);
+      padding-block: 1.4rem 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    .vs__row:last-child { border-bottom: 1px solid var(--color-border); }
+    .vs__row > *,
+    .vs__row:last-child > * { border: 0; }
     .vs__topic {
-      grid-column: 1 / -1;
-      padding: 1.4rem 0 0.6rem;
-      border-top: 0;
-      font-size: 0.8rem;
-      letter-spacing: 0.14em;
-      color: var(--color-muted);
+      padding: 0 0 0.85rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
     }
-    .vs__cell { font-size: 0.93rem; line-height: 1.45; }
-    .vs__cell--s { border-radius: var(--radius-md) 0 0 var(--radius-md); border-top: 0; }
-    .vs__cell--p { border-top: 0; border-block: 1px solid var(--color-border); border-right: 1px solid var(--color-border); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
-    .vs__row:last-child .vs__cell--s { border-radius: var(--radius-md) 0 0 var(--radius-md); }
-    .vs__row:last-child > * { border-bottom: 0; }
-    .vs__row:last-child .vs__cell--p { border-bottom: 1px solid var(--color-border); }
-    .vs__row:last-child .vs__topic { border-bottom: 0; }
+    .vs__cell { padding: 0.85rem 1rem 0.95rem; }
+    .vs__cell--s,
+    .vs__row:last-child .vs__cell--s { border-radius: var(--radius-md); }
+    .vs__cell--p { padding-bottom: 0; }
+    .vs__tag { display: block; }
   }
 
   @media (prefers-reduced-motion: reduce) {

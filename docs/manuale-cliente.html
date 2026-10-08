@@ -1,0 +1,3935 @@
+<title>Manuale del sito — SoftAir Milano</title>
+<style>
+  /* The site's own fonts, copied next to the page by scripts/genera-manuale.mjs. Without them the
+     stacks below fall back to the closest system faces. */
+  @font-face {
+    font-family: 'Oswald';
+    src: url('fonts/oswald-600.woff2') format('woff2');
+    font-weight: 600;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Oswald';
+    src: url('fonts/oswald-700.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Inter';
+    src: url('fonts/inter.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  /* Colours from src/styles/global.css (@theme). The site is dark only, and so is its manual. */
+  :root {
+    --bg: #0e1114;
+    --surface: #161a1f;
+    --surface-2: #1e242b;
+    --fg: #eceef1;
+    --text: #d3d8de;
+    --muted: #a6aeb8;
+    --border: #3a434e;
+    --hair: #262d35;
+    --accent: #00ccff;
+    --accent-soft: rgb(0 204 255 / 0.07);
+    --accent-line: rgb(0 204 255 / 0.4);
+    --danger: #e5484d;
+    --danger-text: #ff8f93;
+    --danger-soft: rgb(229 72 77 / 0.09);
+    --font-display: 'Oswald', 'Bahnschrift', 'Roboto Condensed', 'Arial Narrow', sans-serif;
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-wrap: break-word;
+  }
+
+  .wrap {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 2.5rem 1rem 6rem;
+    display: grid;
+    gap: 2.75rem;
+  }
+  @media (min-width: 40rem) {
+    .wrap {
+      padding-inline: 1.5rem;
+    }
+  }
+  @media (min-width: 62rem) {
+    .wrap {
+      grid-template-columns: 16.5rem minmax(0, 1fr);
+      gap: 4rem;
+      padding-top: 4.5rem;
+    }
+  }
+
+  /* ── intestazione ── */
+  .masthead {
+    grid-column: 1 / -1;
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    padding: 2rem 1.25rem 2.25rem;
+    background:
+      radial-gradient(60rem 22rem at 85% -20%, rgb(0 204 255 / 0.1), transparent 70%),
+      linear-gradient(var(--hair) 1px, transparent 1px) 0 0 / 100% 2.25rem,
+      linear-gradient(90deg, var(--hair) 1px, transparent 1px) 0 0 / 2.25rem 100%,
+      var(--surface);
+    border: 1px solid var(--border);
+  }
+  @media (min-width: 40rem) {
+    .masthead {
+      padding: 2.75rem 2.5rem 3rem;
+    }
+  }
+  /* corner brackets, as on the site's openings */
+  .masthead::before,
+  .masthead::after {
+    content: '';
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid var(--accent);
+  }
+  .masthead::before {
+    top: -1px;
+    left: -1px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .masthead::after {
+    bottom: -1px;
+    right: -1px;
+    border-left: 0;
+    border-top: 0;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .brand img {
+    width: 3.25rem;
+    height: auto;
+  }
+  .kicker {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .kicker::before {
+    content: '';
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 0.6rem;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px 1px rgb(0 204 255 / 0.7);
+    vertical-align: 0.05em;
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.3rem, 7.5vw, 4.25rem);
+    line-height: 1.04;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .standfirst {
+    margin: 0;
+    max-width: 52ch;
+    font-size: 1.1rem;
+    color: var(--text);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.5rem;
+    margin: 0.5rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .meta a {
+    color: var(--muted);
+  }
+
+  /* ── indice ── */
+  nav.toc {
+    align-self: start;
+    font-size: 0.92rem;
+  }
+  @media (min-width: 62rem) {
+    nav.toc {
+      position: sticky;
+      top: 1.5rem;
+      max-height: calc(100vh - 3rem);
+      max-height: calc(100dvh - 3rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding-right: 0.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+  }
+  .toc__title {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg);
+  }
+  .toc__group {
+    margin: 1.1rem 0 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  nav.toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.1rem;
+  }
+  nav.toc a {
+    display: grid;
+    grid-template-columns: 1.9rem 1fr;
+    align-items: baseline;
+    min-height: 2rem;
+    padding: 0.2rem 0.5rem 0.2rem 0.6rem;
+    border-left: 2px solid var(--hair);
+    color: var(--muted);
+    text-decoration: none;
+    line-height: 1.35;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  nav.toc a .n {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--border);
+    transition: color 0.15s;
+  }
+  nav.toc a:hover,
+  nav.toc a:focus-visible {
+    color: var(--fg);
+  }
+  nav.toc a:hover .n,
+  nav.toc a:focus-visible .n {
+    color: var(--accent);
+  }
+  /* the entry of the chapter being read */
+  nav.toc a[aria-current] {
+    color: var(--fg);
+    font-weight: 600;
+    border-left-color: var(--accent);
+    background: linear-gradient(90deg, var(--accent-soft), transparent);
+  }
+  nav.toc a[aria-current] .n {
+    color: var(--accent);
+  }
+
+  /* ── contenuto ── */
+  main {
+    display: grid;
+    gap: 4rem;
+    min-width: 0;
+  }
+  section {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+    scroll-margin-top: 1.5rem;
+  }
+  h2 {
+    margin: 0;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem;
+    align-items: baseline;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4.6vw, 2.1rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+  h2 .num {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    padding: 0.15em 0.45em;
+    border: 1px solid var(--accent-line);
+    transform: translateY(-0.2em);
+  }
+  h3 {
+    margin: 1.25rem 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.28rem;
+    line-height: 1.2;
+    letter-spacing: 0.015em;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+  h4 {
+    margin: 0.5rem 0 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--fg);
+  }
+  p,
+  li {
+    max-width: 70ch;
+  }
+  p {
+    margin: 0;
+  }
+  main ul,
+  main ol {
+    margin: 0;
+    padding-left: 1.3rem;
+    display: grid;
+    gap: 0.45rem;
+  }
+  main ul li::marker {
+    color: var(--accent);
+  }
+  main ol li::marker {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--accent);
+  }
+  strong {
+    font-weight: 650;
+    color: var(--fg);
+  }
+  a {
+    color: var(--accent);
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    color: var(--fg);
+    background: var(--surface-2);
+    border: 1px solid var(--hair);
+    padding: 0.05em 0.35em;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .lead {
+    font-size: 1.07rem;
+    color: var(--fg);
+  }
+
+  /* where a chapter lives in the panel */
+  .where {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.3rem 0.7rem;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0.45rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--fg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+  }
+  .where span {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* fields: the panel label, then what it does */
+  .fields {
+    margin: 0;
+    display: grid;
+    border-bottom: 1px solid var(--hair);
+  }
+  .fields > div {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.85rem 0;
+    border-top: 1px solid var(--hair);
+  }
+  @media (min-width: 48rem) {
+    .fields > div {
+      grid-template-columns: minmax(11rem, 15.5rem) minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+  }
+  .fields dt {
+    font-weight: 650;
+    color: var(--fg);
+    line-height: 1.45;
+  }
+  .fields dd {
+    margin: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .fields dd p,
+  .fields dd li {
+    max-width: 64ch;
+  }
+  .empty {
+    font-size: 0.93rem;
+    color: var(--muted);
+  }
+  .empty::before {
+    content: 'Se è vuoto';
+    display: inline-block;
+    margin-right: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 0.05em 0.45em;
+    vertical-align: 0.12em;
+  }
+  .limit {
+    display: inline-block;
+    margin-left: 0.15rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    border: 1px solid var(--accent-line);
+    padding: 0.02em 0.45em;
+    white-space: nowrap;
+    vertical-align: 0.1em;
+  }
+
+  /* ── tabelle ── */
+  .scroller {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .scroller:focus-visible {
+    outline-offset: 2px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.93rem;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+  th,
+  td {
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--hair);
+    vertical-align: top;
+  }
+  th {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    background: var(--surface-2);
+  }
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  td:first-child {
+    font-weight: 600;
+    color: var(--fg);
+  }
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  /* ── richiami ── */
+  .callout {
+    display: grid;
+    gap: 0.4rem;
+    padding: 0.95rem 1.15rem;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-line);
+    border-left-width: 3px;
+  }
+  .callout .label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .callout.stop {
+    background: var(--danger-soft);
+    border-color: rgb(229 72 77 / 0.45);
+  }
+  .callout.stop .label {
+    color: var(--danger-text);
+  }
+  .callout p,
+  .callout li {
+    max-width: 66ch;
+  }
+  .callout ul {
+    gap: 0.3rem;
+  }
+
+  .example {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+    color: var(--fg);
+    background: var(--surface);
+    border-left: 2px solid var(--border);
+  }
+
+  /* ── «se cambia una regola» ── */
+  .rules {
+    display: grid;
+  }
+  details.rule {
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  details.rule + details.rule {
+    border-top: 0;
+  }
+  details.rule summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.9rem;
+    padding: 0.85rem 2.6rem 0.85rem 1rem;
+    position: relative;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 650;
+    color: var(--fg);
+  }
+  details.rule summary::-webkit-details-marker {
+    display: none;
+  }
+  details.rule summary::after {
+    content: '+';
+    position: absolute;
+    right: 1rem;
+    top: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    color: var(--accent);
+  }
+  details.rule[open] summary::after {
+    content: '−';
+  }
+  details.rule summary:hover {
+    background: var(--surface-2);
+  }
+  details.rule summary .today {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  details.rule > div {
+    display: grid;
+    gap: 0.6rem;
+    padding: 0.2rem 1rem 1.1rem;
+  }
+
+  /* ── lista di controllo ── */
+  ul.check {
+    list-style: none;
+    padding: 0;
+    gap: 0.6rem;
+  }
+  ul.check li {
+    position: relative;
+    padding-left: 2rem;
+  }
+  ul.check li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.3em;
+    width: 1.05rem;
+    height: 1.05rem;
+    border: 1.5px solid var(--accent);
+  }
+
+  footer {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 0.35rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+  footer a {
+    color: var(--muted);
+  }
+
+  /* on phones the index sits on top: a way back to it from anywhere */
+  .to-toc {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--bg);
+    background: var(--accent);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.45);
+  }
+  @media (min-width: 62rem) {
+    .to-toc {
+      display: none;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      transition: none !important;
+    }
+  }
+
+  @media print {
+    :root {
+      --bg: #fff;
+      --surface: #fff;
+      --surface-2: #f2f4f6;
+      --fg: #0e1114;
+      --text: #1e242b;
+      --muted: #4a535d;
+      --border: #9aa3ad;
+      --hair: #d5dae0;
+      --accent: #006f8c;
+      --accent-soft: #fff;
+      --accent-line: #7fb8c8;
+      --danger-text: #a3171c;
+      --danger-soft: #fff;
+    }
+    body {
+      font-size: 10.5pt;
+    }
+    .wrap {
+      display: block;
+      padding: 0;
+    }
+    .masthead {
+      background: none;
+      margin-bottom: 2rem;
+    }
+    .brand,
+    nav.toc,
+    .to-toc,
+    details.rule summary::after {
+      display: none;
+    }
+    main {
+      gap: 2rem;
+    }
+    section {
+      break-before: auto;
+    }
+    h2,
+    h3 {
+      break-after: avoid;
+    }
+    .fields > div,
+    .callout,
+    tr,
+    details.rule {
+      break-inside: avoid;
+    }
+    .scroller {
+      overflow: visible;
+    }
+    a {
+      color: inherit;
+    }
+  }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="brand">
+      <img src="/logo/logo-white-120.webp" alt="" width="121" height="120">
+      <p class="kicker">Manuale d'uso · Pages CMS</p>
+    </div>
+    <h1>Il sito di <em>SoftAir Milano</em></h1>
+    <p class="standfirst">
+      Come aggiornare da soli testi, foto, prezzi, orari e domande frequenti, dal pannello, senza
+      toccare una riga di codice e senza aspettare nessuno.
+    </p>
+    <p class="meta">
+      <span>Versione di ottobre 2026</span>
+      <span>Realizzazione: <a href="https://mapped-dev.it/">Mattia Pedone</a></span>
+    </p>
+  </header>
+
+  <nav class="toc" id="indice" aria-label="Indice del manuale">
+    <p class="toc__title">Indice</p>
+    <p class="toc__group">Le basi</p>
+    <ol>
+      <li><a href="#sito"><span class="n">01</span> Com'è fatto il sito</a></li>
+      <li><a href="#accesso"><span class="n">02</span> Entrare nel pannello</a></li>
+      <li><a href="#modificare"><span class="n">03</span> Modificare e salvare</a></li>
+      <li><a href="#online"><span class="n">04</span> Accendere e spegnere una pagina</a></li>
+      <li><a href="#non-toccare"><span class="n">05</span> Cosa non si tocca</a></li>
+      <li><a href="#immagini"><span class="n">06</span> Le immagini</a></li>
+      <li><a href="#blocchi"><span class="n">07</span> I blocchi che ritornano</a></li>
+    </ol>
+    <p class="toc__group">Le sezioni del pannello</p>
+    <ol>
+      <li><a href="#impostazioni"><span class="n">08</span> Impostazioni generali</a></li>
+      <li><a href="#menu"><span class="n">09</span> Menu di navigazione</a></li>
+      <li><a href="#home"><span class="n">10</span> Home</a></li>
+      <li><a href="#recensioni"><span class="n">11</span> Recensioni</a></li>
+      <li><a href="#attivita"><span class="n">12</span> Attività (pagine)</a></li>
+      <li><a href="#paintball"><span class="n">13</span> Softair VS Paintball</a></li>
+      <li><a href="#corso"><span class="n">14</span> Corso softair</a></li>
+      <li><a href="#form"><span class="n">15</span> Form di richiesta</a></li>
+      <li><a href="#pagina-404"><span class="n">16</span> Pagina 404</a></li>
+      <li><a href="#contatti"><span class="n">17</span> Contatti</a></li>
+      <li><a href="#modulistica"><span class="n">18</span> Modulistica</a></li>
+      <li><a href="#teambuilding"><span class="n">19</span> Team building</a></li>
+      <li><a href="#occasioni"><span class="n">20</span> Occasioni</a></li>
+      <li><a href="#voucher"><span class="n">21</span> Voucher regalo</a></li>
+      <li><a href="#blog"><span class="n">22</span> Blog</a></li>
+      <li><a href="#cookie"><span class="n">23</span> Banner dei cookie</a></li>
+      <li><a href="#legali"><span class="n">24</span> Privacy, cookie e termini</a></li>
+    </ol>
+    <p class="toc__group">Regole e servizi</p>
+    <ol>
+      <li><a href="#servizi"><span class="n">25</span> I servizi collegati</a></li>
+      <li><a href="#regole"><span class="n">26</span> Se cambia una regola</a></li>
+      <li><a href="#prima-di-salvare"><span class="n">27</span> Prima di salvare</a></li>
+      <li><a href="#tecnico"><span class="n">28</span> Cosa fa il tecnico</a></li>
+      <li><a href="#aiuto"><span class="n">29</span> Se qualcosa non va</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="sito">
+      <h2><span class="num">01</span> Com'è fatto il sito</h2>
+      <p class="lead">
+        Il sito di SoftAir Milano è fatto di pagine già pronte, che si aprono in un attimo anche dal
+        telefono. I contenuti però sono vostri: testi, foto, prezzi, orari, domande frequenti e
+        recensioni si cambiano da un pannello, e ogni modifica va online da sola.
+      </p>
+
+      <h3>Contenuto e struttura</h3>
+      <p>
+        Tutto il sito si regge su una regola: <strong>quello che si legge e si vede lo cambiate voi
+        dal pannello; il modo in cui è disposto lo cambia un tecnico</strong>. Un titolo, una foto, un
+        prezzo, il testo di un bottone sono contenuto. L'ordine delle sezioni, i colori, le
+        animazioni e gli indirizzi delle pagine sono struttura.
+      </p>
+
+      <h3>Le pagine</h3>
+      <div class="scroller" tabindex="0" role="region" aria-label="Le pagine del sito">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Pagina</th>
+              <th scope="col">Indirizzo</th>
+              <th scope="col">Nel pannello</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Home</td><td><code>/</code></td><td>Home</td></tr>
+            <tr><td>Softair</td><td><code>/softair</code></td><td>Attività (pagine) › Softair</td></tr>
+            <tr><td>Arcotag</td><td><code>/arcotag</code></td><td>Attività (pagine) › Arcotag</td></tr>
+            <tr><td>Tiro dinamico</td><td><code>/tiro-dinamico</code></td><td>Attività (pagine) › Tiro dinamico</td></tr>
+            <tr><td>Nerf</td><td><code>/nerf</code></td><td>Attività (pagine) › Nerf</td></tr>
+            <tr><td>Corso di softair</td><td><code>/corso-softair</code></td><td>Corso softair</td></tr>
+            <tr><td>Compleanni e addii al celibato</td><td><code>/occasioni</code></td><td>Occasioni (compleanni e addii al celibato)</td></tr>
+            <tr><td>Team building</td><td><code>/teambuilding</code></td><td>Team building</td></tr>
+            <tr><td>Softair VS Paintball</td><td><code>/softair-vs-paintball</code></td><td>Softair VS Paintball</td></tr>
+            <tr><td>Modulistica</td><td><code>/modulistica</code></td><td>Modulistica</td></tr>
+            <tr><td>Voucher regalo</td><td><code>/voucher-regalo</code></td><td>Voucher regalo</td></tr>
+            <tr><td>Contatti</td><td><code>/contatti</code></td><td>Contatti</td></tr>
+            <tr><td>Blog</td><td><code>/blog</code></td><td>Pagina Blog</td></tr>
+            <tr><td>Un articolo del blog</td><td><code>/blog/nome-del-file</code></td><td>Blog — articoli</td></tr>
+            <tr><td>Privacy</td><td><code>/privacy</code></td><td>Privacy policy</td></tr>
+            <tr><td>Cookie</td><td><code>/cookie</code></td><td>Cookie policy</td></tr>
+            <tr><td>Termini</td><td><code>/termini</code></td><td>Termini e condizioni</td></tr>
+            <tr><td>Pagina «non trovata»</td><td>ogni indirizzo che non esiste</td><td>Pagina 404</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Scritto una volta, uguale ovunque</h3>
+      <p>Alcune parti compaiono su molte pagine ma si scrivono in un posto solo: le cambiate lì e cambiano dappertutto.</p>
+      <ul>
+        <li>la sezione finale «Sei pronto a scendere in campo?», in fondo a ogni pagina: <strong>Impostazioni generali</strong>;</li>
+        <li>telefono, email, WhatsApp, indirizzo, orari, social: <strong>Impostazioni generali</strong>;</li>
+        <li>il blocco «Abbigliamento consigliato» sotto i prezzi delle attività: <strong>Impostazioni generali</strong>;</li>
+        <li>il menu, e con lui le colonne del footer e l'elenco della pagina 404: <strong>Menu di navigazione</strong>;</li>
+        <li>le recensioni e il voto di Google: <strong>Recensioni</strong>;</li>
+        <li>i campi, il bottone e i messaggi dei form: <strong>Form di richiesta</strong>;</li>
+        <li>i testi del banner dei cookie: <strong>Banner dei cookie</strong>.</li>
+      </ul>
+      <p>
+        Altre informazioni invece sono scritte dentro i testi di più pagine: il numero di giocatori,
+        le età, le durate, i prezzi, le regole della sala feste. Quelle vanno aggiornate a mano in
+        ognuna, e il capitolo <a href="#regole">26</a> elenca dove.
+      </p>
+
+      <h3>Anteprima e sito vero</h3>
+      <p>
+        Oggi il sito nuovo è online in anteprima su <strong>softairmilano-anteprima.mapped-dev.it</strong>,
+        nascosto a Google. Il giorno del passaggio prenderà il posto del sito attuale su
+        <strong>softairmilano.it</strong>, con lo stesso pannello e gli stessi contenuti: quello che
+        preparate adesso resta.
+      </p>
+
+      <h3>Un sito attento a chi lo visita</h3>
+      <ul>
+        <li>
+          Le descrizioni delle foto che scrivete nel pannello (capitolo <a href="#immagini">06</a>)
+          vengono lette ad alta voce dai programmi usati da chi non vede, e le legge Google.
+        </li>
+        <li>
+          Telefoni e computer hanno un'impostazione che riduce le animazioni («Riduci movimento» su
+          iPhone, «Rimuovi animazioni» su Android): la usa chi dal movimento ricava vertigini o
+          nausea. Il sito la rispetta e ferma le animazioni; il video della home parte comunque,
+          con il suo pulsante di pausa. Se qualcuno vi dice che «da lui il sito non si muove», non
+          è un guasto.
+        </li>
+        <li>Menu, bottoni, domande frequenti e form funzionano anche solo con la tastiera.</li>
+      </ul>
+    </section>
+
+    <section id="accesso">
+      <h2><span class="num">02</span> Entrare nel pannello</h2>
+      <p>
+        Il pannello si chiama <strong>Pages CMS</strong> e si apre dal browser, sul computer o sul
+        telefono. Non serve installare nulla.
+      </p>
+      <ol>
+        <li>Aprite <a href="https://app.pagescms.org">app.pagescms.org</a>.</li>
+        <li>
+          Entrate con l'account GitHub collegato al sito, oppure con l'indirizzo email a cui vi è
+          arrivato l'invito, seguendo il link che Pages CMS vi manda.
+        </li>
+        <li>Scegliete il progetto <strong>softairmilano</strong>.</li>
+        <li>
+          A sinistra trovate le sezioni del sito, con i nomi in italiano: sono le stesse dei capitoli
+          08–24 di questo manuale, nello stesso ordine.
+        </li>
+      </ol>
+      <div class="callout">
+        <span class="label">Da sapere</span>
+        <p>
+          I pulsanti del pannello sono in inglese (<em>Save</em>, <em>Add</em>, <em>Upload</em>), i
+          campi invece hanno il nome in italiano e, sotto, una riga grigia che dice cosa fanno.
+          Questo manuale riprende quei nomi esattamente come li vedete, tra «virgolette».
+          Conviene salvare <strong>app.pagescms.org</strong> tra i preferiti.
+        </p>
+      </div>
+    </section>
+
+    <section id="modificare">
+      <h2><span class="num">03</span> Modificare e salvare</h2>
+      <ol>
+        <li>Scegliete la sezione a sinistra, per esempio <em>Home</em>.</li>
+        <li>Aprite il gruppo di campi che vi interessa, per esempio <em>Hero</em>, e cambiate il testo.</li>
+        <li>Premete <strong>Save</strong>.</li>
+      </ol>
+      <p>
+        Il salvataggio fa ricostruire il sito: <strong>dopo due o tre minuti</strong> la modifica è
+        online. Ricaricate la pagina per vederla; se non è ancora cambiata, aspettate un altro minuto.
+      </p>
+
+      <h3>Le liste</h3>
+      <p>
+        Domande frequenti, recensioni, prezzi, passaggi, foto: tutto quello che è un elenco si
+        allunga, si accorcia e si riordina trascinando le voci. <strong>L'ordine della lista è
+        l'ordine della pagina.</strong>
+      </p>
+
+      <h3>I tipi di campo</h3>
+      <dl class="fields">
+        <div>
+          <dt>Testo breve e testo lungo</dt>
+          <dd>
+            <p>
+              Scrivete testo semplice, un paragrafo per campo: grassetti, elenchi e link dentro i
+              testi non si vedono. Fanno eccezione le pagine legali, che hanno un editor vero
+              (capitolo <a href="#legali">24</a>).
+            </p>
+          </dd>
+        </div>
+        <div>
+          <dt>Campo con il limite <span class="limit">max 32</span></dt>
+          <dd><p>Il pannello si ferma al numero di caratteri indicato: oltre, il testo non ci starebbe.</p></dd>
+        </div>
+        <div>
+          <dt>Campo obbligatorio</dt>
+          <dd><p>Ha l'asterisco: senza, il pannello non salva. Di solito è il titolo principale di una pagina e la sua foto.</p></dd>
+        </div>
+        <div>
+          <dt>Interruttore</dt>
+          <dd><p>Acceso o spento, per esempio «Iscrizioni aperte» nel corso o «Mostra il voto Google sotto i bottoni» in home.</p></dd>
+        </div>
+        <div>
+          <dt>Menu a tendina</dt>
+          <dd><p>Una scelta fra voci già pronte, come le icone o «Dove sta il soggetto della foto».</p></dd>
+        </div>
+      </dl>
+
+      <h3>Vuoto vuol dire nascosto</h3>
+      <p>
+        Quasi ogni parte del sito si nasconde da sola quando è vuota: un titolo vuoto nasconde la sua
+        sezione, un bottone senza testo o senza link non compare, una domanda senza risposta non si
+        vede. Per togliere una sezione da una pagina basta svuotarne il titolo; per rimetterla,
+        riscriverlo. Nei capitoli delle pagine trovate, campo per campo, cosa succede quando è vuoto.
+      </p>
+      <div class="callout">
+        <span class="label">Niente si perde</span>
+        <p>
+          Ogni salvataggio porta il nome e l'email di chi l'ha fatto, e ogni versione precedente resta
+          conservata. Se cancellate qualcosa per sbaglio, il tecnico la recupera.
+        </p>
+      </div>
+    </section>
+
+    <section id="online">
+      <h2><span class="num">04</span> Accendere e spegnere una pagina</h2>
+      <p>
+        Tutte le pagine tranne la home, le pagine legali e la pagina 404 hanno in cima l'interruttore
+        <strong>«Pagina online»</strong> (negli articoli del blog si chiama «Articolo online»). Serve a
+        togliere una pagina dal sito senza cancellarla: quello che c'è scritto resta salvato, e la
+        riaccendete quando volete.
+      </p>
+      <div class="scroller" tabindex="0" role="region" aria-label="Le pagine con l'interruttore">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Nel pannello</th>
+              <th scope="col">Interruttore</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Attività (pagine) › ogni attività</td><td>«Pagina online»</td></tr>
+            <tr><td>Softair VS Paintball</td><td>«Pagina online»</td></tr>
+            <tr><td>Corso softair</td><td>«Pagina online»</td></tr>
+            <tr><td>Contatti</td><td>«Pagina online»</td></tr>
+            <tr><td>Modulistica</td><td>«Pagina online»</td></tr>
+            <tr><td>Team building</td><td>«Pagina online»</td></tr>
+            <tr><td>Occasioni (compleanni e addii al celibato)</td><td>«Pagina online»</td></tr>
+            <tr><td>Voucher regalo</td><td>«Pagina online»</td></tr>
+            <tr><td>Pagina Blog</td><td>«Pagina online»: spegne anche tutti gli articoli</td></tr>
+            <tr><td>Blog — articoli › ogni articolo</td><td>«Articolo online»</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Cosa succede quando la spegnete</h3>
+      <ul>
+        <li>
+          La pagina non viene più pubblicata: chi apre il suo indirizzo trova la pagina «non
+          trovata», ed esce anche dall'elenco delle pagine che il sito dà a Google.
+        </li>
+        <li>
+          La sua voce sparisce dal menu, e con lei dalle colonne del footer e dall'elenco della pagina
+          404. Se tutte le voci di un sottomenu sono spente, sparisce anche il sottomenu.
+        </li>
+        <li>
+          Un'attività spenta esce anche dalle attività della home e dalla galleria «Provate anche»
+          delle altre attività.
+        </li>
+        <li>
+          In tutti gli altri punti del sito i link verso quella pagina perdono l'indirizzo. Così i
+          bottoni e i link che ci portavano spariscono (per esempio «Scopri il corso»), le schede
+          restano ma non sono più cliccabili (per esempio quelle di «Per chi è»), e le voci che
+          senza link non compaiono si nascondono (Occasioni › «Scegli l'attività», il rimando al
+          paintball della home).
+        </li>
+        <li>In home, le sezioni «Il corso» e «Voucher regalo» spariscono insieme alla loro pagina.</li>
+        <li>Spegnendo «Pagina Blog» si spengono anche tutti gli articoli.</li>
+        <li>Un'attività spenta esce anche dall'elenco «Attività» del form di richiesta.</li>
+        <li>
+          Un link scritto a mano dentro il testo di un articolo del blog o di una pagina legale verso
+          la pagina spenta perde il collegamento: le parole restano, come testo normale.
+        </li>
+      </ul>
+      <p>
+        Per riaccenderla basta riaccendere l'interruttore e salvare: dopo i soliti due o tre minuti
+        tornano da soli la pagina, le voci del menu e tutti i link.
+      </p>
+
+      <h3>Cosa resta da sistemare a mano</h3>
+      <ul>
+        <li>
+          Le frasi che parlano della pagina spenta: un'età in Modulistica, il nome dell'attività fra
+          le parole della fascia di Prenota, una domanda frequente che la cita. Sono testi, e il sito
+          non li riscrive.
+        </li>
+      </ul>
+      <div class="callout">
+        <span class="label">Da sapere</span>
+        <p>
+          L'interruttore vale per il sito pubblicato, l'anteprima online come softairmilano.it. Solo
+          sul computer del tecnico, mentre lavora al sito, una pagina spenta si vede ancora.
+        </p>
+      </div>
+    </section>
+
+    <section id="non-toccare">
+      <h2><span class="num">05</span> Cosa non si tocca</h2>
+      <p>
+        Il pannello vi lascia scrivere ovunque, ma alcune cose tengono insieme il sito. Queste si
+        cambiano solo insieme al tecnico.
+      </p>
+
+      <h3>Gli indirizzi delle pagine</h3>
+      <p>
+        Gli indirizzi (<code>/softair</code>, <code>/corso-softair</code>…) sono fissi: Google li
+        conosce, i clienti li salvano, le altre pagine ci puntano. Quando un campo «Link» porta a
+        un'altra pagina del sito, scrivete l'indirizzo esatto della tabella del capitolo
+        <a href="#sito">01</a>, con la barra davanti e senza il dominio: <code>/softair</code>, non
+        <code>https://softairmilano.it/softair</code>. Per i siti esterni invece serve l'indirizzo
+        completo, con <code>https://</code>.
+      </p>
+
+      <h3>Le ancore: i link con #</h3>
+      <p>
+        Un link che comincia con <code>#</code> porta a una sezione della stessa pagina. I nomi di
+        queste sezioni sono scritti nel codice: usate solo questi, così come sono.
+      </p>
+      <div class="scroller" tabindex="0" role="region" aria-label="Le ancore del sito">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Ancora</th>
+              <th scope="col">Porta a</th>
+              <th scope="col">Pagine</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>#prenota</code></td><td>«Sei pronto a scendere in campo?», la sezione per prenotare</td><td>tutte, in fondo</td></tr>
+            <tr><td><code>#arena</code></td><td>«L'arena»</td><td>Home</td></tr>
+            <tr><td><code>#serata</code></td><td>«Come funziona (passo per passo)»</td><td>attività</td></tr>
+            <tr><td><code>#richiesta</code></td><td>il form di richiesta</td><td>attività, Team building, Occasioni</td></tr>
+            <tr><td><code>#confronto</code></td><td>la tabella del confronto</td><td>Softair VS Paintball</td></tr>
+            <tr><td><code>#prima-volta</code></td><td>«La prima volta»</td><td>Softair VS Paintball</td></tr>
+            <tr><td><code>#calendario</code></td><td>il calendario del corso</td><td>Corso softair</td></tr>
+            <tr><td><code>#come-funziona</code></td><td>i passaggi: «Come si svolge», «Come si prenota», «Come funziona»</td><td>Team building, Occasioni, Voucher regalo</td></tr>
+            <tr><td><code>#acquista</code></td><td>«Acquista il voucher»</td><td>Voucher regalo</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout stop">
+        <span class="label">Attenzione</span>
+        <p>
+          Se nascondete una sezione svuotandone il titolo, il bottone che ci portava resta e non va
+          più da nessuna parte: svuotate anche quello. Per esempio, se togliete il calendario del
+          corso, svuotate il «Bottone secondario» dell'apertura del corso, che punta a
+          <code>#calendario</code>.
+        </p>
+      </div>
+
+      <h3>Spegnere, non cancellare</h3>
+      <p>
+        Per togliere una pagina o un articolo dal sito, anche per sempre, spegnete «Pagina online»
+        (capitolo <a href="#online">04</a>) invece di cancellarli: il sito toglie da solo le voci del
+        menu e i link che ci portavano, e il contenuto resta salvato. Cancellando un'attività o un
+        articolo, invece, i link scritti nei campi restano e portano alla pagina «non trovata». Se
+        una pagina sparisce per sempre, chiedete anche al tecnico di reindirizzare il suo indirizzo
+        verso una pagina che esiste: Google e i clienti lo conoscono già.
+      </p>
+
+      <h3>Quello che il pannello non cambia</h3>
+      <ul>
+        <li>l'ordine delle sezioni nelle pagine, i colori, i caratteri e le animazioni;</li>
+        <li>le scritte dei comandi, come «Apri il menu» o «Torna su», che servono a usare il sito;</li>
+        <li>i dati per Google (indirizzo, orari, domande frequenti…), che si compongono da soli dai campi del pannello.</li>
+      </ul>
+    </section>
+
+    <section id="immagini">
+      <h2><span class="num">06</span> Le immagini</h2>
+
+      <h3>Caricare una foto</h3>
+      <ol>
+        <li>Nel campo immagine premete il riquadro: si apre la raccolta delle foto già caricate.</li>
+        <li>Sceglietene una, oppure caricatene una nuova dal computer o dal telefono.</li>
+        <li>Scrivete subito il suo testo alternativo, nel campo accanto.</li>
+        <li>Salvate.</li>
+      </ol>
+      <p>
+        Caricate le foto in <strong>JPG</strong> (i loghi in PNG), larghe almeno <strong>1600
+        pixel</strong> sul lato lungo. Non serve rimpicciolirle né comprimerle: il sito prepara da
+        solo le versioni leggere per ogni schermo.
+      </p>
+      <div class="callout">
+        <span class="label">Da sapere</span>
+        <ul>
+          <li>
+            Il nome del file va corto, minuscolo, con i trattini e senza spazi né accenti:
+            <code>compleanno-sala-esterna.jpg</code>.
+          </li>
+          <li>
+            Per sostituire una foto caricatene una con un <strong>nome nuovo</strong>, invece di
+            sovrascrivere quella vecchia con lo stesso nome: così il sito rifà di sicuro le versioni
+            leggere.
+          </li>
+          <li>
+            Le foto che mostrano com'è l'arena («L'arena» in home, «Cosa trovi da noi» in Softair VS
+            Paintball) devono essere <strong>foto vere</strong>. Le immagini create al computer vanno
+            bene per le atmosfere, mai per far vedere i luoghi.
+          </li>
+        </ul>
+      </div>
+
+      <h3>I formati</h3>
+      <p>Ogni posto del sito ha la sua forma. Una foto della forma giusta non perde pezzi.</p>
+      <div class="scroller" tabindex="0" role="region" aria-label="I formati delle immagini">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Dove</th>
+              <th scope="col">Foto principale</th>
+              <th scope="col">Versione per il telefono</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Home › Hero</td><td>orizzontale 16:9</td><td>verticale 9:16, soggetto nel terzo alto</td></tr>
+            <tr><td>Aperture delle altre pagine</td><td>orizzontale 16:9</td><td>verticale, soggetto nel terzo alto</td></tr>
+            <tr><td>Immagine per i social</td><td>1200×630, JPG o PNG</td><td>—</td></tr>
+            <tr><td>Home › Attività</td><td>orizzontale</td><td>verticale 4:5, soggetto al centro</td></tr>
+            <tr><td>Home › L'arena</td><td>orizzontali, soggetto al centro</td><td>si ritagliano da sole</td></tr>
+            <tr><td>Home › Occasioni</td><td>orizzontale 3:2</td><td>verticale 4:5, solo quella in evidenza</td></tr>
+            <tr><td>Home › Il corso</td><td>orizzontale, soggetto al centro o a destra</td><td>—</td></tr>
+            <tr><td>Home › Rimando arena outdoor</td><td>orizzontale, lato sinistro scuro</td><td>ritagliata 3:2, soggetto al centro</td></tr>
+            <tr><td>Attività › Come si gioca</td><td>verticale 4:5</td><td>—</td></tr>
+            <tr><td>Corso › La prova gratuita</td><td>verticale 4:5</td><td>—</td></tr>
+            <tr><td>Occasioni › Compleanni</td><td>orizzontale 3:2</td><td>verticale 4:5</td></tr>
+            <tr><td>Occasioni › Addio al celibato</td><td>orizzontale 3:2</td><td>—</td></tr>
+            <tr><td>Occasioni › Scegli l'attività</td><td>orizzontale</td><td>verticale 4:5</td></tr>
+            <tr><td>Team building › Attività da abbinare</td><td>orizzontale 16:9</td><td>—</td></tr>
+            <tr><td>Team building › Loghi</td><td>PNG trasparente, logo bianco o grigio chiaro</td><td>—</td></tr>
+            <tr><td>Home › Video (poster)</td><td>fotogramma del video, 2,5:1</td><td>fotogramma 4:5</td></tr>
+            <tr><td>Blog › Copertina</td><td>orizzontale 16:9, almeno 1600 pixel di larghezza</td><td>— (nelle schede l'immagine è un po' più alta e si taglia ai lati: tenete il soggetto al centro)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Le versioni per il telefono</h3>
+      <p>
+        Un telefono in verticale è stretto e alto: una foto orizzontale, ritagliata per riempirlo,
+        perde i lati. Per questo molte foto hanno un secondo campo «(mobile)» o «(telefono)». Se lo
+        lasciate vuoto il sito usa la foto orizzontale ritagliata al centro, e va bene quando il
+        soggetto è al centro. Quando il soggetto sta su un lato, caricate anche la versione verticale.
+      </p>
+
+      <h3>Dove sta il soggetto della foto</h3>
+      <p>
+        Alcune foto hanno anche il campo «Dove sta il soggetto della foto». Quando la foto è più
+        larga della cornice in cui sta, il sito ne taglia un pezzo: con questo campo dite quale lato
+        tenere sempre nell'inquadratura. Se non scegliete, vale «Al centro».
+      </p>
+
+      <h3>Il testo alternativo</h3>
+      <p>
+        Ogni foto ha accanto il suo «Testo alternativo». Non si vede, ma lo leggono ad alta voce i
+        programmi di chi non vede, e lo legge Google per capire cosa mostra la foto. Scrivetelo così:
+      </p>
+      <ul>
+        <li>descrivete quello che si vede, in una frase: chi, cosa fa, dove;</li>
+        <li>senza «Foto di…» o «Immagine di…»;</li>
+        <li>se nella foto c'è una scritta che conta, riportatela;</li>
+        <li>niente elenchi di parole chiave: una frase vera vale di più, anche per Google.</li>
+      </ul>
+      <p class="example">
+        «Due giocatori di softair con casco, maschera protettiva e fucile replica entrano da una
+        porta in controluce, tra polvere e fumo.»
+      </p>
+
+      <h3>I PDF</h3>
+      <p>
+        Il modulo dei minorenni (Modulistica) e l'invito per le feste (Occasioni) sono PDF: si
+        caricano nel loro campo, e il formato e il peso accanto al bottone («PDF, 242 KB») si
+        scrivono da soli. Teneteli leggeri, sotto i 2 MB: si scaricano soprattutto dal telefono.
+      </p>
+
+      <h3>I video</h3>
+      <p>
+        I video non si caricano dal pannello: stanno su Cloudflare R2, e nel campo va il loro
+        indirizzo (che finisce in <code>.mp4</code>). Per un video nuovo chiedete al tecnico di
+        caricarlo: vi darà l'indirizzo da incollare.
+      </p>
+    </section>
+
+    <section id="blocchi">
+      <h2><span class="num">07</span> I blocchi che ritornano</h2>
+      <p>
+        Molte pagine sono costruite con gli stessi blocchi. Qui sono spiegati una volta per tutte; nei
+        capitoli delle pagine trovate solo quello che cambia.
+      </p>
+
+      <h3>SEO e anteprima social</h3>
+      <p>In cima a ogni pagina. Decide come la pagina compare su Google e quando qualcuno ne condivide il link.</p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo della pagina (Google)</dt>
+          <dd>
+            <p>
+              Il titolo blu nei risultati di Google e il nome della scheda del browser. Circa
+              <strong>60 caratteri</strong>: oltre, Google lo taglia. Prima cosa e dove, poi il nome:
+              «Arcotag Milano al coperto, per gruppi e feste | SoftAir Milano».
+            </p>
+            <p class="empty">nelle pagine interne è obbligatorio; in home si usa il «Nome sito».</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Descrizione (Google)</dt>
+          <dd>
+            <p>Le righe grigie sotto il titolo nei risultati. Circa <strong>155 caratteri</strong>: cosa, dove, per chi.</p>
+            <p class="empty">si usa la «Descrizione SEO predefinita» di Impostazioni generali.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Immagine per i social</dt>
+          <dd>
+            <p>L'anteprima che compare quando il link si condivide su WhatsApp, Facebook e simili. Orizzontale, 1200×630, JPG o PNG.</p>
+            <p class="empty">si usa l'«Immagine social predefinita» di Impostazioni generali.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Testo alternativo immagine social</dt>
+          <dd>
+            <p>Descrive l'anteprima.</p>
+            <p class="empty">si usa il testo alternativo della foto d'apertura o il nome del sito, come dice la riga grigia sotto il campo.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Apertura</h3>
+      <p>La prima schermata delle pagine interne: foto a tutto schermo, titolo, bottoni.</p>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo</dt>
+          <dd>
+            <p>La riga piccola sopra il titolo, es. «Corso · stagione 2026–2027».</p>
+            <p class="empty">non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Titolo principale (H1)</dt>
+          <dd>
+            <p>
+              Il titolo grande, e per Google il titolo principale della pagina: deve dire cosa e dove,
+              es. «Compleanni e addii al celibato a Milano». Obbligatorio.
+            </p>
+          </dd>
+        </div>
+        <div>
+          <dt>Sottotitolo (massimo 20 parole)</dt>
+          <dd><p>Una frase sotto il titolo.</p><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Immagine (desktop, 16:9) · Immagine (mobile, verticale) · Testo alternativo immagine</dt>
+          <dd>
+            <p>
+              La foto di sfondo e la sua versione per telefoni e tablet in verticale, con il soggetto
+              nel terzo alto: la metà bassa ospita i testi (capitolo <a href="#immagini">06</a>). Foto
+              per computer e testo alternativo sono obbligatori.
+            </p>
+            <p class="empty">senza la versione verticale, sul telefono si usa la foto per computer, ritagliata.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Dove sta il soggetto della foto (desktop)</dt>
+          <dd>
+            <p>
+              «A destra» quando la foto lascia libera la parte sinistra per il titolo: sui portatili e
+              sugli schermi più stretti il soggetto resta nell'inquadratura. Nell'arcotag non ha
+              effetto, perché lì l'apertura ha la freccia disegnata.
+            </p>
+            <p class="empty">vale «Al centro».</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Bottone principale · Bottone secondario</dt>
+          <dd>
+            <p>
+              Ognuno con «Testo» e «Link». Il principale porta di solito a <code>#prenota</code> (o al
+              form, dove la pagina chiede un preventivo); nelle attività e in Softair VS Paintball
+              compare anche sotto i prezzi. Il secondario porta a una sezione della pagina.
+            </p>
+            <p class="empty">un bottone senza testo o senza link non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Scritta tattica sulla foto (HUD) <span class="limit">max 32</span></dt>
+          <dd>
+            <p>
+              La scritta piccola da visore militare in alto a destra sulla foto (in basso a destra in
+              home), es. «CQB · MAX 20 GIOCATORI · 12+». Il maiuscolo lo mette il sito. Non compare
+              sotto i 641 pixel di larghezza, cioè sui telefoni in verticale.
+            </p>
+            <p>
+              Ripete solo dati già scritti nella pagina: se cambiate i «Dati chiave», aggiornatela.
+            </p>
+            <p class="empty">sparisce; la cornice e la riga che scorre restano, perché sono struttura.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Dati chiave</h3>
+      <p>
+        I numeri sotto il titolo dell'apertura. Ogni dato ha un «Valore», in grande (es. «20»), e
+        un'«Etichetta» (es. «giocatori al massimo»), che si leggono di seguito: «20 giocatori al
+        massimo». Meglio da 2 a 4.
+      </p>
+      <p class="empty">un dato senza valore o senza etichetta non compare.</p>
+
+      <h3>Passo per passo</h3>
+      <p>
+        Le sezioni con i passaggi in fila: la serata delle attività, la prima volta, il calendario
+        del corso, come si prenota una festa, come funziona il voucher. Ogni passaggio ha:
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Momento</dt>
+          <dd><p>L'etichetta piccola del passaggio, es. «Arrivo» o «7 ott – 16 dic 2026».</p><p class="empty">compare il numero del passaggio: 01, 02…</p></dd>
+        </div>
+        <div>
+          <dt>Titolo</dt>
+          <dd><p class="empty">il passaggio non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Testo</dt>
+          <dd><p>Una o due frasi.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Recensioni</h3>
+      <p>
+        In ogni pagina la sezione Recensioni ha un campo solo: il titolo. Le recensioni, il voto e il
+        numero sono gli stessi ovunque e si cambiano in «Recensioni» (capitolo
+        <a href="#recensioni">11</a>).
+      </p>
+      <p class="empty">la sezione non compare in quella pagina.</p>
+
+      <h3>Domande frequenti</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo</dt>
+          <dd><p class="empty">la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Domande › Domanda · Risposta</dt>
+          <dd>
+            <p>
+              Si apre una risposta alla volta. Google legge domande e risposte e può mostrarle nei
+              suoi risultati: scrivete risposte brevi e complete, che si capiscono anche lette da
+              sole.
+            </p>
+            <p class="empty">una domanda senza risposta non compare.</p>
+          </dd>
+        </div>
+      </dl>
+      <p>
+        Molte risposte ripetono dati che cambiano (età, giocatori, prezzi, indirizzo): quando ne
+        cambia uno, il capitolo <a href="#regole">26</a> dice quali domande rivedere.
+      </p>
+
+      <h3>Icone</h3>
+      <p>
+        Alcune schede (le caratteristiche dell'arena, le missioni, le voci del corso, le formule del
+        team building) hanno un menu «Icona» con simboli già disegnati. Sceglietela per tutte le voci
+        della sezione o per nessuna, così le schede restano allineate. Un simbolo nuovo lo disegna il
+        tecnico (capitolo <a href="#tecnico">28</a>).
+      </p>
+      <p class="empty">la scheda resta senza simbolo.</p>
+
+      <h3>Form di richiesta preventivo</h3>
+      <p>
+        In fondo a Team building e Occasioni c'è il form per chiedere un preventivo (<code>#richiesta</code>).
+        Qui cambiano solo tre cose; campi, bottone e messaggi sono quelli di «Form di richiesta»
+        (capitolo <a href="#form">15</a>), uguali per tutto il sito.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Il titolo è meglio uguale al testo del bottone principale dell'apertura, es. «Richiedi un preventivo».</p><p class="empty">si usano quelli di «Form di richiesta».</p></dd>
+        </div>
+        <div>
+          <dt>Attività già scelta nel form</dt>
+          <dd><p>Compare già selezionata nell'elenco «Attività» del form e nell'oggetto dell'email che ricevete, es. «Richiesta dal sito: Team building».</p></dd>
+        </div>
+      </dl>
+    </section>
+
+    <section id="impostazioni">
+      <h2><span class="num">08</span> Impostazioni generali</h2>
+      <p class="where"><span>Nel pannello</span> Impostazioni generali</p>
+      <p>
+        I dati che valgono per tutto il sito. Quasi tutti compaiono in più posti: cambiandoli qui,
+        cambiano ovunque. Fanno eccezione le domande frequenti che li ripetono a parole (capitolo
+        <a href="#regole">26</a>).
+      </p>
+
+      <h3>Il sito</h3>
+      <dl class="fields">
+        <div>
+          <dt>Nome sito</dt>
+          <dd><p>«SoftAir Milano»: nel footer accanto al ©, nella scritta gigante in fondo alla sezione Prenota, sul disegno del voucher e nei dati per Google.</p></dd>
+        </div>
+        <div>
+          <dt>URL del sito</dt>
+          <dd><p><strong>Non si tocca.</strong> È l'indirizzo del sito che leggono Google e i social: lo imposta il tecnico il giorno del passaggio.</p></dd>
+        </div>
+        <div>
+          <dt>Partita IVA</dt>
+          <dd>
+            <p>In fondo a ogni pagina, accanto al copyright («© 2026 SoftAir Milano · P.IVA …»), e nei dati per Google. Obbligatoria per legge sul sito di un'attività.</p>
+            <p class="empty">non compare, e il sito non è in regola: non lasciatela vuota.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Descrizione SEO predefinita</dt>
+          <dd><p>La descrizione per Google delle pagine che non hanno la loro. Circa 155 caratteri.</p></dd>
+        </div>
+        <div>
+          <dt>Immagine social predefinita</dt>
+          <dd><p>L'anteprima per i social delle pagine che non hanno la loro. 1200×630, JPG o PNG.</p></dd>
+        </div>
+        <div>
+          <dt>Frase sotto il logo nel footer</dt>
+          <dd><p>Una riga, es. «Arena indoor di softair a Milano. Missioni, adrenalina, squadra.».</p><p class="empty">non compare.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Contatti e orari</h3>
+      <dl class="fields">
+        <div>
+          <dt>Telefono</dt>
+          <dd>
+            <p>Scritto come lo dite, es. «375 595 6805»: il sito lo rende chiamabile con un tocco. Compare nella sezione Prenota, nel footer, in Contatti, nel voucher, nell'addio al celibato e nel messaggio dei form quando l'invio non riesce.</p>
+            <p class="empty">nessun bottone per chiamare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>WhatsApp</dt>
+          <dd>
+            <p>Il numero WhatsApp, scritto come il telefono. Accende il bottone WhatsApp nella sezione Prenota e in Contatti, e il bottone tondo sul telefono (qui sotto).</p>
+            <p class="empty">WhatsApp non compare da nessuna parte, nemmeno il bottone tondo.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Email</dt>
+          <dd><p>Sezione Prenota (bottone «Scrivi»), footer, Contatti, voucher.</p><p class="empty">nessun bottone email.</p></dd>
+        </div>
+        <div>
+          <dt>Indirizzo</dt>
+          <dd><p>Come si scrive su una busta: «Via Melegnano 26, 20019 Settimo Milanese (MI)». Si vede nella sezione Prenota (un tocco apre Google Maps), nel footer, in Contatti e sulla mappa.</p></dd>
+        </div>
+        <div>
+          <dt>Indirizzo per Google (campi separati)</dt>
+          <dd>
+            <p>Lo stesso indirizzo, diviso in «Via e numero», «CAP», «Comune», «Provincia (sigla)» e «Paese (sigla, es. IT)»: lo leggono Google e gli assistenti come ChatGPT per sapere dove siete.</p>
+            <p><strong>Se cambiate l'indirizzo, cambiate tutti e due i campi.</strong></p>
+          </dd>
+        </div>
+        <div>
+          <dt>Orari</dt>
+          <dd>
+            <p>Una riga, es. «Tutti i giorni dalle 14:00 alle 24:00, solo su prenotazione». Sezione Prenota, footer, Contatti.</p>
+            <p class="empty">non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Come arrivare</dt>
+          <dd>
+            <p>Una riga breve: parcheggio e mezzi, es. «Parcheggio facile · Bus 433 dalla metro M1 Bisceglie». Sotto gli orari, nella sezione Prenota. Se cambia una linea, aggiornate anche Contatti › «Con i mezzi».</p>
+            <p class="empty">non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Link arena outdoor (Ranger Softair)</dt>
+          <dd>
+            <p>L'indirizzo completo del sito del Ranger. Porta lì il riquadro «Rimando arena outdoor» della home, la colonna del Ranger nel footer e «L'arena all'aperto» in Contatti.</p>
+            <p class="empty">i tre rimandi spariscono.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Bottone WhatsApp sul telefono</h3>
+      <p>
+        Il bottone tondo con il simbolo di WhatsApp in basso a sinistra, di fronte alla freccia «Torna su».
+        Compare solo su telefoni e tablet piccoli, quando si scorre oltre la prima schermata; si nasconde da
+        solo dalla sezione Prenota in giù (che ha già il suo WhatsApp), mentre sono aperti il banner dei
+        cookie o il menu e mentre si scrive in un form. Un tocco apre WhatsApp sul numero del campo
+        «WhatsApp» qui sopra, con il messaggio già scritto: il visitatore può cambiarlo prima di inviarlo.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Mostra il bottone</dt>
+          <dd><p>Acceso: il bottone compare su tutte le pagine. Spento: sparisce ovunque; WhatsApp resta nella sezione Prenota e in Contatti.</p></dd>
+        </div>
+        <div>
+          <dt>Nome del bottone (per i lettori di schermo)</dt>
+          <dd><p>Non si vede: lo legge ad alta voce il telefono a chi non vede lo schermo. Poche parole che dicono cosa fa il bottone, es. «Scrivici su WhatsApp». Obbligatorio.</p></dd>
+        </div>
+        <div>
+          <dt>Messaggio già scritto</dt>
+          <dd><p>Il testo che il visitatore trova già scritto in WhatsApp, es. «Ciao! Vorrei informazioni per prenotare una partita.». Meglio una frase sola.</p><p class="empty">WhatsApp si apre senza messaggio.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Abbigliamento consigliato (pagine attività)</h3>
+      <p>
+        Il blocco sotto le note dei prezzi di Softair, Arcotag, Tiro dinamico e Nerf, uguale su tutte:
+        si scrive qui una volta sola. Per questo nelle «Note sotto i prezzi» delle attività non serve
+        più la nota sulla temperatura.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo</dt>
+          <dd><p>Es. «Abbigliamento consigliato».</p><p class="empty">compaiono solo la frase e l'elenco.</p></dd>
+        </div>
+        <div>
+          <dt>Frase sopra l'elenco</dt>
+          <dd><p>Es. «L'arena non è climatizzata né riscaldata.».</p><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Elenco</dt>
+          <dd><p>Un capo per riga, breve: «Pantaloni lunghi», «Scarpe comode».</p><p class="empty">se sono vuoti sia la frase sia l'elenco, il blocco non compare.</p></dd>
+        </div>
+      </dl>
+      <div class="callout">
+        <span class="label">Da sapere</span>
+        <p>
+          Le domande frequenti sull'abbigliamento si scrivono a parte in ogni pagina («Cosa devo
+          indossare?» in Softair, Arcotag e Tiro dinamico, «Cosa devono indossare i bambini?» nel
+          Nerf, e quelle di Team building e Occasioni). Se cambiate l'elenco, rivedete anche quelle.
+        </p>
+      </div>
+
+      <h3>Prenota (fondo di ogni pagina)</h3>
+      <p>
+        La sezione «Sei pronto a scendere in campo?» che chiude ogni pagina (<code>#prenota</code>), a
+        cui portano tutti i bottoni «Prenota». Telefono, WhatsApp, email, orari, indirizzo e «Come
+        arrivare» sono i campi qui sopra; la scritta gigante sul fondo è il «Nome sito».
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo</dt>
+          <dd><p>Grande, al centro: le parole salgono una alla volta. Meglio breve, cinque o sei parole. Obbligatorio.</p></dd>
+        </div>
+        <div>
+          <dt>Sottotitolo</dt>
+          <dd><p>Una riga sotto il titolo. Compare in fondo a tutte le pagine, anche arcotag, Nerf e tiro dinamico: meglio una frase che valga per tutte le attività.</p></dd>
+        </div>
+        <div>
+          <dt>Testo del bottone email</dt>
+          <dd><p>Es. «Scrivi».</p><p class="empty">il bottone email non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Parole della fascia inclinata <span class="limit">max 8</span></dt>
+          <dd>
+            <p>Le parole brevi che scorrono nella fascia in basso: le attività e «1.500 m²». Se nasce un'attività nuova, aggiungetela.</p>
+            <p class="empty">la fascia non compare.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Footer</h3>
+      <dl class="fields">
+        <div>
+          <dt>Colonna arena outdoor nel footer › Titolo colonna · Testo del link · Descrizione</dt>
+          <dd>
+            <p>Il riquadro sotto il logo che porta al sito del Ranger. Il «Testo del link» è anche il testo del link in Contatti › «L'arena all'aperto».</p>
+            <p class="empty">la colonna compare solo con il testo del link e il «Link arena outdoor»; titolo e descrizione vuoti non compaiono.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Titoli delle colonne nel footer</dt>
+          <dd>
+            <p>
+              Le colonne del menu si fanno da sole dal «Menu di navigazione»: ogni voce con un
+              sottomenu (Attività, Info) è una colonna con il suo nome; le voci senza sottomenu
+              (Corso, Occasioni…) stanno insieme in una colonna, il cui titolo è «Colonna delle voci
+              senza sottomenu» (es. «Scopri»). «Colonna dei contatti» è il titolo dei contatti
+              (es. «Contatti»). «Home» non compare: ci porta già il logo.
+            </p>
+          </dd>
+        </div>
+        <div>
+          <dt>Link legali nel footer › Testo · Link</dt>
+          <dd>
+            <p>In fondo al footer, accanto al ©: «Privacy» → <code>/privacy</code>, «Cookie» → <code>/cookie</code>, «Termini» → <code>/termini</code>. Gli indirizzi non si cambiano. Accanto a loro c'è anche «Preferenze cookie», che non è un link ma un bottone: riapre le scelte dei cookie, e il suo testo si scrive in «Banner dei cookie» (capitolo <a href="#cookie">23</a>).</p>
+            <p class="empty">un link senza testo o senza indirizzo non compare.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Codici dei servizi</h3>
+      <p>
+        «ID script TicketingHub (prenotazioni)», «ID TicketingHub dei voucher regalo», «ID Google
+        Analytics (GA4)» e «Chiave Web3Forms (form di richiesta)» collegano il sito ai servizi
+        esterni. Li inserisce il tecnico: sono spiegati nel capitolo <a href="#servizi">25</a>.
+      </p>
+
+      <h3>Social (URL dei profili)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Instagram · Facebook · YouTube · TikTok</dt>
+          <dd>
+            <p>L'indirizzo completo di ogni profilo, con <code>https://</code>. Compaiono nella sezione Social della home, in Contatti, nel footer e nei dati per Google; YouTube anche come pulsante sul video della home.</p>
+            <p class="empty">quel profilo non compare da nessuna parte.</p>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section id="menu">
+      <h2><span class="num">09</span> Menu di navigazione</h2>
+      <p class="where"><span>Nel pannello</span> Menu di navigazione</p>
+      <p>
+        Il menu in alto in ogni pagina. Da lui si compongono anche le colonne del footer e l'elenco
+        delle pagine nella pagina 404.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Voci del menu › Etichetta · Link</dt>
+          <dd>
+            <p>
+              Il nome della voce e la pagina a cui porta. «Home» (<code>/</code>) è la prima: così si
+              vede sempre dove si è. Sul computer le voci principali stanno su una riga sola accanto
+              al logo e a «Prenota»: tenetele poche e con nomi brevi. Una pagina nuova di solito va
+              nel sottomenu di una voce, che si allunga verso il basso senza rubare spazio.
+            </p>
+            <p>
+              Se le voci principali non ci stanno, sui computer con lo schermo più stretto il menu
+              diventa il pulsante «Menu», come sul telefono.
+            </p>
+            <p class="empty">nel «Link» va lasciato vuoto quando la voce apre un sottomenu.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Sottomenu (es. le attività) › Etichetta · Link</dt>
+          <dd><p>Le voci della tendina, es. Softair → <code>/softair</code>, o sotto «Info» Modulistica, Voucher regalo, Blog e Contatti. Mettete solo pagine che esistono. La voce di una pagina spenta con «Pagina online» sparisce da sola (capitolo <a href="#online">04</a>).</p></dd>
+        </div>
+        <div>
+          <dt>Sottomenu › Badge</dt>
+          <dd><p>Facoltativo e brevissimo, es. «Il più richiesto». Meglio su una voce sola.</p><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Sottomenu › Descrizione di una riga</dt>
+          <dd>
+            <p>Si vede nella tendina da computer, sotto il nome. È anche la riga sotto ogni scheda della galleria «Provate anche» delle attività e dell'elenco della pagina 404. Le età che cita devono essere quelle delle pagine.</p>
+            <p class="empty">nella galleria si usa la descrizione di Home › Attività.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Bottone Prenota del menu › Testo · Link</dt>
+          <dd><p>«Prenota» → <code>#prenota</code>: porta alla sezione Prenota della pagina in cui ci si trova. Il bottone principale delle aperture usa lo stesso testo.</p></dd>
+        </div>
+      </dl>
+    </section>
+
+    <section id="home">
+      <h2><span class="num">10</span> Home</h2>
+      <p class="where"><span>Nel pannello</span> Home</p>
+      <p>
+        La home, dall'alto in basso: Hero, Dentro l'azione (il video), L'arena, Le attività, Rimando
+        al paintball, Occasioni, Voucher regalo, Il corso, Social, Rimando arena outdoor, Recensioni
+        e, in fondo, Prenota. Nel pannello i gruppi sono quasi nello stesso ordine; «Recensioni» sta
+        subito dopo il rimando al paintball, ma nella pagina viene per ultima, prima di Prenota.
+      </p>
+
+      <h3>SEO e anteprima social</h3>
+      <p>Come nel capitolo <a href="#blocchi">07</a>. Il titolo vuoto usa il «Nome sito».</p>
+
+      <h3>Hero</h3>
+      <p>La prima schermata: la foto a tutto schermo, il titolo principale e i bottoni.</p>
+      <dl class="fields">
+        <div>
+          <dt>Immagine (desktop, 16:9)</dt>
+          <dd><p>Obbligatoria.</p></dd>
+        </div>
+        <div>
+          <dt>Immagine (telefono e tablet in verticale, 9:16)</dt>
+          <dd><p>Verticale, con il soggetto nel terzo alto: la metà bassa ospita i testi.</p><p class="empty">si usa l'immagine per computer, ritagliata.</p></dd>
+        </div>
+        <div>
+          <dt>Testo alternativo immagine (accessibilità/SEO)</dt>
+          <dd><p>Capitolo <a href="#immagini">06</a>.</p></dd>
+        </div>
+        <div>
+          <dt>Sopratitolo (fa parte del titolo H1) <span class="limit">max 30</span></dt>
+          <dd>
+            <p>
+              La riga piccola sopra la frase grande, oggi «Softair indoor a Milano». Anche se si vede
+              piccola, <strong>fa parte del titolo principale</strong>: Google e gli assistenti AI la
+              leggono come il suo inizio, «Softair indoor a Milano: Diventa protagonista di un film
+              d'azione». Teneteci dentro «softair» e «Milano»: sono le parole con cui vi cercano.
+            </p>
+            <p class="empty">il titolo principale è solo la frase grande, e la home perde le parole che la fanno trovare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Titolo principale (H1): la frase grande</dt>
+          <dd><p>Obbligatorio.</p></dd>
+        </div>
+        <div>
+          <dt>Sottotitolo</dt>
+          <dd><p>Una o due frasi sotto il titolo.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone principale › Testo · Link</dt>
+          <dd><p>Lo stesso testo del bottone Prenota del menu, es. «Prenota», con il link <code>#prenota</code>.</p><p class="empty">compare solo con testo e link.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone secondario › Testo · Link</dt>
+          <dd><p>Es. «Scopri l'arena» → <code>#arena</code>, la sezione L'arena della home.</p><p class="empty">compare solo con testo e link.</p></dd>
+        </div>
+        <div>
+          <dt>Scritta tattica sulla foto (HUD) <span class="limit">max 32</span></dt>
+          <dd><p>In basso a destra sulla foto, es. «IND · 1.500 M² · CQB». Come nel capitolo <a href="#blocchi">07</a>.</p></dd>
+        </div>
+        <div>
+          <dt>Mostra il voto Google sotto i bottoni</dt>
+          <dd>
+            <p>Interruttore. Acceso: sotto i bottoni compaiono stelle, voto e numero di recensioni, che si cambiano in «Recensioni» › «Valutazione complessiva». Sui telefoni tenuti in orizzontale non compare, per lasciare in vista «Prenota».</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Dentro l'azione (video sotto l'hero)</h3>
+      <p>
+        Il video è largo da subito e parte da solo, senza audio, appena arriva sullo schermo; l'audio
+        si accende con il suo pulsante, e il pulsante di pausa è sempre lì.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Il testo è una o due righe sopra il video.</p></dd>
+        </div>
+        <div>
+          <dt>Video (computer e tablet): URL Cloudflare R2, .mp4</dt>
+          <dd>
+            <p>Orizzontale e molto largo, come quello attuale (1920×756, circa 2,5:1). Un filmato più alto viene tagliato sopra e sotto: tenete il soggetto al centro.</p>
+            <p class="empty">la sezione non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Video (telefono in verticale): URL Cloudflare R2, .mp4</dt>
+          <dd>
+            <p>Facoltativo. Versione verticale 4:5 (es. 604×756) con il soggetto nel terzo alto.</p>
+            <p class="empty">sul telefono in verticale si vede il video orizzontale in una striscia larga, con i pulsanti sotto.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Immagine poster (computer e tablet)</dt>
+          <dd><p>Un fotogramma del video orizzontale, nello stesso formato: si vede finché il video non parte.</p><p class="empty">al suo posto c'è un riquadro scuro.</p></dd>
+        </div>
+        <div>
+          <dt>Immagine poster (telefono in verticale)</dt>
+          <dd><p>Un fotogramma del video verticale, 4:5. Serve solo se c'è il video per telefono.</p><p class="empty">si usa il poster orizzontale.</p></dd>
+        </div>
+        <div>
+          <dt>Descrizione del video (accessibilità)</dt>
+          <dd><p>Cosa si vede nel video, in una frase: la sente chi usa un lettore di schermo.</p><p class="empty">si usa il titolo della sezione.</p></dd>
+        </div>
+        <div>
+          <dt>Testo del pulsante YouTube <span class="limit">max 24</span></dt>
+          <dd>
+            <p>Il pulsante in basso a sinistra sul video, che porta al canale YouTube di Impostazioni generali › Social. Breve: sul telefono un testo più lungo di «@softairmilano4590» si taglia con «…».</p>
+            <p class="empty">si usa il nome del canale preso dall'indirizzo (es. @softairmilano4590), o «YouTube». Senza indirizzo YouTube il pulsante non c'è.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>L'arena</h3>
+      <p>La sezione <code>#arena</code>, a cui porta il bottone secondario dell'hero.</p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>La presentazione dell'arena.</p></dd>
+        </div>
+        <div>
+          <dt>Numero in evidenza › Valore · Unità di misura · Didascalia</dt>
+          <dd>
+            <p>La cifra grande, che scorre come un contachilometri: «1.500» (solo la cifra), «m²» accanto, «al coperto» sotto.</p>
+            <p class="empty">senza valore la cifra non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Caratteristiche › Icona · Titolo · Testo</dt>
+          <dd>
+            <p>Quattro stanno su una riga da computer, due per riga sul telefono. Le icone: capannone (al coperto), casa, ombrello (con la pioggia), lampadina, faro (illuminazione), luna (di sera), frecce in cerchio (sempre nuova), riquadri (scenari), chiave inglese (allestimento), altoparlante, equalizzatore, nota musicale.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Foto dell'arena › Foto · Testo alternativo foto <span class="limit">da 1 a 4</span></dt>
+          <dd>
+            <p>Foto vere dell'arena, orizzontali, con il soggetto al centro: sul telefono si ritagliano in riquadri più stretti.</p>
+            <p class="empty">una voce senza foto non compare; senza nessuna foto la sezione resta senza foto.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Tour a 360° (Google) › Testo del link · Link</dt>
+          <dd>
+            <p>Il giro virtuale dell'arena su Google, che si apre in una nuova scheda. Il link si copia da Google Maps, dalle foto a 360° della vostra scheda.</p>
+            <p class="empty">compare solo con testo e link.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Le attività</h3>
+      <p>Una schermata per attività, che si alternano scorrendo la pagina.</p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo sezione attività</dt>
+          <dd><p class="empty">il titolo non compare, le attività sì.</p></dd>
+        </div>
+        <div>
+          <dt>Introduzione attività</dt>
+          <dd><p>Una o due righe sotto il titolo. Facoltativa.</p></dd>
+        </div>
+        <div>
+          <dt>Attività › Titolo · Descrizione</dt>
+          <dd><p class="empty">un'attività senza titolo (o senza immagine) non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Attività › Etichette (età, modalità…)</dt>
+          <dd><p>Le pillole sotto la descrizione, es. «Dai 12 anni», «A squadre». Le età devono essere quelle delle pagine attività.</p></dd>
+        </div>
+        <div>
+          <dt>Attività › Immagine (desktop) · Immagine (mobile, verticale 4:5, soggetto al centro) · Testo alternativo immagine</dt>
+          <dd><p>La foto della schermata e la sua versione verticale per il telefono, facoltativa.</p></dd>
+        </div>
+        <div>
+          <dt>Attività › Dove sta il soggetto della foto</dt>
+          <dd>
+            <p>Al centro, A sinistra o A destra. Quando la foto è più larga della cornice, il lato scelto resta sempre nell'inquadratura. Oggi Arcotag e Nerf sono «A destra».</p>
+            <p class="empty">vale «Al centro».</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Attività › Foto nella galleria «Provate anche» (facoltativa) · versione telefono</dt>
+          <dd>
+            <p>La foto di questa attività nella galleria in fondo alle altre pagine attività, se volete che sia diversa da quella della home. La versione telefono è verticale.</p>
+            <p class="empty">si usa la foto della home; senza la versione telefono, la foto orizzontale della galleria.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Attività › Testo del bottone · Link</dt>
+          <dd><p>Es. «Scopri Softair» → <code>/softair</code>.</p><p class="empty">compare solo con testo e link.</p></dd>
+        </div>
+      </dl>
+      <div class="callout">
+        <span class="label">Questa lista conta anche altrove</span>
+        <p>
+          Home › Attività è l'elenco delle attività del sito. Decide quali schede compaiono nella
+          galleria «Provate anche» in fondo alle pagine attività e in che ordine, e l'ordine delle
+          attività nel form di richiesta. Una pagina attività nuova entra nella galleria solo dopo
+          che l'avete aggiunta qui. Un'attività spenta con «Pagina online» esce da sola sia da qui
+          sia dalla galleria, senza toccare la lista.
+        </p>
+      </div>
+
+      <h3>Rimando al paintball</h3>
+      <p>Subito dopo le attività, per chi cerca il paintball. Tutto il riquadro porta al link.</p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p class="empty">senza titolo la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Testo del link · Link</dt>
+          <dd><p>Dice dove porta, es. «Softair o paintball: guarda il confronto» → <code>/softair-vs-paintball</code>.</p><p class="empty">la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Immagine (orizzontale) · Testo alternativo immagine</dt>
+          <dd><p>Sta a destra del testo e sfuma verso sinistra; sul telefono sta sopra il testo.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Occasioni (mosaico di foto)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p class="empty">senza titolo la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone › Testo · Link</dt>
+          <dd><p>Es. «Prenota» → <code>#prenota</code>.</p><p class="empty">senza testo il bottone non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Occasioni <span class="limit">da 2 a 4</span></dt>
+          <dd>
+            <p>Quella «In evidenza» diventa la foto grande, con il titolo sopra; le altre stanno in fila sotto, nell'ordine della lista. Per ognuna: «Titolo», «Testo (una riga)», «Foto (orizzontale 3:2)», «Testo alternativo foto».</p>
+            <p class="empty">un'occasione senza titolo o senza foto non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Occasioni › Foto verticale (4:5) — solo per quella in evidenza</dt>
+          <dd><p>Sul telefono la foto in evidenza è alta, con il titolo in basso: soggetto nel terzo alto.</p><p class="empty">si usa la foto orizzontale, ritagliata.</p></dd>
+        </div>
+        <div>
+          <dt>Occasioni › Link (facoltativo)</dt>
+          <dd><p>Solo verso una pagina che esiste, es. <code>/occasioni</code> o <code>/teambuilding</code>.</p><p class="empty">la foto non è cliccabile.</p></dd>
+        </div>
+        <div>
+          <dt>Occasioni › In evidenza</dt>
+          <dd><p>Interruttore. Una sola occasione in evidenza.</p><p class="empty">se nessuna è accesa, la foto grande è la prima.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Voucher regalo (rimando alla pagina del voucher)</h3>
+      <p>Subito dopo Occasioni: il biglietto disegnato accanto al titolo, il testo, i voucher con il loro prezzo e il bottone verso la pagina del voucher.</p>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo</dt>
+          <dd><p>Breve, es. «Idea regalo».</p><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo</dt>
+          <dd><p>Es. «Regala una partita di softair». La sezione compare solo se la pagina «Voucher regalo» è online.</p><p class="empty">la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Testo</dt>
+          <dd>
+            <p>Una o due frasi, solo cose vere del voucher: chi lo riceve sceglie giorno e ora, entro quanto, che va portato stampato. Niente prezzi: compaiono da soli sotto il testo.</p>
+            <p class="empty">non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Bottone verso la pagina del voucher › Testo · Link</dt>
+          <dd><p>Es. «Scopri il voucher» → <code>/voucher-regalo</code>.</p><p class="empty">compare solo con testo e link.</p></dd>
+        </div>
+      </dl>
+      <div class="callout">
+        <span class="label">Il disegno e i prezzi si cambiano altrove</span>
+        <p>
+          Il biglietto disegnato (il titolo e la scritta in fondo) e i prezzi arrivano dalla pagina
+          del voucher: «Voucher regalo» › «Apertura» › «Titolo principale» e «Scritta in fondo al
+          disegno del voucher», e «Voucher regalo» › «I voucher» › nome e prezzo di ogni scheda.
+          Cambiandoli lì, cambiano anche qui. Se cambia la validità, riscrivete invece il testo qui
+          sopra.
+        </p>
+      </div>
+
+      <h3>Il corso (rimando alla pagina del corso)</h3>
+      <p>Il titolo, poi una foto con sopra un riquadro che fa da scheda del corso.</p>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo</dt>
+          <dd><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo</dt>
+          <dd><p>La sezione compare solo se la pagina «Corso softair» è online.</p><p class="empty">la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Testo</dt>
+          <dd><p>In cima al riquadro, una o due frasi: chi insegna, dove, quando.</p></dd>
+        </div>
+        <div>
+          <dt>Dati chiave › Dato · Dettaglio <span class="limit">da 2 a 4</span></dt>
+          <dd>
+            <p>Il dato in grande (es. «Ogni mercoledì») e il dettaglio sotto (es. «Dalle 21:00 alle 22:30»). Solo dati veri del corso: giorno e orario, età, prova, attrezzatura. <strong>Mai il prezzo</strong> (capitolo <a href="#corso">14</a>).</p>
+            <p class="empty">un dato senza valore non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Link alla pagina del corso › Testo · Link</dt>
+          <dd><p>Es. «Scopri il corso» → <code>/corso-softair</code>.</p><p class="empty">compare solo con testo e link.</p></dd>
+        </div>
+        <div>
+          <dt>Foto (orizzontale) · Testo alternativo foto</dt>
+          <dd>
+            <p>Il soggetto al centro o un po' a destra: da computer il riquadro copre il quarto destro della foto, sul telefono il suo bordo in basso.</p>
+            <p class="empty">il riquadro sta da solo sotto il titolo.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Social</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd>
+            <p>I link ai profili si cambiano in Impostazioni generali › Social (URL dei profili).</p>
+            <p class="empty">senza titolo, o senza nessun profilo compilato, la sezione non compare.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Rimando arena outdoor (Ranger)</h3>
+      <p>
+        Un riquadro con foto, tutto cliccabile, che porta al sito del Ranger. Il link è «Link arena
+        outdoor» di Impostazioni generali; il nome del sito scritto in ambra sotto il testo (es.
+        rangersoftairmilano.it) si ricava da lì.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo</dt>
+          <dd><p>Nomina l'altra arena, es. «Ranger Softair Milano · arena all'aperto»: chi legge (e Google) capisce subito che il bosco non è questa arena.</p><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p class="empty">senza titolo, o senza il «Link arena outdoor», la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Foto del riquadro (orizzontale) · Foto del riquadro (telefono) · Testo alternativo immagine</dt>
+          <dd>
+            <p>Su computer la foto sta dietro al testo, e il suo lato sinistro deve restare scuro; su telefono e tablet sta in alto nel riquadro, ritagliata 3:2 con il soggetto al centro.</p>
+            <p class="empty">senza la versione telefono si usa la foto orizzontale.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Recensioni</h3>
+      <p>Solo il titolo, come nel capitolo <a href="#blocchi">07</a>. In home la sezione sta in fondo, subito prima di Prenota: l'ultima parola prima di prenotare.</p>
+    </section>
+
+    <section id="recensioni">
+      <h2><span class="num">11</span> Recensioni</h2>
+      <p class="where"><span>Nel pannello</span> Recensioni</p>
+      <p>
+        Il voto e le recensioni che compaiono in ogni sezione Recensioni del sito: sono gli stessi in
+        tutte le pagine, e si cambiano solo qui.
+      </p>
+
+      <h3>Valutazione complessiva</h3>
+      <dl class="fields">
+        <div>
+          <dt>Giudizio (es. Eccellente)</dt>
+          <dd><p>La parola accanto alle stelle.</p></dd>
+        </div>
+        <div>
+          <dt>Voto medio (es. 4.7)</dt>
+          <dd><p>Da 1 a 5, con un decimale, scritto con il punto: «4.7».</p><p class="empty">le stelle non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Numero di recensioni (es. 500+)</dt>
+          <dd>
+            <p><strong>Non si aggiorna da solo</strong>: copiatelo dal vostro profilo Google quando cresce. Compare nell'hero della home (se acceso) e in ogni sezione Recensioni.</p>
+            <p class="empty">non compare, e con lui la fonte.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Fonte (es. recensioni su Google)</dt>
+          <dd><p>Segue il numero: «500+ recensioni su Google».</p></dd>
+        </div>
+        <div>
+          <dt>Link alla pagina delle recensioni</dt>
+          <dd><p>L'indirizzo delle recensioni del vostro profilo Google: con il link, la riga «500+ recensioni su Google» diventa cliccabile.</p><p class="empty">la riga resta un testo semplice.</p></dd>
+        </div>
+        <div>
+          <dt>Link a Trustindex (tutte le recensioni) · Testo del link a Trustindex</dt>
+          <dd><p>In fondo al riquadro del voto, apre la pagina Trustindex in una nuova scheda, es. «Leggi tutte le recensioni su Trustindex».</p><p class="empty">compare solo con testo e indirizzo.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Recensioni</h3>
+      <dl class="fields">
+        <div>
+          <dt>Autore (nome e iniziale del cognome)</dt>
+          <dd><p>Es. «Giovanni Z.».</p></dd>
+        </div>
+        <div>
+          <dt>Testo (breve, al massimo 250 caratteri circa)</dt>
+          <dd>
+            <p>Tutte le schede hanno la stessa altezza: un testo più lungo si vede tagliato con «…» (chi usa un lettore di schermo lo sente per intero).</p>
+          </dd>
+        </div>
+      </dl>
+      <div class="callout">
+        <span class="label">Le regole delle recensioni</span>
+        <ul>
+          <li>Solo recensioni vere, copiate da Google, senza cambiare le parole.</li>
+          <li>Potete farle partire più avanti o fermarle prima; se togliete una parte in mezzo, segnate il punto con […].</li>
+          <li>Compaiono tutte, uguali in ogni pagina, su due file che scorrono accanto al riquadro del voto: la 1ª, la 3ª, la 5ª… in alto, le altre in basso. Quelle in cima alla lista si vedono per prime.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="attivita">
+      <h2><span class="num">12</span> Attività (pagine)</h2>
+      <p class="where"><span>Nel pannello</span> Attività (pagine) › Softair, Arcotag, Tiro dinamico, Nerf</p>
+      <p>
+        Una scheda per attività, e ogni scheda è una pagina del sito. Tutte hanno le stesse sezioni,
+        nello stesso ordine: Apertura, In breve, Come funziona, la sezione con foto ed elenco,
+        Missioni o percorsi, Per chi è, Prezzi, Recensioni, Domande frequenti, Altre attività, il
+        form di richiesta e Prenota. Una sezione vuota non compare, così ogni attività usa solo
+        quelle che le servono: le missioni, per esempio, ci sono solo nel softair e nel tiro
+        dinamico.
+      </p>
+
+      <h3>Creare una nuova attività</h3>
+      <ol>
+        <li>In «Attività (pagine)» aggiungete una voce.</li>
+        <li>
+          Scrivete il «Nome attività» (vedi sotto): diventa l'indirizzo della pagina. Sceglietelo con
+          cura, perché dopo non cambia.
+        </li>
+        <li>
+          Compilate almeno SEO e Apertura (titolo per Google, titolo principale, foto e testo
+          alternativo sono obbligatori) e poi le sezioni che servono. Salvate: la pagina nasce da
+          sola, e il form di richiesta la aggiunge al suo elenco.
+        </li>
+        <li>
+          Perché la gente la trovi, aggiungetela: al <strong>Menu</strong> (sottomenu «Attività»,
+          con la descrizione di una riga); a <strong>Home › Attività</strong>, che la porta anche
+          nella galleria «Provate anche» delle altre attività; se si fanno feste, a
+          <strong>Occasioni › Scegli l'attività</strong>; con la sua età minima, a
+          <strong>Modulistica › Età minime</strong>; e il suo nome alle «Parole della fascia
+          inclinata» di Prenota.
+        </li>
+      </ol>
+
+      <h3>Pagina online · Nome attività</h3>
+      <dl class="fields">
+        <div>
+          <dt>Pagina online</dt>
+          <dd>
+            <p>
+              Acceso per una pagina nuova. Spento, l'attività sparisce dal sito, dal menu, dalle
+              attività della home, da «Provate anche» e da ogni link che ci porta (capitolo
+              <a href="#online">04</a>).
+            </p>
+          </dd>
+        </div>
+        <div>
+          <dt>Nome attività</dt>
+          <dd>
+            <p>
+              Il nome breve dell'attività: compare nelle briciole di pane in cima alla pagina e
+              nell'elenco del form di richiesta. Alla creazione diventa l'indirizzo della pagina
+              (arcotag → <code>/arcotag</code>); cambiarlo dopo cambia il nome, non l'indirizzo.
+            </p>
+            <p>
+              Nomi riservati, che non si possono usare: paintball, contatti e le altre pagine del
+              sito (corso-softair, occasioni, teambuilding, modulistica, voucher-regalo,
+              softair-vs-paintball, privacy, cookie, termini).
+            </p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>SEO e anteprima social · Apertura · Dati chiave</h3>
+      <p>
+        Come nel capitolo <a href="#blocchi">07</a>. Il «Bottone principale» dell'apertura (di solito
+        «Prenota» → <code>#prenota</code>) compare anche sotto i prezzi; il secondario porta di solito
+        a <code>#serata</code>, la sezione Come funziona. La scritta tattica ripete i dati chiave, es.
+        «CQB · MAX 20 GIOCATORI · 12+». I dati chiave di oggi sono giocatori al massimo, durata, età
+        minima e superficie.
+      </p>
+
+      <h3>In breve</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd>
+            <p>La risposta in breve a «che cos'è?»: due o tre frasi che si reggono da sole. È il passaggio che Google e gli assistenti AI citano più volentieri.</p>
+            <p class="empty">senza titolo o senza testo la sezione non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Punti forti › Titolo · Testo</dt>
+          <dd><p class="empty">un punto senza titolo non compare.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Come funziona (passo per passo)</h3>
+      <p>La serata dall'arrivo all'ultima missione (<code>#serata</code>). Passaggi come nel capitolo <a href="#blocchi">07</a>, più il link.</p>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo · Titolo · Testo</dt>
+          <dd><p class="empty">senza titolo, o senza passaggi, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Passaggi › Momento · Titolo · Testo</dt>
+          <dd><p>Es. «Arrivo», «Briefing», «In campo».</p></dd>
+        </div>
+        <div>
+          <dt>Passaggi › Link sotto il testo (facoltativo) › Testo del link · Link</dt>
+          <dd>
+            <p>Un link sotto il testo di un passaggio, es. «Vai alla modulistica» → <code>/modulistica</code> nel passaggio dell'arrivo, perché tutti arrivino con il modulo.</p>
+            <p class="empty">compare solo con testo e link.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Sezione con foto ed elenco (es. Come si gioca)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Le regole del gioco e cosa si usa.</p><p class="empty">senza titolo, o senza immagine, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo elenco incluso · Cosa è incluso</dt>
+          <dd><p>L'elenco con le spunte, es. «Attrezzatura inclusa»: «Fucile softair», «Maschera protettiva», «300 colpi». Una voce per riga.</p></dd>
+        </div>
+        <div>
+          <dt>Immagine (verticale, 4:5) · Testo alternativo immagine</dt>
+          <dd><p>Accanto al testo.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Missioni / Percorsi</h3>
+      <p>Le missioni del softair o i percorsi del tiro dinamico, dopo la sezione con foto ed elenco.</p>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo · Titolo · Testo</dt>
+          <dd><p class="empty">senza titolo, o senza voci, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Numera le voci (01, 02…)</dt>
+          <dd><p>Interruttore. Solo se l'ordine conta, come nei percorsi del tiro dinamico, dove il Beta si sblocca dopo l'Alfa.</p></dd>
+        </div>
+        <div>
+          <dt>Missioni o percorsi › Nome · Descrizione (una o due frasi)</dt>
+          <dd><p>L'ordine della lista è quello della pagina (e della numerazione).</p><p class="empty">una voce senza nome non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Missioni o percorsi › Icona</dt>
+          <dd><p>Bandiera (cattura), mirino (eliminazione), corona (l'ultimo in piedi), scudo con persona (scorta), ordigno (disinnesco), fortezza (difesa), bersaglio (precisione), squadra (a squadre), cronometro (a tempo). Per tutte le voci o per nessuna.</p></dd>
+        </div>
+        <div>
+          <dt>Missioni o percorsi › Cifre › Valore · Etichetta</dt>
+          <dd><p>Facoltative, si leggono di seguito: «16 bersagli ravvicinati», «7 tappe».</p><p class="empty">una cifra senza valore o senza etichetta non compare.</p></dd>
+        </div>
+      </dl>
+      <p>Le missioni del softair sono ripetute in Softair VS Paintball › «Cosa trovi da noi»: se ne cambiate una, cambiatela anche lì.</p>
+
+      <h3>Per chi è</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo</dt>
+          <dd><p class="empty">la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Occasioni › Titolo · Testo</dt>
+          <dd><p>Es. «Compleanni», «Serata tra amici», «Team building».</p></dd>
+        </div>
+        <div>
+          <dt>Occasioni › Link (facoltativo)</dt>
+          <dd><p>Solo verso una pagina che esiste o verso <code>#prenota</code>, es. <code>/occasioni</code> o <code>/teambuilding</code>.</p><p class="empty">la scheda non è cliccabile.</p></dd>
+        </div>
+        <div>
+          <dt>Occasioni › In evidenza</dt>
+          <dd><p>Interruttore, per una sola occasione: con tre occasioni diventa la scheda grande.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Prezzi</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Il testo dice quando si gioca e cosa comprende il prezzo, es. «Si prenota tutti i giorni. Prezzo a persona per una partita di 1 ora e 45 minuti, briefing compreso.».</p><p class="empty">senza titolo, o senza fasce, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Fasce di prezzo › Nome · Quando / per chi</dt>
+          <dd><p>Es. «Recluta» e «Prima volta, attrezzatura inclusa».</p></dd>
+        </div>
+        <div>
+          <dt>Fasce di prezzo › Prezzo (solo il numero) · Unità</dt>
+          <dd><p>«35» e «€ a persona»: il numero va da solo, il resto nell'unità.</p></dd>
+        </div>
+        <div>
+          <dt>Fasce di prezzo › Nota · Badge</dt>
+          <dd><p>La nota sotto il prezzo; il badge mette in risalto la fascia (es. «Serata tra amici»): meglio uno solo per pagina.</p><p class="empty">non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Note sotto i prezzi</dt>
+          <dd>
+            <p>Una per riga: giocatori, ricariche, Tessera Élite, sala feste, «Prenotazione obbligatoria». Sotto le note compaiono da sole l'«Abbigliamento consigliato» di Impostazioni generali e il bottone principale dell'apertura: la nota sulla temperatura non serve più.</p>
+            <p>Le note sulla sala feste devono dire le stesse regole di Occasioni › «Sala feste e catering» (capitolo <a href="#occasioni">20</a>).</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Recensioni · Domande frequenti</h3>
+      <p>Come nel capitolo <a href="#blocchi">07</a>.</p>
+
+      <h3>Altre attività</h3>
+      <p>
+        La galleria «Provate anche» in fondo alla pagina: le altre attività del sito, a strisce che
+        si allargano al tocco. Le schede sono le attività di <strong>Home › Attività</strong>, tranne
+        quella della pagina stessa; la foto viene da lì, la riga sotto il nome dalla «Descrizione di
+        una riga» del Menu.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo</dt>
+          <dd><p>Es. «Provate anche».</p><p class="empty">la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Attività da mostrare per prime (facoltativo)</dt>
+          <dd>
+            <p>
+              Le schede che vengono per prime, in quest'ordine: sceglietele dall'elenco e
+              trascinatele per cambiare l'ordine. Le attività che non scegliete seguono nell'ordine
+              di Home › Attività: non serve elencarle tutte, e <strong>nessuna sparisce mai</strong>.
+            </p>
+            <p>
+              Non contano la pagina stessa, le ripetizioni e le attività che non sono in Home ›
+              Attività: un'attività nuova entra nella galleria solo dopo che l'avete aggiunta anche lì.
+            </p>
+            <p class="empty">l'ordine è quello di Home › Attività.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Il form di richiesta</h3>
+      <p>
+        In fondo a ogni pagina attività, sopra Prenota, c'è il form «Richiedi la tua data»
+        (<code>#richiesta</code>), con questa attività già scelta. Testi, campi e messaggi si
+        cambiano in «Form di richiesta» (capitolo <a href="#form">15</a>), uguali per tutte.
+      </p>
+    </section>
+
+    <section id="paintball">
+      <h2><span class="num">13</span> Softair VS Paintball</h2>
+      <p class="where"><span>Nel pannello</span> Softair VS Paintball</p>
+      <p>
+        La pagina <code>/softair-vs-paintball</code>, per chi cerca il paintball: un confronto onesto
+        che porta alle partite di softair. Il vecchio indirizzo <code>/paintball</code> porta qui da
+        solo. Dall'alto: Apertura, In breve, il confronto, Fa più male?, l'alternativa arcotag, Cosa
+        trovi da noi, La prima volta, Prezzi, Recensioni, Domande frequenti, Prenota.
+      </p>
+
+      <h3>SEO e anteprima social · Apertura</h3>
+      <p>
+        Come nel capitolo <a href="#blocchi">07</a>, senza il campo «Dove sta il soggetto». Il bottone
+        secondario porta a <code>#confronto</code>. La scritta tattica, es. «Ø 6 MM VS Ø 17 MM»,
+        ripete i numeri del confronto: se li cambiate, aggiornatela.
+      </p>
+
+      <h3>In breve</h3>
+      <p>Titolo, Testo e Punti forti, come nelle attività (capitolo <a href="#attivita">12</a>).</p>
+
+      <h3>Confronto softair / paintball</h3>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo · Titolo · Testo</dt>
+          <dd><p class="empty">senza titolo, o senza righe, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Nome colonna softair · Nome colonna paintball</dt>
+          <dd><p>Le intestazioni delle due colonne della tabella. Sul telefono compaiono anche sopra ogni risposta: teneteli brevi.</p></dd>
+        </div>
+        <div>
+          <dt>Righe del confronto › Tema · Softair · Paintball</dt>
+          <dd><p>Una riga per tema, es. «Vestiti». È una tabella vera, che Google legge bene: frasi brevi, una per cella.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Fa più male?</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo · Nota sotto il disegno</dt>
+          <dd><p class="empty">senza titolo la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Pallino softair · Sfera paintball › Nome · Peso · Energia · Come si sente</dt>
+          <dd><p>Le due schede a confronto.</p></dd>
+        </div>
+        <div>
+          <dt>› Diametro in mm (per il disegno in proporzione)</dt>
+          <dd><p>Solo il numero, es. 6 e 17: il sito disegna le due sfere in scala.</p><p class="empty">le sfere non vengono disegnate.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Alternativa (arcotag)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo · Testo del link · Link</dt>
+          <dd><p>Il riquadro che propone l'arcotag a chi cerca qualcosa di più leggero, es. «Scopri l'arcotag» → <code>/arcotag</code>.</p><p class="empty">senza titolo o senza link il riquadro non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Immagine (orizzontale) · Testo alternativo immagine</dt>
+          <dd><p>Come il rimando al paintball della home.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Cosa trovi da noi</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p class="empty">senza titolo, o senza immagine, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Immagine (foto reale dell'arena) · Testo alternativo immagine</dt>
+          <dd><p>Deve essere una foto vera: è qui che chi viene dal paintball vede com'è l'arena.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo elenco missioni · Missioni › Nome · Descrizione</dt>
+          <dd><p>Le stesse missioni di Softair › Missioni / Percorsi: se cambiano là, cambiatele anche qui.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone verso la pagina del softair › Testo · Link</dt>
+          <dd><p>Porta chi cerca il paintball alle partite di softair, es. «Scopri le partite di softair» → <code>/softair</code>.</p><p class="empty">compare solo con testo e link.</p></dd>
+        </div>
+      </dl>
+
+      <h3>La prima volta</h3>
+      <p>I passaggi per chi non ha mai giocato (<code>#prima-volta</code>).</p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Passaggi › Titolo · Testo</dt>
+          <dd><p>Il primo passaggio ripete quanti si gioca (oggi «da 8 a 20»): vedi capitolo <a href="#regole">26</a>.</p><p class="empty">senza titolo, o senza passaggi, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo elenco incluso · Cosa è incluso · Nota</dt>
+          <dd><p>L'elenco in riga sotto i passaggi, e una nota, es. «Dai 12 anni compiuti.».</p></dd>
+        </div>
+      </dl>
+
+      <h3>Prezzi · Recensioni · Domande frequenti</h3>
+      <p>
+        Prezzi come nelle attività (capitolo <a href="#attivita">12</a>), senza il blocco
+        dell'abbigliamento. Sono i prezzi del softair: devono essere uguali a quelli della pagina
+        Softair.
+      </p>
+    </section>
+
+    <section id="corso">
+      <h2><span class="num">14</span> Corso softair</h2>
+      <p class="where"><span>Nel pannello</span> Corso softair</p>
+      <p>
+        La pagina <code>/corso-softair</code>. Dall'alto: Apertura con lo stato delle iscrizioni, In
+        breve, La prova gratuita, Cosa trovi nel corso, Il calendario (<code>#calendario</code>),
+        Recensioni, Domande frequenti, Prenota.
+      </p>
+      <div class="callout stop">
+        <span class="label">Il prezzo non si pubblica</span>
+        <p>
+          Il prezzo del corso non va scritto da nessuna parte: né nei testi, né nei dati chiave, né
+          nelle domande frequenti, né in home. Si dà al telefono.
+        </p>
+      </div>
+
+      <h3>SEO e anteprima social · Apertura</h3>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo</dt>
+          <dd><p>Es. «Corso · stagione 2026–2027»: aggiornatelo quando cambia la stagione.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone principale · Bottone secondario</dt>
+          <dd><p>Il principale porta a <code>#prenota</code>; il secondario a <code>#calendario</code>. Se il calendario non compare, svuotate il secondario.</p></dd>
+        </div>
+        <div>
+          <dt>Scritta tattica sulla foto (HUD)</dt>
+          <dd><p>Es. «OGNI MER · 21:00 · 16+»: gli stessi dati dei Dati chiave.</p></dd>
+        </div>
+        <div>
+          <dt>Gli altri campi</dt>
+          <dd><p>Come nel capitolo <a href="#blocchi">07</a>.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Dati chiave (sotto il titolo)</h3>
+      <p>
+        Da 2 a 4 dati brevi, che si leggono di seguito: «16+ anni». Il primo è il più importante:
+        oggi è la prova gratuita.
+      </p>
+
+      <h3>Iscrizioni</h3>
+      <p>
+        Lo stato delle iscrizioni compare in due punti: sotto i bottoni dell'apertura e sotto il
+        calendario. È una riga con una luce accanto.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Iscrizioni aperte</dt>
+          <dd><p>Interruttore. <strong>Acceso</strong>: luce ciano e il testo «aperte». <strong>Spento</strong>: luce rossa e il testo «chiuse».</p></dd>
+        </div>
+        <div>
+          <dt>Testo con le iscrizioni aperte <span class="limit">max 90</span></dt>
+          <dd><p>Es. «Iscrizioni aperte per la prima parte: si parte il 7 ottobre». Breve: sul telefono va su due righe.</p><p class="empty">con le iscrizioni aperte non compare nulla.</p></dd>
+        </div>
+        <div>
+          <dt>Testo con le iscrizioni chiuse <span class="limit">max 90</span></dt>
+          <dd><p>Es. «Iscrizioni chiuse: riaprono per la seconda parte, che inizia il 3 marzo».</p><p class="empty">con le iscrizioni chiuse non compare nulla.</p></dd>
+        </div>
+      </dl>
+      <h4>Il giro dell'anno</h4>
+      <div class="scroller" tabindex="0" role="region" aria-label="Le iscrizioni durante l'anno">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Quando</th>
+              <th scope="col">Interruttore</th>
+              <th scope="col">Testo che deve comparire</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dall'inizio della stagione all'inizio della prima parte (oggi il 7 ottobre)</td>
+              <td class="nowrap">acceso</td>
+              <td>«Iscrizioni aperte per la prima parte: si parte il 7 ottobre»</td>
+            </tr>
+            <tr>
+              <td>Da quando parte la prima parte</td>
+              <td class="nowrap">spento</td>
+              <td>«Iscrizioni chiuse: riaprono per la seconda parte, che inizia il 3 marzo»</td>
+            </tr>
+            <tr>
+              <td>Qualche settimana prima della seconda parte (prima del 3 marzo)</td>
+              <td class="nowrap">acceso, e riscrivete il testo «aperte»</td>
+              <td>«Iscrizioni aperte per la seconda parte: si riparte il 3 marzo»</td>
+            </tr>
+            <tr>
+              <td>Da marzo, quando parte la seconda parte</td>
+              <td class="nowrap">spento, e riscrivete il testo «chiuse»</td>
+              <td>«Iscrizioni chiuse: riaprono a ottobre per la nuova stagione», oppure «Iscrizioni chiuse, alla prossima stagione»</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Ogni volta che spostate l'interruttore, rileggete il testo che comparirà: deve dire la parte e la data giuste.</p>
+
+      <h3>In breve</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd>
+            <p>Tre o quattro frasi che si reggono da sole: chi organizza il corso, quando, dove e per chi. È anche la descrizione del corso che riceve Google.</p>
+            <p class="empty">la sezione non compare, e Google non riceve la descrizione.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>La prova gratuita (foto e testo)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>La prima sera gratuita.</p><p class="empty">senza titolo la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Foto (verticale, 4:5) · Testo alternativo foto</dt>
+          <dd><p>Meglio una foto vera di una serata del corso.</p><p class="empty">la sezione non compare: aspetta la foto.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo dell'elenco · Elenco › Nome · Testo</dt>
+          <dd><p>Es. «Da sapere», con due o tre voci brevi (al massimo 4).</p><p class="empty">una voce senza nome non compare.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Cosa trovi nel corso</h3>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo · Titolo · Testo</dt>
+          <dd><p>Il sopratitolo è facoltativo: meglio vuoto se ripete il titolo.</p><p class="empty">senza titolo, o senza voci, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Voci › Nome · Descrizione · Icona <span class="limit">da 3 a 6</span></dt>
+          <dd>
+            <p>Con 4 voci le schede stanno due per riga. Icone: mappa (le arene), scudo con persona (istruttore), squadra, coppa (tornei), cartellino (sconti), medaglia (attestato), bersaglio, cronometro.</p>
+            <p class="empty">una voce senza nome non compare.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Il calendario</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Es. «Il calendario 2026–2027»; nel testo giorno e orario degli allenamenti, e come ci si iscrive.</p><p class="empty">senza titolo, o senza tappe, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Tappe › Quando · Titolo · Testo</dt>
+          <dd><p>Es. «7 ott – 16 dic 2026». Togliete le date passate quando inizia una nuova stagione.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Recensioni · Domande frequenti</h3>
+      <p>Come nel capitolo <a href="#blocchi">07</a>.</p>
+
+      <div class="callout">
+        <span class="label">A ogni nuova stagione</span>
+        <ul>
+          <li>Apertura › Sopratitolo («stagione 2027–2028») e scritta tattica;</li>
+          <li>Il calendario › Titolo e Tappe;</li>
+          <li>Iscrizioni › i due testi, con le date nuove;</li>
+          <li>Dati chiave, In breve e SEO, se cambiano giorno o orario;</li>
+          <li>Home › Il corso › Dati chiave.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="form">
+      <h2><span class="num">15</span> Form di richiesta</h2>
+      <p class="where"><span>Nel pannello</span> Form di richiesta</p>
+      <p>
+        Il form che compare in fondo alle quattro pagine attività (sopra Prenota), in Team building,
+        in Occasioni e in Contatti. Chi lo compila vi manda un'email con tutte le risposte; nelle
+        pagine di Team building, Occasioni e Contatti cambiano solo titolo e testo, che si scrivono
+        nelle loro sezioni.
+      </p>
+      <div class="callout">
+        <span class="label">Quando compare</span>
+        <p>
+          Solo se c'è il titolo e se in Impostazioni generali c'è la «Chiave Web3Forms» (capitolo
+          <a href="#servizi">25</a>). Le email arrivano all'indirizzo collegato a quell'account.
+        </p>
+      </div>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo</dt>
+          <dd><p>Facoltativo: meglio vuoto se ripete il titolo.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Es. «Richiedi la tua data»; nel testo, una o due frasi su cosa succede dopo l'invio.</p><p class="empty">senza titolo il form non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Campi del form › Nome · Telefono · Email › Nome del campo · Messaggio di errore</dt>
+          <dd>
+            <p>Il nome del campo compare sopra la casella e nell'email che ricevete. Il messaggio di errore compare sotto la casella quando è vuota o scritta male: deve dire cosa correggere, es. «Scrivi il tuo numero di telefono: almeno 6 cifre, spazi e prefisso vanno bene.».</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Attività › Nome del campo · Ultima voce dell'elenco</dt>
+          <dd>
+            <p>L'elenco delle attività si compone da solo con le pagine attività, nell'ordine di Home › Attività; nella pagina di un'attività è già scelta quella. L'ultima voce è per chi chiede altro, es. «Altro».</p>
+            <p class="empty">l'ultima voce non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Giorno preferito › Nome del campo · Messaggio di errore</dt>
+          <dd><p>L'errore compare se si sceglie un giorno già passato.</p></dd>
+        </div>
+        <div>
+          <dt>Numero di persone › Nome del campo · Numero massimo di persone · Messaggio di errore</dt>
+          <dd>
+            <p>Oggi il massimo è 30, come il team building. Se cambiate il numero, cambiate anche quello scritto nel messaggio di errore («da 1 a 30»).</p>
+            <p class="empty">nessun massimo.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Messaggio › Nome del campo</dt>
+          <dd><p>La casella libera per le richieste particolari.</p></dd>
+        </div>
+        <div>
+          <dt>Testo del bottone</dt>
+          <dd><p>Breve, es. «Invia richiesta». Obbligatorio.</p></dd>
+        </div>
+        <div>
+          <dt>Riga sulla privacy</dt>
+          <dd><p>Piccola, sotto il bottone.</p><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Invio riuscito: titolo · Invio riuscito: testo</dt>
+          <dd><p>Prendono il posto del form quando la richiesta è partita: dite come e quando ricontattate.</p></dd>
+        </div>
+        <div>
+          <dt>Invio non riuscito: testo · Invio non riuscito: invito a chiamare</dt>
+          <dd><p>Sopra il bottone, se la richiesta non parte (rete assente, servizio irraggiungibile). L'invito è seguito dal telefono di Impostazioni generali, es. «Oppure chiamaci al».</p><p class="empty">senza telefono l'invito non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Oggetto dell'email che ricevi</dt>
+          <dd><p>Seguito dall'attività scelta: «Richiesta dal sito: Nerf». Così in casella capite subito di cosa si tratta.</p></dd>
+        </div>
+        <div>
+          <dt>Mittente dell'email che ricevi</dt>
+          <dd><p>Il nome che vedete come mittente.</p><p class="empty">si usa il «Nome sito».</p></dd>
+        </div>
+      </dl>
+    </section>
+
+    <section id="pagina-404">
+      <h2><span class="num">16</span> Pagina 404</h2>
+      <p class="where"><span>Nel pannello</span> Pagina 404</p>
+      <p>
+        La pagina che vede chi apre un indirizzo che non esiste: un link vecchio, un errore di
+        battitura. Non compare mai su Google. Sotto il titolo c'è l'elenco delle pagine del sito, che
+        si compone da solo dal Menu (con le descrizioni delle attività) e mostra solo le pagine già
+        online; in fondo, Prenota.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo nella scheda del browser › Titolo della pagina · Descrizione</dt>
+          <dd><p>Il titolo compare nella scheda del browser; la descrizione solo se qualcuno condivide un link sbagliato.</p><p class="empty">la descrizione usa quella predefinita di Impostazioni generali.</p></dd>
+        </div>
+        <div>
+          <dt>Scritta tattica nella cornice (HUD) <span class="limit">max 32</span></dt>
+          <dd><p>Piccola, in alto a destra, solo su schermi larghi, es. «SCANSIONE · NESSUN CONTATTO».</p><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Sopratitolo · Titolo principale (H1) · Testo</dt>
+          <dd><p>Es. «Errore 404», un titolo obbligatorio e una frase: la pagina non esiste o è stata spostata.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone principale · Bottone secondario</dt>
+          <dd><p>Es. «Prenota» → <code>#prenota</code> e «Torna alla home» → <code>/</code>.</p><p class="empty">compaiono solo con testo e link.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo dell'elenco delle pagine</dt>
+          <dd><p class="empty">l'elenco compare senza titolo.</p></dd>
+        </div>
+      </dl>
+    </section>
+
+    <section id="contatti">
+      <h2><span class="num">17</span> Contatti</h2>
+      <p class="where"><span>Nel pannello</span> Contatti</p>
+      <p>
+        La pagina <code>/contatti</code>. Telefono, email, WhatsApp, orari, indirizzo e social sono
+        quelli di Impostazioni generali: qui si cambiano solo i testi intorno. Dall'alto: Apertura
+        con i contatti, Come raggiungerci con la mappa, il form, le domande frequenti, Prenota.
+      </p>
+
+      <h3>SEO e anteprima social</h3>
+      <p>Come nel capitolo <a href="#blocchi">07</a>.</p>
+
+      <h3>Apertura</h3>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo · Sottotitolo (massimo 20 parole)</dt>
+          <dd><p>Es. «Arena indoor · Milano».</p><p class="empty">non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo principale (H1)</dt>
+          <dd><p>Breve, es. «Contatti»: oltre le 14 lettere si stampa più piccolo. Obbligatorio.</p></dd>
+        </div>
+        <div>
+          <dt>Scritta tattica nella cornice (HUD) <span class="limit">max 32</span></dt>
+          <dd><p>Se cambiano gli orari, controllate che dica ancora il vero.</p><p class="empty">non compare.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Didascalie dei contatti</h3>
+      <dl class="fields">
+        <div>
+          <dt>Sopra il telefono · Sopra l'email · Sopra WhatsApp · Sopra gli orari · Sopra l'indirizzo · Prima dei social</dt>
+          <dd>
+            <p>Le parole piccole sopra ogni contatto: «Telefono», «Email», «Seguici»… WhatsApp compare solo se il suo numero è compilato in Impostazioni generali.</p>
+            <p class="empty">la didascalia non compare, il contatto sì. Un contatto vuoto in Impostazioni generali non compare affatto.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Come raggiungerci (mappa e indicazioni)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Una frase sotto il titolo: dove si trova l'arena.</p><p class="empty">senza titolo la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Mappa › Testo del bottone · Nota sotto il bottone</dt>
+          <dd>
+            <p>La mappa di Google si carica solo quando il visitatore preme il bottone (es. «Mostra la mappa»): prima c'è un riquadro con il nome del sito e l'indirizzo. La nota dice che la mappa è di Google e si carica solo se la si apre.</p>
+            <p class="empty">senza testo del bottone, o senza indirizzo in Impostazioni generali, la mappa non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Mappa › Nome della mappa per i lettori di schermo</dt>
+          <dd><p>Non si vede: lo legge ad alta voce il programma di chi non vede, es. «Mappa di Google con la posizione di SoftAir Milano».</p><p class="empty">si usano nome del sito e indirizzo.</p></dd>
+        </div>
+        <div>
+          <dt>Mappa › Testo del link a Google Maps</dt>
+          <dd><p>Sotto la mappa, apre l'indirizzo in Google Maps, es. «Apri in Google Maps».</p><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>In auto › Titolo · Testo · Testo del link al percorso</dt>
+          <dd><p>Parcheggio e come arrivare in auto: solo cose vere e verificate. Il link apre Google Maps con il percorso, es. «Calcola il percorso».</p><p class="empty">il riquadro compare solo con titolo e testo; senza il testo del link, il link non c'è.</p></dd>
+        </div>
+        <div>
+          <dt>Con i mezzi › Titolo · Testo</dt>
+          <dd><p>Metro, autobus e fermate. Se cambia una linea, aggiornate anche «Come arrivare» in Impostazioni generali.</p><p class="empty">compare solo con titolo e testo.</p></dd>
+        </div>
+        <div>
+          <dt>L'arena all'aperto (Ranger) › Titolo · Testo</dt>
+          <dd><p>Per chi cerca l'arena nel bosco, che è in un altro posto. Il link è «Link arena outdoor» di Impostazioni generali, con il testo della colonna Ranger del footer.</p><p class="empty">compare solo con titolo, testo e link.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Form di contatto</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd>
+            <p>Es. «Scrivici». Il form è quello di «Form di richiesta» (capitolo <a href="#form">15</a>); qui l'attività parte da «Altro» e l'email che ricevete dice che arriva da /contatti.</p>
+            <p class="empty">si usano titolo e testo di «Form di richiesta».</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Domande frequenti</h3>
+      <p>
+        Domande pratiche prima di venire: prenotare, annullare, cosa portare. Non scriveteci
+        telefono o email: sono già nella pagina.
+      </p>
+    </section>
+
+    <section id="modulistica">
+      <h2><span class="num">18</span> Modulistica</h2>
+      <p class="where"><span>Nel pannello</span> Modulistica</p>
+      <p>
+        La pagina <code>/modulistica</code>, a cui portano i link «Vai alla modulistica» delle
+        attività, del voucher e delle feste. Il modulo è obbligatorio per tutti: i maggiorenni lo
+        compilano online, i minorenni portano quello su carta firmato da un genitore. Dall'alto:
+        l'apertura con le due schede, Arrivare pronti con le età minime, Prenota.
+      </p>
+
+      <h3>SEO e anteprima social · Apertura</h3>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo · Titolo principale (H1) · Sottotitolo (massimo 20 parole)</dt>
+          <dd><p>Es. «Prima di giocare», «Modulistica» e una frase che dice che il modulo è obbligatorio per tutti. Il titolo è obbligatorio.</p><p class="empty">sopratitolo e sottotitolo non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Scritta tattica nella cornice (HUD) <span class="limit">max 32</span></dt>
+          <dd><p>Es. «MODULI · ONLINE · PDF».</p><p class="empty">non compare.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Scheda «Maggiorenni» · Scheda «Minorenni»</h3>
+      <p>Le due schede affiancate: a sinistra il modulo online, a destra quello da stampare.</p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Frase sotto il titolo</dt>
+          <dd><p>Es. «Maggiorenni» e «Tutto online, prima di venire».</p><p class="empty">senza titolo la scheda non compare; senza frase, la frase.</p></dd>
+        </div>
+        <div>
+          <dt>Passaggi <span class="limit">max 4</span></dt>
+          <dd><p>Una frase breve per passaggio, nell'ordine: compaiono numerati 01, 02…</p><p class="empty">un passaggio vuoto non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Maggiorenni › Testo del bottone · Link del modulo online</dt>
+          <dd><p>Es. «Compila il modulo online» e l'indirizzo completo del modulo, con <code>https://</code> (oggi su forms.monday.com). Si apre in una nuova scheda.</p><p class="empty">il bottone compare solo con testo e link.</p></dd>
+        </div>
+        <div>
+          <dt>Minorenni › Testo del bottone · Modulo da stampare (PDF)</dt>
+          <dd><p>Es. «Scarica il modulo». Per aggiornare il modulo caricate qui il nuovo PDF: formato e peso accanto al bottone si aggiornano da soli.</p><p class="empty">il bottone compare solo con testo e file.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Arrivare pronti ed età minime</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Es. «Arriva con i moduli già compilati» e una frase sul perché conviene.</p><p class="empty">senza titolo, titolo e testo non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo delle età · Età minime › Età · Attività <span class="limit">max 6</span></dt>
+          <dd>
+            <p>Es. «Età minima», poi «12+» e «Softair», una per attività. Devono essere le stesse delle pagine attività.</p>
+            <p class="empty">un'età senza valore o senza attività non compare. La sezione compare se ha il titolo o almeno un'età.</p>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section id="teambuilding">
+      <h2><span class="num">19</span> Team building</h2>
+      <p class="where"><span>Nel pannello</span> Team building</p>
+      <p>
+        La pagina <code>/teambuilding</code>, per le aziende: qui si chiede un preventivo, non si
+        prenota. Dall'alto: Apertura, Perché il softair, Le formule, i loghi delle aziende, Come si
+        svolge, le attività da abbinare (spente), Recensioni, Domande frequenti, il form di richiesta
+        preventivo, Prenota. Fino a 30 persone, con il torneo di softair. Niente prezzi in pagina: si
+        danno con il preventivo.
+      </p>
+
+      <h3>SEO e anteprima social · Apertura · Dati chiave</h3>
+      <p>
+        Come nel capitolo <a href="#blocchi">07</a>. Il bottone principale porta al form
+        (<code>#richiesta</code>), con lo stesso testo del titolo del form, es. «Richiedi un
+        preventivo»; il secondario a <code>#come-funziona</code>. La scritta tattica, es. «TEAM
+        BUILDING · MAX 30 · 12+», ripete i dati chiave.
+      </p>
+
+      <h3>Perché il softair (in breve)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>La prima frase del testo compare in grande e deve reggersi da sola: è quella che citano Google e gli assistenti AI.</p><p class="empty">senza titolo o senza testo la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>I valori del softair › Titolo · Testo <span class="limit">max 5</span></dt>
+          <dd><p>Una voce per valore, es. «Coraggio».</p><p class="empty">una voce senza titolo non compare.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Le formule</h3>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo · Titolo · Testo</dt>
+          <dd><p>Il sopratitolo è facoltativo: meglio vuoto se ripete il titolo.</p><p class="empty">senza titolo, o senza formule, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Formule › Nome · Descrizione · Icona</dt>
+          <dd><p>Una scheda per formula, nell'ordine della lista. Icone: squadra (partite), coppa (torneo), bersaglio (arcotag), bandiera, cronometro, mappa.</p><p class="empty">una formula senza nome non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Formule › Cifre › Valore · Etichetta</dt>
+          <dd><p>Si leggono di seguito: «20 persone al massimo». Meglio le stesse cifre, nello stesso ordine, in tutte le formule; le età devono essere quelle delle pagine attività.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Loro hanno scelto noi (loghi delle aziende)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>La striscia di loghi che scorre sotto le formule. Il testo è facoltativo.</p></dd>
+        </div>
+        <div>
+          <dt>Aziende › Nome dell'azienda · Logo</dt>
+          <dd>
+            <p>Solo aziende che hanno davvero giocato da voi. Il nome, scritto come lo scrive l'azienda («MediaWorld»), è anche il testo alternativo del logo e compare al suo posto se il file manca. Il logo: PNG con lo sfondo trasparente, tutto bianco o grigio chiaro, ritagliato stretto. Tutti compaiono alla stessa altezza.</p>
+            <p class="empty">se l'elenco è vuoto, la sezione non compare.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Come si svolge (passo per passo)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo · Passaggi</dt>
+          <dd><p>La sezione <code>#come-funziona</code>. Nel testo durata e arbitraggio, in una frase. Passaggi come nel capitolo <a href="#blocchi">07</a>.</p><p class="empty">senza titolo, o senza passaggi, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo delle opzioni · Opzioni su richiesta · Nota sotto le opzioni</dt>
+          <dd><p>Es. «Su richiesta», poi una opzione per riga («Catering»), e una nota come «Indicatele nella richiesta di preventivo». Niente prezzi.</p><p class="empty">senza opzioni il riquadro non compare.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Attività da abbinare</h3>
+      <dl class="fields">
+        <div>
+          <dt>Mostra le attività combinabili</dt>
+          <dd><p>Interruttore. Oggi spento: escape room, Enigma Bomb e Mistero di Milano vengono dal vecchio sito, e prima di accenderlo va verificato che ogni attività dell'elenco ci sia ancora.</p><p class="empty">spento, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p class="empty">senza titolo, o senza voci, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Attività › Nome · Testo · Foto (orizzontale, 16:9) · Testo alternativo foto · Link</dt>
+          <dd>
+            <p>Una scheda per attività. Il testo è una riga («Fino a 40 persone»); la foto si ritaglia 16:9, quindi soggetto e scritte al centro, e il testo alternativo riporta anche le scritte. Il link è l'indirizzo completo, con <code>https://</code>: la scheda intera diventa un link che si apre in una nuova scheda.</p>
+            <p class="empty">senza link la scheda non è cliccabile; senza foto resta senza foto.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Recensioni · Domande frequenti · Form di richiesta preventivo</h3>
+      <p>Come nel capitolo <a href="#blocchi">07</a>. L'attività già scelta nel form è «Team building».</p>
+    </section>
+
+    <section id="occasioni">
+      <h2><span class="num">20</span> Occasioni</h2>
+      <p class="where"><span>Nel pannello</span> Occasioni (compleanni e addii al celibato)</p>
+      <p>
+        La pagina <code>/occasioni</code>, per compleanni e addii al celibato e al nubilato. Dall'alto:
+        Apertura, Compleanni, Addio al celibato e al nubilato, Scegli l'attività, Sala feste e
+        catering, Come si prenota, Recensioni, Domande frequenti, il form di richiesta preventivo,
+        Prenota.
+      </p>
+
+      <h3>SEO e anteprima social · Apertura · Dati chiave</h3>
+      <p>
+        Come nel capitolo <a href="#blocchi">07</a>. Per l'apertura scegliete una foto diversa da
+        quelle di Compleanni e Addio al celibato: la stessa foto due volte nella pagina stanca. Il
+        bottone principale porta al form (<code>#richiesta</code>), il secondario a
+        <code>#come-funziona</code>. La scritta tattica, es. «FESTE · MAX 20 · 6+», ripete i dati
+        chiave.
+      </p>
+
+      <h3>Compleanni (foto ed elenco)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Nel testo l'indirizzo non serve: basta «Milano». L'indirizzo è nei contatti e nelle domande frequenti.</p><p class="empty">senza titolo la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Foto (orizzontale, 3:2) · Foto (mobile, verticale 4:5) · Testo alternativo foto</dt>
+          <dd><p>La foto sta a sinistra del testo.</p><p class="empty">senza la foto orizzontale la sezione non compare; senza quella verticale, sul telefono si usa l'orizzontale.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo dell'elenco · Elenco › Nome · Testo</dt>
+          <dd><p>Es. «In breve», con voci brevi, meglio in numero pari: stanno due per riga. Le età devono essere quelle delle pagine attività.</p></dd>
+        </div>
+        <div>
+          <dt>Invito per gli ospiti (PDF) · Testo del bottone dell'invito</dt>
+          <dd><p>Facoltativo: l'invito da inoltrare o stampare per gli invitati, sotto i 2 MB. Accanto al bottone compaiono da soli formato e peso.</p><p class="empty">il bottone compare solo con testo e file.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Addio al celibato e al nubilato (foto e testo)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo · Foto (orizzontale, 3:2) · Testo alternativo foto</dt>
+          <dd>
+            <p>La foto sta a destra del testo; sui telefoni sopra, un po' ritagliata ai lati: soggetto al centro. Sotto il testo compare da solo il telefono di Impostazioni generali.</p>
+            <p class="empty">senza titolo o senza foto la sezione non compare.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Scegli l'attività</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo</dt>
+          <dd><p class="empty">senza titolo, o senza voci, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Attività › Nome · Descrizione</dt>
+          <dd><p>Il nome breve, su una riga («Softair»); la descrizione comincia dall'età minima: «Dai 12 anni. Missioni a squadre nel villaggio militare.». La prima della lista compare aperta.</p></dd>
+        </div>
+        <div>
+          <dt>Attività › Foto (orizzontale) · Foto (mobile, verticale 4:5) · Link</dt>
+          <dd><p>Il link è la pagina dell'attività, es. <code>/softair</code>.</p><p class="empty">una voce senza nome, foto o link non compare; senza la foto verticale si usa l'orizzontale.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Sala feste e catering</h3>
+      <p>
+        Le regole della sala feste, una scheda per caso. Le sale sono due, una interna e una
+        esterna; le schede di oggi dicono:
+      </p>
+      <div class="scroller" tabindex="0" role="region" aria-label="Le tre schede della sala feste">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Scheda</th>
+              <th scope="col">La regola</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Arcotag e Nerf, dal lunedì al venerdì</td>
+              <td>La sala è compresa nell'1 ora e 45: il gruppo decide quanto giocare e quanto festeggiare. Se dopo non ci sono altre partite si prolunga di un'ora: 70 € la sala interna, 50 € quella esterna.</td>
+            </tr>
+            <tr>
+              <td>Arcotag e Nerf, sabato e domenica</td>
+              <td>Solo la sala esterna, compresa nell'1 ora e 45: si gioca un po' meno per fare spazio alla festa.</td>
+            </tr>
+            <tr>
+              <td>Softair, con l'arena in esclusiva</td>
+              <td>La sala c'è solo prenotando l'arena tutta per il gruppo: è compresa nell'1 ora e 45, e si prolunga di un'ora se dopo non ci sono altre partite. Giocando insieme ad altri gruppi, le sale non si usano.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Nel testo la torta e il catering, in una o due frasi. Niente prezzi del catering: si danno con il preventivo.</p><p class="empty">senza titolo, o senza schede, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Schede › Nome · Descrizione (una frase)</dt>
+          <dd><p class="empty">una scheda senza nome non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Schede › Durate › Valore · Etichetta</dt>
+          <dd><p>Si leggono di seguito: «1 h 45 tra partita e sala, briefing compreso», «70 € un'ora in più nella sala interna».</p><p class="empty">una durata senza valore o senza etichetta non compare.</p></dd>
+        </div>
+      </dl>
+      <div class="callout stop">
+        <span class="label">Le stesse regole, in sei posti</span>
+        <p>
+          Le regole della sala sono scritte anche nelle note dei prezzi e nelle domande frequenti di
+          Softair, Arcotag e Nerf, nella domanda «Come funziona la sala feste?» di questa pagina e
+          nei Termini e condizioni. Se una regola cambia, cambiatela dappertutto: l'elenco preciso è
+          nel capitolo <a href="#regole">26</a>.
+        </p>
+      </div>
+
+      <h3>Come si prenota (passo per passo)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo · Passaggi</dt>
+          <dd><p>La sezione <code>#come-funziona</code>. Passaggi come nel capitolo <a href="#blocchi">07</a>; un passaggio senza titolo non compare.</p><p class="empty">senza titolo, o senza passaggi, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo del riquadro · Da sapere · Nota in fondo al riquadro</dt>
+          <dd><p>Es. «Da sapere», poi una voce per riga («Prenotazione obbligatoria», «Modulo obbligatorio per ogni giocatore»).</p><p class="empty">senza voci il riquadro non compare; senza nota, la nota.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone sotto il riquadro › Testo · Link</dt>
+          <dd><p>Es. «Vai ai moduli» → <code>/modulistica</code>.</p><p class="empty">compare solo con testo e link.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Recensioni · Domande frequenti · Form di richiesta preventivo</h3>
+      <p>Come nel capitolo <a href="#blocchi">07</a>. L'attività già scelta nel form è «Festa o addio al celibato».</p>
+    </section>
+
+    <section id="voucher">
+      <h2><span class="num">21</span> Voucher regalo</h2>
+      <p class="where"><span>Nel pannello</span> Voucher regalo</p>
+      <p>
+        La pagina <code>/voucher-regalo</code>: chi compra regala una partita di softair, e chi la
+        riceve sceglie il giorno. Dall'alto: Apertura con il biglietto disegnato, I voucher, Come
+        funziona, Acquista il voucher (<code>#acquista</code>), Domande frequenti, Prenota.
+      </p>
+      <div class="callout">
+        <span class="label">Il voucher oggi</span>
+        <ul>
+          <li><strong>35 €</strong> a giocatore con il noleggio: fucile con 300 colpi, pettorina e maschera protettiva;</li>
+          <li><strong>15 €</strong> a giocatore per chi ha già il fucile: nessuna attrezzatura fornita;</li>
+          <li>ricarica extra da 300 colpi: 3 €;</li>
+          <li>vale 6 mesi, con il giorno e l'ora a scelta di chi lo riceve;</li>
+          <li>va <strong>portato stampato</strong> in arena il giorno della partita.</li>
+        </ul>
+      </div>
+
+      <h3>SEO e anteprima social</h3>
+      <p>Come nel capitolo <a href="#blocchi">07</a>. Nella descrizione per Google ci sono i prezzi: se cambiano, aggiornateli anche lì.</p>
+
+      <h3>Apertura</h3>
+      <p>
+        Senza foto: accanto al titolo c'è il disegno di un voucher, con il nome del sito, il titolo
+        principale e la scritta del biglietto. Lo stesso disegno compare in home, nella sezione
+        Voucher regalo.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Sopratitolo · Sottotitolo (massimo 20 parole)</dt>
+          <dd><p>Es. «Idea regalo».</p><p class="empty">non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo principale (H1)</dt>
+          <dd><p>Breve, es. «Voucher regalo»: compare anche sul disegno, qui e in home. Obbligatorio.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone principale › Testo · Link</dt>
+          <dd><p>Lo stesso testo del titolo della sezione di acquisto, es. «Acquista il voucher» → <code>#acquista</code>.</p><p class="empty">compare solo con testo e link.</p></dd>
+        </div>
+        <div>
+          <dt>Scritta in fondo al disegno del voucher <span class="limit">max 32</span></dt>
+          <dd>
+            <p>In maiuscolo da sola, es. «Valido 6 mesi · Data a scelta»: ogni parte separata da «·» va su una riga. Compare anche sul disegno in home. Se cambia la validità, aggiornatela qui e nel testo della sezione Voucher regalo della home.</p>
+            <p class="empty">non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Scritta tattica nella cornice (HUD) <span class="limit">max 32</span></dt>
+          <dd><p>Es. «VOUCHER · VALIDO 6 MESI».</p><p class="empty">non compare.</p></dd>
+        </div>
+      </dl>
+
+      <h3>I voucher (schede con i prezzi)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Es. «Scegli il voucher» e una frase come «Il prezzo è a giocatore».</p><p class="empty">senza titolo, o senza schede con nome e prezzo, la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo dell'elenco in ogni scheda</dt>
+          <dd><p>Es. «Comprende».</p><p class="empty">l'elenco compare senza titolo.</p></dd>
+        </div>
+        <div>
+          <dt>Schede › Nome del voucher · Per chi è <span class="limit">max 3</span></dt>
+          <dd><p>Meglio due schede, una accanto all'altra, es. «Con noleggio attrezzatura». Nome e prezzo compaiono anche in home.</p><p class="empty">una scheda senza nome o senza prezzo non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Schede › Prezzo (solo il numero, es. 35) · Unità del prezzo</dt>
+          <dd><p>Il prezzo compare in grande, qui e in home, dove si aggiorna da solo. L'unità, es. «€ a giocatore», sta accanto. Se cambiate il prezzo, aggiornatelo anche nelle domande frequenti e nella descrizione per Google.</p></dd>
+        </div>
+        <div>
+          <dt>Schede › Cosa comprende · Nota in fondo alla scheda</dt>
+          <dd><p>Una voce per riga («Fucile con 300 colpi»); la nota, es. «Ricarica extra da 300 colpi: 3 €».</p><p class="empty">non compaiono.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Come funziona (passo per passo)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo · Passaggi</dt>
+          <dd><p>Dall'acquisto alla partita, nell'ordine (<code>#come-funziona</code>). Passaggi come nel capitolo <a href="#blocchi">07</a>.</p><p class="empty">senza titolo la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo del riquadro delle regole · Regole</dt>
+          <dd><p>Es. «Prima di giocare», poi una regola per riga: «Dai 12 anni compiuti», «Voucher stampato, da portare in arena». Le età devono essere quelle delle pagine attività.</p><p class="empty">senza regole, il riquadro e il suo link non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Link sotto il riquadro › Testo · Link</dt>
+          <dd><p>Es. «Vai alla modulistica» → <code>/modulistica</code>.</p><p class="empty">compare solo con testo e link.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Acquista il voucher</h3>
+      <p>
+        La sezione <code>#acquista</code>. Finché il tecnico non collega l'acquisto online con
+        TicketingHub, mostra il primo testo con telefono ed email (quelli di Impostazioni generali);
+        dopo, il secondo testo con il bottone di acquisto, e telefono ed email restano sotto.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo</dt>
+          <dd><p>Es. «Acquista il voucher».</p><p class="empty">la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Testo senza l'acquisto online · Testo con l'acquisto online</dt>
+          <dd><p>Il primo, es. «L'acquisto online arriva a breve: per ora chiamaci o scrivici»; il secondo compare quando l'acquisto online è collegato.</p></dd>
+        </div>
+        <div>
+          <dt>Testo del bottone di acquisto online · Nota sotto il bottone di acquisto online</dt>
+          <dd><p>Compaiono solo con l'acquisto online collegato. La nota dice che il pagamento passa da TicketingHub, che si carica solo quando il visitatore apre l'acquisto.</p></dd>
+        </div>
+        <div>
+          <dt>Scritta sopra il numero di telefono · Scritta sopra l'email</dt>
+          <dd><p>Es. «Chiama» e «Scrivi».</p><p class="empty">il bottone mostra solo il numero o l'indirizzo.</p></dd>
+        </div>
+        <div>
+          <dt>Oggetto dell'email</dt>
+          <dd><p>L'oggetto già scritto nell'email che parte dal bottone, es. «Voucher regalo».</p><p class="empty">l'email parte senza oggetto.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Domande frequenti</h3>
+      <p>Come nel capitolo <a href="#blocchi">07</a>. Se cambiano prezzi o validità, aggiornate anche le risposte.</p>
+    </section>
+
+    <section id="blog">
+      <h2><span class="num">22</span> Blog</h2>
+      <p class="where"><span>Nel pannello</span> Pagina Blog · Blog — articoli</p>
+      <p>
+        Il blog ha due voci nel pannello. «Pagina Blog» è la pagina <code>/blog</code>, con
+        l'elenco degli articoli. «Blog — articoli» è la raccolta degli articoli, uno per file, e ogni
+        articolo è una pagina del sito: <code>/blog/nome-del-file</code>. Nel menu il blog sta sotto
+        «Info».
+      </p>
+      <ul>
+        <li><strong>La pagina del blog</strong>, dall'alto: l'apertura con accanto l'articolo più recente in grande, poi le schede degli altri articoli dal più recente, e Prenota.</li>
+        <li><strong>Un articolo</strong>, dall'alto: l'apertura (briciole di pane, titolo, riassunto, data e minuti di lettura), la copertina, il testo, «Altri articoli» e Prenota. I minuti di lettura il sito li conta da solo.</li>
+      </ul>
+
+      <h3>Pagina Blog</h3>
+      <dl class="fields">
+        <div>
+          <dt>Pagina online</dt>
+          <dd><p>Spenta, il blog sparisce dal sito e dal menu <strong>insieme a tutti i suoi articoli</strong>, che restano salvati (capitolo <a href="#online">04</a>).</p></dd>
+        </div>
+        <div>
+          <dt>SEO e anteprima social</dt>
+          <dd><p>Come nel capitolo <a href="#blocchi">07</a>. Ogni articolo invece usa per Google il suo titolo e il suo riassunto.</p></dd>
+        </div>
+        <div>
+          <dt>Apertura › Sopratitolo · Titolo principale (H1) · Sottotitolo (massimo 20 parole)</dt>
+          <dd><p>Es. «Guide e consigli», «Blog» e una frase su cosa trova chi legge. Il sottotitolo compare solo nella prima pagina dell'elenco.</p><p class="empty">sopratitolo e sottotitolo non compaiono; il titolo è obbligatorio.</p></dd>
+        </div>
+        <div>
+          <dt>Apertura › Scritta tattica nella cornice (HUD) <span class="limit">max 32</span></dt>
+          <dd><p>Es. «Guide · Regole · Attrezzatura». È la stessa anche in cima a ogni articolo.</p><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo sopra l'elenco degli articoli</dt>
+          <dd><p>Es. «Tutti gli articoli».</p><p class="empty">non compare: l'elenco segue subito l'apertura.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo degli articoli suggeriti (in fondo a ogni articolo)</dt>
+          <dd><p>Es. «Altri articoli»: in fondo a ogni articolo, sopra le schede dei tre articoli più recenti, tranne quello che si sta leggendo. Vale per tutti gli articoli.</p><p class="empty">gli articoli suggeriti non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Testo del bottone sulle schede</dt>
+          <dd><p>Es. «Leggi l'articolo»: in fondo a ogni scheda, nell'elenco e negli articoli suggeriti. Tutta la scheda porta all'articolo.</p><p class="empty">il bottone non compare, ma la scheda resta cliccabile.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Le schede e l'elenco</h3>
+      <ul>
+        <li>L'ordine è quello della «Data di pubblicazione»: l'articolo più recente compare in grande nell'apertura, gli altri seguono come schede.</li>
+        <li>Ogni scheda mostra copertina, data, titolo, riassunto e bottone. Le schede affiancate hanno tutte la stessa altezza: titolo e riassunto si fermano a tre righe, e un testo più lungo si taglia con «…».</li>
+        <li>L'elenco si divide in pagine da 9 articoli (la prima ne ha uno in più, quello in evidenza): <code>/blog</code>, <code>/blog/2</code>, <code>/blog/3</code>…, con i numeri delle pagine in fondo. Le pagine si creano da sole quando aggiungete articoli.</li>
+      </ul>
+
+      <h3>Scrivere un articolo nuovo</h3>
+      <p>In «Blog — articoli» aggiungete una voce e compilate i campi, nell'ordine del pannello.</p>
+      <dl class="fields">
+        <div>
+          <dt>Articolo online</dt>
+          <dd><p>Acceso per pubblicarlo. Spento, l'articolo resta salvato ma non è sul sito: utile per prepararlo con calma.</p></dd>
+        </div>
+        <div>
+          <dt>Titolo dell'articolo (H1)</dt>
+          <dd>
+            <p>Grande in cima all'articolo, sulle schede e su Google. <strong>Quando create l'articolo diventa anche il nome del file, cioè l'indirizzo</strong>: prima del primo salvataggio potete accorciarlo (es. <code>softair-sulla-neve</code>). Dopo, cambiare il titolo non cambia l'indirizzo.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Riassunto (elenco del blog e Google) <span class="limit">max 160</span></dt>
+          <dd><p>Una o due frasi su cosa trova chi legge. Compare sotto il titolo nelle schede, in apertura dell'articolo e come descrizione su Google. Obbligatorio.</p></dd>
+        </div>
+        <div>
+          <dt>Data di pubblicazione</dt>
+          <dd><p>Per un articolo nuovo è già la data di oggi. Compare sull'articolo e decide l'ordine dell'elenco.</p></dd>
+        </div>
+        <div>
+          <dt>Immagine di copertina</dt>
+          <dd>
+            <p>Orizzontale 16:9, larga almeno 1600 pixel, in JPG. Compare in cima all'articolo, sulle schede (un po' più alta, quindi si taglia ai lati: tenete il soggetto al centro) e nelle anteprime sui social.</p>
+            <p class="empty">l'articolo compare senza foto, e sui social si usa l'«Immagine social predefinita».</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Testo alternativo della copertina</dt>
+          <dd><p><strong>Obbligatorio se c'è la copertina</strong>: una frase che dice cosa si vede (capitolo <a href="#immagini">06</a>). Senza copertina lasciatelo vuoto.</p></dd>
+        </div>
+        <div>
+          <dt>Testo dell'articolo</dt>
+          <dd>
+            <p>Qui c'è un editor vero: titoli, grassetti, elenchi, link, immagini.</p>
+            <ul>
+              <li>I titoli delle sezioni partono dal <strong>secondo livello</strong> (H2), poi il terzo (H3): il primo livello è già il titolo dell'articolo.</li>
+              <li>I link alle pagine del sito si scrivono senza dominio: <code>/softair</code>, <code>/blog/softair-sulla-neve</code>. Quelli ai siti esterni con <code>https://</code>.</li>
+              <li>Ogni immagine nel testo ha bisogno del suo testo alternativo.</li>
+            </ul>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Le immagini del blog</h3>
+      <p>
+        Le immagini caricate dal blog finiscono nella cartella principale della raccolta foto, come
+        tutte le altre. Le copertine di oggi si chiamano <code>blog-</code> più il nome
+        dell'articolo, es. <code>blog-softair-sulla-neve.jpg</code>: seguite lo stesso schema, così
+        si ritrovano subito. Per le immagini nel testo il sito prende da solo le misure, prepara la
+        versione leggera e le carica solo quando chi legge ci arriva. Se il file di una copertina
+        manca, l'articolo compare senza foto, mai con un'immagine rotta.
+      </p>
+
+      <h3>Togliere un articolo</h3>
+      <p>
+        Spegnete «Articolo online» invece di cancellarlo: sparisce dall'elenco, dagli articoli
+        suggeriti e dal suo indirizzo (che mostra la pagina «non trovata»), ma resta salvato e lo
+        riaccendete quando volete. I link a quell'articolo scritti nel testo di altri articoli
+        perdono il collegamento da soli: le parole restano, come testo normale.
+      </p>
+      <div class="callout stop">
+        <span class="label">Non rinominate il file</span>
+        <p>
+          Il nome del file è l'indirizzo dell'articolo: <code>softair-sulla-neve.md</code> diventa
+          <code>/blog/softair-sulla-neve</code>. Rinominarlo cambia l'indirizzo, e i link già
+          condivisi, quelli scritti in altri articoli e quelli su Google portano alla pagina «non
+          trovata». Con un articolo già online, non fatelo mai: cambiate il titolo, che si può.
+        </p>
+      </div>
+      <div class="callout">
+        <span class="label">Testi vostri, anche vecchi</span>
+        <p>
+          Gli articoli sono testi vostri, scritti negli anni: possono parlare di prezzi, regole o
+          numeri che oggi non valgono più. Quando cambia una regola, rileggete anche il blog
+          (capitolo <a href="#regole">26</a>).
+        </p>
+      </div>
+    </section>
+
+    <section id="cookie">
+      <h2><span class="num">23</span> Banner dei cookie</h2>
+      <p class="where"><span>Nel pannello</span> Banner dei cookie</p>
+      <p>
+        Il riquadro che compare alla prima visita e chiede il consenso, e la finestra «Preferenze
+        cookie» dove ognuno sceglie cosa attivare. Finché il visitatore non accetta, il sito non
+        accende nulla che lo segua o che carichi servizi di altri: niente statistiche, niente
+        prenotazione online di TicketingHub.
+      </p>
+
+      <h3>Banner (prima visita)</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Testo breve e vero: cosa usa il sito e che si può cambiare idea. Niente nomi di servizi che il sito non usa.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone «Accetta tutti» · Bottone «Rifiuta» · Bottone «Preferenze»</dt>
+          <dd>
+            <p>Il testo dei tre bottoni. «Rifiuta» ha lo stesso peso di «Accetta tutti», come chiede il Garante della privacy: chiamatelo sempre in modo chiaro, senza giri di parole.</p>
+          </dd>
+        </div>
+      </dl>
+
+      <h3>Finestra «Preferenze cookie»</h3>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo introduttivo</dt>
+          <dd><p>Sotto il testo compaiono da soli i link a privacy e cookie policy del footer.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone «Salva le preferenze» · Bottone «Accetta tutti» · Bottone «Rifiuta tutti»</dt>
+          <dd><p>I bottoni in fondo alla finestra.</p></dd>
+        </div>
+        <div>
+          <dt>Testo per chiudere la finestra</dt>
+          <dd><p>Non si vede: lo leggono i lettori di schermo sulla X, es. «Chiudi».</p></dd>
+        </div>
+      </dl>
+
+      <h3>Categorie</h3>
+      <p>Ogni categoria ha un «Titolo» e una «Descrizione», e nella finestra un interruttore.</p>
+      <dl class="fields">
+        <div>
+          <dt>Necessari (sempre attivi)</dt>
+          <dd><p>L'unico cookie che il sito salva sempre: ricorda la scelta fatta nel banner. Non si può spegnere.</p></dd>
+        </div>
+        <div>
+          <dt>Statistiche (Google Analytics)</dt>
+          <dd>
+            <p>Le visite contate da Google Analytics, solo per chi le accetta.</p>
+            <p class="empty">se in Impostazioni generali l'«ID Google Analytics (GA4)» è vuoto, questa categoria non compare.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Servizi esterni (prenotazione online e mappa)</dt>
+          <dd><p>La prenotazione e l'acquisto online di TicketingHub e la mappa di Google, che caricano contenuti da siti di altri.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Le due voci per cambiare idea</h3>
+      <dl class="fields">
+        <div>
+          <dt>Voce nel footer per riaprire le preferenze</dt>
+          <dd><p>«Preferenze cookie», in fondo a ogni pagina accanto ai link legali. Non è un link ma un bottone: non porta a un'altra pagina, riapre la finestra delle scelte, così chiunque può cambiare idea in qualsiasi momento.</p><p class="empty">la voce non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone in fondo alla cookie policy</dt>
+          <dd><p>Es. «Gestisci le preferenze»: compare da solo in fondo alla pagina <code>/cookie</code> e riapre le scelte.</p><p class="empty">il bottone non compare.</p></dd>
+        </div>
+      </dl>
+      <div class="callout stop">
+        <span class="label">Un servizio nuovo cambia il banner</span>
+        <p>
+          Il banner conosce solo i servizi di oggi. Se il sito ne aggiunge uno (una chat, un'altra
+          mappa, un video di YouTube dentro la pagina, un nuovo strumento di statistiche), il tecnico
+          lo deve collegare al consenso, e i testi del banner, della privacy e della cookie policy
+          vanno aggiornati.
+        </p>
+      </div>
+    </section>
+
+    <section id="legali">
+      <h2><span class="num">24</span> Privacy, cookie e termini</h2>
+      <p class="where"><span>Nel pannello</span> Privacy policy · Cookie policy · Termini e condizioni</p>
+      <p>
+        Le tre pagine legali, <code>/privacy</code>, <code>/cookie</code> e <code>/termini</code>,
+        linkate in fondo a ogni pagina. Non compaiono su Google e non hanno l'interruttore «Pagina
+        online»: sono sempre pubblicate. Ognuna ha gli stessi campi.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo della pagina</dt>
+          <dd><p>Il titolo grande della pagina, es. «Privacy policy».</p></dd>
+        </div>
+        <div>
+          <dt>Descrizione per Google e anteprime</dt>
+          <dd><p>Una frase su cosa contiene la pagina: si vede quando qualcuno ne condivide il link.</p></dd>
+        </div>
+        <div>
+          <dt>Ultimo aggiornamento</dt>
+          <dd><p>Es. «8 ottobre 2026»: compare sotto il titolo, dopo le parole «Ultimo aggiornamento:» che il sito aggiunge da solo. <strong>Aggiornatela ogni volta che cambiate il testo</strong>: chi legge deve sapere da quando valgono quelle regole.</p><p class="empty">la riga non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Testo della pagina</dt>
+          <dd>
+            <p>Qui c'è un editor vero: titoli, grassetti, elenchi e link. Usate i titoli per dividere il testo in parti, come oggi («Titolare del trattamento», «I tuoi diritti»…), partendo dal secondo livello come negli articoli del blog, con cui queste pagine condividono apertura e impaginazione.</p>
+            <p>In fondo alla cookie policy compare da solo il bottone «Gestisci le preferenze» (capitolo <a href="#cookie">23</a>): non serve scriverlo.</p>
+          </dd>
+        </div>
+      </dl>
+      <div class="callout stop">
+        <span class="label">Da far controllare</span>
+        <ul>
+          <li>Questi testi vanno validati dal vostro consulente: il sito offre lo spazio, la responsabilità di cosa c'è scritto è vostra.</li>
+          <li>Se il sito aggiunge un servizio esterno, privacy e cookie policy vanno aggiornate (e il banner, capitolo <a href="#cookie">23</a>).</li>
+          <li>I Termini ripetono le regole delle attività (prenotazioni, giocatori, sala feste, età e moduli, voucher): se una cambia nelle pagine, cambiatela anche qui.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="servizi">
+      <h2><span class="num">25</span> I servizi collegati</h2>
+      <p class="where"><span>Nel pannello</span> Impostazioni generali</p>
+      <p>
+        Quattro campi di Impostazioni generali collegano il sito a servizi esterni. Li fornisce e li
+        inserisce il tecnico: vanno copiati identici, e uno sbagliato spegne il servizio senza
+        avvisare.
+      </p>
+      <div class="scroller" tabindex="0" role="region" aria-label="I servizi collegati">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Campo</th>
+              <th scope="col">Cosa fa</th>
+              <th scope="col">Se è vuoto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ID Google Analytics (GA4)</td>
+              <td>Conta le visite in forma anonima e aggregata, es. <code>G-XXXXXXXXXX</code>. Parte solo per chi accetta le «Statistiche» nel banner dei cookie.</td>
+              <td>Nessuna statistica, e la voce «Statistiche» sparisce dal banner.</td>
+            </tr>
+            <tr>
+              <td>ID script TicketingHub (prenotazioni)</td>
+              <td>La prenotazione online. È pronto per quando il tecnico collega TicketingHub alle sezioni Prenota; si caricherà solo per chi accetta i «Servizi esterni».</td>
+              <td>Si prenota al telefono e via email, come oggi.</td>
+            </tr>
+            <tr>
+              <td>ID TicketingHub dei voucher regalo</td>
+              <td>L'acquisto online dei voucher, nella sezione <code>#acquista</code>.</td>
+              <td>Telefono ed email. Finché il tecnico non collega l'acquisto online, compaiono telefono ed email anche se il campo è pieno.</td>
+            </tr>
+            <tr>
+              <td>Chiave Web3Forms (form di richiesta)</td>
+              <td>Riceve le richieste dai form (attività, team building, occasioni, contatti) e le inoltra per email.</td>
+              <td>I form non compaiono.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout stop">
+        <span class="label">Non toccare</span>
+        <p>
+          Non cambiate e non cancellate questi codici. Se un servizio smette di funzionare (i form
+          spariscono, le statistiche si fermano), chiamate il tecnico invece di provare a correggerli.
+        </p>
+      </div>
+    </section>
+
+    <section id="regole">
+      <h2><span class="num">26</span> Se cambia una regola, aggiorna qui</h2>
+      <p>
+        Alcuni dati sono scritti dentro i testi di più pagine, perché lì servono a chi legge e a
+        Google. Il sito non può aggiornarli da solo: quando uno cambia, aprite la sua voce e passate
+        tutti i posti dell'elenco. Alla fine, cercate il vecchio valore sul sito con
+        <strong>Ctrl+F</strong> (<strong>Cmd+F</strong> sul Mac) per scovare quello che è sfuggito.
+      </p>
+      <p>
+        Due posti valgono per quasi tutte le voci: i <strong>Termini e condizioni</strong>, che
+        ripetono le regole di prenotazioni, giocatori, sala feste, età, moduli e voucher, e gli
+        <strong>articoli del blog</strong>, che sono testi vostri scritti negli anni e possono
+        contenere regole, prezzi o numeri di una volta.
+      </p>
+      <div class="rules">
+        <details class="rule">
+          <summary>Numero di giocatori <span class="today">oggi: softair, arcotag e Nerf da 8 a 20</span></summary>
+          <div>
+            <ul>
+              <li><strong>Softair, Arcotag, Nerf</strong>: Dati chiave («20 giocatori al massimo»), Apertura › Scritta tattica («MAX 20 GIOCATORI»), SEO › Descrizione («fino a 20 giocatori»), Come funziona › Testo («in pochi o in 20»), Prezzi › prima nota, domanda «Quanti giocatori servono?» (nel Nerf «Quanti possono giocare a una festa Nerf?»), e nel Nerf anche Per chi è («Fino a 20 giocatori»).</li>
+              <li><strong>Occasioni</strong>: Dati chiave, Scritta tattica («MAX 20»), SEO › Descrizione, Compleanni › Elenco, Addio al celibato › Testo, domanda «Quante persone possono partecipare alla festa?».</li>
+              <li><strong>Softair VS Paintball</strong>: La prima volta › primo passaggio («Si gioca da 8 a 20»).</li>
+              <li><strong>Termini e condizioni</strong>: «Giocatori».</li>
+              <li>Sotto gli 8: nel softair «vi uniamo a un altro gruppo», in arcotag e Nerf «pagando 8 quote»: note dei prezzi e domande sui giocatori.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Team building <span class="today">oggi: fino a 30 persone con il torneo</span></summary>
+          <div>
+            <ul>
+              <li><strong>Team building</strong>: Dati chiave («30»), Scritta tattica («MAX 30»), Le formule › Cifre (20, 30 e 20), domanda «Quante persone possono partecipare?».</li>
+              <li><strong>Form di richiesta</strong>: Numero di persone › Numero massimo e il suo messaggio di errore («da 1 a 30»).</li>
+              <li><strong>Termini e condizioni</strong>: «Giocatori».</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Età minime <span class="today">oggi: softair e tiro 12+, arcotag 8+, Nerf 6+, corso 16+</span></summary>
+          <div>
+            <ul>
+              <li><strong>Pagine attività</strong>: Dati chiave, Scritta tattica, domanda «Da che età…», Per chi è › Compleanni; nel Nerf anche il titolo per Google e In breve.</li>
+              <li><strong>Home</strong>: Attività › Etichette («Dai 12 anni»…), Il corso › Dati chiave («Dai 16 anni»).</li>
+              <li><strong>Menu</strong>: la descrizione di una riga dell'Arcotag («dagli 8 anni»).</li>
+              <li><strong>Modulistica</strong>: Età minime.</li>
+              <li><strong>Occasioni</strong>: Dati chiave («6+»), Scritta tattica, Compleanni › Elenco, Scegli l'attività › Descrizioni, domanda «Da che età si può giocare?».</li>
+              <li><strong>Softair VS Paintball</strong>: La prima volta › Nota, Alternativa › Testo, domanda «Da che età si gioca a softair?».</li>
+              <li><strong>Team building</strong>: Dati chiave, Scritta tattica, Le formule › Cifre, domanda «Da che età si può partecipare?».</li>
+              <li><strong>Voucher regalo</strong>: Come funziona › Regole, domanda «Da che età si può giocare?».</li>
+              <li><strong>Corso softair</strong>: Dati chiave, Scritta tattica, In breve, La prova gratuita › Elenco, SEO, domanda «Da che età si può fare il corso?».</li>
+              <li><strong>Termini e condizioni</strong>: «Età e moduli».</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Durata di una partita <span class="today">oggi: 1 ora e 45 minuti, briefing compreso</span></summary>
+          <div>
+            <ul>
+              <li><strong>Softair, Arcotag, Nerf</strong>: Dati chiave («1 h 45»), Come funziona › Testo, domanda «Quanto dura…», le note e le domande sulla sala feste; nel softair anche In breve e Prezzi › Testo.</li>
+              <li><strong>Occasioni</strong>: Sala feste e catering, tutte e tre le schede (descrizioni e durate) e domanda «Come funziona la sala feste?».</li>
+              <li><strong>Softair VS Paintball</strong>: La prima volta › quarto passaggio.</li>
+              <li><strong>Team building</strong>: Dati chiave, Come si svolge › Testo, domanda «Quanto dura il team building?».</li>
+              <li><strong>Termini e condizioni</strong>: «Sala feste».</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Sala feste <span class="today">oggi: le tre schede di Occasioni › Sala feste</span></summary>
+          <div>
+            <ul>
+              <li><strong>Occasioni</strong>: Sala feste e catering (testo e tre schede), domanda «Come funziona la sala feste?».</li>
+              <li><strong>Softair</strong>: Prezzi › nota «Sala feste…», domanda «Si può festeggiare un compleanno?».</li>
+              <li><strong>Arcotag</strong>: Prezzi › nota «Sala feste…», domanda «Possiamo festeggiare un compleanno?».</li>
+              <li><strong>Nerf</strong>: Prezzi › nota «Sala feste…», domanda «Come funziona la festa di compleanno?».</li>
+              <li><strong>Termini e condizioni</strong>: «Sala feste».</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Prezzi delle partite <span class="today">listino di ogni attività</span></summary>
+          <div>
+            <ul>
+              <li><strong>Pagina dell'attività</strong>: Prezzi › Fasce e note, e la domanda «Quanto costa…» (nel softair anche «Posso usare la mia attrezzatura?», che cita il Veterano).</li>
+              <li><strong>Softair VS Paintball</strong>: Prezzi, che devono essere uguali a quelli del softair, compresa la nota sulla Tessera Élite.</li>
+              <li>La ricarica da 300 colpi (oggi 3 €): note dei prezzi del softair e voucher.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Voucher <span class="today">oggi: 35 € e 15 €, valido 6 mesi, stampato</span></summary>
+          <div>
+            <ul>
+              <li><strong>Prezzi</strong>: I voucher › Prezzo di ogni scheda (la home si aggiorna da sola), SEO › Descrizione, le domande «Cosa comprende il voucher con noleggio attrezzatura?» e «E il voucher per chi ha già il fucile?».</li>
+              <li><strong>Validità</strong>: Apertura › Scritta in fondo al disegno e Scritta tattica, SEO › Descrizione, domanda «Per quanto tempo è valido il voucher?», Come funziona › Passaggi, Home › Voucher regalo › Testo, Termini e condizioni › «Voucher regalo».</li>
+              <li><strong>Stampato</strong>: Come funziona › Passaggi e Regole, domanda «Il voucher va stampato?», Home › Voucher regalo › Testo, Termini.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Telefono ed email <span class="today">Impostazioni generali, più le risposte che li scrivono</span></summary>
+          <div>
+            <ul>
+              <li><strong>Impostazioni generali</strong>: Telefono, Email (e WhatsApp).</li>
+              <li><strong>Softair, Arcotag, Tiro dinamico, Nerf</strong>: la domanda «Come si prenota?», che li scrive per esteso.</li>
+              <li><strong>Privacy policy</strong> («Titolare del trattamento») e <strong>Termini e condizioni</strong> («Chi siamo»).</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Indirizzo <span class="today">oggi: Via Melegnano 26, Settimo Milanese</span></summary>
+          <div>
+            <ul>
+              <li><strong>Impostazioni generali</strong>: Indirizzo e Indirizzo per Google (tutti e due).</li>
+              <li><strong>Domande «Dove…»</strong>: Softair, Arcotag, Tiro dinamico e Nerf; «Dove si fanno gli allenamenti?» del corso; «Dove si trova l'arena?» di Occasioni e Team building.</li>
+              <li><strong>Contatti</strong>: Come raggiungerci › Testo, In auto, Con i mezzi.</li>
+              <li><strong>Privacy policy</strong> e <strong>Termini</strong>: la sede.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Orari <span class="today">oggi: tutti i giorni 14–24</span></summary>
+          <div>
+            <ul>
+              <li><strong>Impostazioni generali</strong>: Orari.</li>
+              <li><strong>Contatti</strong>: Scritta tattica.</li>
+              <li><strong>Pagine attività</strong>: Prezzi › Testo e «Quando / per chi» delle fasce; nel tiro dinamico anche le note e la domanda «Quando si può fare tiro dinamico?».</li>
+              <li><strong>Corso</strong> (giorno e ora degli allenamenti): Dati chiave, Scritta tattica, In breve, Il calendario › Testo, SEO, e Home › Il corso › Dati chiave.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Prenotazioni <span class="today">obbligatorie; sotto le 4 ore si confermano; caparra</span></summary>
+          <div>
+            <ul>
+              <li><strong>Pagine attività</strong>: domanda «Come si prenota?» e la nota «Prenotazione obbligatoria».</li>
+              <li><strong>Contatti</strong>: domande «Bisogna prenotare?» e «Posso annullare una prenotazione?».</li>
+              <li><strong>Occasioni</strong>: Come si prenota › Da sapere, domanda «Come si prenota?».</li>
+              <li><strong>Termini e condizioni</strong>: «Prenotazioni».</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Abbigliamento <span class="today">Impostazioni generali, più le risposte che lo ripetono</span></summary>
+          <div>
+            <ul>
+              <li><strong>Impostazioni generali</strong>: Abbigliamento consigliato.</li>
+              <li><strong>Domande</strong>: «Cosa devo indossare?» di Softair, Arcotag e Tiro dinamico; «Cosa devono indossare i bambini?» del Nerf; «Cosa devono indossare i partecipanti?» del Team building; «Come ci si veste?» di Occasioni; «Com'è la temperatura in arena?» del corso; «Si gioca anche d'inverno o se piove?» di Softair VS Paintball.</li>
+              <li><strong>Occasioni</strong>: Come si prenota › Da sapere. <strong>Team building</strong>: Nota sotto le opzioni.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Superficie dell'arena <span class="today">oggi: 1.500 m²</span></summary>
+          <div>
+            <ul>
+              <li><strong>Home</strong>: Hero › Scritta tattica, SEO › Descrizione, L'arena › Numero in evidenza.</li>
+              <li><strong>Impostazioni generali</strong>: Prenota › Parole della fascia inclinata.</li>
+              <li><strong>Pagine attività</strong>: Dati chiave, In breve, SEO › Descrizione.</li>
+              <li><strong>Occasioni</strong> e <strong>Team building</strong>: Dati chiave (nel team building anche SEO).</li>
+              <li><strong>Softair VS Paintball</strong>: Apertura › Sottotitolo, Cosa trovi da noi › Testo, SEO.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Missioni del softair <span class="today">scritte in due pagine</span></summary>
+          <div>
+            <ul>
+              <li><strong>Softair</strong>: Missioni / Percorsi.</li>
+              <li><strong>Softair VS Paintball</strong>: Cosa trovi da noi › Missioni.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Un'attività nuova <span class="today">dove aggiungerla</span></summary>
+          <div>
+            <ul>
+              <li><strong>Menu</strong> (sottomenu Attività, con la descrizione di una riga), <strong>Home › Attività</strong>, <strong>Occasioni › Scegli l'attività</strong> (se ci si fanno feste), <strong>Modulistica › Età minime</strong>, <strong>Impostazioni generali › Prenota › Parole della fascia inclinata</strong>.</li>
+              <li><strong>Termini e condizioni</strong>: l'elenco delle attività, giocatori ed età.</li>
+            </ul>
+          </div>
+        </details>
+        <details class="rule">
+          <summary>Articoli del blog <span class="today">testi vostri, anche di anni fa</span></summary>
+          <div>
+            <ul>
+              <li>Quando cambia una qualsiasi delle regole qui sopra, cercate le sue parole anche negli articoli di «Blog — articoli»: il sito non li corregge.</li>
+              <li>Un articolo superato si può aggiornare, oppure spegnere con «Articolo online».</li>
+              <li>I link scritti a mano negli articoli verso una pagina spenta o cancellata restano: toglieteli (capitolo <a href="#online">04</a>).</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section id="prima-di-salvare">
+      <h2><span class="num">27</span> Prima di salvare</h2>
+      <p>Trenta secondi che evitano quasi tutti gli errori.</p>
+      <ul class="check">
+        <li>Quello che ho scritto è vero? Prezzi, età, orari, numeri: solo dati confermati.</li>
+        <li>Ho cambiato una regola? Allora passo la sua voce nel capitolo <a href="#regole">26</a>.</li>
+        <li>Ogni foto nuova ha il suo testo alternativo e, dove serve, la versione per il telefono.</li>
+        <li>Ogni bottone ha sia il testo sia il link, e il link porta a una pagina che esiste o a un'ancora della stessa pagina.</li>
+        <li>Se ho nascosto una sezione, ho svuotato anche i bottoni che ci portavano.</li>
+        <li>Titoli per Google intorno ai 60 caratteri, descrizioni intorno ai 155.</li>
+        <li>Le scritte tattiche ripetono solo dati già scritti nella pagina.</li>
+        <li>Nessun prezzo del corso, da nessuna parte.</li>
+        <li>Un articolo nuovo ha il riassunto, la data e, se ha la copertina, il suo testo alternativo; i titoli nel testo partono dal secondo livello.</li>
+        <li>Per togliere una pagina o un articolo spengo l'interruttore, non lo cancello e non rinomino il file.</li>
+        <li>Dopo il salvataggio aspetto due o tre minuti, ricarico la pagina e la guardo anche dal telefono.</li>
+      </ul>
+    </section>
+
+    <section id="tecnico">
+      <h2><span class="num">28</span> Cosa fa il tecnico</h2>
+      <p>
+        Quasi tutto si fa dal pannello: creare una pagina attività nuova (capitolo
+        <a href="#attivita">12</a>), scrivere un articolo del blog (capitolo <a href="#blog">22</a>),
+        spegnere e riaccendere una pagina (capitolo <a href="#online">04</a>). Le recensioni sono
+        le stesse in ogni pagina, quindi una pagina nuova le mostra senza bisogno di nulla. Restano
+        al tecnico:
+      </p>
+      <ul>
+        <li><strong>Le pagine nuove che non sono attività</strong>, per esempio una pagina sull'arena o sulle serate a tema: finché il pannello non avrà una raccolta «Pagine», ognuna va costruita nel codice; poi i suoi testi si cambiano dal pannello.</li>
+        <li><strong>Simboli nuovi</strong> per i menu «Icona»: vanno disegnati e aggiunti all'elenco.</li>
+        <li><strong>Sezioni nuove</strong>, o in un ordine diverso, e i dettagli disegnati come la freccia dell'arcotag.</li>
+        <li><strong>I video</strong>: caricarli su Cloudflare R2 e darvi l'indirizzo.</li>
+        <li><strong>I servizi collegati</strong>: TicketingHub, Google Analytics, Web3Forms (capitolo <a href="#servizi">25</a>), e ogni servizio esterno nuovo, da collegare al banner dei cookie.</li>
+        <li><strong>I reindirizzamenti</strong>, quando una pagina cambia indirizzo o sparisce.</li>
+        <li><strong>Il dominio, il passaggio da un sito all'altro e la visibilità su Google.</strong></li>
+        <li><strong>Recuperare una versione precedente</strong> di un contenuto.</li>
+      </ul>
+    </section>
+
+    <section id="aiuto">
+      <h2><span class="num">29</span> Se qualcosa non va</h2>
+      <dl class="fields">
+        <div>
+          <dt>La modifica non compare</dt>
+          <dd><p>Aspettate tre minuti e ricaricate la pagina (sul computer Ctrl+F5, sul telefono tirate giù la pagina). Controllate di aver premuto Save.</p></dd>
+        </div>
+        <div>
+          <dt>Il pannello non salva</dt>
+          <dd><p>Un campo obbligatorio è vuoto, oppure un testo supera il suo limite.</p></dd>
+        </div>
+        <div>
+          <dt>Una sezione è sparita</dt>
+          <dd><p>Quasi sempre ne è vuoto il titolo, o la foto dove serve: cercate la sezione nel capitolo della sua pagina e guardate le righe «Se è vuoto».</p></dd>
+        </div>
+        <div>
+          <dt>Un bottone non c'è</dt>
+          <dd><p>Gli manca il testo o il link, oppure porta a una pagina spenta.</p></dd>
+        </div>
+        <div>
+          <dt>Una pagina dà «non trovata», o una voce del menu è sparita</dt>
+          <dd><p>La pagina, o l'articolo, ha l'interruttore «Pagina online» (o «Articolo online») spento: riaccendetelo e salvate (capitolo <a href="#online">04</a>). Se è spenta «Pagina Blog», sono spenti tutti gli articoli.</p></dd>
+        </div>
+        <div>
+          <dt>Il form non compare</dt>
+          <dd><p>È vuoto il titolo del form, oppure la «Chiave Web3Forms» in Impostazioni generali.</p></dd>
+        </div>
+        <div>
+          <dt>Una foto è tagliata male</dt>
+          <dd><p>Caricate la versione per il telefono, o cambiate «Dove sta il soggetto della foto» (capitolo <a href="#immagini">06</a>).</p></dd>
+        </div>
+        <div>
+          <dt>«Da me il sito non si muove»</dt>
+          <dd><p>Su quel telefono è attiva l'impostazione che riduce le animazioni: il sito la rispetta di proposito.</p></dd>
+        </div>
+        <div>
+          <dt>Tutto il resto</dt>
+          <dd><p>Scrivete al tecnico che segue il sito, con il link della pagina e cosa avete cambiato poco prima: ogni salvataggio è registrato, quindi si risale sempre al punto giusto.</p></dd>
+        </div>
+      </dl>
+    </section>
+  </main>
+
+  <footer>
+    <p>Manuale del sito di SoftAir Milano. Si aggiorna insieme al pannello: ogni campo nuovo arriva con la sua spiegazione.</p>
+    <p>Realizzazione e assistenza: <a href="https://mapped-dev.it/">Mattia Pedone</a>.</p>
+  </footer>
+</div>
+
+<a class="to-toc" href="#indice">Indice</a>
+
+<script>
+  // Marks in the index the chapter being read: on click, on scroll, and when a chapter is reached
+  // with the Tab key. Closed checklists open for printing.
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+    var entries = links
+      .map(function (a) {
+        return { link: a, section: document.querySelector(a.getAttribute('href')) };
+      })
+      .filter(function (e) {
+        return e.section;
+      });
+    if (!entries.length) return;
+
+    var current = null;
+    function mark(a) {
+      if (a === current) return;
+      if (current) current.removeAttribute('aria-current');
+      if (a) a.setAttribute('aria-current', 'true');
+      current = a;
+      // keep the marked entry visible inside the index, which scrolls on its own on short screens
+      var toc = a && a.closest('nav.toc');
+      if (toc && toc.scrollHeight > toc.clientHeight) {
+        var box = toc.getBoundingClientRect();
+        var item = a.getBoundingClientRect();
+        if (item.top < box.top || item.bottom > box.bottom) {
+          toc.scrollTop += item.top - box.top - box.height / 2;
+        }
+      }
+    }
+
+    function update() {
+      // reference line a third of the way down the screen
+      var line = window.scrollY + window.innerHeight / 3;
+      var active = entries[0].link;
+      entries.forEach(function (e) {
+        if (e.section.getBoundingClientRect().top + window.scrollY <= line) active = e.link;
+      });
+      // at the very bottom the last chapter wins
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+        active = entries[entries.length - 1].link;
+      }
+      mark(active);
+    }
+
+    var queued = false;
+    window.addEventListener(
+      'scroll',
+      function () {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(function () {
+          queued = false;
+          update();
+        });
+      },
+      { passive: true }
+    );
+    window.addEventListener('resize', update, { passive: true });
+
+    links.forEach(function (a) {
+      a.addEventListener('click', function () {
+        mark(a);
+      });
+    });
+    document.addEventListener('focusin', function (event) {
+      var hit = entries.filter(function (e) {
+        return e.section.contains(event.target);
+      })[0];
+      if (hit) mark(hit.link);
+    });
+
+    window.addEventListener('beforeprint', function () {
+      document.querySelectorAll('details').forEach(function (d) {
+        d.open = true;
+      });
+    });
+
+    update();
+  })();
+</script>

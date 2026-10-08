@@ -55,11 +55,13 @@ const label = (k: Key) => fields[k]?.label?.trim() || '';
 const nameOf = (k: Key) => (k === 'email' ? 'email' : label(k) || k);
 
 // The activities in the site's own order (as on the home), from the activity pages themselves, so
-// a new page joins the list without touching this component.
-const pages = import.meta.glob<{ default: { name?: string } }>('../../data/activities/*.json', { eager: true });
+// a new page joins the list without touching this component; a page switched off in the CMS
+// («Pagina online») leaves it.
+const pages = import.meta.glob<{ default: { name?: string; published?: boolean } }>('../../data/activities/*.json', { eager: true });
 const order = home.activities.map((a) => a.href);
 const rank = (href: string) => (order.includes(href) ? order.indexOf(href) : order.length);
 const listed = Object.entries(pages)
+  .filter(([, mod]) => mod.default.published !== false)
   .map(([file, mod]) => ({ href: `/${file.split('/').pop()!.replace(/\.json$/, '')}`, name: mod.default.name?.trim() ?? '' }))
   .filter((a) => has(a.name))
   .sort((a, b) => rank(a.href) - rank(b.href))

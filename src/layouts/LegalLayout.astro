@@ -1,0 +1,77 @@
+---
+// The legal pages (privacy, cookie, terms): their texts are Markdown files in src/pages/ that the
+// client edits from Pages CMS (title, last update, body). What must never break stays here: the
+// structure, the long-text typography and, on the cookie policy, the button that reopens the
+// cookie choices, tied to the address so the CMS cannot remove it by mistake. Never indexed and
+// out of the sitemap (SEO-06, astro.config.mjs).
+
+import BaseLayout from './BaseLayout.astro';
+import Button from '../components/atoms/Button.astro';
+import Prose from '../components/molecules/Prose.astro';
+import TextHero from '../components/organisms/TextHero.astro';
+import cookie from '../data/cookie.json';
+import settings from '../data/settings.json';
+import { has } from '../lib/fields';
+import { breadcrumbLd } from '../lib/jsonld';
+
+interface Props {
+  frontmatter: {
+    title?: string;
+    description?: string;
+    updated?: string;
+  };
+}
+
+const { frontmatter } = Astro.props;
+const { description, updated } = frontmatter;
+const path = Astro.url.pathname.replace(/\/$/, '');
+// Pages CMS drops an emptied key: without a title the page takes its footer link's label, so the
+// build never fails on a missing heading.
+const footerLabel = (settings.footerLegal ?? []).find((l) => l.href?.replace(/\/$/, '') === path)?.label;
+const title = has(frontmatter.title) ? frontmatter.title : has(footerLabel) ? footerLabel : settings.siteName;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: title, href: path },
+];
+const withPreferences = path === '/cookie' && has(cookie.policyButton);
+---
+
+<BaseLayout title={`${title} | ${settings.siteName}`} description={description} noindex preloadBodyFont jsonLd={[breadcrumbLd(crumbs, Astro.site)]}>
+  <article class="legal" aria-labelledby="legal-title">
+    {/* Compact: the headline introduces a document to read, it is not the page's statement. */}
+    <TextHero title={title} crumbs={crumbs} headingId="legal-title" compact>
+      {/* Interface microcopy (CMS-02): the label of the date the client writes. */}
+      {has(updated) && <p class="legal__updated">Ultimo aggiornamento: {updated}</p>}
+    </TextHero>
+
+    <div class="legal__inner shell">
+      <Prose>
+        <slot />
+      </Prose>
+
+      {withPreferences && (
+        <p class="legal__action">
+          <Button type="button" variant="secondary" class="legal__prefs" data-cc="show-preferencesModal">{cookie.policyButton}</Button>
+        </p>
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<style is:global>
+  .legal__updated {
+    margin: 1.5rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+  }
+
+  .legal__inner {
+    padding-block: 0 clamp(4.5rem, 10vw, 8rem);
+  }
+  /* The cookie policy's last section ends on its button: the page's one action after the
+     header's Prenota, so it is the secondary shape (DES-05). */
+  .legal__action { margin: 1.75rem 0 0; }
+  .legal__prefs { min-height: 2.75rem; }
+  .legal__prefs:active { transform: translateY(1px); }
+</style>

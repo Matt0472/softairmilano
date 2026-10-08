@@ -1,0 +1,18 @@
+{
+  "published": true,
+  "seo": {
+    "title": "Blog softair: guide, regole e consigli | SoftAir Milano",
+    "description": "Il blog di SoftAir Milano, arena indoor di softair a Milano: guide su attrezzatura, protezioni e normativa, e le differenze con il paintball.",
+    "image": "",
+    "imageAlt": ""
+  },
+  "hero": {
+    "hudTag": "Guide · Regole · Attrezzatura",
+    "eyebrow": "Guide e consigli",
+    "title": "Blog",
+    "subtitle": "Attrezzatura, protezioni, regole e curiosità sul softair, raccontate da chi lo fa giocare ogni giorno."
+  },
+  "listTitle": "Tutti gli articoli",
+  "moreTitle": "Altri articoli",
+  "readMore": "Leggi l'articolo"
+}

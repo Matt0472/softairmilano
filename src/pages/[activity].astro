@@ -44,7 +44,7 @@ interface Activity {
   };
   facts?: { value: string; label: string }[];
   intro?: { title: string; text: string; points?: { title: string; text: string }[] };
-  evening?: { eyebrow?: string; title: string; text?: string; steps?: { time?: string; title: string; text: string }[] };
+  evening?: { eyebrow?: string; title: string; text?: string; steps?: { time?: string; title: string; text: string; link?: { label?: string; href?: string } }[] };
   modes?: {
     eyebrow?: string;
     title: string;
@@ -62,12 +62,14 @@ interface Activity {
   };
   reviews?: { title: string };
   faq?: { title: string; items?: { q: string; a: string }[] };
-  related?: { title: string };
+  related?: { title: string; order?: string[] };
+  published?: boolean;
 }
 
 export function getStaticPaths() {
   const files = import.meta.glob<{ default: Activity }>('../data/activities/*.json', { eager: true });
-  return Object.entries(files).map(([file, mod]) => ({
+  // An activity switched off in the CMS («Pagina online») is not published at all (src/lib/pages.ts).
+  return Object.entries(files).filter(([, mod]) => mod.default.published !== false).map(([file, mod]) => ({
     params: { activity: file.split('/').pop()!.replace(/\.json$/, '') },
     props: { data: mod.default },
   }));
@@ -90,9 +92,18 @@ const crumbs = [
 ];
 // "Provate anche": the other activities, with the one-line description from the menu when there is one.
 const menuDesc = new Map(flattenNav(navigation.items as NavItem[]).map((n) => [n.href, 'desc' in n ? n.desc : undefined]));
+// The page may put some of them first (`related.order`, references to files of this collection, so
+// the link comes from the file name like the route's); the rest keep the home's order (stable sort).
+// It only reorders: unknown entries, repeats and this page are ignored, and no card is ever dropped.
+const firstHrefs = (related?.order ?? []).filter(has).map((file) => `/${file.split('/').pop()!.replace(/\.json$/, '')}`);
+const rank = (href: string) => {
+  const i = firstHrefs.indexOf(href);
+  return i === -1 ? firstHrefs.length : i;
+};
 // Each card may carry its own photo for this gallery (`linkImage`), so it can differ from the home's.
 const relatedItems = home.activities
   .filter((a) => a.href !== path)
+  .sort((a, b) => rank(a.href) - rank(b.href))
   .map((a) => ({
     ...a,
     desc: menuDesc.get(a.href) || a.desc,
@@ -124,7 +135,7 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
   {audiences && has(audiences.title) && !!audiences.items?.length && <AudienceGrid title={audiences.title} items={audiences.items} />}
 
   {pricing && has(pricing.title) && !!pricing.tiers?.length && (
-    <PriceTiers title={pricing.title} text={pricing.text} tiers={pricing.tiers} notes={pricing.notes} cta={data.hero.ctaPrimary} />
+    <PriceTiers title={pricing.title} text={pricing.text} tiers={pricing.tiers} notes={pricing.notes} wear={settings.wear} cta={data.hero.ctaPrimary} />
   )}
 
   {reviews && has(reviews.title) && <Reviews title={reviews.title} />}

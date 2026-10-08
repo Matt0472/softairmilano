@@ -18,6 +18,7 @@ interface Props {
   /** Mobile image (9:16), for any portrait screen below desktop. Falls back to the desktop image. */
   imageMobile?: string;
   imageAlt: string;
+  /** Small kicker line that opens the H1, above the headline. */
   eyebrow?: string;
   title: string;
   subtitle?: string;
@@ -41,6 +42,9 @@ const {
   hudTag,
   showRating = false,
 } = Astro.props;
+
+// An emptied kicker leaves the H1 to the headline alone.
+const kicker = has(eyebrow) ? eyebrow : undefined;
 
 const score = showRating ? ratingScore() : null;
 const scoreText = score !== null ? formatScore(score) : '';
@@ -85,8 +89,13 @@ const toWebp = (p: string): string => p.replace(/\.(jpe?g|png)$/i, '.webp');
 
   <div class="hero__content shell">
     <div class="hero__inner">
-      {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
-      <h1 class="hero__title">{keepShortWords(title)}</h1>
+      {/* The kicker opens the H1, so the page's main heading names the activity and the city
+          while the big line stays a phrase; the hidden colon is the pause a screen reader voices
+          between the two. The headline is the big type and the LCP. */}
+      <h1 class="hero__title">
+        {kicker && <span class="hero__kicker">{kicker}<span class="sr-only">: </span></span>}
+        <span class="hero__headline">{keepShortWords(title)}</span>
+      </h1>
       {subtitle && <p class="hero__lede">{subtitle}</p>}
       {(primary || secondary) && (
         <div class="hero__cta">
@@ -258,7 +267,7 @@ const toWebp = (p: string): string => p.replace(/\.(jpe?g|png)$/i, '.webp');
   }
   .hero__inner { position: relative; max-width: 42rem; }
   /* Legibility gradient anchored to the copy, not to the hero's height (as in the inner pages'
-     hero), so it follows the text on any screen: it fades in above the eyebrow and deepens under
+     hero), so it follows the text on any screen: it fades in above the kicker and deepens under
      the copy. It runs off the left and bottom edges, which the hero clips. */
   .hero__inner::before {
     content: "";
@@ -295,7 +304,7 @@ const toWebp = (p: string): string => p.replace(/\.(jpe?g|png)$/i, '.webp');
     }
   }
 
-  .hero__eyebrow {
+  .hero__kicker {
     --track: 0.28em;
     display: flex;
     align-items: baseline;
@@ -316,8 +325,8 @@ const toWebp = (p: string): string => p.replace(/\.(jpe?g|png)$/i, '.webp');
     color: var(--accent);
     animation: hero-rise 0.7s var(--ease-out-expo) 0.05s both;
   }
-  /* On the first line's cap centre, so it stays put if a long eyebrow wraps. */
-  .hero__eyebrow::before {
+  /* On the first line's cap centre, so it stays put if a long kicker wraps. */
+  .hero__kicker::before {
     content: "";
     position: relative;
     top: -0.36em;
@@ -327,11 +336,17 @@ const toWebp = (p: string): string => p.replace(/\.(jpe?g|png)$/i, '.webp');
     background: var(--accent);
   }
   @media (max-width: 767px) {
-    .hero__eyebrow { --track: 0.2em; }
+    .hero__kicker { --track: 0.2em; }
   }
 
+  /* The H1 only stacks its two lines: the big type lives on the headline, so the kicker inherits
+     none of it. */
   .hero__title {
     margin: 0;
+    position: relative;
+  }
+  .hero__headline {
+    display: block;
     /* Short words are bound to the next (keepShortWords), so a line must take a chain like
        «di un film d'azione»: 16ch and a 5rem cap keep the headline to three lines. */
     max-width: 16ch;
@@ -342,7 +357,6 @@ const toWebp = (p: string): string => p.replace(/\.(jpe?g|png)$/i, '.webp');
     letter-spacing: 0.005em;
     font-size: clamp(2.05rem, 7.5vw, 5rem);
     text-wrap: balance;
-    position: relative;
     text-shadow:
       0 2px 20px color-mix(in srgb, var(--ink) 85%, transparent),
       0 1px 3px color-mix(in srgb, var(--ink) 70%, transparent);
@@ -407,12 +421,12 @@ const toWebp = (p: string): string => p.replace(/\.(jpe?g|png)$/i, '.webp');
   }
 
   /* Landscape phones: the headline goes wide and small, the lede to two lines and the rating
-     bows out, so the primary CTA stays above the fold. The top padding keeps the eyebrow clear
+     bows out, so the primary CTA stays above the fold. The top padding keeps the kicker clear
      of the floating header's logo. After the short-screen rule on purpose. */
   @media (max-height: 500px) and (orientation: landscape) {
     .hero__content { padding-top: 4.75rem; }
-    .hero__eyebrow { margin-bottom: 0.6rem; }
-    .hero__title {
+    .hero__kicker { margin-bottom: 0.6rem; }
+    .hero__headline {
       max-width: none;
       font-size: clamp(1.75rem, 8.5vh, 2.25rem);
     }
@@ -434,7 +448,7 @@ const toWebp = (p: string): string => p.replace(/\.(jpe?g|png)$/i, '.webp');
     .hero__bg { transform: scale(1.06); }
     .hero__shaft { opacity: 0.4; }
     .hero__title::after { transform: scaleX(1); }
-    .hero__eyebrow,
+    .hero__kicker,
     .hero__cta,
     .hero__proof { opacity: 1; transform: none; }
   }

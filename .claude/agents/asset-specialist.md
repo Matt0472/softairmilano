@@ -53,6 +53,11 @@ approved, which are still candidates) is in `docs/in-development/HANDOFF.md`: re
 Using a real photo — especially `arena.jpg` — as the base of an AI generation needs the client's
 explicit request for that generation (`MEDIA-03`).
 
+Every softair replica in an image has a **red** barrel tip, as Italian law requires (`MEDIA-11`): say
+it in the prompt, and check it zoomed before showing the image. Gemini defaults to the US orange tip;
+when an approved image has it, fix only the tip with a faithful image-to-image edit, never a new
+composition.
+
 ## Generating with Gemini
 
 ```bash

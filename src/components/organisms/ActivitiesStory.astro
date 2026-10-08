@@ -76,7 +76,7 @@ const portraitMedia = '(max-width: 820px) and (orientation: portrait)';
                 </Button>
               )}
             </div>
-            <figure class:list={['acts__media', (a.focus === 'left' || a.focus === 'right') && `acts__media--${a.focus}`]}>
+            <figure class:list={['acts__media', (a.focus === 'left' || a.focus === 'right') && `acts__media--${a.focus}`, has(a.imageMobile) && 'acts__media--crop']}>
               <Picture
                 src={a.image}
                 srcMobile={a.imageMobile}
@@ -219,6 +219,11 @@ const portraitMedia = '(max-width: 820px) and (orientation: portrait)';
   /* The subject chosen in the CMS stays in the frame when the photo is wider than its box. */
   .acts__media--left { --acts-x: 0%; }
   .acts__media--right { --acts-x: 100%; }
+  /* A portrait phone gets the vertical crop, already composed on its subject: the focus is for the
+     wide photo only, as in PageHero. */
+  @media (max-width: 820px) and (orientation: portrait) {
+    .acts__media--crop { --acts-x: 50%; }
+  }
 
   /* Progress dashes: a 4px bar in a 44px-tall hit area (RESP-04), the padding left unpainted. */
   .acts__dots { position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); z-index: 6; display: flex; gap: 10px; }

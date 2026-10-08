@@ -1,4 +1,5 @@
 {
+  "published": true,
   "seo": {
     "title": "Team building a Milano con il softair | SoftAir Milano",
     "description": "Team building aziendale a Milano con il softair: missioni a squadre in un'arena indoor di 1.500 m², fino a 30 persone, arbitrate dal nostro staff.",
@@ -200,7 +201,7 @@
       "Un'ora di gioco in più",
       "Catering"
     ],
-    "optionsNote": "Indicatele nella richiesta di preventivo. L'arena non è riscaldata né climatizzata: vestitevi in base alla stagione."
+    "optionsNote": "Indicatele nella richiesta di preventivo. L'arena non è climatizzata né riscaldata: cosa indossare è nelle domande frequenti, più in basso."
   },
   "extras": {
     "show": true,
@@ -242,7 +243,7 @@
       },
       {
         "q": "Quanto dura il team building?",
-        "a": "Una sessione di softair dura 1 ora e 45 minuti in tutto, briefing compreso. Su richiesta si aggiungono un'ora di addestramento prima, con un istruttore esperto, o un'ora di gioco in più."
+        "a": "Una sessione di softair dura 1 ora e 45 minuti in tutto, briefing compreso. Su richiesta si aggiungono una sessione di training di 1 ora prima, con un formatore esperto, o un'ora di gioco in più."
       },
       {
         "q": "Quanto costa?",
@@ -258,7 +259,7 @@
       },
       {
         "q": "Cosa si può aggiungere alla giornata?",
-        "a": "Su richiesta, un'ora di addestramento prima dell'attività con un istruttore esperto, un'ora di gioco in più e il catering. Indicatelo nella richiesta di preventivo."
+        "a": "Su richiesta, una sessione di training di 1 ora prima dell'attività con un formatore esperto, un'ora di gioco in più e il catering. Indicatelo nella richiesta di preventivo."
       },
       {
         "q": "Si può fare fuori dall'arena?",
@@ -266,7 +267,7 @@
       },
       {
         "q": "Cosa devono indossare i partecipanti?",
-        "a": "Maglietta a maniche lunghe, pantaloni lunghi, scaldacollo, scarpe comode e guanti aderenti. L'arena non è riscaldata né climatizzata: d'inverno meglio vestirsi a strati."
+        "a": "Maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). L'arena non è climatizzata né riscaldata: se fa freddo, aggiungete qualche strato."
       },
       {
         "q": "Si gioca anche se piove?",

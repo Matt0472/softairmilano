@@ -6,6 +6,7 @@ import ArenaIntro from '../components/organisms/ArenaIntro.astro';
 import ActivitiesStory from '../components/organisms/ActivitiesStory.astro';
 import Reviews from '../components/organisms/Reviews.astro';
 import OccasionMosaic from '../components/organisms/OccasionMosaic.astro';
+import VoucherTeaser from '../components/organisms/VoucherTeaser.astro';
 import CourseTeaser from '../components/organisms/CourseTeaser.astro';
 import TeaserBanner from '../components/organisms/TeaserBanner.astro';
 import SocialChannels from '../components/organisms/SocialChannels.astro';
@@ -15,8 +16,9 @@ import Reveal from '../components/molecules/Reveal.astro';
 import home from '../data/home.json';
 import settings from '../data/settings.json';
 import { has } from '../lib/fields';
+import { isLive } from '../lib/pages';
 
-const { seo, hero, video, arena, intro, activitiesTitle, activities, reviews, occasions, course, paintballTeaser, social, rangerTeaser } = home;
+const { seo, hero, video, arena, intro, activitiesTitle, activities, reviews, occasions, voucher, course, paintballTeaser, social, rangerTeaser } = home;
 
 ---
 
@@ -36,16 +38,22 @@ const { seo, hero, video, arena, intro, activitiesTitle, activities, reviews, oc
     <TeaserBanner {...paintballTeaser} headingId="paintball-teaser-title" />
   )}
 
-  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
-
   {occasions && has(occasions.title) && !!occasions.items?.length && <OccasionMosaic {...occasions} />}
 
-  {course && has(course.title) && <CourseTeaser {...course} />}
+  {/* The gift voucher, right after the occasions it suits: a game to give for a birthday or a stag
+      night. */}
+  {voucher && has(voucher.title) && isLive('/voucher-regalo') && <VoucherTeaser {...voucher} />}
+
+  {/* A teaser that exists to lead to its page goes with the page when the client switches it off. */}
+  {course && has(course.title) && isLive('/corso-softair') && <CourseTeaser {...course} />}
 
   {social && has(social.title) && <SocialChannels title={social.title} text={social.text} />}
 
   {/* The outdoor arena (Ranger): one card that links to its own site. */}
   {rangerTeaser && has(rangerTeaser.title) && <RangerTeaser {...rangerTeaser} href={settings.rangerUrl} />}
+
+  {/* The reviews come after every offer: the last word before booking. */}
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
 
   {/* #prenota: every Prenota on the page lands here. The same block closes every page. */}
   <FinalCta {...settings.finalCta} />

@@ -1,0 +1,238 @@
+---
+// One article on a card: the cover in the site's inner frame, the date, the title, the summary and
+// a button. The whole card is one link, stretched from the title, so a screen reader hears the
+// title once; the button is its visible part (aria-hidden). In the source the heading comes first,
+// the cover above it only on screen. In a grid of cards (BlogPosts) each part sits on a row shared
+// across the cards (subgrid): titles, summaries and buttons line up, and the summary is cut to a
+// fixed number of lines with an ellipsis. `featured` is the newest article in the blog's opening:
+// the cover beside the copy from desktop. Next to the title the cover is decoration (alt=""): the
+// article's own page describes it.
+
+import Icon from '../atoms/Icon.astro';
+import Picture from '../atoms/Picture.astro';
+import PhotoFrame from './PhotoFrame.astro';
+import { has } from '../../lib/fields';
+import { coverOf, formatDate, isoDate, postHref, type Post } from '../../lib/blog';
+
+interface Props {
+  post: Post;
+  /** The button's label (blog.json `readMore`). Without it the card has no button. */
+  readMore?: string;
+  headingLevel?: 2 | 3;
+  featured?: boolean;
+  /** Rendered width of the cover, as in the `sizes` attribute. */
+  sizes?: string;
+}
+
+const { post, readMore, headingLevel = 3, featured = false, sizes = '(max-width: 639px) calc(100vw - 2.5rem), (max-width: 1023px) 46vw, (max-width: 1520px) 31vw, 480px' } = Astro.props;
+const { title, description, date } = post.data;
+const image = coverOf(post);
+const Heading = headingLevel === 2 ? 'h2' : 'h3';
+---
+
+<article class:list={['post', featured && 'post--featured']}>
+  <Heading class="post__title"><a class="post__link" href={postHref(post)}>{title}</a></Heading>
+  <p class="post__date"><time datetime={isoDate(date)}>{formatDate(date)}</time></p>
+  {has(description) && <p class="post__excerpt">{description}</p>}
+  {has(readMore) && (
+    <span class="post__more" aria-hidden="true">{readMore}<Icon name="arrowRight" size={16} class="post__go" /></span>
+  )}
+  <div class="post__media">
+    {has(image) ? (
+      <Picture src={image} alt="" sizes={sizes} class="post__img" />
+    ) : (
+      <Icon name="crosshair" size={40} class="post__mark" />
+    )}
+    <PhotoFrame />
+  </div>
+</article>
+
+<style is:global>
+  /* Phones, and wherever subgrid is missing: a column, the cover first, the button at the foot. */
+  .post {
+    --post-pad: clamp(1.25rem, 2.4vw, 1.75rem);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--lift, var(--color-surface));
+    transition:
+      border-color var(--duration-base) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .post__media {
+    order: -2;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: var(--lift-2, var(--color-surface-2));
+  }
+  .post__media picture,
+  .post__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .post__img {
+    object-fit: cover;
+    transition: transform calc(var(--duration-slow) * 2) var(--ease-out-expo);
+  }
+  /* No cover: the site's mark, quiet, so the card keeps its shape. */
+  .post__mark {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    color: var(--color-steel);
+  }
+
+  .post__date {
+    order: -1;
+    margin: 0;
+    padding: var(--post-pad) var(--post-pad) 0;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    line-height: 1.3;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  /* The title is never cut: with wider text spacing (WCAG 1.4.12) a clamp would hide words, and
+     the shared rows keep the cards of a line equal anyway. Line height 1.16: the accent of a
+     capital È clears the line above. The last text before the button keeps the room above it. */
+  .post__title {
+    margin: 0.6rem 0 0;
+    padding: 0 var(--post-pad);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.35rem, 1.1rem + 0.7vw, 1.6rem);
+    line-height: 1.16;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    transition: color var(--duration-base) var(--ease-out-expo);
+  }
+  .post:not(:has(.post__excerpt)) .post__title { margin-bottom: 1.4rem; }
+  .post__link {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* Stretched link: the whole card is the target. */
+  .post__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: var(--radius-lg);
+  }
+  /* The summary is cut to a fixed number of lines with an ellipsis. The clamp clips at the padding
+     edge, so its spacing is margin: a bottom padding would show the next line. */
+  .post__excerpt {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    margin: 0.7rem 0 1.4rem;
+    padding: 0 var(--post-pad);
+    color: var(--color-muted);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  /* The Button atom's secondary shape, drawn: the link is the card. */
+  .post__more {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    margin: auto var(--post-pad) var(--post-pad);
+    padding: 0.5rem 1.1rem;
+    border: 1px solid var(--color-steel);
+    border-radius: var(--radius-md);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .post__go {
+    flex: none;
+    transition: transform var(--duration-base) var(--ease-out-expo);
+  }
+
+  /* In a grid that asks for it (data-post-grid), each part takes a row shared by the cards of the
+     same line: titles, summaries and buttons line up whatever their length. */
+  @supports (grid-template-rows: subgrid) {
+    [data-post-grid] > .post {
+      display: grid;
+      grid-row: span 5;
+      grid-template-rows: subgrid;
+      row-gap: 0;
+    }
+    [data-post-grid] > .post .post__media { grid-row: 1; }
+    [data-post-grid] > .post .post__date { grid-row: 2; }
+    [data-post-grid] > .post .post__title { grid-row: 3; align-self: start; }
+    [data-post-grid] > .post .post__excerpt { grid-row: 4; align-self: start; }
+    [data-post-grid] > .post .post__more { grid-row: 5; align-self: end; justify-self: start; margin-top: 0; }
+  }
+
+  /* Pointer and keyboard light the card the same way: tinted edge, lit title, the button turned
+     to the accent, the cover leaning in. */
+  .post:active { transform: translateY(1px) scale(0.99); }
+  @media (hover: hover) {
+    .post:hover { border-color: color-mix(in srgb, var(--color-accent) 50%, var(--color-border)); }
+    .post:hover .post__title { color: var(--color-accent-hover); }
+    .post:hover .post__more { border-color: var(--color-accent); color: var(--color-accent); }
+    .post:hover .post__go { transform: translateX(3px); }
+    .post:hover .post__img { transform: scale(1.04); }
+  }
+  /* The ring goes round the card, the real target. */
+  .post:has(.post__link:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-color: color-mix(in srgb, var(--color-accent) 50%, var(--color-border));
+  }
+  @supports selector(:has(*)) {
+    .post__link:focus-visible { outline: none; }
+  }
+  .post:has(.post__link:focus-visible) .post__title { color: var(--color-accent-hover); }
+  .post:has(.post__link:focus-visible) .post__more { border-color: var(--color-accent); color: var(--color-accent); }
+  .post:has(.post__link:focus-visible) .post__go { transform: translateX(3px); }
+  .post:has(.post__link:focus-visible) .post__img { transform: scale(1.04); }
+
+  /* The newest article, in the opening: a larger title and one more line of summary. From desktop
+     the cover takes the left 7/12 and the copy stands beside it, the button at the card's foot. */
+  .post--featured .post__title { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem); }
+  .post--featured .post__excerpt { -webkit-line-clamp: 4; font-size: 1.0625rem; }
+  @media (min-width: 1024px) {
+    .post--featured {
+      --post-pad: clamp(1.75rem, 3vw, 2.75rem);
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      grid-template-rows: auto auto auto minmax(0, 1fr);
+      grid-template-areas: "media date" "media title" "media excerpt" "media more";
+    }
+    /* The card is as tall as the copy needs, never shorter than a wide photo; the cover fills it. */
+    .post--featured .post__media {
+      grid-area: media;
+      aspect-ratio: auto;
+      min-height: clamp(22rem, 30vw, 30rem);
+    }
+    .post--featured .post__date { grid-area: date; }
+    .post--featured .post__title { grid-area: title; }
+    .post--featured .post__excerpt { grid-area: excerpt; }
+    .post--featured .post__more { grid-area: more; align-self: end; justify-self: start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .post:hover .post__img,
+    .post:has(.post__link:focus-visible) .post__img,
+    .post:hover .post__go,
+    .post:has(.post__link:focus-visible) .post__go { transform: none; }
+  }
+</style>

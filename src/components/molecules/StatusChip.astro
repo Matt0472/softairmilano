@@ -8,7 +8,7 @@ import { keepShortWords } from '../../lib/typography';
 
 interface Props {
   text: string;
-  /** "on" lights the dot in the accent (e.g. enrolment open); "off" leaves it grey. */
+  /** "on" lights the dot in the accent (e.g. enrolment open); "off" lights it red (closed). */
   tone?: 'on' | 'off';
   class?: string;
 }
@@ -48,5 +48,8 @@ const { text, tone = 'on', class: className } = Astro.props;
     box-shadow: 0 0 8px 1px color-mix(in srgb, var(--color-accent) 80%, transparent);
     translate: 0 -1px;
   }
-  .status-chip--off .status-chip__dot { background: var(--color-muted); box-shadow: none; }
+  .status-chip--off .status-chip__dot {
+    background: var(--color-danger);
+    box-shadow: 0 0 8px 1px color-mix(in srgb, var(--color-danger) 80%, transparent);
+  }
 </style>

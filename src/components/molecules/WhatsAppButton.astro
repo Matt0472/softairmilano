@@ -1,0 +1,139 @@
+---
+// Floating WhatsApp link for phones and small tablets, bottom left, opposite «Torna su». Global
+// (rendered in BaseLayout): a tap opens a chat with the business number and a message already
+// typed, both from settings.json (whatsapp, whatsappButton); without the number, or with the
+// switch off, nothing renders. A secondary contact that never rivals Prenota (DES-05): the glyph
+// alone on the back-to-top button's chip, in the site's accent rather than WhatsApp green (DES-04).
+// Same tab on purpose: on a phone the link hands over to the WhatsApp app and the page stays put.
+import Icon from '../atoms/Icon.astro';
+import settings from '../../data/settings.json';
+import { has } from '../../lib/fields';
+import { waHref } from '../../lib/phone';
+
+const { whatsapp, whatsappButton: button } = settings;
+const chat = waHref(whatsapp);
+const message = button?.message;
+const href = chat && has(message) ? `${chat}?text=${encodeURIComponent(message.trim())}` : chat;
+const label = has(button?.label) ? button.label.trim() : 'WhatsApp';
+const show = Boolean(chat) && button?.show === true;
+---
+
+{
+  show && (
+    <Fragment>
+      <a
+        id="wa-chat"
+        href={href}
+        class="wa-chat fixed bottom-5 left-5 z-40 grid h-11 w-11 place-items-center rounded-full border border-border bg-surface/90 text-accent shadow-md backdrop-blur hover:border-accent hover:bg-accent hover:text-on-accent active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent lg:hidden"
+        data-visible="false"
+      >
+        <Icon name="whatsapp" size={20} />
+        <span class="sr-only">{label} (si apre WhatsApp)</span>
+      </a>
+      <span id="wa-chat-sentinel" class="wa-chat__sentinel" aria-hidden="true" />
+    </Fragment>
+  )
+}
+
+<style>
+  /* Hidden until wanted, and only opacity/transform animate. It stays in the tab order (where the
+     page has no other WhatsApp link, as on the legal pages, it is the only way to it): keyboard
+     focus always brings it into view (A11Y-05). */
+  .wa-chat {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition:
+      opacity var(--duration-base) var(--ease-out-expo),
+      transform var(--duration-base) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .wa-chat[data-visible='true'],
+  .wa-chat:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+  /* Spans the first screen: once none of it is in view, the opening is behind. A whole screen rather
+     than a 1px mark, so a jump (an anchor, «Torna su») always crosses its edge and is noticed. */
+  .wa-chat__sentinel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100svh;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  const link = document.getElementById('wa-chat');
+  const sentinel = document.getElementById('wa-chat-sentinel');
+  if (link && sentinel) {
+    // Every reason to step aside; the button shows only when none holds.
+    const away = { opening: true, closing: false, story: false, consent: false, menu: false, typing: false };
+    const sync = () => {
+      link.dataset.visible = String(!Object.values(away).some(Boolean));
+    };
+
+    // Observers and events rather than a scroll listener: no work per frame, no layout read at load.
+    new IntersectionObserver(([entry]) => {
+      away.opening = entry.isIntersecting;
+      sync();
+    }).observe(sentinel);
+
+    // The closing section and the footer run on to the end of the page, so "from #prenota down" is
+    // "either of them in view". A page without #prenota ends on the footer alone.
+    const closing = [document.getElementById('prenota'), document.querySelector('body > footer')].filter((el) => el !== null);
+    const inView = new Map<Element, boolean>();
+    const closingObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) inView.set(entry.target, entry.isIntersecting);
+      away.closing = [...inView.values()].some(Boolean);
+      sync();
+    });
+    for (const el of closing) closingObserver.observe(el);
+
+    // The home's activities story pins its «Scopri» button to the bottom of the screen, where this
+    // button sits: it steps aside while the story is on screen.
+    const story = document.querySelector('[data-acts]');
+    if (story) {
+      new IntersectionObserver(([entry]) => {
+        away.story = entry.isIntersecting;
+        sync();
+      }).observe(story);
+    }
+
+    // vanilla-cookieconsent marks the root while the banner or the preferences are open.
+    const root = document.documentElement;
+    const syncConsent = () => {
+      away.consent = root.classList.contains('show--consent') || root.classList.contains('show--preferences');
+      sync();
+    };
+    addEventListener('cc:onModalShow', syncConsent);
+    addEventListener('cc:onModalHide', syncConsent);
+    syncConsent();
+
+    // The mobile menu (Header) covers the page while open.
+    const menu = document.getElementById('mobile-menu');
+    if (menu) {
+      new MutationObserver(() => {
+        away.menu = menu.dataset.open === 'true';
+        sync();
+      }).observe(menu, { attributes: true, attributeFilter: ['data-open'] });
+    }
+
+    // While a text field has focus the keyboard is up, and the button would sit on the form.
+    const typesText = (el: EventTarget | null) =>
+      el instanceof HTMLElement && el.matches('textarea, input:not([type="checkbox"], [type="radio"], [type="button"], [type="submit"])');
+    document.addEventListener('focusin', (e) => {
+      away.typing = typesText(e.target);
+      sync();
+    });
+    document.addEventListener('focusout', (e) => {
+      away.typing = typesText(e.relatedTarget);
+      sync();
+    });
+  }
+</script>

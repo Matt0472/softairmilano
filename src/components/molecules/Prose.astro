@@ -1,0 +1,89 @@
+---
+// Long text written by the client in Markdown (the legal pages, the blog articles): one reading
+// measure, one heading rhythm, the site's links, lists, code chips and inline photos. Every page of
+// running text goes through here, so the typography never drifts from one to the other. Pages
+// that use it preload the body face (BaseLayout `preloadBodyFont`), so the text does not rewrap
+// when Inter arrives (PERF-03).
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={['prose', className]}>
+  <slot />
+</div>
+
+<style is:global>
+  /* A reading measure of about 65 characters, in em rather than ch so it does not follow the
+     fallback face's "0". */
+  .prose {
+    max-width: 36em;
+    color: var(--color-muted);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+  .prose > :first-child { margin-top: 0; }
+  .prose > :last-child { margin-bottom: 0; }
+  /* Each section opens on a hairline, so a long text reads as numbered parts without numbers. */
+  .prose h2 {
+    margin: clamp(2.75rem, 6vw, 3.75rem) 0 1rem;
+    padding-top: clamp(1.75rem, 4vw, 2.25rem);
+    border-top: 1px solid var(--color-border);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    color: var(--color-foreground);
+    text-wrap: balance;
+  }
+  .prose h3 {
+    margin: 2rem 0 0.6rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    letter-spacing: 0.04em;
+    color: var(--color-foreground);
+  }
+  .prose p,
+  .prose ul,
+  .prose ol { margin: 0 0 1.15rem; }
+  .prose ul,
+  .prose ol { padding-left: 1.25rem; }
+  .prose ul { list-style: square; }
+  .prose li { margin-bottom: 0.65rem; padding-left: 0.35rem; }
+  .prose li::marker { color: var(--color-steel); }
+  .prose ol li::marker { font-family: var(--font-display); font-weight: 600; color: var(--color-muted); }
+  .prose strong { font-weight: 600; color: var(--color-foreground); }
+  .prose a {
+    color: var(--color-foreground);
+    overflow-wrap: anywhere;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-accent) 50%, transparent);
+    text-underline-offset: 4px;
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      text-decoration-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .prose a:hover { color: var(--color-accent-hover); text-decoration-color: var(--color-accent); }
+  /* A photo in the text: the full measure, rounded like the cards. Its alt text describes it for
+     who cannot see it; it is not repeated as a caption. */
+  .prose img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-2);
+  }
+  .prose p:has(> img:only-child) { margin-block: clamp(1.75rem, 4vw, 2.5rem); }
+  /* Cookie and file names: the HUD's monospace on a raised chip. */
+  .prose code {
+    padding: 0.1em 0.4em;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-2);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--color-foreground);
+  }
+</style>

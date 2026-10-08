@@ -17,6 +17,11 @@ Foto, immagini AI, video, logo e favicon. Il procedimento (prompt, script, param
 - **MEDIA-05** — **Coerenza**: ogni immagine segue la grade dark-tattica del brand, così tutto sembra
   girato per noi. Ogni sezione con immagine a tutto schermo ha la sua **variante mobile dedicata**
   (4:5 per le sezioni, 9:16 stretto sul soggetto per l'hero).
+- **MEDIA-11** — **Nelle immagini le repliche da softair hanno la punta della canna rossa**, come vuole
+  la legge italiana (art. 5 L. 110/1975: canna rossa per almeno 3 cm), mai arancione (l'uso americano)
+  né scura. Vale per ogni immagine AI, nel prompt e nel controllo ingrandito prima di mostrarla, e per le
+  foto stock scelte. Perché: il sito spiega la legge italiana, e una punta sbagliata la smentisce
+  (decisione dell'utente, 8 ott 2026).
 
 ## Formati e peso
 

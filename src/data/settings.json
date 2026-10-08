@@ -6,7 +6,12 @@
   "defaultOgImage": "/og-default.svg",
   "footerTagline": "Arena indoor di softair a Milano. Missioni, adrenalina, squadra.",
   "phone": "375 595 6805",
-  "whatsapp": "",
+  "whatsapp": "375 595 6805",
+  "whatsappButton": {
+    "show": true,
+    "label": "Scrivici su WhatsApp",
+    "message": "Ciao! Vorrei informazioni per prenotare una partita."
+  },
   "email": "info@softairmilano.it",
   "address": "Via Melegnano 26, 20019 Settimo Milanese (MI)",
   "postalAddress": {
@@ -19,6 +24,18 @@
   "openingHours": "Tutti i giorni dalle 14:00 alle 24:00, solo su prenotazione",
   "directions": "Parcheggio facile · Bus 433 dalla metro M1 Bisceglie",
   "rangerUrl": "https://www.rangersoftairmilano.it/",
+  "wear": {
+    "title": "Abbigliamento consigliato",
+    "text": "L'arena non è climatizzata né riscaldata.",
+    "items": [
+      "Maglietta a maniche lunghe o felpa con cappuccio",
+      "Pantaloni lunghi",
+      "Scaldacollo o pashmina",
+      "Strati in più se fa freddo",
+      "Scarpe comode",
+      "Guanti aderenti (non quelli da sci)"
+    ]
+  },
   "finalCta": {
     "title": "Sei pronto a scendere in campo?",
     "subtitle": "Prenota la tua sessione di softair a Milano.",

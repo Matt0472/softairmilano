@@ -67,6 +67,12 @@
           "desc": "Regala una partita"
         },
         {
+          "label": "Blog",
+          "href": "/blog",
+          "badge": "",
+          "desc": "Guide, regole e consigli sul softair"
+        },
+        {
           "label": "Contatti",
           "href": "/contatti",
           "badge": "",

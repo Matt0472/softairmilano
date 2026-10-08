@@ -1,4 +1,5 @@
 {
+  "published": true,
   "name": "Tiro dinamico",
   "seo": {
     "title": "Tiro dinamico softair a Milano, a cronometro | SoftAir Milano",
@@ -38,8 +39,8 @@
       "label": "anni"
     },
     {
-      "value": "1.500 m²",
-      "label": "al coperto"
+      "value": "1 h 30",
+      "label": "di sessione, briefing compreso"
     }
   ],
   "intro": {
@@ -63,12 +64,16 @@
   "evening": {
     "eyebrow": "",
     "title": "La vostra sfida, un passo alla volta",
-    "text": "Da soli, in coppia o in un gruppo fino a 8: ecco come va una sessione di tiro dinamico.",
+    "text": "Da soli, in coppia o in un gruppo fino a 8: una sessione dura 1 ora e 30 minuti, briefing compreso, e uno del nostro staff vi segue dall'inizio alla fine.",
     "steps": [
       {
         "time": "Arrivo",
         "title": "Vi accogliamo",
-        "text": "Arrivate e ritirate la replica, oppure preparate la vostra. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online prima di venire, i minorenni portano quello firmato da un genitore."
+        "text": "Arrivate e ritirate la replica, oppure preparate la vostra. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online prima di venire, i minorenni portano quello firmato da un genitore.",
+        "link": {
+          "label": "Vai alla modulistica",
+          "href": "/modulistica"
+        }
       },
       {
         "time": "Prima di partire",
@@ -186,7 +191,7 @@
   },
   "pricing": {
     "title": "Prezzi del tiro dinamico",
-    "text": "Stesso prezzo con la vostra attrezzatura o con i nostri fucili a noleggio. Si gioca dal lunedì al venerdì, dalle 14 a mezzanotte.",
+    "text": "Si prenota tutti i giorni: dal lunedì al venerdì si gioca dalle 14 a mezzanotte (l'ultima sessione parte alle 22), il sabato e la domenica su richiesta. Il prezzo è per una sessione di 1 ora e 30 minuti, briefing compreso, con la vostra attrezzatura o con i nostri fucili a noleggio.",
     "tiers": [
       {
         "label": "Da soli o in due",
@@ -207,7 +212,6 @@
     ],
     "notes": [
       "Sabato e domenica solo su richiesta: i campi sono riservati al softair, e ogni richiesta va confermata dallo staff.",
-      "Temperatura: l'arena non è riscaldata né climatizzata, vestitevi in base alla stagione.",
       "Prenotazione obbligatoria."
     ]
   },
@@ -223,15 +227,19 @@
       },
       {
         "q": "Si può giocare da soli?",
-        "a": "Sì: i percorsi si affrontano da soli o in coppia, e per 1 o 2 persone il prezzo è di 60 € in totale. Il Double Team è pensato per una coppia, in contemporanea."
+        "a": "Sì, i percorsi si affrontano anche da soli o in coppia, ma mai in autonomia: uno del nostro staff vi segue per tutta la sessione. Per 1 o 2 persone il prezzo è di 60 € in totale. Il Double Team è pensato per una coppia, in contemporanea."
       },
       {
         "q": "Quante persone possono partecipare?",
-        "a": "Da 1 a 8 per sessione. Da 3 persone in su si pagano 20 € a testa."
+        "a": "Da 1 a 8 per sessione. Il prezzo vale per tutta la sessione: 60 € in totale per 1 o 2 persone, 20 € a testa da 3 persone in su."
+      },
+      {
+        "q": "Quanto dura una sessione?",
+        "a": "1 ora e 30 minuti in tutto, compreso il briefing iniziale con le regole di sicurezza e i percorsi."
       },
       {
         "q": "Quando si può fare tiro dinamico?",
-        "a": "Dal lunedì al venerdì, dalle 14 a mezzanotte. Sabato e domenica solo su richiesta, perché i campi sono riservati al softair: ogni richiesta va confermata dallo staff."
+        "a": "Dal lunedì al venerdì, dalle 14 a mezzanotte: l'ultima sessione parte alle 22. Sabato e domenica solo su richiesta, perché i campi sono riservati al softair: ogni richiesta va confermata dallo staff."
       },
       {
         "q": "Posso usare la mia replica?",
@@ -247,11 +255,11 @@
       },
       {
         "q": "Cosa devo indossare?",
-        "a": "Maglietta a maniche lunghe o felpa, pantaloni lunghi e scarpe comode. L'arena non è riscaldata né climatizzata: d'inverno vestitevi a strati."
+        "a": "Maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). L'arena non è climatizzata né riscaldata: se fa freddo, aggiungete qualche strato."
       },
       {
         "q": "Come si prenota?",
-        "a": "Chiamateci al 375 595 6805 o scriveteci a info@softairmilano.it indicando giorno, orario e numero di giocatori. La prenotazione è obbligatoria."
+        "a": "Chiamateci al 375 595 6805 o scriveteci a info@softairmilano.it indicando giorno, orario e numero di giocatori. La prenotazione è obbligatoria. Le prenotazioni a meno di 4 ore dalla partita vanno confermate, e la caparra si recupera annullando almeno una settimana prima."
       },
       {
         "q": "Dove si trova il percorso?",
@@ -260,6 +268,11 @@
     ]
   },
   "related": {
-    "title": "Provate anche"
+    "title": "Provate anche",
+    "order": [
+      "src/data/activities/softair.json",
+      "src/data/activities/arcotag.json",
+      "src/data/activities/nerf.json"
+    ]
   }
 }

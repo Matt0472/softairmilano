@@ -4,14 +4,19 @@ import settings from '../data/settings.json';
 import Header from '../components/organisms/Header.astro';
 import Footer from '../components/organisms/Footer.astro';
 import ScrollToTop from '../components/molecules/ScrollToTop.astro';
+import WhatsAppButton from '../components/molecules/WhatsAppButton.astro';
 import SmoothScroll from '../components/molecules/SmoothScroll.astro';
+import CookieConsent from '../components/molecules/CookieConsent.astro';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import sharp from 'sharp';
-import { toLd } from '../lib/jsonld';
+import { businessId, toLd } from '../lib/jsonld';
 import { toE164 } from '../lib/phone';
 // The display face the hero headline waits for: preloaded so the copy doesn't reflow late (CLS).
 import oswald700 from '@fontsource/oswald/files/oswald-latin-700-normal.woff2?url';
+// The body face (one variable file for every weight), preloaded only where running text fills the
+// first screen (`preloadBodyFont`): there a late swap would rewrap the paragraphs (CLS).
+import interVariable from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 
 interface Props {
   title: string;
@@ -20,9 +25,15 @@ interface Props {
   imageAlt?: string;
   /** Extra structured data for this page (e.g. BreadcrumbList, FAQPage). */
   jsonLd?: Record<string, unknown>[];
-  /** Never indexed, whatever the build flag says (the 404). Such a page answers at addresses
-   *  that are not its own, so it also goes without a canonical and og:url. */
+  /** Never indexed, whatever the build flag says (legal pages, the 404). */
   noindex?: boolean;
+  /** No canonical and og:url: for a page that answers at addresses not its own (the 404). */
+  noCanonical?: boolean;
+  /** Open Graph type: an article also carries its publication date ("2024-03-12"). */
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  /** Preload Inter too: for pages of running text (legal pages, blog), where the text is the first screen. */
+  preloadBodyFont?: boolean;
 }
 
 const props = Astro.props;
@@ -37,10 +48,10 @@ const jsonLd = props.jsonLd ?? [];
 // build sets PUBLIC_SITE_INDEXABLE=true to allow indexing. See
 // docs/geo-e-indicizzazione.md.
 const indexable = import.meta.env.PUBLIC_SITE_INDEXABLE === 'true' && !props.noindex;
-const canonical = props.noindex ? undefined : new URL(Astro.url.pathname, Astro.site);
+const canonical = props.noCanonical ? undefined : new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? new URL(image, Astro.site).toString() : undefined;
-const ogTypes: Record<string, string> = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', svg: 'image/svg+xml' };
-const ogType = image ? ogTypes[image.split('.').pop()?.toLowerCase() ?? ''] : undefined;
+const imageTypes: Record<string, string> = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', svg: 'image/svg+xml' };
+const ogImageType = image ? imageTypes[image.split('.').pop()?.toLowerCase() ?? ''] : undefined;
 
 // Social previews render faster and uncropped when the size is declared: read it from the file.
 // The build runs from the project root; the bundled module's own URL is not under src/.
@@ -59,7 +70,7 @@ const social = Object.values(settings.social ?? {}).filter(Boolean);
 const businessLd: Record<string, unknown> = {
   '@context': 'https://schema.org',
   '@type': 'SportsActivityLocation',
-  '@id': new URL('/#business', settings.siteUrl).toString(),
+  '@id': businessId(settings.siteUrl),
   name: settings.siteName,
   url: settings.siteUrl,
   description: settings.defaultDescription,
@@ -92,17 +103,19 @@ const businessLd: Record<string, unknown> = {
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#0e1114" />
     <link rel="preload" href={oswald700} as="font" type="font/woff2" crossorigin />
+    {props.preloadBodyFont && <link rel="preload" href={interVariable} as="font" type="font/woff2" crossorigin />}
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={props.ogType ?? 'website'} />
+    {props.ogType === 'article' && props.publishedTime && <meta property="article:published_time" content={props.publishedTime} />}
     {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:site_name" content={settings.siteName} />
     <meta property="og:locale" content="it_IT" />
     {ogImage && <meta property="og:image" content={ogImage} />}
     {ogImage && <meta property="og:image:alt" content={imageAlt} />}
-    {ogType && <meta property="og:image:type" content={ogType} />}
+    {ogImageType && <meta property="og:image:type" content={ogImageType} />}
     {ogSize && <meta property="og:image:width" content={String(ogSize.width)} />}
     {ogSize && <meta property="og:image:height" content={String(ogSize.height)} />}
 
@@ -123,7 +136,9 @@ const businessLd: Record<string, unknown> = {
       <slot />
     </main>
     <Footer />
+    <WhatsAppButton />
     <ScrollToTop />
     <SmoothScroll />
+    <CookieConsent />
   </body>
 </html>

@@ -1,0 +1,278 @@
+---
+// The cookie banner and preferences, on every page (src/scripts/consent.ts). The texts are the
+// client's, from src/data/cookie.json; the GA4 ID from settings.json (CMS-11): without it the
+// statistics category is not offered at all. The links under the banner are the footer's legal
+// links to the privacy and cookie policies, so their labels and addresses live in one place.
+// Script and stylesheet load after the page, so the banner never weighs on the first paint.
+
+import cookie from '../../data/cookie.json';
+import settings from '../../data/settings.json';
+import { has } from '../../lib/fields';
+import { toLd } from '../../lib/jsonld';
+import { POLICY_PATHS } from '../../lib/pages';
+
+const policyLinks = ((settings.footerLegal ?? []) as { label?: string; href?: string }[])
+  .filter((l): l is { label: string; href: string } => has(l.label) && has(l.href))
+  .filter((l) => POLICY_PATHS.includes(l.href.replace(/\/$/, '')));
+
+const config = {
+  gaId: (settings.gaMeasurementId ?? '').trim(),
+  banner: cookie.banner,
+  preferences: cookie.preferences,
+  categories: cookie.categories,
+  links: policyLinks,
+};
+---
+
+<script type="application/json" id="consent-config" set:html={toLd(config)} />
+
+<script>
+  import '../../scripts/consent';
+</script>
+
+<style is:global>
+  /*
+    The library's look in the site's: colours, type and radii from the tokens, through its own
+    variables (cookieconsent.orestbida.com/advanced/ui-customization.html) and a few rules. Its
+    stylesheet arrives after this one, so each rule carries `html` before the library's selector
+    to win the tie; the `!important`s answer the library's own, on phones.
+    Accept and reject are one outlined shape, equal in weight; «Preferenze» is the quiet one. The
+    accent marks only what is on: the toggles, and the button that saves the visitor's choices.
+  */
+  html #cc-main {
+    --cc-font-family: var(--font-sans);
+    --cc-modal-border-radius: var(--radius-lg);
+    --cc-btn-border-radius: var(--radius-md);
+    /* Close enough to the edge that the banner, rounded corner included, covers the HUD frame's
+       bottom corner (18px inset) instead of leaving its tip showing. */
+    --cc-modal-margin: 0.75rem;
+    --cc-modal-transition-duration: var(--duration-slow);
+    --cc-bg: var(--color-surface);
+    --cc-primary-color: var(--color-foreground);
+    --cc-secondary-color: var(--color-muted);
+    --cc-btn-primary-bg: transparent;
+    --cc-btn-primary-color: var(--color-foreground);
+    --cc-btn-primary-border-color: var(--color-steel);
+    --cc-btn-primary-hover-bg: transparent;
+    --cc-btn-primary-hover-color: var(--color-accent);
+    --cc-btn-primary-hover-border-color: var(--color-accent);
+    --cc-btn-secondary-bg: transparent;
+    --cc-btn-secondary-color: var(--color-muted);
+    --cc-btn-secondary-border-color: transparent;
+    --cc-btn-secondary-hover-bg: transparent;
+    --cc-btn-secondary-hover-color: var(--color-foreground);
+    --cc-btn-secondary-hover-border-color: transparent;
+    --cc-separator-border-color: var(--color-border);
+    --cc-toggle-on-bg: var(--color-accent);
+    --cc-toggle-on-knob-bg: var(--color-on-accent);
+    --cc-toggle-off-bg: var(--color-steel);
+    --cc-toggle-off-knob-bg: var(--color-foreground);
+    --cc-toggle-readonly-bg: color-mix(in srgb, var(--color-accent) 35%, var(--color-surface));
+    --cc-toggle-readonly-knob-bg: var(--color-on-accent);
+    --cc-cookie-category-block-bg: transparent;
+    --cc-cookie-category-block-border: var(--color-border);
+    --cc-cookie-category-block-hover-bg: color-mix(in srgb, var(--color-foreground) 4%, transparent);
+    --cc-cookie-category-block-hover-border: var(--color-border);
+    --cc-cookie-category-expanded-block-hover-bg: var(--color-border);
+    --cc-overlay-bg: color-mix(in srgb, var(--color-background) 80%, transparent);
+    --cc-footer-bg: transparent;
+    --cc-footer-color: var(--color-muted);
+    --cc-footer-border-color: transparent;
+    line-height: 1.6;
+  }
+
+  /* Both panels: the dropdown panel's surface, and the site's motion. */
+  html #cc-main .cm,
+  html #cc-main .pm {
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    box-shadow: var(--shadow-md);
+  }
+  html #cc-main .cc--anim .cm,
+  html #cc-main .cc--anim .pm,
+  html #cc-main .cc--anim .pm-overlay,
+  html #cc-main .cc--anim.cm-wrapper::before { transition-timing-function: var(--ease-out-expo); }
+  /* The veil over the page until the first choice: lighter than the preferences panel's, so the
+     site still shows through on the first visit. */
+  html #cc-main .cm-wrapper { --cc-overlay-bg: color-mix(in srgb, var(--color-background) 65%, transparent); }
+
+  /* --- The banner: the copy, the two equal answers, then «Preferenze» and the policies on one
+     line. The library's wrappers step aside (display: contents), so its parts sit on one grid. */
+  html #cc-main .cm {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: "texts texts" "pair pair" "more links";
+    max-width: 30rem;
+    padding: 1.5rem 1.5rem 0.5rem;
+  }
+  /* A raised surface opens on the accent seam, as the site's raised bands do; inside the border,
+     so a banner that scrolls (short screens) does not clip it. */
+  html #cc-main .cm::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 1.5rem;
+    width: 3rem;
+    height: 2px;
+    background: var(--color-accent);
+  }
+  /* The library focuses this empty element when the banner opens: out of the grid, at the top, so
+     a banner that scrolls opens on its title. */
+  html #cc-main .cm > [tabindex="-1"] { position: absolute; top: 0; left: 0; }
+  html #cc-main .cm__body,
+  html #cc-main .cm__btns { display: contents; }
+  html #cc-main .cm__texts { grid-area: texts; padding: 0; }
+  html #cc-main .cm__title,
+  html #cc-main .cm__desc,
+  html #cc-main .cm__links { padding-left: 0 !important; padding-right: 0 !important; }
+  html #cc-main .cm__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1.12;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  html #cc-main .cm__title + .cm__desc { margin-top: 0.6rem; }
+  html #cc-main .cm__desc { padding-bottom: 0; font-size: 1rem; line-height: 1.6; text-wrap: pretty; }
+  html #cc-main .cm__btn-group {
+    grid-area: pair;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding-top: 1.25rem;
+  }
+  html #cc-main .cm__btn-group + .cm__btn-group {
+    grid-area: more;
+    grid-template-columns: auto;
+    padding-top: 0.5rem;
+  }
+  html #cc-main .cm__btn + .cm__btn,
+  html #cc-main .cm__btn-group + .cm__btn-group { margin: 0 !important; }
+  html #cc-main .cm__footer { grid-area: links; align-self: end; padding: 0.5rem 0 0; }
+  html #cc-main .cm__link-group { justify-content: flex-end !important; font-size: 0.8125rem; }
+  html #cc-main .cm__link-group > * + * { margin-left: 1rem; }
+  html #cc-main .cm__footer a,
+  html #cc-main .pm__section-desc a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+
+  /* --- Buttons: the Button atom's shape --- */
+  html #cc-main .cm__btn,
+  html #cc-main .pm__btn {
+    min-height: 2.75rem;
+    padding: 0.5rem 1rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  html #cc-main .cc--anim .cm__btn,
+  html #cc-main .pm__btn,
+  html #cc-main .pm__close-btn {
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo);
+  }
+  html #cc-main .cm__btn:active,
+  html #cc-main .pm__btn:active,
+  html #cc-main .pm__close-btn:active { transform: translateY(1px); }
+  /* «Preferenze»: the atom's ghost, its text on the copy's edge. */
+  html #cc-main .cm__btn--secondary { justify-self: start; padding-left: 0; padding-right: 0; }
+  /* After the visitor's own choices, saving them is the panel's one accent action. */
+  html #cc-main .pm__btn--secondary {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  html #cc-main .pm__btn--secondary:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+    color: var(--color-on-accent);
+  }
+
+  /* --- Links and focus, as everywhere on the site --- */
+  html #cc-main a {
+    background: none;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-accent) 50%, transparent);
+    text-underline-offset: 4px;
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      text-decoration-color var(--duration-fast) var(--ease-out-expo);
+  }
+  html #cc-main a:hover { color: var(--color-accent-hover); text-decoration-color: var(--color-accent); }
+  html #cc-main .pm a { color: var(--color-foreground); }
+  html #cc-main .pm a + a { margin-left: 0.6rem; }
+  html #cc-main :is(a, button, input):focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+  /* --- The preferences panel: as tall as its categories, not the library's fixed height --- */
+  @media (min-width: 641px) {
+    html #cc-main .pm--box { height: auto; max-height: min(37.5em, calc(100% - 2em)); }
+  }
+  html #cc-main .pm__header,
+  html #cc-main .pm__body,
+  html #cc-main .pm__footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+  html #cc-main .pm__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.12;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  /* The mobile menu's close: a round 44px control. */
+  html #cc-main .pm__close-btn {
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    border-color: color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    background: color-mix(in srgb, var(--color-foreground) 5%, transparent);
+  }
+  html #cc-main .pm__close-btn:hover {
+    border-color: color-mix(in srgb, var(--color-foreground) 25%, transparent);
+    background: color-mix(in srgb, var(--color-foreground) 10%, transparent);
+  }
+  html #cc-main .pm__close-btn svg { stroke: var(--color-foreground); }
+  html #cc-main .pm__section-desc { font-size: 1rem; line-height: 1.6; }
+  html #cc-main .pm__section-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  html #cc-main .pm__section--expandable .pm__section-arrow { background: var(--color-surface-2); }
+  /* Toggles of 52×28: a target of at least 24px in both directions (A11Y-09). */
+  html #cc-main .section__toggle,
+  html #cc-main .section__toggle-wrapper,
+  html #cc-main .toggle__icon,
+  html #cc-main .toggle__label { width: 3.25rem; height: 1.75rem; }
+  html #cc-main .toggle__icon-circle { width: 1.75rem; height: 1.75rem; }
+  html #cc-main .section__toggle:checked ~ .toggle__icon .toggle__icon-circle { transform: translateX(1.5rem); }
+
+  /* Phones: the banner sits at the bottom, in thumb reach, and keeps the page's gutter rhythm. */
+  @media (max-width: 640px) {
+    html #cc-main .cm--middle { top: auto; bottom: var(--cc-modal-margin); transform: translateY(1.6em); }
+    html.show--consent #cc-main .cc--anim .cm--middle { transform: none; }
+    html #cc-main .cm { padding: 1.25rem 1.25rem 0.25rem; }
+    html #cc-main .cm__title { font-size: 1.125rem; }
+    html #cc-main .pm__header,
+    html #cc-main .pm__body,
+    html #cc-main .pm__footer { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+  }
+
+  /* Short screens (a phone on its side, 400% zoom): the banner and the panel scroll as a whole,
+     so the title and every button stay reachable (WCAG 1.4.10). */
+  @media (max-height: 30rem) {
+    html #cc-main .cm { max-height: calc(100dvh - 1.5rem); overflow-y: auto; }
+    html #cc-main .cm__desc { max-height: none; overflow: visible; }
+    html #cc-main .pm { overflow-y: auto; }
+    html #cc-main .pm__body { flex: none; overflow: visible; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html #cc-main { --cc-modal-transition-duration: 0s; }
+  }
+</style>

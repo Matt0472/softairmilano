@@ -1,15 +1,20 @@
 ---
 // Step-by-step timeline ("La vostra serata", "La prima volta"): the rail draws
 // itself node by node as the section enters and ends in an arrowhead ("the night
-// goes on"). Steps without a time label show their order instead.
+// goes on"). Steps without a time label show their order instead. A step can end with a link
+// (the arrival step points to the forms page).
 
+import ArrowLink from '../atoms/ArrowLink.astro';
 import SectionHead from '../molecules/SectionHead.astro';
+import { has } from '../../lib/fields';
 import { slotHtml } from '../../lib/slots';
 
 interface Step {
   time?: string;
   title: string;
   text: string;
+  /** Shown under the text only with both label and link. */
+  link?: { label?: string; href?: string };
 }
 interface Props {
   eyebrow?: string;
@@ -52,6 +57,9 @@ const asideHtml = await slotHtml(Astro.slots);
             </div>
             <h3 class="tl__title">{s.title}</h3>
             {s.text?.trim() && <p class="tl__text">{s.text}</p>}
+            {has(s.link?.label) && has(s.link?.href) && (
+              <p class="tl__more"><ArrowLink href={s.link.href}>{s.link.label}</ArrowLink></p>
+            )}
           </li>
         ))}
       </ol>
@@ -176,6 +184,8 @@ const asideHtml = await slotHtml(Astro.slots);
     text-wrap: pretty;
   }
 
+  .tl__more { margin: 0.6rem 0 0; }
+
   .tl__aside { margin-top: clamp(2.5rem, 5vw, 3.75rem); }
 
   /* Entrance (only when armed below the fold): node i lights at i × step, its
@@ -183,7 +193,7 @@ const asideHtml = await slotHtml(Astro.slots);
   .tl__steps.is-armed .tl__seg { transform: var(--seg-off, scaleX(0)); }
   .tl__steps.is-armed .tl__node::after { transform: scale(0); }
   .tl__steps.is-armed .tl__head { opacity: 0; }
-  .tl__steps.is-armed :is(.tl__time, .tl__title, .tl__text) {
+  .tl__steps.is-armed :is(.tl__time, .tl__title, .tl__text, .tl__more) {
     opacity: 0;
     transform: translate3d(0, 0.9rem, 0);
   }
@@ -199,12 +209,20 @@ const asideHtml = await slotHtml(Astro.slots);
     opacity: 1;
     transition: opacity var(--duration-slow) var(--ease-out-expo) calc(var(--i) * var(--step) + 0.45s);
   }
-  .tl__steps.is-armed.is-in :is(.tl__time, .tl__title, .tl__text) {
+  .tl__steps.is-armed.is-in :is(.tl__time, .tl__title, .tl__text, .tl__more) {
     opacity: 1;
     transform: none;
     transition:
       opacity 0.7s var(--ease-out-expo) calc(var(--i) * var(--step) + 0.05s),
       transform 0.8s var(--ease-out-expo) calc(var(--i) * var(--step) + 0.05s);
+  }
+
+  /* Keyboard focus on a step's link skips the entrance: a control is never focused while it is
+     still faded (A11Y-05), as in Reveal. */
+  .tl__steps.is-armed .tl__step:has(:focus-visible) :is(.tl__time, .tl__title, .tl__text, .tl__more) {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 
   /* Below 900px the rail runs down the left edge. */
@@ -220,7 +238,7 @@ const asideHtml = await slotHtml(Astro.slots);
     .tl__step:last-child { padding-bottom: 0; }
     .tl__track {
       grid-column: 1;
-      grid-row: 1 / span 3;
+      grid-row: 1 / span 4;
       height: auto;
       margin: 0;
     }
@@ -240,7 +258,8 @@ const asideHtml = await slotHtml(Astro.slots);
     .tl__head { display: none; }
     .tl__time,
     .tl__title,
-    .tl__text { grid-column: 2; }
+    .tl__text,
+    .tl__more { grid-column: 2; }
     .tl__time { margin: 0 0 0.45rem; line-height: 1.35rem; }
     .tl__time--num { font-size: 1.15rem; }
     .tl__text { max-width: 52ch; }
@@ -249,7 +268,7 @@ const asideHtml = await slotHtml(Astro.slots);
   @media (prefers-reduced-motion: reduce) {
     .tl__steps.is-armed .tl__seg,
     .tl__steps.is-armed .tl__node::after,
-    .tl__steps.is-armed :is(.tl__time, .tl__title, .tl__text) { transform: none; opacity: 1; }
+    .tl__steps.is-armed :is(.tl__time, .tl__title, .tl__text, .tl__more) { transform: none; opacity: 1; }
     .tl__steps.is-armed .tl__head { opacity: 1; }
   }
 </style>

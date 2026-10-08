@@ -1,0 +1,33 @@
+{
+  "banner": {
+    "title": "I cookie di SoftAir Milano",
+    "text": "Usiamo cookie tecnici e, solo se accetti, statistiche di visita e servizi esterni come la prenotazione online. Puoi cambiare idea da «Preferenze cookie», in fondo alla pagina.",
+    "acceptAll": "Accetta tutti",
+    "rejectAll": "Rifiuta",
+    "preferences": "Preferenze"
+  },
+  "preferences": {
+    "title": "Preferenze cookie",
+    "text": "Scegli quali cookie accettare. Puoi cambiare idea in qualsiasi momento da «Preferenze cookie», in fondo a ogni pagina.",
+    "save": "Salva le preferenze",
+    "acceptAll": "Accetta tutti",
+    "rejectAll": "Rifiuta tutti",
+    "close": "Chiudi"
+  },
+  "categories": {
+    "necessary": {
+      "title": "Necessari",
+      "text": "Servono solo a ricordare la tua scelta sui cookie. Non tracciano nulla e restano nel tuo browser."
+    },
+    "analytics": {
+      "title": "Statistiche",
+      "text": "Google Analytics ci dice, in forma aggregata, quante persone visitano il sito e quali pagine leggono, così possiamo migliorarlo. Si attiva solo con il tuo consenso."
+    },
+    "external": {
+      "title": "Servizi esterni",
+      "text": "La prenotazione e l'acquisto online di TicketingHub e la mappa di Google caricano contenuti da siti di terze parti, che possono usare i propri cookie. Senza consenso restano spenti finché non li attivi tu."
+    }
+  },
+  "footerLabel": "Preferenze cookie",
+  "policyButton": "Gestisci le preferenze"
+}

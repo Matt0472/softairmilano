@@ -3,10 +3,13 @@
 // row per tier on the right with large tabular figures in one aligned column.
 // Every tier is lit the same way; a tier the client wants to push gets a badge,
 // so emphasis never breaks the alignment or introduces a second colour.
+// What to wear sits between the notes and the CTA, as a plain list: a check
+// would read as "included in the price", next to the prices.
 
 import Badge from '../atoms/Badge.astro';
 import Button from '../atoms/Button.astro';
 import SectionHead from '../molecules/SectionHead.astro';
+import { has } from '../../lib/fields';
 
 interface Tier {
   label: string;
@@ -20,18 +23,27 @@ interface Cta {
   label: string;
   href: string;
 }
+interface Wear {
+  title?: string;
+  text?: string;
+  items?: string[];
+}
 interface Props {
   title: string;
   text?: string;
   tiers: Tier[];
   notes?: string[];
+  wear?: Wear;
   cta?: Cta;
   headingId?: string;
 }
 
-const { title, text, tiers, notes, cta, headingId = 'price-title' } = Astro.props;
+const { title, text, tiers, notes, wear, cta, headingId = 'price-title' } = Astro.props;
 const list = (tiers ?? []).filter((t) => t?.label?.trim());
 const noteList = (notes ?? []).filter((n) => typeof n === 'string' && n.trim());
+const wearItems = (wear?.items ?? []).filter(has);
+// A sentence alone is a complete note: the block shows with either the text or the list.
+const hasWear = wearItems.length > 0 || has(wear?.text);
 // Keep "6 €" and "14:00–18:00" on one line: a figure never wraps away from its unit or its range.
 const keep = (s?: string) => s?.replace(/(\d) €/g, '$1\u00a0€').replace(/(\d)–(\d)/g, '$1\u2060–\u2060$2');
 const hasCta = !!cta?.label?.trim() && !!cta?.href?.trim();
@@ -66,12 +78,23 @@ const hasTitle = !!title?.trim();
         ))}
       </ul>
 
-      {(noteList.length > 0 || hasCta) && (
+      {(noteList.length > 0 || hasWear || hasCta) && (
         <div class="price__after" data-reveal style="--i: 2">
           {noteList.length > 0 && (
             <ul class="price__notes" role="list">
               {noteList.map((n) => <li>{keep(n)}</li>)}
             </ul>
+          )}
+          {hasWear && (
+            <div class="price__wear">
+              {has(wear?.title) && <h3 class="price__wear-title">{wear!.title}</h3>}
+              {has(wear?.text) && <p class="price__wear-text">{wear!.text}</p>}
+              {wearItems.length > 0 && (
+                <ul class="price__wear-list" role="list">
+                  {wearItems.map((it) => <li>{it}</li>)}
+                </ul>
+              )}
+            </div>
           )}
           {hasCta && (
             <div class="price__cta">
@@ -126,6 +149,52 @@ const hasTitle = !!title?.trim();
     border-radius: 50%;
     background: var(--color-steel);
   }
+
+  /* What to wear: set off from the notes by a hairline; the items go in two columns where the
+     column is wide enough, so six short lines stay a compact block. */
+  .price__wear {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .price__wear-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+  }
+  .price__wear-text {
+    margin: 0.5rem 0 0;
+    font-size: 0.93rem;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+  .price__wear-list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+    gap: 0.6rem 1.5rem;
+    font-size: 0.93rem;
+    line-height: 1.45;
+  }
+  .price__wear-list li {
+    position: relative;
+    padding-left: 1.1rem;
+    text-wrap: pretty;
+  }
+  .price__wear-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.68em;
+    width: 0.6rem;
+    height: 2px;
+    background: var(--accent);
+  }
+
   .price__cta { margin-top: 2rem; }
   .price__btn {
     min-height: 48px;
@@ -215,6 +284,15 @@ const hasTitle = !!title?.trim();
     color: var(--color-foreground);
   }
 
+  /* A short ledger beside a longer left column stays in view while the notes are read, so the
+     prices are still beside the CTA. */
+  @media (min-width: 1024px) {
+    .price__list {
+      position: sticky;
+      top: clamp(1.5rem, 6vh, 4rem);
+    }
+  }
+
   /* A narrow list (small phones): the figure moves under the label instead of squeezing it. */
   @container (max-width: 21rem) {
     .price__row { grid-template-columns: minmax(0, 1fr); row-gap: 0.75rem; }
@@ -228,6 +306,7 @@ const hasTitle = !!title?.trim();
       grid-template-areas: "intro" "list" "after";
     }
     .price__list { margin-top: clamp(2rem, 5vw, 2.75rem); }
-    .price__notes { margin-top: 1.5rem; }
+    .price__notes,
+    .price__wear { margin-top: 1.5rem; }
   }
 </style>

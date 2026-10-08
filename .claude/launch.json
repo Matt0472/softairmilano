@@ -4,8 +4,20 @@
     {
       "name": "astro-dev",
       "runtimeExecutable": "bash",
-      "runtimeArgs": ["-lc", "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm use 22.23.2 >/dev/null; npx astro dev --port 4321"],
+      "runtimeArgs": [
+        "-lc",
+        "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm use 22.23.2 >/dev/null; npx astro dev --port 4321"
+      ],
       "port": 4321
+    },
+    {
+      "name": "astro-preview",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "export NVM_DIR=\"$HOME/.nvm\"; . \"$NVM_DIR/nvm.sh\"; nvm use 22.23.2 >/dev/null; npx astro preview --port 4322 --host 127.0.0.1"
+      ],
+      "port": 4322
     }
   ]
 }

@@ -1,0 +1,200 @@
+---
+// The inner pages' text-only opening: no photo, the HUD frame, the breadcrumb, an optional
+// eyebrow, the headline on its accent rule and an optional lede, beside it from desktop. Whatever
+// the page puts in the slot follows the headline inside the frame (a date line, a row of cards).
+// The headline is the page's largest text and its LCP: it never gets an entrance (DES-08).
+
+import Breadcrumb from '../molecules/Breadcrumb.astro';
+import HudFrame from '../molecules/HudFrame.astro';
+import { has } from '../../lib/fields';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  title: string;
+  eyebrow?: string;
+  subtitle?: string;
+  /** Small readout in the HUD frame, from 641px wide. */
+  hudTag?: string;
+  crumbs?: Crumb[];
+  headingId?: string;
+  /** A page that is a text to read: the smaller headline whatever its length, the lede under it. */
+  compact?: boolean;
+}
+
+const { title, eyebrow, subtitle, hudTag, crumbs = [], headingId = 'text-hero-title', compact = false } = Astro.props;
+// A short title keeps the display size; a long one steps down so it holds in two lines.
+const isCompact = compact || title.length > 14;
+---
+
+<section class:list={['text-hero band', compact && 'text-hero--compact']} aria-labelledby={headingId}>
+  <HudFrame tag={hudTag} />
+
+  <div class="text-hero__inner shell">
+    {crumbs.length > 0 && <Breadcrumb items={crumbs} class="text-hero__crumbs" />}
+
+    <div class="text-hero__head">
+      <div>
+        {has(eyebrow) && <p class="text-hero__eyebrow">{eyebrow}</p>}
+        <h1 class:list={['text-hero__title', isCompact && 'text-hero__title--compact']} id={headingId}>{title}</h1>
+      </div>
+      {has(subtitle) && <p class="text-hero__lede">{subtitle}</p>}
+    </div>
+
+    <slot />
+  </div>
+</section>
+
+<style is:global>
+  .text-hero {
+    --accent: var(--color-accent);
+    /* Room for the floating header (logo 48px + 20px padding each side), as in PageHero; the HUD
+       readout sits on the breadcrumb's row, right-aligned with the page column like the header's
+       Prenota. */
+    --text-hero-top: 5.75rem;
+    --hud-tag-top: calc(var(--text-hero-top) + 0.55rem);
+    --hud-tag-right: calc(max(0px, (100% - var(--shell-max)) / 2) + var(--shell-gutter));
+    --hud-tag-bottom: auto;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  /* A soft, neutral light behind the title: depth on a page with no photo, not a halo. */
+  .text-hero::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(55% 60% at 12% 18%, color-mix(in srgb, var(--color-foreground) 6%, transparent), transparent 70%);
+  }
+  /* The scan runs under the copy; the corners and the readout sit above. */
+  .text-hero .hud__scan { z-index: 0; }
+  .text-hero .hud__corners,
+  .text-hero .hud__tag { z-index: 2; }
+  /* Below desktop the header's logo and Menu pill fill the top corners: the frame's top pair
+     drops under them, as in the 404. */
+  @media (max-width: 1023px) {
+    .text-hero .hud__corners { top: 5.5rem; }
+  }
+
+  .text-hero__inner {
+    position: relative;
+    z-index: 1;
+    /* The bottom clears the frame's lower corners (18px inset + 34px). */
+    padding-block: var(--text-hero-top) clamp(4rem, 8vw, 5.5rem);
+  }
+  /* The trail's first label lines up with the headline: the link's own padding hangs outside. */
+  .text-hero__crumbs { margin-left: -0.375rem; }
+  /* Its last step is the page's own title, the H1 just below: one line, cut with an ellipsis
+     when a long title (an article's) does not fit. */
+  .text-hero__crumbs .crumbs__item:last-child { flex: 1 1 0; min-width: 0; }
+  .text-hero__crumbs .crumbs__item:last-child .crumbs__link {
+    display: block;
+    overflow: hidden;
+    line-height: 44px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  /* The HUD readout shares the trail's row from 641px: the trail stops short of the widest one
+     the CMS allows (32 characters). */
+  @media (min-width: 641px) {
+    .text-hero:has(.hud__tag) .text-hero__crumbs { max-width: calc(100% - 20rem); }
+  }
+
+  .text-hero__head {
+    display: grid;
+    gap: 1.4rem;
+    margin-top: clamp(1.25rem, 4vw, 2.5rem);
+  }
+  .text-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(0.75rem, 1.4vw, 0.85rem);
+    line-height: 1.3;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .text-hero__eyebrow::before {
+    content: "";
+    flex: none;
+    width: 30px;
+    height: 2px;
+    background: var(--accent);
+  }
+  /* Measured in em, not ch, so the fallback face wraps where Oswald will (PERF-03). */
+  .text-hero__title {
+    margin: 0;
+    max-width: 8.8em;
+    font-weight: 700;
+    font-size: clamp(2.75rem, 1.5rem + 7vw, 8rem);
+    line-height: 0.94;
+    letter-spacing: 0.005em;
+    text-wrap: balance;
+  }
+  /* Compact titles run to two or three lines, often with an È or a Ù: 1.12, as every heading
+     (global.css), so the raised accent clears the line above. */
+  .text-hero__title--compact {
+    max-width: 12.1em;
+    font-size: clamp(2rem, 1rem + 4.6vw, 5.25rem);
+    line-height: 1.12;
+  }
+  /* The inner pages' accent rule under the headline: a pseudo-element, so the H1 itself stays
+     still. Hero choreography, longer than the UI duration tokens on purpose. */
+  .text-hero__title::after {
+    content: "";
+    display: block;
+    width: clamp(64px, 18vw, 160px);
+    height: 5px;
+    margin-top: 0.45rem;
+    background: var(--accent);
+    transform-origin: left;
+    animation: text-hero-wipe 0.7s var(--ease-out-expo) 0.35s both;
+  }
+  @keyframes text-hero-wipe { from { transform: scaleX(0); } }
+  .text-hero__lede {
+    margin: 0;
+    max-width: 30em;
+    font-size: clamp(1.05rem, 0.95rem + 0.45vw, 1.3rem);
+    line-height: 1.55;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+
+  /* Desktop: the lede beside the headline, on its foot. The title's column is as wide as its
+     longest word needs, up to 62%: a one-word title never runs under the lede, a long one wraps. */
+  @media (min-width: 1024px) {
+    .text-hero__head {
+      grid-template-columns: fit-content(62%) minmax(0, 1fr);
+      align-items: end;
+      column-gap: clamp(2rem, 5vw, 6rem);
+    }
+    /* Bottom-aligned with the title's last line, above its accent rule. */
+    .text-hero__lede { padding-bottom: 1.1rem; }
+    /* A text to read opens like an article: the headline across, the lede under it. */
+    .text-hero--compact .text-hero__head { grid-template-columns: minmax(0, 1fr); }
+    .text-hero--compact .text-hero__title { max-width: 16em; }
+    .text-hero--compact .text-hero__lede { max-width: 38em; padding-bottom: 0; }
+  }
+
+  /* Landscape phones: the frame's top pair and the readout have no room under the header, and a
+     smaller headline brings what follows it up. */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .text-hero { --text-hero-top: 4.75rem; }
+    .text-hero .hud__corner--tl,
+    .text-hero .hud__corner--tr,
+    .text-hero .hud__tag { display: none; }
+    .text-hero__head { margin-top: 1rem; }
+    .text-hero__title { max-width: none; font-size: clamp(2rem, 11vh, 2.75rem); }
+    .text-hero__eyebrow { margin-bottom: 0.6rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .text-hero__title::after { animation: none; }
+  }
+</style>

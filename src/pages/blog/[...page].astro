@@ -1,0 +1,108 @@
+---
+// The blog (/blog): the text-only opening with the newest article beside it, the others as cards,
+// newest first, and the closing section every page ends on. Each page holds POSTS_PER_PAGE cards
+// (the first one also the featured article) and the list goes on at /blog/2, /blog/3. The
+// articles are the «Blog — articoli» collection (only the published ones, src/lib/blog.ts), the
+// page's copy is blog.json; switched off, the whole blog
+// leaves the build (src/lib/pages.ts). The first screen is mostly Inter (the lede, the newest
+// article's summary), so the body face is preloaded (PERF-03).
+
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/molecules/BlogCard.astro';
+import BlogPosts from '../../components/organisms/BlogPosts.astro';
+import FinalCta from '../../components/organisms/FinalCta.astro';
+import TextHero from '../../components/organisms/TextHero.astro';
+import blog from '../../data/blog.json';
+import navigation from '../../data/navigation.json';
+import settings from '../../data/settings.json';
+import { coverOf, getPosts, isoDate, postHref, POSTS_PER_PAGE, type Post } from '../../lib/blog';
+import { has } from '../../lib/fields';
+import { blogLd, breadcrumbLd } from '../../lib/jsonld';
+import { flattenNav, type NavItem } from '../../lib/nav';
+
+// Built by hand instead of paginate(): the first page carries the featured article on top of a
+// full grid, so it holds one article more than the others.
+export const getStaticPaths = (async () => {
+  const posts = await getPosts();
+  const pages = [posts.slice(0, POSTS_PER_PAGE + 1)];
+  for (let i = POSTS_PER_PAGE + 1; i < posts.length; i += POSTS_PER_PAGE) pages.push(posts.slice(i, i + POSTS_PER_PAGE));
+  return pages.map((data, i) => ({
+    params: { page: i === 0 ? undefined : String(i + 1) },
+    props: { page: { data, currentPage: i + 1, lastPage: pages.length } },
+  }));
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: { data: Post[]; currentPage: number; lastPage: number } };
+const { seo, hero, listTitle, readMore } = blog;
+
+const path = '/blog';
+const pageHref = (n: number) => (n === 1 ? path : `${path}/${n}`);
+// The page name in the trail is its menu label (single source for both).
+const pageName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === path)?.label || hero.title;
+const first = page.currentPage === 1;
+// Interface microcopy (CMS-02): the number of a page past the first.
+const pageLabel = `Pagina ${page.currentPage}`;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: pageName, href: path },
+  ...(first ? [] : [{ label: pageLabel, href: pageHref(page.currentPage) }]),
+];
+
+// The newest article opens the first page; the others follow as cards.
+const [featured, ...rest] = first ? page.data : [undefined, ...page.data];
+
+const jsonLd = [
+  breadcrumbLd(crumbs, Astro.site),
+  blogLd(
+    { name: hero.title, description: seo.description, href: pageHref(page.currentPage) },
+    page.data.map((p) => ({ title: p.data.title, description: p.data.description, date: isoDate(p.data.date), href: postHref(p), image: coverOf(p) })),
+    Astro.site,
+    settings.siteUrl,
+  ),
+];
+---
+
+<BaseLayout
+  title={first ? seo.title : `${pageLabel} · ${seo.title}`}
+  description={first || !has(seo.description) ? seo.description : `${pageLabel} di ${page.lastPage}. ${seo.description}`}
+  image={seo.image}
+  imageAlt={seo.imageAlt}
+  jsonLd={jsonLd}
+  preloadBodyFont
+>
+  <TextHero
+    eyebrow={hero.eyebrow}
+    title={hero.title}
+    subtitle={first ? hero.subtitle : undefined}
+    hudTag={hero.hudTag}
+    crumbs={crumbs}
+    headingId="blog-title"
+  >
+    {featured && (
+      <div class="blog__featured">
+        <BlogCard
+          post={featured}
+          readMore={readMore}
+          headingLevel={2}
+          featured
+          sizes="(max-width: 1023px) calc(100vw - 2.5rem), (max-width: 1520px) 54vw, 820px"
+        />
+      </div>
+    )}
+  </TextHero>
+
+  <BlogPosts
+    title={listTitle}
+    posts={rest}
+    readMore={readMore}
+    pager={{ current: page.currentPage, last: page.lastPage, href: pageHref }}
+    headingId="blog-list-title"
+  />
+
+  <FinalCta {...settings.finalCta} />
+</BaseLayout>
+
+<style is:global>
+  .blog__featured { margin-top: clamp(2.25rem, 5vw, 3.5rem); }
+</style>

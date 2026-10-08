@@ -33,7 +33,10 @@ template) sta nell'agente `design-specialist`; i **valori** stanno in `src/style
 
 - **DES-05** — **Una sola CTA primaria per pagina: Prenota** (TicketingHub). Le azioni secondarie sono
   subordinate. **Un'etichetta per intento** su tutto il sito: se l'intento è prenotare, l'etichetta è
-  sempre la stessa (navbar, hero, footer).
+  sempre la stessa (navbar, hero, footer). **Eccezione**, decisa dall'utente l'8 ott 2026: dove lo
+  scopo della pagina non è prenotare una partita, la CTA primaria della pagina è quell'azione:
+  **Team building** «Richiedi un preventivo», **Voucher regalo** «Acquista il voucher», con la stessa
+  etichetta in apertura e nella sezione dell'azione. La navbar resta «Prenota» anche lì.
 - **DES-06** — Tipografia: **Oswald** per i titoli (maiuscolo), **Inter** per il testo (≥16px,
   interlinea ~1.6). **Cifre tabellari** per prezzi, orari e durate.
 - **DES-07** — Icone **solo SVG**, una sola famiglia, tratto e dimensioni coerenti. **Mai emoji come

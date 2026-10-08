@@ -1,4 +1,5 @@
 {
+  "published": true,
   "seo": {
     "title": "Modulistica: i moduli per giocare | SoftAir Milano",
     "description": "I moduli obbligatori per giocare a softair, arcotag, Nerf e tiro dinamico a Milano: online per i maggiorenni, da stampare e far firmare per i minorenni.",
@@ -27,7 +28,7 @@
     "text": "Su carta, firmato da un genitore.",
     "steps": [
       "Scarica il modulo e stampalo.",
-      "Fallo firmare a un genitore o a chi ne fa le veci, e allega la fotocopia fronte/retro del suo documento d'identità.",
+      "Fallo firmare a un genitore o a chi ne fa le veci.",
       "Il giorno della partita, portalo in arena."
     ],
     "ctaLabel": "Scarica il modulo",

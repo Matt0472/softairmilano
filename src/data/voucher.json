@@ -1,7 +1,8 @@
 {
+  "published": true,
   "seo": {
     "title": "Voucher regalo softair a Milano | SoftAir Milano",
-    "description": "Regala una partita di softair a Milano: voucher con noleggio attrezzatura a 30 € o per chi ha già il fucile a 15 € a giocatore. Valido 6 mesi.",
+    "description": "Regala una partita di softair a Milano: voucher con noleggio attrezzatura a 35 € o per chi ha già il fucile a 15 € a giocatore. Valido 6 mesi.",
     "image": "",
     "imageAlt": ""
   },
@@ -24,7 +25,7 @@
       {
         "title": "Con noleggio attrezzatura",
         "audience": "Per chi non ha l'attrezzatura: è compresa nel prezzo.",
-        "price": "30",
+        "price": "35",
         "unit": "€ a giocatore",
         "included": [
           "Una sessione di gioco, giorno e ora a scelta",
@@ -68,13 +69,14 @@
       {
         "time": "",
         "title": "Si gioca",
-        "text": "In arena, con il modulo di partecipazione compilato."
+        "text": "In arena, con il voucher stampato e il modulo di partecipazione compilato."
       }
     ],
     "rulesTitle": "Prima di giocare",
     "rules": [
       "Dai 12 anni compiuti",
       "Prenotazione obbligatoria",
+      "Voucher stampato, da portare in arena",
       "Modulo di partecipazione per tutti"
     ],
     "rulesLink": {
@@ -101,7 +103,7 @@
       },
       {
         "q": "Cosa comprende il voucher con noleggio attrezzatura?",
-        "a": "Il fucile con 300 colpi, la pettorina e la maschera protettiva, a 30 € a giocatore. Le ricariche extra da 300 colpi costano 3 € l'una."
+        "a": "Il fucile con 300 colpi, la pettorina e la maschera protettiva, a 35 € a giocatore. Le ricariche extra da 300 colpi costano 3 € l'una."
       },
       {
         "q": "E il voucher per chi ha già il fucile?",
@@ -110,6 +112,10 @@
       {
         "q": "Chi riceve il voucher può scegliere la data?",
         "a": "Sì: sceglie il giorno e l'ora che preferisce e prenota la partita in una delle nostre arene, entro i 6 mesi di validità. La prenotazione è obbligatoria."
+      },
+      {
+        "q": "Il voucher va stampato?",
+        "a": "Sì, è obbligatorio: il giorno della partita chi lo riceve porta il voucher stampato in arena."
       },
       {
         "q": "Da che età si può giocare?",

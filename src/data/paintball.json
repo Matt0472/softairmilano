@@ -1,4 +1,5 @@
 {
+  "published": true,
   "seo": {
     "title": "Paintball a Milano? Prova il softair | SoftAir Milano",
     "description": "Cerchi il paintball a Milano? Prova il softair: niente vernice né lividi, repliche realistiche, arena al coperto di 1.500 m². Confronto e prezzi.",
@@ -64,7 +65,7 @@
       {
         "topic": "Energia del colpo",
         "softair": "Sotto 1 joule, per legge",
-        "paintball": "Tra 6 e 12 joule"
+        "paintball": "Fino a 7,5 joule per legge, 12,7 nelle gare"
       },
       {
         "topic": "Vestiti",
@@ -111,14 +112,14 @@
       "name": "Softair",
       "diameterMm": 6,
       "mass": "0,20–0,30 g",
-      "energy": "< 1 J",
+      "energy": "≤ 1 J",
       "feel": "Una puntura"
     },
     "paintball": {
       "name": "Paintball",
       "diameterMm": 17,
       "mass": "3 g",
-      "energy": "6–12 J",
+      "energy": "≤ 7,5 J",
       "feel": "Una botta secca"
     }
   },
@@ -164,7 +165,7 @@
     "steps": [
       {
         "title": "Prenotate",
-        "text": "Chiamateci o scriveteci con giorno, orario e numero di giocatori. Si gioca da 8 a 30: se siete meno di 8, vi uniamo a un altro gruppo."
+        "text": "Chiamateci o scriveteci con giorno, orario e numero di giocatori. Si gioca da 8 a 20: se siete meno di 8, vi uniamo a un altro gruppo."
       },
       {
         "title": "Compilate i moduli",

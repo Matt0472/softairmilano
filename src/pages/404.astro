@@ -3,7 +3,7 @@
 // within five seconds, so it needs no pause control (A11Y-07); with reduced motion it rests on
 // the zero. The ways out are the shared Prenota section (so the header's Prenota works here too),
 // the home and the built pages the menu lists. Never indexed and no canonical: the page answers
-// at any missing address (BaseLayout `noindex`).
+// at any missing address (BaseLayout `noindex`, `noCanonical`).
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/atoms/Button.astro';
@@ -55,7 +55,7 @@ const cols = Math.ceil(destinations.length / Math.ceil(destinations.length / 6))
 const listId = 'lost-dest-title';
 ---
 
-<BaseLayout title={seo?.title} description={seo?.description} noindex>
+<BaseLayout title={seo?.title} description={seo?.description} noindex noCanonical>
   <section class="lost" aria-labelledby="lost-title">
     <HudFrame tag={hudTag} />
 

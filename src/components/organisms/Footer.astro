@@ -7,6 +7,7 @@
 
 import navigation from '../../data/navigation.json';
 import settings from '../../data/settings.json';
+import cookie from '../../data/cookie.json';
 import Icon from '../atoms/Icon.astro';
 import type { NavItem } from '../../lib/nav';
 import { has } from '../../lib/fields';
@@ -64,6 +65,8 @@ const rangerWords = (ranger.label ?? '').trim().split(/\s+/);
 const rangerLast = rangerWords.pop();
 const legal = ((settings.footerLegal ?? []) as { label?: string; href?: string }[]).filter(usable);
 const year = new Date().getFullYear();
+// Reopens the cookie choices (src/scripts/consent.ts reads data-cc), beside the legal links.
+const cookieLabel = has(cookie.footerLabel) ? cookie.footerLabel : '';
 // The VAT number sits beside the copyright, as the law asks of a business site.
 const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${settings.vatNumber}` : ''].filter(Boolean).join(' · ');
 ---
@@ -165,12 +168,15 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
           Mattia Pedone<span class="sr-only"> (si apre in una nuova scheda)</span>
         </a>
       </p>
-      {legal.length > 0 && (
+      {(legal.length > 0 || cookieLabel) && (
         <nav class="foot__legal-nav" aria-label="Note legali">
           <ul class="foot__legal" role="list">
             {legal.map((l) => (
               <li><a class="foot__fine" href={l.href}>{l.label}</a></li>
             ))}
+            {cookieLabel && (
+              <li><button type="button" class="foot__fine foot__cc" data-cc="show-preferencesModal">{cookieLabel}</button></li>
+            )}
           </ul>
         </nav>
       )}
@@ -227,7 +233,9 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
     align-content: start;
   }
   .foot__id { min-width: 0; }
-  .foot__logo { display: inline-block; }
+  /* Phones: the logo and the socials sit on the centre of the column; the tagline keeps the left
+     edge it shares with the rest of the footer. From 768 they line up on the left. */
+  .foot__logo { display: block; width: fit-content; margin-inline: auto; }
   .foot__logo img { display: block; width: auto; height: 3.5rem; }
   .foot__tagline {
     max-width: 32ch;
@@ -244,6 +252,7 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
     margin: 1.25rem 0 0;
     padding: 0;
     list-style: none;
+    justify-content: center;
   }
   .foot__social {
     display: grid;
@@ -425,6 +434,8 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
     margin: 0;
     padding: 0;
     list-style: none;
+    /* Phones: the last links wrap before the fixed back-to-top button (44px, 20px in). */
+    padding-right: 3.5rem;
   }
   .foot__fine,
   .foot__author {
@@ -438,6 +449,20 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
     text-underline-offset: 0.3em;
   }
   .foot__fine { color: var(--color-muted); }
+  /* The cookie choices are a button among links: same look, no button chrome. */
+  .foot__cc {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+  }
+  /* The ring every link gets (global.css), which a button does not inherit. */
+  .foot__cc:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
   .foot__author { font-weight: 500; color: var(--color-foreground); }
   .foot__fine:hover,
   .foot__author:hover { color: var(--color-foreground); text-decoration-color: var(--color-accent); }
@@ -452,6 +477,8 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
   .foot__heart { color: var(--color-accent); }
 
   @media (min-width: 768px) {
+    .foot__logo { display: inline-block; margin-inline: 0; }
+    .foot__socials { justify-content: flex-start; }
     .foot { --col-gap: 2.5rem; }
     .foot__main { padding-block: 4.5rem 4rem; row-gap: 3.5rem; }
     .foot__nav {
@@ -474,7 +501,7 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
     /* With the gutter, the links end 5rem from the edge: clear of the fixed back-to-top button
        (44px, 20px in). A margin on this side only keeps the centre true. */
     .foot__legal-nav { justify-self: end; margin-right: 3rem; }
-    .foot__legal { justify-content: flex-end; column-gap: 1rem; }
+    .foot__legal { justify-content: flex-end; column-gap: 1rem; padding-right: 0; }
   }
 
   /* 768–1023: the card sits over the third menu column; the contacts split in two. */

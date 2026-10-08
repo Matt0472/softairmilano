@@ -20,12 +20,20 @@ content:
     fields:
       - { name: siteName, label: Nome sito, type: string }
       - { name: siteUrl, label: URL del sito, type: string }
-      - { name: vatNumber, label: Partita IVA, type: string, description: "Compare in fondo a ogni pagina, accanto al copyright. Obbligatoria per legge sul sito di un'attività" }
+      - { name: vatNumber, label: Partita IVA, type: string, description: "Solo le cifre: la sigla «P.IVA» la aggiunge il sito. Compare in fondo a ogni pagina, accanto al copyright, ed è obbligatoria per legge sul sito di un'attività. Se vuota non compare" }
       - { name: defaultDescription, label: Descrizione SEO predefinita, type: text }
       - { name: defaultOgImage, label: Immagine social predefinita, type: image }
       - { name: footerTagline, label: Frase sotto il logo nel footer, type: string }
       - { name: phone, label: Telefono, type: string }
-      - { name: whatsapp, label: WhatsApp, type: string }
+      - { name: whatsapp, label: WhatsApp, type: string, description: "Il numero, scritto come il telefono, es. «375 595 6805». Accende WhatsApp nella sezione Prenota, in Contatti e il bottone WhatsApp sul telefono. Se vuoto, WhatsApp non compare da nessuna parte" }
+      - name: whatsappButton
+        label: Bottone WhatsApp sul telefono
+        description: "Il bottone tondo con il simbolo di WhatsApp in basso a sinistra, solo su telefoni e tablet piccoli: compare dopo l'apertura della pagina e si nasconde dalla sezione Prenota in giù e mentre sono aperti il banner dei cookie o il menu. Un tocco apre WhatsApp sul numero qui sopra, con il messaggio già scritto. Senza il numero WhatsApp non compare"
+        type: object
+        fields:
+          - { name: show, label: Mostra il bottone, type: boolean, default: true, description: "Spento: il bottone sparisce da tutte le pagine. WhatsApp resta nella sezione Prenota e in Contatti" }
+          - { name: label, label: "Nome del bottone (per i lettori di schermo)", type: string, required: true, description: "Non si vede: lo legge ad alta voce il telefono a chi non vede lo schermo. Dice cosa fa il bottone, es. «Scrivici su WhatsApp»" }
+          - { name: message, label: Messaggio già scritto, type: text, description: "Il testo che il visitatore trova già scritto in WhatsApp: può cambiarlo prima di inviarlo. Breve, es. «Ciao! Vorrei informazioni per prenotare una partita.». Se vuoto, WhatsApp si apre senza messaggio" }
       - { name: email, label: Email, type: string }
       - { name: address, label: Indirizzo, type: text }
       - name: postalAddress
@@ -40,6 +48,14 @@ content:
       - { name: openingHours, label: Orari, type: string, description: "Es. Tutti i giorni dalle 14:00 alle 24:00, solo su prenotazione" }
       - { name: directions, label: Come arrivare, type: string, description: "Parcheggio, mezzi pubblici: una riga breve" }
       - { name: rangerUrl, label: "Link arena outdoor (Ranger Softair)", type: string }
+      - name: wear
+        label: "Abbigliamento consigliato (pagine attività)"
+        description: "Il blocco sotto le note dei prezzi di Softair, Arcotag, Tiro dinamico e Nerf, uguale su tutte: si cambia qui una volta sola. Compare con almeno la frase o una voce dell'elenco; se sono vuote entrambe, non compare. Le domande frequenti «Cosa devo indossare?» delle pagine si scrivono a parte: se cambi l'elenco, aggiornale"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Es. «Abbigliamento consigliato». Se vuoto, compaiono solo la frase e l'elenco" }
+          - { name: text, label: Frase sopra l'elenco, type: string, description: "Es. «L'arena non è climatizzata né riscaldata». Se vuota non compare" }
+          - { name: items, label: Elenco, type: string, list: true, description: "Un capo per riga, breve, es. «Pantaloni lunghi». Le righe vuote non compaiono" }
       - name: finalCta
         label: "Prenota (fondo di ogni pagina)"
         description: "La sezione «Sei pronto a scendere in campo?» in fondo a home, attività e Softair VS Paintball, uguale ovunque. Telefono, WhatsApp, email, orari, indirizzo e «Come arrivare» sono i campi qui sopra; un dato vuoto non compare. La scritta gigante sul fondo è il «Nome sito»"
@@ -72,9 +88,9 @@ content:
         fields:
           - { name: label, label: Testo, type: string }
           - { name: href, label: Link, type: string, description: "Es. /privacy" }
-      - { name: ticketinghubId, label: "ID script TicketingHub (prenotazioni)", type: string }
+      - { name: ticketinghubId, label: "ID script TicketingHub (prenotazioni)", type: string, description: "Lo fornisce e lo collega il tecnico insieme al widget di prenotazione: finché il collegamento non è fatto, questo campo non ha effetto" }
       - { name: ticketinghubVoucherId, label: "ID TicketingHub dei voucher regalo", type: string, description: "Lo inserisce il tecnico quando collega l'acquisto online dei voucher. Finché l'acquisto online non è collegato, nella pagina «Voucher regalo» compaiono il telefono e l'email, anche se questo campo è pieno" }
-      - { name: gaMeasurementId, label: "ID Google Analytics (GA4)", type: string }
+      - { name: gaMeasurementId, label: "ID Google Analytics (GA4)", type: string, description: "Es. G-XXXXXXXXXX, lo fornisce il tecnico. Google Analytics parte solo per chi lo accetta nel banner dei cookie; se il campo è vuoto, nel banner la voce «Statistiche» non compare" }
       - { name: web3formsKey, label: "Chiave Web3Forms (form di richiesta)", type: string, description: "La chiave dell'account Web3Forms che riceve le richieste dalle pagine attività e da Contatti e le inoltra via email. Se vuota, il form non compare" }
       - name: social
         label: Social (URL dei profili)
@@ -134,8 +150,8 @@ content:
           - { name: image, label: "Immagine (desktop, 16:9)", type: image, required: true }
           - { name: imageMobile, label: "Immagine (telefono e tablet in verticale, 9:16)", type: image, description: "Verticale, con il soggetto nel terzo alto: la metà bassa ospita i testi. Se vuota, si usa l'immagine per computer" }
           - { name: imageAlt, label: "Testo alternativo immagine (accessibilità/SEO)", type: string }
-          - { name: eyebrow, label: Sopratitolo, type: string }
-          - { name: title, label: Titolo, type: string, required: true }
+          - { name: eyebrow, label: "Sopratitolo (fa parte del titolo H1)", type: string, options: { maxlength: 30 }, description: "Riga piccola sopra la frase grande. Google e gli assistenti AI la leggono come inizio del titolo principale: tienici \"softair\" e \"Milano\", es. «Softair indoor a Milano». Se vuota, il titolo è solo la frase grande" }
+          - { name: title, label: "Titolo principale (H1): la frase grande", type: string, required: true }
           - { name: subtitle, label: Sottotitolo, type: text }
           - name: ctaPrimary
             label: Bottone principale
@@ -289,6 +305,20 @@ content:
               - { name: imageAlt, label: Testo alternativo foto, type: string }
               - { name: href, label: Link (facoltativo), type: string, description: "Se vuoto, la foto non è cliccabile. Metti un link solo verso una pagina che esiste" }
               - { name: featured, label: In evidenza, type: boolean, description: "Una sola occasione in evidenza; se nessuna lo è, la foto grande è la prima" }
+      - name: voucher
+        label: Voucher regalo (rimando alla pagina del voucher)
+        description: "Subito dopo «Occasioni»: il disegno del voucher accanto al titolo, il testo, i voucher con il loro prezzo e il bottone verso la pagina «Voucher regalo». Il disegno (titolo e scritta) e i prezzi vengono da quella pagina e si cambiano lì: «Voucher regalo» → «Apertura» e «I voucher». Se il titolo è vuoto, la sezione non compare"
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string, description: "Facoltativo, breve, es. «Idea regalo». Se vuoto non compare" }
+          - { name: title, label: Titolo, type: string, description: "Es. «Regala una partita di softair». Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text, description: "Una o due frasi, solo cose vere del voucher: chi lo riceve sceglie giorno e ora, entro quanto, che va portato stampato. Niente prezzi: compaiono da soli sotto il testo. Se cambia la validità, aggiornala anche qui. Se vuoto non compare" }
+          - name: cta
+            label: Bottone verso la pagina del voucher
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string, description: "Es. «Scopri il voucher». Se vuoto (o se è vuoto il link), il bottone non compare" }
+              - { name: href, label: Link, type: string, description: "Es. /voucher-regalo" }
       - name: course
         label: Il corso (rimando alla pagina del corso)
         description: "Il titolo, poi una foto con sopra un riquadro che fa da scheda del corso: il testo, i dati chiave e il link alla pagina del corso, che lo spiega per intero. Se il titolo è vuoto, la sezione non compare"
@@ -367,6 +397,7 @@ content:
     view:
       primary: name
     fields:
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina dell'attività sparisce dal sito, dal menu, dalla home, da «Provate anche» e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
       - { name: name, label: Nome attività, type: string, required: true, description: "Alla creazione diventa l'indirizzo della pagina (es. arcotag → /arcotag); cambiarlo dopo non cambia l'indirizzo. Nomi riservati: paintball, contatti e le altre pagine del menu" }
       - name: seo
         label: SEO e anteprima social
@@ -443,6 +474,13 @@ content:
               - { name: time, label: "Momento (es. Arrivo, Briefing, In campo)", type: string, description: "Se vuoto, compare il numero del passaggio" }
               - { name: title, label: Titolo, type: string }
               - { name: text, label: Testo, type: text }
+              - name: link
+                label: Link sotto il testo (facoltativo)
+                description: "Es. «Vai alla modulistica» → /modulistica nel passaggio dell'arrivo. Compare solo con testo e link"
+                type: object
+                fields:
+                  - { name: label, label: Testo del link, type: string }
+                  - { name: href, label: Link, type: string, description: "Una pagina del sito, es. /modulistica" }
       - name: modes
         label: Missioni / Percorsi
         description: "Le missioni (softair) o i percorsi (tiro dinamico). Compare dopo la sezione con foto ed elenco («Come si gioca» o «Sicurezza e attrezzatura»). Se il titolo è vuoto o non c'è nessuna voce, la sezione non compare"
@@ -524,7 +562,7 @@ content:
               - { name: unit, label: "Unità (es. € a persona)", type: string }
               - { name: note, label: Nota, type: string }
               - { name: badge, label: "Badge (facoltativo, es. Serata tra amici)", type: string, description: "Mette in risalto la fascia: meglio una sola" }
-          - { name: notes, label: Note sotto i prezzi, type: string, list: true }
+          - { name: notes, label: Note sotto i prezzi, type: string, list: true, description: "Una per riga. Sotto le note compare il blocco «Abbigliamento consigliato», uguale per tutte le attività: si cambia in Impostazioni generali" }
       - name: reviews
         label: Recensioni
         type: object
@@ -544,16 +582,28 @@ content:
               - { name: a, label: Risposta, type: text }
       - name: related
         label: Altre attività
-        description: "Le schede mostrate sono le attività di Home › Attività (tranne questa)"
+        description: "Le schede mostrate sono le attività di Home › Attività (tranne questa), nell'ordine scelto qui sotto"
         type: object
         fields:
           - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - name: order
+            label: Attività da mostrare per prime (facoltativo)
+            description: "Le schede che vengono per prime, in quest'ordine: trascinale per cambiarlo. Le altre attività seguono nell'ordine di Home › Attività, quindi non serve elencarle tutte e non ne sparisce mai nessuna. Se vuoto, l'ordine è quello di Home › Attività. Questa stessa pagina, le ripetizioni e le attività che non sono in Home › Attività non contano"
+            type: reference
+            list: true
+            options:
+              collection: activities
+              # The page link comes from the file name (arcotag.json → /arcotag), like the route:
+              # the activity's name can change later, its address cannot.
+              value: "{path}"
+              label: "{primary}"
 
   - name: paintball
     label: Softair VS Paintball
     type: file
     path: src/data/paintball.json
     fields:
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina sparisce dal sito, dal menu e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
       - name: seo
         label: SEO e anteprima social
         type: object
@@ -730,6 +780,7 @@ content:
     type: file
     path: src/data/corso.json
     fields:
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina sparisce dal sito, dal menu e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
       - name: seo
         label: SEO e anteprima social
         type: object
@@ -974,6 +1025,7 @@ content:
     type: file
     path: src/data/contatti.json
     fields:
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina sparisce dal sito, dal menu e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
       - name: seo
         label: SEO e anteprima social
         type: object
@@ -1065,6 +1117,7 @@ content:
     type: file
     path: src/data/modulistica.json
     fields:
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina sparisce dal sito, dal menu e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
       - name: seo
         label: SEO e anteprima social
         type: object
@@ -1123,6 +1176,7 @@ content:
     type: file
     path: src/data/teambuilding.json
     fields:
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina sparisce dal sito, dal menu e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
       - name: seo
         label: SEO e anteprima social
         type: object
@@ -1307,6 +1361,7 @@ content:
     type: file
     path: src/data/occasioni.json
     fields:
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina sparisce dal sito, dal menu e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
       - name: seo
         label: SEO e anteprima social
         type: object
@@ -1484,6 +1539,7 @@ content:
     type: file
     path: src/data/voucher.json
     fields:
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina sparisce dal sito, dal menu e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
       - name: seo
         label: SEO e anteprima social
         type: object
@@ -1494,11 +1550,11 @@ content:
           - { name: imageAlt, label: Testo alternativo immagine social, type: string, description: "Descrive l'immagine per i social. Se vuoto si usa il nome del sito" }
       - name: hero
         label: Apertura
-        description: "Senza foto: accanto al titolo compare il disegno di un voucher, con il nome del sito, il titolo principale e la scritta del biglietto"
+        description: "Senza foto: accanto al titolo compare il disegno di un voucher, con il nome del sito, il titolo principale e la scritta del biglietto. Lo stesso disegno compare in home, nella sezione «Voucher regalo»"
         type: object
         fields:
           - { name: eyebrow, label: Sopratitolo, type: string, description: "Es. «Idea regalo». Se vuoto non compare" }
-          - { name: title, label: "Titolo principale (H1)", type: string, required: true, description: "Breve, es. «Voucher regalo»: compare anche sul disegno del voucher" }
+          - { name: title, label: "Titolo principale (H1)", type: string, required: true, description: "Breve, es. «Voucher regalo»: compare anche sul disegno del voucher, qui e in home" }
           - { name: subtitle, label: Sottotitolo (massimo 20 parole), type: text, description: "Se vuoto non compare" }
           - name: cta
             label: Bottone principale
@@ -1507,7 +1563,7 @@ content:
             fields:
               - { name: label, label: Testo, type: string, description: "Lo stesso testo del titolo della sezione «Acquista», es. «Acquista il voucher»" }
               - { name: href, label: Link, type: string, description: "Es. #acquista" }
-          - { name: ticketNote, label: "Scritta in fondo al disegno del voucher", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, es. «Valido 6 mesi · Data a scelta»: ogni parte separata da «·» va su una riga. Se cambi la validità, aggiornala anche qui. Se vuota non compare" }
+          - { name: ticketNote, label: "Scritta in fondo al disegno del voucher", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, es. «Valido 6 mesi · Data a scelta»: ogni parte separata da «·» va su una riga. Compare anche sul disegno in home. Se cambi la validità, aggiornala anche qui e nel testo della sezione «Voucher regalo» della home. Se vuota non compare" }
           - { name: hudTag, label: "Scritta tattica nella cornice (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «VOUCHER · VALIDO 6 MESI». Se vuota non compare" }
       - name: types
         label: I voucher (schede con i prezzi)
@@ -1523,9 +1579,9 @@ content:
             type: object
             list: { max: 3 }
             fields:
-              - { name: title, label: Nome del voucher, type: string, description: "Es. «Con noleggio attrezzatura»" }
+              - { name: title, label: Nome del voucher, type: string, description: "Es. «Con noleggio attrezzatura». Nome e prezzo compaiono anche in home, nella sezione «Voucher regalo»" }
               - { name: audience, label: Per chi è, type: string, description: "Una frase sotto il nome, es. «Per chi ha già il fucile: nessuna attrezzatura fornita». Se vuota non compare" }
-              - { name: price, label: "Prezzo (solo il numero, es. 30)", type: string, description: "Compare in grande. Se cambi il prezzo, aggiornalo anche nelle domande frequenti e nella descrizione per Google" }
+              - { name: price, label: "Prezzo (solo il numero, es. 35)", type: string, description: "Compare in grande, qui e in home (lì si aggiorna da solo). Se cambi il prezzo, aggiornalo anche nelle domande frequenti e nella descrizione per Google" }
               - { name: unit, label: "Unità del prezzo (es. € a giocatore)", type: string, description: "Compare accanto al prezzo. Se vuota non compare" }
               - { name: included, label: Cosa comprende, type: string, list: true, description: "Una voce per riga, es. «Fucile con 300 colpi». Una voce vuota non compare; senza voci l'elenco non compare" }
               - { name: note, label: Nota in fondo alla scheda, type: string, description: "Es. «Ricarica extra da 300 colpi: 3 €». Se vuota non compare" }
@@ -1579,3 +1635,147 @@ content:
             fields:
               - { name: q, label: Domanda, type: string }
               - { name: a, label: Risposta, type: text }
+
+  - name: blog
+    label: Pagina Blog
+    description: "La pagina /blog: l'apertura e l'elenco degli articoli, dal più recente. Gli articoli si scrivono in «Blog — articoli»"
+    type: file
+    path: src/data/blog.json
+    fields:
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: il blog sparisce dal sito, dal menu e da ogni link che ci porta, insieme a tutti i suoi articoli, e chi apre questi indirizzi vede la pagina «non trovata». Gli articoli restano salvati: si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
+      - name: seo
+        label: SEO e anteprima social
+        type: object
+        fields:
+          - { name: title, label: Titolo della pagina (Google), type: string, description: "Circa 60 caratteri", required: true }
+          - { name: description, label: Descrizione (Google), type: text, description: "Circa 155 caratteri" }
+          - { name: image, label: Immagine per i social, type: image, description: "Orizzontale, 1200×630 (JPG o PNG). Se vuota si usa l'immagine social predefinita di «Impostazioni generali»" }
+          - { name: imageAlt, label: Testo alternativo immagine social, type: string, description: "Descrive l'immagine per i social. Se vuoto si usa il nome del sito" }
+      - name: hero
+        label: Apertura
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string, description: "Es. «Guide e consigli». Se vuoto non compare" }
+          - { name: title, label: "Titolo principale (H1)", type: string, required: true, description: "Breve, es. «Blog»" }
+          - { name: subtitle, label: Sottotitolo (massimo 20 parole), type: text, description: "Di cosa parlano gli articoli. Se vuoto non compare" }
+          - { name: hudTag, label: "Scritta tattica nella cornice (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «Guide · Regole · Attrezzatura». Compare anche in cima a ogni articolo. Se vuota non compare" }
+      - { name: listTitle, label: Titolo sopra l'elenco degli articoli, type: string, description: "Es. «Tutti gli articoli». Se vuoto non compare: l'elenco segue subito l'apertura" }
+      - { name: moreTitle, label: "Titolo degli articoli suggeriti (in fondo a ogni articolo)", type: string, description: "Es. «Altri articoli»: in fondo a ogni articolo, sopra qualche altro articolo da leggere. Vale per tutti gli articoli. Se vuoto, gli articoli suggeriti non compaiono" }
+      - { name: readMore, label: Testo del bottone sulle schede, type: string, description: "Es. «Leggi l'articolo»: in fondo a ogni scheda, nell'elenco del blog e negli articoli suggeriti. Tutta la scheda porta all'articolo; se vuoto il bottone non compare" }
+
+  - name: blogPosts
+    label: Blog — articoli
+    description: "Un file per articolo. Il nome del file è l'indirizzo dell'articolo: softair-sulla-neve → /blog/softair-sulla-neve. Quando crei un articolo il nome si fa dal titolo e puoi accorciarlo prima di salvare; dopo resta quello anche se cambi il titolo. Rinominare il file cambia l'indirizzo: i link già condivisi e quelli su Google smettono di funzionare, quindi non farlo con un articolo già online. Per togliere un articolo dal sito senza perderlo, spegni «Articolo online» invece di cancellarlo"
+    type: collection
+    path: src/content/blog
+    format: yaml-frontmatter
+    filename:
+      template: "{primary}.md"
+      field: create
+    view:
+      primary: title
+      fields: [title, date, published]
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - { name: published, label: Articolo online, type: boolean, default: true, description: "Spento: l'articolo sparisce dall'elenco del blog e dagli articoli suggeriti, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. I link a questo articolo scritti nel testo di altri articoli diventano testo normale da soli. Vale per il sito pubblicato e per l'anteprima online" }
+      - { name: title, label: "Titolo dell'articolo (H1)", type: string, required: true, description: "Compare grande in cima all'articolo, nell'elenco del blog e su Google. Quando crei l'articolo diventa anche il nome del file, cioè l'indirizzo (vedi sopra); cambiarlo dopo non cambia l'indirizzo" }
+      - { name: description, label: "Riassunto (elenco del blog e Google)", type: text, required: true, options: { maxlength: 160 }, description: "Una o due frasi su cosa trova chi legge: compare sotto il titolo nell'elenco del blog, in apertura dell'articolo e come descrizione su Google. Massimo 160 caratteri" }
+      - { name: date, label: Data di pubblicazione, type: date, required: true, options: { format: yyyy-MM-dd }, description: "Compare sull'articolo; nell'elenco del blog in cima c'è il più recente. Per un articolo nuovo è già la data di oggi" }
+      - { name: image, label: Immagine di copertina, type: image, description: "Orizzontale 16:9, almeno 1600 px di larghezza (JPG): compare in cima all'articolo, nell'elenco del blog e nelle anteprime sui social. Se vuota, l'articolo compare senza foto e sui social si usa l'immagine predefinita di «Impostazioni generali»" }
+      - { name: imageAlt, label: Testo alternativo della copertina, type: string, description: "Obbligatorio se c'è la copertina: una frase che dice cosa si vede, per chi non vede le immagini e per Google, es. «Pallini da softair bianchi sparsi su un tavolo di legno». Senza copertina lascialo vuoto" }
+      - { name: body, label: Testo dell'articolo, type: rich-text, description: "I titoli delle sezioni partono dal secondo livello (H2), poi H3: il primo livello è già il titolo dell'articolo. Ogni immagine nel testo ha bisogno del suo testo alternativo. I link alle pagine del sito si scrivono senza dominio, es. /softair o /blog/softair-sulla-neve" }
+
+  - name: cookieBanner
+    label: Banner dei cookie
+    description: "I testi del banner che compare alla prima visita e della finestra «Preferenze cookie». Le statistiche compaiono solo quando in Impostazioni generali c'è l'ID di Google Analytics"
+    type: file
+    path: src/data/cookie.json
+    fields:
+      - name: banner
+        label: Banner (prima visita)
+        required: true
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string }
+          - { name: text, label: Testo, type: text, description: "Breve e vero: cosa usa il sito e che si può cambiare idea. Niente nomi di servizi che il sito non usa" }
+          - { name: acceptAll, label: Bottone «Accetta tutti», type: string, required: true }
+          - { name: rejectAll, label: Bottone «Rifiuta», type: string, required: true, description: "Ha lo stesso peso di «Accetta tutti», come chiede il Garante" }
+          - { name: preferences, label: Bottone «Preferenze», type: string, required: true }
+      - name: preferences
+        label: Finestra «Preferenze cookie»
+        required: true
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string }
+          - { name: text, label: Testo introduttivo, type: text, description: "Sotto compaiono da soli i link a privacy e cookie policy del footer" }
+          - { name: save, label: Bottone «Salva le preferenze», type: string, required: true }
+          - { name: acceptAll, label: Bottone «Accetta tutti», type: string, required: true }
+          - { name: rejectAll, label: Bottone «Rifiuta tutti», type: string, required: true }
+          - { name: close, label: Testo per chiudere la finestra, type: string, required: true, description: "Letto dai lettori di schermo sulla X, es. «Chiudi»" }
+      - name: categories
+        label: Categorie
+        required: true
+        type: object
+        fields:
+          - name: necessary
+            label: Necessari (sempre attivi)
+            required: true
+            type: object
+            fields:
+              - { name: title, label: Titolo, type: string, required: true }
+              - { name: text, label: Descrizione, type: text }
+          - name: analytics
+            label: Statistiche (Google Analytics)
+            required: true
+            type: object
+            fields:
+              - { name: title, label: Titolo, type: string, required: true }
+              - { name: text, label: Descrizione, type: text }
+          - name: external
+            label: Servizi esterni (prenotazione online e mappa)
+            required: true
+            type: object
+            fields:
+              - { name: title, label: Titolo, type: string, required: true }
+              - { name: text, label: Descrizione, type: text }
+      - { name: footerLabel, label: Voce nel footer per riaprire le preferenze, type: string, description: "Es. «Preferenze cookie». Se vuota, la voce non compare" }
+      - { name: policyButton, label: Bottone in fondo alla cookie policy, type: string, description: "Es. «Gestisci le preferenze». Se vuoto, il bottone non compare" }
+
+  - name: privacy
+    label: Privacy policy
+    description: "La pagina /privacy. È una bozza da far controllare al proprio consulente; se il sito aggiunge un servizio esterno, va aggiornata. Non compare su Google"
+    type: file
+    path: src/pages/privacy.md
+    fields:
+      - { name: layout, type: string, hidden: true, default: ../layouts/LegalLayout.astro }
+      - { name: title, label: Titolo della pagina, type: string, required: true }
+      - { name: description, label: Descrizione per Google e anteprime, type: text }
+      - { name: updated, label: Ultimo aggiornamento, type: string, description: "Es. «8 ottobre 2026». Aggiornala ogni volta che cambi il testo. Se vuota, la riga non compare" }
+      - { name: body, label: Testo della pagina, type: rich-text, description: "I titoli partono dal secondo livello (il primo è il titolo della pagina). I link alle pagine del sito si scrivono senza dominio, es. /contatti" }
+
+  - name: cookiePolicy
+    label: Cookie policy
+    description: "La pagina /cookie. In fondo compare da solo il bottone per riaprire le preferenze. Se il sito aggiunge un servizio esterno, va aggiornata. Non compare su Google"
+    type: file
+    path: src/pages/cookie.md
+    fields:
+      - { name: layout, type: string, hidden: true, default: ../layouts/LegalLayout.astro }
+      - { name: title, label: Titolo della pagina, type: string, required: true }
+      - { name: description, label: Descrizione per Google e anteprime, type: text }
+      - { name: updated, label: Ultimo aggiornamento, type: string, description: "Es. «8 ottobre 2026». Aggiornala ogni volta che cambi il testo. Se vuota, la riga non compare" }
+      - { name: body, label: Testo della pagina, type: rich-text, description: "I titoli partono dal secondo livello (il primo è il titolo della pagina). I link alle pagine del sito si scrivono senza dominio, es. /contatti" }
+
+  - name: terms
+    label: Termini e condizioni
+    description: "La pagina /termini: prenotazioni, giocatori, sala feste, età e moduli, sicurezza, voucher. Se cambia una regola nelle pagine delle attività, aggiornala anche qui. Non compare su Google"
+    type: file
+    path: src/pages/termini.md
+    fields:
+      - { name: layout, type: string, hidden: true, default: ../layouts/LegalLayout.astro }
+      - { name: title, label: Titolo della pagina, type: string, required: true }
+      - { name: description, label: Descrizione per Google e anteprime, type: text }
+      - { name: updated, label: Ultimo aggiornamento, type: string, description: "Es. «8 ottobre 2026». Aggiornala ogni volta che cambi il testo. Se vuota, la riga non compare" }
+      - { name: body, label: Testo della pagina, type: rich-text, description: "I titoli partono dal secondo livello (il primo è il titolo della pagina). I link alle pagine del sito si scrivono senza dominio, es. /contatti" }
