@@ -3,14 +3,14 @@
   "name": "Softair",
   "seo": {
     "title": "Partite di softair a Milano, al coperto | SoftAir Milano",
-    "description": "Partite di softair a Milano in un villaggio militare indoor di 1.500 m²: missioni a squadre arbitrate, attrezzatura inclusa, fino a 20 giocatori, dai 12 anni.",
+    "description": "Partite di softair a Milano in un villaggio indoor di 1.500 m²: missioni a squadre arbitrate, attrezzatura inclusa, fino a 20 giocatori, dai 12 anni.",
     "image": "/uploads/softair-og.jpg",
     "imageAlt": ""
   },
   "hero": {
     "eyebrow": "Arena indoor · Milano",
     "title": "Partite di softair a Milano",
-    "subtitle": "Missioni a squadre in un villaggio militare al coperto, arbitrate dal nostro staff: il film d'azione, stavolta, lo giocate voi.",
+    "subtitle": "Missioni a squadre in un villaggio al coperto, arbitrate dal nostro staff: il film d'azione, stavolta, lo giocate voi.",
     "image": "/uploads/softair-hero.jpeg",
     "imageMobile": "/uploads/softair-hero-mobile.jpeg",
     "imageAlt": "Due giocatori di softair con casco, maschera protettiva e fucile replica entrano da una porta in controluce, tra polvere e fumo.",
@@ -45,7 +45,7 @@
   ],
   "intro": {
     "title": "Cos'è una partita di softair",
-    "text": "Il softair è un gioco di squadra con repliche di armi che sparano pallini da 6 mm. Da noi non è un semplice sparatutto: in 1 ora e 45 minuti, briefing compreso, giocate diverse missioni una dopo l'altra, ispirate ai videogiochi del momento, tra edifici, auto e torrette di vedetta. Ogni missione ha le sue regole e i suoi obiettivi, e tutto si basa sulla lealtà: chi viene colpito lo dichiara. Si gioca a Milano, in un villaggio militare indoor di 1.500 m², con lo staff che arbitra ogni partita.",
+    "text": "Il softair è un gioco di squadra con repliche di armi che sparano pallini da 6 mm. Da noi non è un semplice sparatutto: in 1 ora e 45 minuti, briefing compreso, giocate diverse missioni una dopo l'altra, ispirate ai videogiochi del momento, tra edifici, auto e torrette di vedetta. Ogni missione ha le sue regole e i suoi obiettivi, e tutto si basa sulla lealtà: chi viene colpito lo dichiara. Si gioca a Milano, in un villaggio indoor di 1.500 m², con lo staff che arbitra ogni partita.",
     "points": [
       {
         "title": "Anche alla prima volta",
@@ -276,7 +276,7 @@
       },
       {
         "q": "Dove si gioca a softair?",
-        "a": "Nel villaggio militare al coperto di Via Melegnano 26 a Settimo Milanese, alle porte di Milano: parcheggio facile e bus 433 dalla metro M1 Bisceglie."
+        "a": "Nel villaggio al coperto di Via Melegnano 26 a Settimo Milanese, alle porte di Milano: parcheggio facile e bus 433 dalla metro M1 Bisceglie."
       }
     ]
   },

@@ -306,12 +306,12 @@ content:
               - { name: featured, label: In evidenza, type: boolean, description: "Una sola occasione in evidenza; se nessuna lo è, la foto grande è la prima" }
       - name: voucher
         label: Voucher regalo (rimando alla pagina del voucher)
-        description: "Subito dopo «Occasioni»: il disegno del voucher accanto al titolo, il testo, i voucher con il loro prezzo e il bottone verso la pagina «Voucher regalo». Il disegno (titolo e scritta) e i prezzi vengono da quella pagina e si cambiano lì: «Voucher regalo» → «Apertura» e «I voucher». Se il titolo è vuoto, la sezione non compare"
+        description: "Subito dopo «Occasioni»: il disegno del voucher accanto al titolo, il testo e il bottone verso la pagina «Voucher regalo», dove stanno i prezzi. Il disegno (titolo e scritta) viene da quella pagina e si cambia lì: «Voucher regalo» → «Apertura». Se il titolo è vuoto, la sezione non compare"
         type: object
         fields:
           - { name: eyebrow, label: Sopratitolo, type: string, description: "Facoltativo, breve, es. «Idea regalo». Se vuoto non compare" }
           - { name: title, label: Titolo, type: string, description: "Es. «Regala una partita di softair». Se vuoto, la sezione non compare" }
-          - { name: text, label: Testo, type: text, description: "Una o due frasi, solo cose vere del voucher: chi lo riceve sceglie giorno e ora, entro quanto, che va portato stampato. Niente prezzi: compaiono da soli sotto il testo. Se cambia la validità, aggiornala anche qui. Se vuoto non compare" }
+          - { name: text, label: Testo, type: text, description: "Una o due frasi, solo cose vere del voucher: chi lo riceve sceglie giorno e ora, entro quanto, che va portato stampato. Meglio senza prezzi: stanno nella pagina del voucher, e qui andrebbero aggiornati a mano. Se cambia la validità, aggiornala anche qui. Se vuoto non compare" }
           - name: cta
             label: Bottone verso la pagina del voucher
             type: object
@@ -1454,7 +1454,7 @@ content:
             list: true
             fields:
               - { name: title, label: Nome, type: string, description: "Breve, su una riga, es. «Softair»" }
-              - { name: desc, label: Descrizione, type: string, description: "Una riga che comincia dall'età minima, es. «Dai 12 anni. Missioni a squadre nel villaggio militare.». Le età devono essere quelle delle pagine attività" }
+              - { name: desc, label: Descrizione, type: string, description: "Una riga che comincia dall'età minima, es. «Dai 12 anni. Missioni a squadre nel villaggio al coperto.». Le età devono essere quelle delle pagine attività" }
               - { name: image, label: "Foto (orizzontale)", type: image }
               - { name: imageMobile, label: "Foto (mobile, verticale 4:5)", type: image, description: "Se vuota, si usa la foto orizzontale" }
               - { name: href, label: Link, type: string, description: "La pagina dell'attività, es. /softair" }
@@ -1591,7 +1591,7 @@ content:
             fields:
               - { name: title, label: Nome del voucher, type: string, description: "Es. «Con noleggio attrezzatura». Nome e prezzo compaiono anche in home, nella sezione «Voucher regalo»" }
               - { name: audience, label: Per chi è, type: string, description: "Una frase sotto il nome, es. «Per chi ha già il fucile: nessuna attrezzatura fornita». Se vuota non compare" }
-              - { name: price, label: "Prezzo (solo il numero, es. 35)", type: string, description: "Compare in grande, qui e in home (lì si aggiorna da solo). Se cambi il prezzo, aggiornalo anche nelle domande frequenti e nella descrizione per Google" }
+              - { name: price, label: "Prezzo (solo il numero, es. 35)", type: string, description: "Compare in grande nella scheda. Se cambi il prezzo, aggiornalo anche nelle domande frequenti e nella descrizione per Google" }
               - { name: unit, label: "Unità del prezzo (es. € a giocatore)", type: string, description: "Compare accanto al prezzo. Se vuota non compare" }
               - { name: included, label: Cosa comprende, type: string, list: true, description: "Una voce per riga, es. «Fucile con 300 colpi». Una voce vuota non compare; senza voci l'elenco non compare" }
               - { name: note, label: Nota in fondo alla scheda, type: string, description: "Es. «Ricarica extra da 300 colpi: 3 €». Se vuota non compare" }

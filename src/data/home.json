@@ -35,7 +35,7 @@
   },
   "arena": {
     "title": "L'arena",
-    "text": "L'arena indoor di softair più grande di Milano: un villaggio militare al coperto dove ogni partita sembra una scena d'azione.",
+    "text": "L'arena indoor di softair più grande di Milano: un villaggio al coperto dove ogni partita sembra una scena d'azione.",
     "stat": {
       "value": "1.500",
       "unit": "m²",
@@ -91,7 +91,7 @@
   "activities": [
     {
       "title": "Softair",
-      "desc": "Il cuore dell'arena: partite a missioni in un villaggio militare al coperto. Per veterani e per chi imbraccia un'arma softair per la prima volta.",
+      "desc": "Il cuore dell'arena: partite a missioni in un villaggio al coperto. Per veterani e per chi imbraccia un'arma softair per la prima volta.",
       "pills": [
         "Dai 12 anni",
         "A squadre",
