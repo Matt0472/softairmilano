@@ -16,6 +16,7 @@ legge può verificarlo invece di fidarsi sulla parola.
 |---|---|---|
 | `docs/standards/` (qui) | Le **regole**: come deve essere il sito e il codice | "Violarla è un difetto" |
 | `src/styles/global.css` (`@theme`) | I **valori** dei token di design (colori, font, raggi, ombre, easing) | "È un numero o un colore" |
+| `public/uploads/hero-mira*` (apertura della home e immagine social predefinita) | `MEDIA-11` (punta rossa) | Approvata prima della regola; l'utente ha deciso di lasciarla così (8 ott 2026) |
 | `design-system/softair-milano/MASTER.md` | L'**intento** del design system e il suo perché | "Spiega una scelta di design" |
 | `docs/piano-sviluppo.md`, `docs/cutover-checklist.md`, `docs/geo-e-indicizzazione.md` | Piano delle pagine, procedura di go-live, elenco crawler e checklist GEO | "Descrive il progetto o una procedura" |
 | `docs/in-development/HANDOFF.md` | Lo **stato** del lavoro in corso: cosa è fatto, cosa manca, trappole recenti | "Scade quando il lavoro finisce" |
@@ -65,7 +66,6 @@ come regressioni. Si sistemano quando si tocca quel codice (`GIT-06`), non a vis
 | Dove | Regola | Perché è ancora lì |
 |---|---|---|
 | `scripts/genera-immagine.mjs`, `scripts/ottimizza-immagini.mjs`, script npm `immagini` | `CODE-01` (nomi in italiano) | Precedenti al canone; rinominarli tocca `package.json`, docs e handoff insieme |
-| `public/og-default.svg` come immagine social | `SEO-04` | Da rasterizzare in PNG/JPG 1200×630 prima del go-live |
 | `design-system/softair-milano/MASTER.md` (bordo `#2A313A`, container ~1200px) | `DES-01` | Valori superati da `global.css` (bordo `#3a434e`, `.shell` 1520px); vince `global.css` |
 | Video «Dentro l'azione» della home in autoplay anche con reduced motion | `A11Y-07`, `DES-08` (statico pieno con reduced motion) | Decisione dell'utente del 2 ott 2026: il video parte sempre da solo, a mano si accende solo l'audio. Dal 7 ott il video è largo da subito e il pulsante di pausa è sempre visibile, quindi 2.2.2 è rispettato; resta solo l'autoplay con reduced motion |
 | Movimento continuo senza pausa: riga che scorre e puntino delle aperture (`HudFrame`, home e pagine interne); in home anche zoom lento, polvere e grana dell'hero e radar di `ArenaIntro` (gira solo mentre la sezione è a schermo) | `A11Y-07` (WCAG 2.2.2) | Decisione dell'utente del 2 ott 2026: movimento continuo come in home, senza pulsante di pausa. Con reduced motion si ferma tutto. Va chiuso prima del lancio: un controllo di pausa o la rinuncia al loop |

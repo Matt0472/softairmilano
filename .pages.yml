@@ -22,7 +22,7 @@ content:
       - { name: siteUrl, label: URL del sito, type: string }
       - { name: vatNumber, label: Partita IVA, type: string, description: "Solo le cifre: la sigla «P.IVA» la aggiunge il sito. Compare in fondo a ogni pagina, accanto al copyright, ed è obbligatoria per legge sul sito di un'attività. Se vuota non compare" }
       - { name: defaultDescription, label: Descrizione SEO predefinita, type: text }
-      - { name: defaultOgImage, label: Immagine social predefinita, type: image }
+      - { name: defaultOgImage, label: Immagine social predefinita, type: image, description: "L'anteprima che compare quando qualcuno condivide il sito su WhatsApp, Facebook o LinkedIn, per le pagine che non hanno una loro immagine social. JPG orizzontale 1200×630: i social non mostrano gli SVG" }
       - { name: footerTagline, label: Frase sotto il logo nel footer, type: string }
       - { name: phone, label: Telefono, type: string }
       - { name: whatsapp, label: WhatsApp, type: string, description: "Il numero, scritto come il telefono, es. «375 595 6805». Accende WhatsApp nella sezione Prenota, in Contatti e il bottone WhatsApp sul telefono. Se vuoto, WhatsApp non compare da nessuna parte" }

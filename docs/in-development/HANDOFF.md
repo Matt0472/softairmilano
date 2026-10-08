@@ -24,8 +24,8 @@ Aggiornato: **8 ott 2026, ore 11:00**. Riscritto da capo. Rispetto alla versione
 
 ### Repo e anteprima
 - **Repo:** `Matt0472/softairmilano` (pubblico), branch `main`.
-- **Online sull'anteprima** https://softairmilano-anteprima.mapped-dev.it: commit **`e5c04c4`** del 7 ott, deploy riuscito. Il sito è `noindex` (`SEO-10`).
-- **Solo in locale, circa 85 file:** tutto il lavoro dell'8 ott, elencato sotto. **Mai commit né push senza l'ok esplicito dell'utente** (`GIT-01`).
+- **Online sull'anteprima** https://softairmilano-anteprima.mapped-dev.it: commit **`791651b`** dell'8 ott (blog, pagine legali, banner, interruttori, manuale), deploy verificato. Il sito è `noindex` (`SEO-10`).
+- **Solo in locale:** niente, a parte questo handoff. **Mai commit né push senza l'ok esplicito dell'utente** (`GIT-01`).
 
 ### Pagine (tutte su `BaseLayout`, con `FinalCta` `#prenota` in fondo)
 
@@ -199,7 +199,7 @@ npm run manuale      # rigenera solo il manuale
 - **Chiavi:** la chiave Gemini è in `.env`. La chiave Web3Forms è pubblica per natura, in `settings.json`.
 
 ## Prossimi passi
-1. **Mostrare tutto all'utente e committare con il suo ok** (`GIT-01`). È una modifica delicata (`GIT-07`: redirect, consenso, interruttori): serve un runbook breve. Prima va mandato il **messaggio di prova del form** (Web3Forms → info@), che l'utente ha autorizzato.
+1. **Pages CMS:** l'utente entra su https://app.pagescms.org, installa l'app sul repository `Matt0472/softairmilano` e invita info@softairmilano.it. Il form Web3Forms è provato e arriva (l'intestazione dell'email è il modello inglese fisso di Web3Forms).
 2. **Pages CMS cancella i campi svuotati quando salva** (verificato nel sorgente: `sanitizeObject`): un campo vuoto diventa *assente*, non `""`. Banner, pagine legali e consenso sono già protetti. Va fatto un giro su tutto il sito per gli accessi `a.b.c` a oggetti facoltativi (`code-standards-specialist` + `cms-specialist`).
 3. **Decisioni SEO sul blog, del cliente:**
    - cannibalizzazione con /softair-vs-paintball: fondere «Meglio paintball o softair?» nel «9 motivi» con un 301;
@@ -227,7 +227,6 @@ npm run manuale      # rigenera solo il manuale
    - `npm run manuale` e `genera-manuale.mjs` sono in italiano per `CMS-12`, mentre `CODE-01` vuole nomi in inglese: va corretta una delle due regole.
 
 ## Da chiudere prima del go-live
-- **Immagine social della home** in SVG: rasterizzarla in 1200×630.
 - **JSON-LD:** `geo` e `openingHoursSpecification`.
 - **Indicizzazione:** chiave IndexNow; un solo interruttore per `robots.txt` e `noindex`; `PUBLIC_SITE_INDEXABLE=true` **solo il giorno dello switch** (`SEO-10`, `GIT-08`).
 - **Movimento continuo senza pausa** (WCAG 2.2.2): riga e puntino di `HudFrame`, ora anche su pagine legali e blog. È nel debito noto.
