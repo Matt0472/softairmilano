@@ -89,7 +89,6 @@ content:
           - { name: label, label: Testo, type: string }
           - { name: href, label: Link, type: string, description: "Es. /privacy" }
       - { name: ticketinghubId, label: "ID script TicketingHub (prenotazioni)", type: string, description: "Lo fornisce e lo collega il tecnico insieme al widget di prenotazione: finché il collegamento non è fatto, questo campo non ha effetto" }
-      - { name: ticketinghubVoucherId, label: "ID TicketingHub dei voucher regalo", type: string, description: "Lo inserisce il tecnico quando collega l'acquisto online dei voucher. Finché l'acquisto online non è collegato, nella pagina «Voucher regalo» compaiono il telefono e l'email, anche se questo campo è pieno" }
       - { name: gaMeasurementId, label: "ID Google Analytics (GA4)", type: string, description: "Es. G-XXXXXXXXXX, lo fornisce il tecnico. Google Analytics parte solo per chi lo accetta nel banner dei cookie; se il campo è vuoto, nel banner la voce «Statistiche» non compare" }
       - { name: web3formsKey, label: "Chiave Web3Forms (form di richiesta)", type: string, description: "La chiave dell'account Web3Forms che riceve le richieste dalle pagine attività e da Contatti e le inoltra via email. Se vuota, il form non compare" }
       - name: social
@@ -1559,11 +1558,11 @@ content:
           - { name: subtitle, label: Sottotitolo (massimo 20 parole), type: text, description: "Se vuoto non compare" }
           - name: cta
             label: Bottone principale
-            description: "Porta alla sezione per acquistare il voucher (#acquista). Compare solo se ha sia il testo sia il link"
+            description: "Porta alle schede dei voucher (#scegli), dove ogni voucher ha il suo bottone di acquisto. Compare solo se ha sia il testo sia il link"
             type: object
             fields:
-              - { name: label, label: Testo, type: string, description: "Lo stesso testo del titolo della sezione «Acquista», es. «Acquista il voucher»" }
-              - { name: href, label: Link, type: string, description: "Es. #acquista" }
+              - { name: label, label: Testo, type: string, description: "Es. «Acquista il voucher»" }
+              - { name: href, label: Link, type: string, description: "Es. #scegli" }
           - { name: ticketNote, label: "Scritta in fondo al disegno del voucher", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, es. «Valido 6 mesi · Data a scelta»: ogni parte separata da «·» va su una riga. Compare anche sul disegno in home. Se cambi la validità, aggiornala anche qui e nel testo della sezione «Voucher regalo» della home. Se vuota non compare" }
           - { name: hudTag, label: "Scritta tattica nella cornice (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «VOUCHER · VALIDO 6 MESI». Se vuota non compare" }
       - name: types
@@ -1571,9 +1570,19 @@ content:
         description: "Una scheda per voucher, una accanto all'altra. Se il titolo è vuoto o non c'è nessuna scheda con nome e prezzo, la sezione non compare"
         type: object
         fields:
-          - { name: title, label: Titolo, type: string, description: "Es. «Scegli il voucher». Se vuoto, la sezione non compare" }
+          - { name: title, label: Titolo, type: string, description: "Es. «Scegli il voucher». Se vuoto, la sezione non compare, e con lei l'ancora #scegli: il bottone principale dell'apertura non porta più da nessuna parte" }
           - { name: text, label: Testo, type: text, description: "Una frase, es. che il prezzo è a giocatore. Se vuoto non compare" }
           - { name: includedTitle, label: Titolo dell'elenco in ogni scheda, type: string, description: "Es. «Comprende». Se vuoto, l'elenco compare senza titolo" }
+          - name: buy
+            label: Acquisto online
+            description: "Chi non ha ancora accettato i «Servizi esterni» nel banner dei cookie vede, sopra le schede, un riquadro che spiega che l'acquisto passa da TicketingHub e lo attiva con un clic; dopo, al posto del riquadro compare l'avviso sul pagamento e ogni scheda mostra il suo bottone di acquisto. Riquadro, avviso e messaggio di errore compaiono solo se almeno una scheda ha sia il «Testo del bottone di acquisto» sia l'«ID widget TicketingHub»"
+            type: object
+            fields:
+              - { name: consentText, label: Testo del riquadro di attivazione, type: text, description: "Dice che l'acquisto online è di TicketingHub e che usa cookie di terze parti, es. «L'acquisto online è fornito da TicketingHub e usa cookie di terze parti (statistiche Google). Attivandolo li accetti.». Se vuoto, il riquadro mostra solo i bottoni" }
+              - { name: consentButton, label: Bottone di attivazione, type: string, required: true, description: "Es. «Attiva l'acquisto dei voucher». Accetta i «Servizi esterni» e fa comparire i bottoni di acquisto delle schede. Obbligatorio: senza, il riquadro non compare, e chi non ha accettato i «Servizi esterni» non può comprare dalla pagina finché non li accetta dal banner o da «Preferenze cookie» in fondo alla pagina" }
+              - { name: preferencesLabel, label: Link alle preferenze cookie, type: string, description: "Es. «Gestisci le preferenze cookie»: riapre le scelte dei cookie. Se vuoto non compare" }
+              - { name: paymentNote, label: Avviso sul pagamento, type: text, description: "Una riga con il segno di attenzione, sopra le schede, quando l'acquisto online è attivo: si legge prima di premere un bottone di acquisto, es. «Durante il pagamento, premendo sul pulsante PayPal è possibile pagare anche con carta.». Solo cose vere sul pagamento in TicketingHub. Se vuoto non compare" }
+              - { name: failText, label: Messaggio se l'acquisto online non si carica, type: text, required: true, description: "Compare sotto le schede se TicketingHub non risponde (connessione assente, servizio bloccato dal browser), es. «L'acquisto online non si è caricato: chiamaci o scrivici, i contatti sono in fondo alla pagina.». Obbligatorio: senza, chi preme un bottone che non si apre non riceve nessuna spiegazione" }
           - name: items
             label: Schede
             description: "Meglio due: stanno una accanto all'altra. L'ordine della lista è quello della pagina. Una scheda senza nome o senza prezzo non compare"
@@ -1586,6 +1595,8 @@ content:
               - { name: unit, label: "Unità del prezzo (es. € a giocatore)", type: string, description: "Compare accanto al prezzo. Se vuota non compare" }
               - { name: included, label: Cosa comprende, type: string, list: true, description: "Una voce per riga, es. «Fucile con 300 colpi». Una voce vuota non compare; senza voci l'elenco non compare" }
               - { name: note, label: Nota in fondo alla scheda, type: string, description: "Es. «Ricarica extra da 300 colpi: 3 €». Se vuota non compare" }
+              - { name: buyLabel, label: Testo del bottone di acquisto, type: string, description: "Dice quale voucher si compra, es. «Partita con noleggio attrezzatura». Il bottone apre l'acquisto online di questo voucher; compare solo a chi ha attivato l'acquisto online (o accettato i «Servizi esterni» nel banner dei cookie) e solo se c'è anche l'ID del widget" }
+              - { name: widgetId, label: "ID widget TicketingHub (acquisto)", type: string, description: "Il codice del widget di questo voucher in TicketingHub, fatto di lettere, numeri e trattini, es. ab82c960-e267-465e-85c6-5386327bf60e: nel codice di incorporamento del widget, è il codice tra virgolette dopo \"widgetId\":. Un codice sbagliato fa sì che l'acquisto non si apra: dopo averlo cambiato, provate il bottone sull'anteprima. Se vuoto, la scheda compare senza bottone di acquisto" }
       - name: steps
         label: Come funziona (passo per passo)
         type: object
@@ -1610,19 +1621,6 @@ content:
             fields:
               - { name: label, label: Testo, type: string, description: "Es. «Vai alla modulistica»" }
               - { name: href, label: Link, type: string, description: "Es. /modulistica" }
-      - name: purchase
-        label: Acquista il voucher
-        description: "La sezione dove si compra il voucher (#acquista), a cui porta il bottone dell'apertura. Telefono ed email sono quelli di «Impostazioni generali». Finché il tecnico non collega l'acquisto online con TicketingHub, la sezione mostra il primo testo con telefono ed email; dopo, il secondo testo con il bottone di acquisto, e telefono ed email restano sotto"
-        type: object
-        fields:
-          - { name: title, label: Titolo, type: string, description: "Es. «Acquista il voucher». Se vuoto, la sezione non compare" }
-          - { name: offlineText, label: "Testo senza l'acquisto online", type: text, description: "Es. «L'acquisto online arriva a breve: per ora chiamaci o scrivici». Se vuoto non compare" }
-          - { name: onlineText, label: "Testo con l'acquisto online", type: text, description: "Compare quando l'acquisto online è collegato. Se vuoto non compare" }
-          - { name: button, label: Testo del bottone di acquisto online, type: string, description: "Es. «Acquista il voucher». Compare solo con l'acquisto online collegato" }
-          - { name: note, label: Nota sotto il bottone di acquisto online, type: string, description: "Dice che il pagamento passa da TicketingHub, che si carica solo quando il visitatore apre l'acquisto. Se vuota non compare" }
-          - { name: callLabel, label: Scritta sopra il numero di telefono, type: string, description: "Es. «Chiama». Se vuota, il bottone mostra solo il numero" }
-          - { name: emailLabel, label: Scritta sopra l'email, type: string, description: "Es. «Scrivi». Se vuota, il bottone mostra solo l'indirizzo" }
-          - { name: emailSubject, label: Oggetto dell'email, type: string, description: "L'oggetto già scritto nell'email che parte dal bottone, es. «Voucher regalo». Se vuoto, l'email parte senza oggetto" }
       - name: faq
         label: Domande frequenti
         type: object

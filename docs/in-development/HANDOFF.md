@@ -54,7 +54,7 @@ Aggiornato: **8 ott 2026, ore 11:00**. Riscritto da capo. Rispetto alla versione
 - /softair-vs-paintball, con 301 da /paintball.
 - /occasioni: sala feste con tre schede, invito PDF nuovo `/uploads/invito-festa-compleanno.pdf`.
 - /teambuilding: loghi dei clienti, attività abbinabili.
-- /voucher-regalo: 35 € e 15 €; l'acquisto aspetta TicketingHub.
+- /voucher-regalo: 35 € e 15 €, acquisto online con TicketingHub. Un widget per scheda (`widgetId` in `voucher.json`), aperto come modale dal bottone della scheda, solo con il consenso «Servizi esterni»; senza, un riquadro «Attiva» sopra le schede. L'iframe del checkout vuole `color-scheme: normal`: sul nostro tema scuro Chrome lo dipinge bianco e opaco.
 - /contatti: mappa caricata su click.
 - /modulistica: modulo dei minorenni nuovo, `/uploads/modulistica-minorenni.pdf`.
 - /404.
@@ -206,7 +206,7 @@ npm run manuale      # rigenera solo il manuale
    - togliere dal «9 motivi» le FAQ doppie;
    - un blocco «Approfondimenti» sulla pagina paintball verso gli articoli.
 4. **TicketingHub:**
-   - widget nelle sezioni `#prenota` e acquisto dei voucher, con il consenso «Servizi esterni»;
+   - widget nelle sezioni `#prenota`, con il consenso «Servizi esterni», sullo schema già fatto per il voucher (`voucher-regalo.astro`: caricamento dopo il consenso, `color-scheme: normal` sull'iframe, focus e `inert` attorno al checkout);
    - `settings.ticketinghubId` oggi non è letto da nessun componente.
 5. **`/audit sito`**, pagina per pagina. Poi la rifinitura.
 6. **Seguiti tecnici:**
@@ -222,7 +222,8 @@ npm run manuale      # rigenera solo il manuale
    - `lastmod` nella sitemap dalla data degli articoli; `dateModified` facoltativo negli articoli;
    - un campo facoltativo «Titolo per Google» negli articoli: oggi oltre i 65 caratteri cade solo il suffisso;
    - `/la-montagna-della-morte/` e `/la-montagna-della-morte-pagamento/` del vecchio sito, un evento esterno: decidere se mandarle a Ranger o a /softair;
-   - TicketingHub: con lo snippet, collegare la categoria «Servizi esterni» (`window.__consent` / `consent-change`) e allineare banner, policy e manuale. Oggi mappa e voucher si caricano solo al click e ignorano la categoria;
+   - la mappa di Contatti si carica solo al click e ignora la categoria «Servizi esterni»: allinearla al voucher;
+   - GA di TicketingHub e il nostro GA4 condividono i cookie `_ga`: revocare «Servizi esterni» cancella anche il client id del nostro GA4 (`consent.ts`). Da rivedere quando arriva l'ID GA4;
    - il percorso del manuale (`/manuale-sam-3c9e/`) è leggibile nel repo pubblico: `CMS-13` lo presuppone segreto, quindi valutare di leggerlo da una variabile di CI oppure correggere la regola;
    - `npm run manuale` e `genera-manuale.mjs` sono in italiano per `CMS-12`, mentre `CODE-01` vuole nomi in inglese: va corretta una delle due regole.
 

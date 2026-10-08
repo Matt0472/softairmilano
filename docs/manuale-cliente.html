@@ -1092,7 +1092,7 @@
             <tr><td><code>#prima-volta</code></td><td>«La prima volta»</td><td>Softair VS Paintball</td></tr>
             <tr><td><code>#calendario</code></td><td>il calendario del corso</td><td>Corso softair</td></tr>
             <tr><td><code>#come-funziona</code></td><td>i passaggi: «Come si svolge», «Come si prenota», «Come funziona»</td><td>Team building, Occasioni, Voucher regalo</td></tr>
-            <tr><td><code>#acquista</code></td><td>«Acquista il voucher»</td><td>Voucher regalo</td></tr>
+            <tr><td><code>#scegli</code></td><td>«Scegli il voucher»: le schede, con l'acquisto online</td><td>Voucher regalo</td></tr>
           </tbody>
         </table>
       </div>
@@ -1485,7 +1485,7 @@
         <div>
           <dt>Telefono</dt>
           <dd>
-            <p>Scritto come lo dite, es. «375 595 6805»: il sito lo rende chiamabile con un tocco. Compare nella sezione Prenota, nel footer, in Contatti, nel voucher, nell'addio al celibato e nel messaggio dei form quando l'invio non riesce.</p>
+            <p>Scritto come lo dite, es. «375 595 6805»: il sito lo rende chiamabile con un tocco. Compare nella sezione Prenota, nel footer, in Contatti, nell'addio al celibato e nel messaggio dei form quando l'invio non riesce.</p>
             <p class="empty">nessun bottone per chiamare.</p>
           </dd>
         </div>
@@ -1498,7 +1498,7 @@
         </div>
         <div>
           <dt>Email</dt>
-          <dd><p>Sezione Prenota (bottone «Scrivi»), footer, Contatti, voucher.</p><p class="empty">nessun bottone email.</p></dd>
+          <dd><p>Sezione Prenota (bottone «Scrivi»), footer, Contatti.</p><p class="empty">nessun bottone email.</p></dd>
         </div>
         <div>
           <dt>Indirizzo</dt>
@@ -1646,9 +1646,10 @@
 
       <h3>Codici dei servizi</h3>
       <p>
-        «ID script TicketingHub (prenotazioni)», «ID TicketingHub dei voucher regalo», «ID Google
-        Analytics (GA4)» e «Chiave Web3Forms (form di richiesta)» collegano il sito ai servizi
-        esterni. Li inserisce il tecnico: sono spiegati nel capitolo <a href="#servizi">25</a>.
+        «ID script TicketingHub (prenotazioni)», «ID Google Analytics (GA4)» e «Chiave Web3Forms
+        (form di richiesta)» collegano il sito ai servizi esterni. Li inserisce il tecnico: sono
+        spiegati nel capitolo <a href="#servizi">25</a>. Il codice TicketingHub dei voucher non sta
+        qui: ogni voucher ha il suo, nella sua scheda (capitolo <a href="#voucher">21</a>).
       </p>
 
       <h3>Social (URL dei profili)</h3>
@@ -3145,8 +3146,10 @@
       <p class="where"><span>Nel pannello</span> Voucher regalo</p>
       <p>
         La pagina <code>/voucher-regalo</code>: chi compra regala una partita di softair, e chi la
-        riceve sceglie il giorno. Dall'alto: Apertura con il biglietto disegnato, I voucher, Come
-        funziona, Acquista il voucher (<code>#acquista</code>), Domande frequenti, Prenota.
+        riceve sceglie il giorno. Dall'alto: Apertura con il biglietto disegnato, I voucher
+        (<code>#scegli</code>), dove ogni scheda ha il suo bottone per comprarlo online, Come
+        funziona, Domande frequenti, Prenota. Chi vuole comprare al telefono o via email trova i
+        contatti nella sezione Prenota, in fondo.
       </p>
       <div class="callout">
         <span class="label">Il voucher oggi</span>
@@ -3179,7 +3182,7 @@
         </div>
         <div>
           <dt>Bottone principale › Testo · Link</dt>
-          <dd><p>Lo stesso testo del titolo della sezione di acquisto, es. «Acquista il voucher» → <code>#acquista</code>.</p><p class="empty">compare solo con testo e link.</p></dd>
+          <dd><p>Es. «Acquista il voucher» → <code>#scegli</code>: porta alle schede dei voucher, dove ognuno ha il suo bottone di acquisto.</p><p class="empty">compare solo con testo e link.</p></dd>
         </div>
         <div>
           <dt>Scritta in fondo al disegno del voucher <span class="limit">max 32</span></dt>
@@ -3198,23 +3201,74 @@
       <dl class="fields">
         <div>
           <dt>Titolo · Testo</dt>
-          <dd><p>Es. «Scegli il voucher» e una frase come «Il prezzo è a giocatore».</p><p class="empty">senza titolo, o senza schede con nome e prezzo, la sezione non compare.</p></dd>
+          <dd><p>Es. «Scegli il voucher» e una frase come «Il prezzo è a giocatore». La sezione è <code>#scegli</code>, dove porta il bottone principale dell'apertura.</p><p class="empty">senza titolo, o senza schede con nome e prezzo, la sezione non compare, e con lei <code>#scegli</code>: il bottone dell'apertura non porta più da nessuna parte.</p></dd>
         </div>
         <div>
           <dt>Titolo dell'elenco in ogni scheda</dt>
           <dd><p>Es. «Comprende».</p><p class="empty">l'elenco compare senza titolo.</p></dd>
         </div>
+      </dl>
+
+      <h3>I voucher › Acquisto online</h3>
+      <p>
+        L'acquisto passa da TicketingHub, che usa cookie di terze parti (statistiche Google): per
+        questo parte solo con il consenso ai «Servizi esterni» del banner dei cookie. Riquadro,
+        avviso e messaggio di errore compaiono solo se almeno una scheda ha sia il «Testo del
+        bottone di acquisto» sia l'«ID widget TicketingHub».
+      </p>
+      <ul>
+        <li><strong>Chi non li ha accettati</strong> vede, sopra le schede, un riquadro che lo spiega, con il bottone che attiva l'acquisto e un link alle preferenze dei cookie. Le schede non hanno ancora il bottone di acquisto.</li>
+        <li><strong>Dopo l'attivazione</strong>, o per chi ha già accettato i «Servizi esterni», il riquadro non c'è: al suo posto compare l'avviso sul pagamento, con il segno di attenzione, e ogni scheda mostra il suo bottone. Il bottone apre l'acquisto sopra la pagina; chiuso l'acquisto, si torna dove si era.</li>
+        <li><strong>Se TicketingHub non risponde</strong> (connessione assente, servizio bloccato dal browser), sotto le schede compare il messaggio di errore.</li>
+      </ul>
+      <dl class="fields">
         <div>
-          <dt>Schede › Nome del voucher · Per chi è <span class="limit">max 3</span></dt>
+          <dt>Testo del riquadro di attivazione</dt>
+          <dd><p>Dice che l'acquisto è di TicketingHub e che usa cookie di terze parti, es. «L'acquisto online è fornito da TicketingHub e usa cookie di terze parti (statistiche Google). Attivandolo li accetti.».</p><p class="empty">il riquadro mostra solo i bottoni.</p></dd>
+        </div>
+        <div>
+          <dt>Bottone di attivazione</dt>
+          <dd><p>Es. «Attiva l'acquisto dei voucher»: accetta i «Servizi esterni» e fa comparire i bottoni delle schede. Obbligatorio.</p><p class="empty">il riquadro non compare, e chi non ha accettato i «Servizi esterni» può comprare solo dopo averli accettati dal banner o da «Preferenze cookie» in fondo alla pagina.</p></dd>
+        </div>
+        <div>
+          <dt>Link alle preferenze cookie</dt>
+          <dd><p>Es. «Gestisci le preferenze cookie»: riapre le scelte dei cookie.</p><p class="empty">non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Avviso sul pagamento</dt>
+          <dd><p>Una riga con il segno di attenzione, sopra le schede, quando l'acquisto è attivo: si legge prima di premere un bottone di acquisto, es. «Durante il pagamento, premendo sul pulsante PayPal è possibile pagare anche con carta.». Solo cose vere sul pagamento in TicketingHub: se cambia, aggiornatela.</p><p class="empty">l'avviso non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Messaggio se l'acquisto online non si carica</dt>
+          <dd><p>Compare sotto le schede quando TicketingHub non risponde, e dice cosa fare invece, es. «L'acquisto online non si è caricato: chiamaci o scrivici, i contatti sono in fondo alla pagina.». Obbligatorio.</p><p class="empty">chi preme un bottone che non si apre non riceve nessuna spiegazione.</p></dd>
+        </div>
+      </dl>
+
+      <h3>I voucher › Schede</h3>
+      <dl class="fields">
+        <div>
+          <dt>Nome del voucher · Per chi è <span class="limit">max 3</span></dt>
           <dd><p>Meglio due schede, una accanto all'altra, es. «Con noleggio attrezzatura». Nome e prezzo compaiono anche in home.</p><p class="empty">una scheda senza nome o senza prezzo non compare.</p></dd>
         </div>
         <div>
-          <dt>Schede › Prezzo (solo il numero, es. 35) · Unità del prezzo</dt>
+          <dt>Prezzo (solo il numero, es. 35) · Unità del prezzo</dt>
           <dd><p>Il prezzo compare in grande, qui e in home, dove si aggiorna da solo. L'unità, es. «€ a giocatore», sta accanto. Se cambiate il prezzo, aggiornatelo anche nelle domande frequenti e nella descrizione per Google.</p></dd>
         </div>
         <div>
-          <dt>Schede › Cosa comprende · Nota in fondo alla scheda</dt>
+          <dt>Cosa comprende · Nota in fondo alla scheda</dt>
           <dd><p>Una voce per riga («Fucile con 300 colpi»); la nota, es. «Ricarica extra da 300 colpi: 3 €».</p><p class="empty">non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Testo del bottone di acquisto</dt>
+          <dd><p>Il bottone in fondo alla scheda, che apre l'acquisto online di quel voucher sopra la pagina, es. «Partita con noleggio attrezzatura» e «Partita con la tua attrezzatura». Che dica quale voucher si compra.</p><p class="empty">la scheda compare senza bottone di acquisto.</p></dd>
+        </div>
+        <div>
+          <dt>ID widget TicketingHub (acquisto)</dt>
+          <dd>
+            <p>Il codice del widget di quel voucher in TicketingHub, fatto di lettere, numeri e trattini, es. <code>ab82c960-e267-465e-85c6-5386327bf60e</code>. Ogni voucher ha il suo: il codice sta nella scheda, così un voucher nuovo porta con sé il suo acquisto.</p>
+            <p>Per cambiarlo: nel pannello di TicketingHub aprite il widget del voucher e il suo codice di incorporamento. Nel codice cercate <code>"widgetId":</code> e copiate solo il codice tra virgolette che lo segue, senza le virgolette. Un codice sbagliato fa sì che l'acquisto non si apra: dopo averlo cambiato, provate il bottone sull'anteprima. Se cambiate il prezzo in TicketingHub, aggiornatelo anche nella scheda.</p>
+            <p class="empty">la scheda compare senza bottone di acquisto.</p>
+          </dd>
         </div>
       </dl>
 
@@ -3231,35 +3285,6 @@
         <div>
           <dt>Link sotto il riquadro › Testo · Link</dt>
           <dd><p>Es. «Vai alla modulistica» → <code>/modulistica</code>.</p><p class="empty">compare solo con testo e link.</p></dd>
-        </div>
-      </dl>
-
-      <h3>Acquista il voucher</h3>
-      <p>
-        La sezione <code>#acquista</code>. Finché il tecnico non collega l'acquisto online con
-        TicketingHub, mostra il primo testo con telefono ed email (quelli di Impostazioni generali);
-        dopo, il secondo testo con il bottone di acquisto, e telefono ed email restano sotto.
-      </p>
-      <dl class="fields">
-        <div>
-          <dt>Titolo</dt>
-          <dd><p>Es. «Acquista il voucher».</p><p class="empty">la sezione non compare.</p></dd>
-        </div>
-        <div>
-          <dt>Testo senza l'acquisto online · Testo con l'acquisto online</dt>
-          <dd><p>Il primo, es. «L'acquisto online arriva a breve: per ora chiamaci o scrivici»; il secondo compare quando l'acquisto online è collegato.</p></dd>
-        </div>
-        <div>
-          <dt>Testo del bottone di acquisto online · Nota sotto il bottone di acquisto online</dt>
-          <dd><p>Compaiono solo con l'acquisto online collegato. La nota dice che il pagamento passa da TicketingHub, che si carica solo quando il visitatore apre l'acquisto.</p></dd>
-        </div>
-        <div>
-          <dt>Scritta sopra il numero di telefono · Scritta sopra l'email</dt>
-          <dd><p>Es. «Chiama» e «Scrivi».</p><p class="empty">il bottone mostra solo il numero o l'indirizzo.</p></dd>
-        </div>
-        <div>
-          <dt>Oggetto dell'email</dt>
-          <dd><p>L'oggetto già scritto nell'email che parte dal bottone, es. «Voucher regalo».</p><p class="empty">l'email parte senza oggetto.</p></dd>
         </div>
       </dl>
 
@@ -3526,7 +3551,7 @@
       <h2><span class="num">25</span> I servizi collegati</h2>
       <p class="where"><span>Nel pannello</span> Impostazioni generali</p>
       <p>
-        Quattro campi di Impostazioni generali collegano il sito a servizi esterni. Li fornisce e li
+        Tre campi di Impostazioni generali collegano il sito a servizi esterni. Li fornisce e li
         inserisce il tecnico: vanno copiati identici, e uno sbagliato spegne il servizio senza
         avvisare.
       </p>
@@ -3551,11 +3576,6 @@
               <td>Si prenota al telefono e via email, come oggi.</td>
             </tr>
             <tr>
-              <td>ID TicketingHub dei voucher regalo</td>
-              <td>L'acquisto online dei voucher, nella sezione <code>#acquista</code>.</td>
-              <td>Telefono ed email. Finché il tecnico non collega l'acquisto online, compaiono telefono ed email anche se il campo è pieno.</td>
-            </tr>
-            <tr>
               <td>Chiave Web3Forms (form di richiesta)</td>
               <td>Riceve le richieste dai form (attività, team building, occasioni, contatti) e le inoltra per email.</td>
               <td>I form non compaiono.</td>
@@ -3563,6 +3583,10 @@
           </tbody>
         </table>
       </div>
+      <p>
+        I codici TicketingHub dei voucher regalo non stanno qui: ogni voucher ha il suo, nella sua
+        scheda (capitolo <a href="#voucher">21</a>, «ID widget TicketingHub (acquisto)»).
+      </p>
       <div class="callout stop">
         <span class="label">Non toccare</span>
         <p>

@@ -13,7 +13,7 @@
     "subtitle": "Regala un'esperienza di gioco ai tuoi amici e familiari: scelgono loro il giorno e l'ora, entro 6 mesi.",
     "cta": {
       "label": "Acquista il voucher",
-      "href": "#acquista"
+      "href": "#scegli"
     },
     "ticketNote": "Valido 6 mesi · Data a scelta"
   },
@@ -21,6 +21,13 @@
     "title": "Scegli il voucher",
     "text": "Il prezzo è a giocatore: puoi regalare la partita a una persona o a tutto il gruppo.",
     "includedTitle": "Comprende",
+    "buy": {
+      "consentText": "L'acquisto online è fornito da TicketingHub e usa cookie di terze parti (statistiche Google). Attivandolo li accetti.",
+      "consentButton": "Attiva l'acquisto dei voucher",
+      "preferencesLabel": "Gestisci le preferenze cookie",
+      "paymentNote": "Durante il pagamento, premendo sul pulsante PayPal è possibile pagare anche con carta.",
+      "failText": "L'acquisto online non si è caricato: chiamaci o scrivici, i contatti sono in fondo alla pagina."
+    },
     "items": [
       {
         "title": "Con noleggio attrezzatura",
@@ -33,7 +40,9 @@
           "Pettorina",
           "Maschera protettiva"
         ],
-        "note": "Ricarica extra da 300 colpi: 3 €"
+        "note": "Ricarica extra da 300 colpi: 3 €",
+        "buyLabel": "Partita con noleggio attrezzatura",
+        "widgetId": "ab82c960-e267-465e-85c6-5386327bf60e"
       },
       {
         "title": "Con il proprio fucile",
@@ -43,7 +52,9 @@
         "included": [
           "Una sessione di gioco, giorno e ora a scelta"
         ],
-        "note": ""
+        "note": "",
+        "buyLabel": "Partita con la tua attrezzatura",
+        "widgetId": "286cd2af-452c-437d-8ca6-eeea5c941453"
       }
     ]
   },
@@ -83,16 +94,6 @@
       "label": "Vai alla modulistica",
       "href": "/modulistica"
     }
-  },
-  "purchase": {
-    "title": "Acquista il voucher",
-    "offlineText": "L'acquisto online arriva a breve: per ora chiamaci o scrivici.",
-    "onlineText": "Scegli il voucher e completa l'acquisto online.",
-    "button": "Acquista il voucher",
-    "note": "Il pagamento passa da TicketingHub, il nostro sistema di prenotazione: si carica solo quando lo apri.",
-    "callLabel": "Chiama",
-    "emailLabel": "Scrivi",
-    "emailSubject": "Voucher regalo"
   },
   "faq": {
     "title": "Domande frequenti",

@@ -37,8 +37,11 @@ configurazione) la tocca solo un tecnico.
 - **CMS-10** — I **dati del cliente non si inventano**: telefono, indirizzo, orari, prezzi, recensioni,
   numeri. Se mancano, il campo resta vuoto, il componente gestisce il vuoto con garbo e il dato mancante
   finisce nell'elenco "Dati dal cliente" dell'handoff.
-- **CMS-11** — Gli **ID di terze parti** (TicketingHub, GA4) sono campi di `settings.json`: sono l'unica
-  cosa di quelle integrazioni che il cliente cambia (`CODE-09`).
+- **CMS-11** — Gli **ID di terze parti** (TicketingHub, GA4) sono campi del CMS: sono l'unica cosa di
+  quelle integrazioni che il cliente cambia (`CODE-09`). Stanno in `settings.json` quando valgono per
+  tutto il sito (GA4, la prenotazione), oppure nella voce che vendono quando ce n'è uno per voce (il
+  widget di ciascun voucher), così una voce nuova porta con sé il suo ID (decisione dell'utente,
+  8 ott 2026).
 
 ## Manuale cliente
 

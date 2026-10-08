@@ -58,7 +58,7 @@
   runtime di framework UI (React, Vue…). Nessuno script da CDN: le librerie sono dipendenze npm.
 - **CODE-09** — **Terze parti** (TicketingHub, GA4) si caricano **solo dopo il consenso**, per
   categoria del banner (vanilla-cookieconsent, gestione fatta a mano), con Consent Mode v2 e IP
-  anonimizzato per GA4. I loro ID arrivano da `settings.json` (`CMS-11`).
+  anonimizzato per GA4. I loro ID sono campi del CMS (`CMS-11`).
 - **CODE-10** — **Scroll**: Lenis è globale (`molecules/SmoothScroll.astro`) ed esposto su
   `window.__lenis`. Lo scroll programmatico passa da `window.__lenis.scrollTo(...)` (un
   `window.scrollTo` smooth viene annullato da Lenis). Niente listener di `scroll` che lavorano a ogni

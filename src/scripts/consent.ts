@@ -5,7 +5,8 @@
 //
 // The texts come from src/data/cookie.json through the JSON block CookieConsent.astro writes.
 // Third-party widgets read the choice from window.__consent and listen for the "consent-change"
-// event; any element with data-cc="show-preferencesModal" reopens the preferences.
+// event; window.__acceptExternal() is the contextual consent a widget's own button gives (the
+// voucher purchase); any element with data-cc="show-preferencesModal" reopens the preferences.
 import * as CookieConsent from 'vanilla-cookieconsent';
 import stylesheet from 'vanilla-cookieconsent/dist/cookieconsent.css?url';
 
@@ -25,6 +26,7 @@ interface Config {
 declare global {
   interface Window {
     __consent?: { analytics: boolean; external: boolean };
+    __acceptExternal?: () => void;
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
   }
@@ -87,8 +89,8 @@ if (config) {
   const hasAnalytics = !!gaId;
   const linkList = links.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join(' ');
 
-  loadStyles().then(() =>
-    CookieConsent.run({
+  loadStyles().then(async () => {
+    await CookieConsent.run({
       cookie: { name: 'cc_cookie', expiresAfterDays: 182 },
       // When the statistics arrive (the GA4 ID set in the CMS), whoever already chose is asked again.
       revision: hasAnalytics ? 1 : 0,
@@ -97,7 +99,11 @@ if (config) {
         // Withdrawing removes what GA left on our domain and reloads: a script already run cannot
         // be unloaded, only a clean load stops it.
         ...(hasAnalytics ? { analytics: { autoClear: { cookies: [{ name: /^_ga/ }], reloadPage: true } } } : {}),
-        external: {},
+        // TicketingHub brings Google Analytics and its own th-reseller-ref: withdrawing clears what
+        // they left on our domain and reloads, so the purchase widget is gone too. GA's cookie names
+        // are shared, so this also clears our own GA4's while «analytics» stays accepted: it starts
+        // again with a new client id on the reload.
+        external: { autoClear: { cookies: [{ name: /^(_ga|th[-_])/ }], reloadPage: true } },
       },
       // Until the first choice the page waits under a dark veil: it cannot be clicked, and Tab
       // stays in the banner, so focus never reaches a control the banner hides (WCAG 2.4.11).
@@ -143,6 +149,16 @@ if (config) {
           },
         },
       },
-    }),
-  );
+    });
+
+    // A widget's own «activate» button: accepts the external services, keeping every other choice
+    // as it was, and closes the banner if it was still open. Defined only once run() is done: an
+    // earlier call would write the cookie before the library sets its domain, leaving a second
+    // cc_cookie that outlives a later withdrawal. Until then the widget's button does nothing.
+    window.__acceptExternal = () => {
+      const accepted = CookieConsent.getUserPreferences().acceptedCategories;
+      CookieConsent.acceptCategory([...new Set([...accepted, 'necessary', 'external'])]);
+      CookieConsent.hide();
+    };
+  });
 }

@@ -1,11 +1,13 @@
 ---
 // Gift vouchers (/voucher-regalo, the same address as the old site): someone buys a game for
 // friends or family, who then book their own date within the validity. A text-only opening with
-// the voucher drawn beside the title, the two vouchers side by side, how the gift becomes a game,
-// and the purchase (#acquista), which the opening's button leads to. Buying online goes through
-// TicketingHub, loaded only when the visitor asks for it (CODE-09); until its embed is wired the
-// purchase area offers the phone and the email. Copy and prices come from voucher.json, contacts
-// and the TicketingHub id from settings.json; a section emptied in the CMS disappears (CMS-10).
+// the voucher drawn beside the title, the two vouchers side by side (#scegli, where the opening's
+// button leads), each with its own button to buy it online, how the gift becomes a game, and the
+// closing section every page ends on, with the phone and the email. Buying goes through a
+// TicketingHub widget per voucher, which loads only with consent to the «external» cookies
+// (CODE-09): until then a box above the cards explains it and activates it. Copy, prices and each
+// voucher's widget id come from voucher.json (CMS-11); a section emptied in the CMS disappears
+// (CMS-10).
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArrowLink from '../components/atoms/ArrowLink.astro';
@@ -26,9 +28,8 @@ import settings from '../data/settings.json';
 import { has } from '../lib/fields';
 import { breadcrumbLd, faqLd } from '../lib/jsonld';
 import { flattenNav, type NavItem } from '../lib/nav';
-import { telHref } from '../lib/phone';
 
-const { seo, hero, types, steps, purchase, faq } = page;
+const { seo, hero, types, steps, faq } = page;
 
 const path = '/voucher-regalo';
 // The page name in the trail is its menu label (single source for both).
@@ -43,31 +44,22 @@ const cta = has(hero.cta?.label) && has(hero.cta?.href) ? hero.cta : undefined;
 // Keep "3 €" on one line: a figure never wraps away from its unit.
 const keep = (s: string) => s.replace(/(\d) €/g, '$1 €');
 
-// A voucher shows once it has a name and a price; its parts drop out one by one when emptied.
+// A voucher shows once it has a name and a price; its parts drop out one by one when emptied. Its
+// button needs both a label and the widget id: a voucher without one is shown, not sold online.
 const cards = (types?.items ?? [])
   .filter((c) => has(c?.title) && has(c?.price))
-  .map((c) => ({ ...c, included: (c.included ?? []).filter(has) }));
+  .map((c) => ({
+    ...c,
+    included: (c.included ?? []).filter(has),
+    buy: has(c.buyLabel) && has(c.widgetId) ? { label: c.buyLabel.trim(), config: JSON.stringify({ widgetId: c.widgetId.trim() }) } : undefined,
+  }));
 const hasTypes = has(types?.title) && cards.length > 0;
+const buy = types?.buy;
+const sells = cards.some((c) => c.buy);
 
 const stepItems = (steps?.items ?? []).filter((s) => has(s?.title));
 const rules = (steps?.rules ?? []).filter(has);
 const rulesLink = has(steps?.rulesLink?.label) && has(steps?.rulesLink?.href) ? steps.rulesLink : undefined;
-
-// --- Purchase ---
-const tel = telHref(settings.phone);
-const email = has(settings.email) ? settings.email.trim() : '';
-const mailHref = email
-  ? `mailto:${email}${has(purchase?.emailSubject) ? `?subject=${encodeURIComponent(purchase.emailSubject.trim())}` : ''}`
-  : '';
-
-// TODO(TicketingHub): the address of the voucher widget's embed script, from the snippet
-// TicketingHub provides. Until it is set the purchase area shows only the phone and the email,
-// whatever the CMS holds, so an id typed in early never shows a button that does nothing.
-const embedSrc: string = '';
-const voucherId = settings.ticketinghubVoucherId;
-const shop = has(embedSrc) && has(voucherId) && has(purchase?.button) ? { src: embedSrc, id: voucherId.trim() } : undefined;
-const purchaseText = shop ? purchase?.onlineText : purchase?.offlineText;
-const hasPurchase = has(purchase?.title) && (!!shop || !!tel || !!email);
 
 const faqItems = (faq?.items ?? []).filter((f) => has(f.q) && has(f.a));
 const faqData = faqLd(faqItems);
@@ -100,11 +92,54 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
   </section>
 
   {hasTypes && (
-    <section class="vtypes band" aria-labelledby="vtypes-title">
+    <section class="vtypes band" id="scegli" aria-labelledby="vtypes-title" data-checkout-title="Acquisto del voucher">
+      {/* data-checkout-title: UI microcopy, the checkout frame's accessible name (CMS-02). */}
+      {/* Before the cards paint, the stored cookie choice decides between the activation box and
+          the cards' buy buttons, so a returning visitor sees no jump; the page script keeps it in
+          sync after that. Without JavaScript neither shows: the closing section has the phone.
+          The cookie is the one src/scripts/consent.ts names (cc_cookie). */}
+      {sells && (
+        <script is:inline>
+          (() => {
+            const section = document.currentScript.parentElement;
+            const stored = document.cookie.match(/(?:^|; )cc_cookie=([^;]*)/);
+            let on = false;
+            try {
+              on = !!stored && JSON.parse(decodeURIComponent(stored[1])).categories.includes('external');
+            } catch {}
+            section.setAttribute('data-buy', on ? 'on' : 'off');
+          })();
+        </script>
+      )}
       <div class="shell">
         <div data-reveal>
           <SectionHead title={types.title} text={types.text} id="vtypes-title" />
         </div>
+
+        {/* The step before choosing: what activating the purchase means, before anything loads.
+            One box for both cards, gone once the purchase is active; never without its button. */}
+        {sells && has(buy?.consentButton) && (
+          <div class="vbuy">
+            {has(buy?.consentText) && <p class="vbuy__text" id="vbuy-text">{buy.consentText}</p>}
+            <div class="vbuy__actions">
+              <Button type="button" variant="primary" class="vbuy__activate" data-vbuy-activate aria-describedby={has(buy?.consentText) ? 'vbuy-text' : undefined}>
+                {buy.consentButton}
+              </Button>
+              {has(buy?.preferencesLabel) && (
+                <button type="button" class="vbuy__prefs" data-cc="show-preferencesModal" data-vbuy-prefs>{buy.preferencesLabel}</button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Once the purchase is active, in the box's place: the one thing to know about paying,
+            read before pressing a card's button. The icon is decoration, the sentence the meaning. */}
+        {sells && has(buy?.paymentNote) && (
+          <p class="vpay">
+            <span class="vpay__icon" aria-hidden="true"><Icon name="alert" size={20} /></span>
+            <span id="vpay-text">{buy.paymentNote}</span>
+          </p>
+        )}
 
         <div class="vtypes__list" style={`--n: ${cards.length}`}>
           {cards.map((c, i) => (
@@ -136,9 +171,40 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
                 )}
               </div>
               {has(c.note) && <p class="vcard__note">{keep(c.note)}</p>}
+              {/* Our own button, shown once the external services are accepted: TicketingHub's
+                  script is bound to it (the script below). It hears the payment notice too, which
+                  focus skips on its way here. */}
+              {c.buy && (
+                <div class="vcard__buy">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    class="vcard__btn"
+                    data-th-popover=""
+                    data-th-config={c.buy.config}
+                    data-th-manually-managed=""
+                    data-vbuy-open
+                    aria-describedby={has(buy?.paymentNote) ? 'vpay-text' : undefined}
+                  >
+                    <span class="vcard__btn-idle">{c.buy.label}</span>
+                    {/* Status label while the purchase loads (CMS-02). */}
+                    <span class="vcard__btn-busy">Caricamento in corso</span>
+                    <span class="vcard__spin" aria-hidden="true"></span>
+                  </Button>
+                </div>
+              )}
             </article>
           ))}
         </div>
+
+        {/* Under the cards: why the purchase did not load, if it did not (the client's words), and
+            what assistive technologies hear when it becomes active (status microcopy, CMS-02). */}
+        {sells && (
+          <div class="vbuy-foot">
+            <p class="vbuy-foot__status" role="status" data-vbuy-status data-fail={buy?.failText?.trim() ?? ''}></p>
+            <p class="sr-only" aria-live="polite" data-vbuy-live data-on="Acquisto online attivo: scegli il voucher."></p>
+          </div>
+        )}
       </div>
     </section>
   )}
@@ -154,69 +220,6 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
         </div>
       )}
     </StepTimeline>
-  )}
-
-  {hasPurchase && (
-    <section class="buy band" id="acquista" aria-labelledby="buy-title">
-      <div class="shell">
-        <div class="buy__panel" data-reveal>
-          <span class="corners buy__corners" aria-hidden="true"></span>
-
-          <div class="buy__copy">
-            <h2 class="buy__title" id="buy-title">{purchase.title}</h2>
-            {has(purchaseText) && <p class="buy__text">{purchaseText}</p>}
-          </div>
-
-          <div class="buy__actions">
-            {shop && (
-              <div class="buy__shop" data-voucher-shop data-src={shop.src} data-id={shop.id}>
-                <div class="buy__launch" data-shop-idle>
-                  <Button type="button" variant="primary" class="buy__open" data-shop-load>
-                    <span class="buy__open-idle">{purchase.button}</span>
-                    {/* Status labels while the purchase loads, or if it cannot (CMS-02). */}
-                    <span class="buy__open-busy">Caricamento in corso</span>
-                    <span class="buy__spin" aria-hidden="true"></span>
-                  </Button>
-                  {has(purchase.note) && <p class="buy__note">{purchase.note}</p>}
-                  <p class="buy__error" data-shop-error hidden>L'acquisto online non si è caricato: chiamaci o scrivici.</p>
-                </div>
-                {/* TODO(TicketingHub): the element the voucher widget renders into, as the embed
-                    snippet sets it out. Its height is reserved while it loads (PERF-03). */}
-                <div class="buy__mount" data-shop-mount hidden></div>
-              </div>
-            )}
-
-            {(tel || email) && (
-              <ul class:list={['buy__contacts', shop && 'buy__contacts--alt']} role="list">
-                {tel && (
-                  <li>
-                    <a class="buy__call" href={tel}>
-                      <span class="buy__chip"><Icon name="phone" size={22} /></span>
-                      <span class="buy__call-body">
-                        {/* The space keeps caption and number apart in the link's name («Chiama 375…»). */}
-                        {has(purchase.callLabel) && <Fragment><span class="buy__cap">{purchase.callLabel}</span>{' '}</Fragment>}
-                        <span class="buy__num">{settings.phone}</span>
-                      </span>
-                    </a>
-                  </li>
-                )}
-                {email && (
-                  <li>
-                    <a class="buy__mail" href={mailHref}>
-                      <span class="buy__chip buy__chip--line"><Icon name="mail" size={22} /></span>
-                      <span class="buy__call-body">
-                        {has(purchase.emailLabel) && <Fragment><span class="buy__cap">{purchase.emailLabel}</span>{' '}</Fragment>}
-                        <span class="buy__addr">{email}</span>
-                      </span>
-                    </a>
-                  </li>
-                )}
-              </ul>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
   )}
 
   {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
@@ -534,176 +537,24 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
     color: var(--color-foreground);
   }
 
-  /* Side by side from tablets: one shared row per part (top, list, note), so the perforations
-     line up and the notes sit on the same foot line. */
-  @media (min-width: 768px) {
-    .vtypes__list {
-      grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
-      grid-template-rows: repeat(3, auto);
-      row-gap: 0;
-    }
-    @supports (grid-template-rows: subgrid) {
-      .vcard {
-        display: grid;
-        grid-row: span 3;
-        grid-template-rows: subgrid;
-      }
-      .vcard__top { grid-row: 1; }
-      .vcard__body { grid-row: 2; align-self: start; }
-      .vcard__note { grid-row: 3; align-self: end; }
-    }
-  }
-
-  /* ============ Before playing (under the steps) ============ */
-  .vrules {
-    display: grid;
-    gap: 1rem;
-    justify-items: start;
-  }
-  .vrules .incl { justify-self: stretch; }
-
-  /* ============ Purchase (#acquista) ============ */
-  .buy {
-    --accent: var(--color-accent);
-    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
-  }
-  /* The page's destination, framed by the HUD's corner brackets. */
-  .buy__panel {
-    --arm: 1.5rem;
-    position: relative;
-    display: grid;
-    gap: clamp(1.75rem, 4vw, 2.5rem);
-    padding: clamp(1.75rem, 5vw, 4.5rem);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    background: var(--lift);
-  }
-  .buy__corners {
-    inset: 0.75rem;
-    color: color-mix(in srgb, var(--accent) 55%, transparent);
-  }
-  .buy__title {
-    margin: 0;
-    font-weight: 700;
-    font-size: clamp(2rem, 5.5vw, 3.4rem);
-    letter-spacing: 0.01em;
+  /* The card's own purchase, at its foot. The labels come from the CMS and can be long: the
+     button takes the card's width and a long label wraps on balanced lines. */
+  .vcard__buy { padding-top: 1.5rem; }
+  .vcard__btn {
+    width: 100%;
+    min-height: 2.75rem;
+    text-align: center;
     text-wrap: balance;
   }
-  .buy__text {
-    margin: 1.1rem 0 0;
-    max-width: 34ch;
-    color: var(--color-muted);
-    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
-    line-height: 1.6;
-    text-wrap: pretty;
-  }
-
-  .buy__contacts {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0.75rem;
-  }
-  .buy__call,
-  .buy__mail {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    min-height: 4.5rem;
-    padding: 0.5rem 1.5rem 0.5rem 0.5rem;
-    border-radius: var(--radius-md);
-    text-decoration: none;
-    transition:
-      background-color var(--duration-fast) var(--ease-out-expo),
-      border-color var(--duration-fast) var(--ease-out-expo),
-      transform var(--duration-fast) var(--ease-out-expo);
-  }
-  /* The call is the way to buy today: the section's one accent action. */
-  .buy__call {
-    background: var(--accent);
-    color: var(--color-on-accent);
-  }
-  .buy__call:hover { background: var(--color-accent-hover); }
-  .buy__mail {
-    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--color-border));
-    background: var(--lift-2);
-    color: var(--color-foreground);
-  }
-  .buy__mail:hover {
-    border-color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 7%, var(--lift-2));
-  }
-  .buy__call:active,
-  .buy__mail:active { transform: translateY(1px) scale(0.98); }
-  .buy .buy__call:focus-visible,
-  .buy .buy__mail:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-    border-radius: var(--radius-md);
-  }
-  .buy__chip {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 3.25rem;
-    height: 3.25rem;
-    border-radius: var(--radius-sm);
-    background: var(--color-on-accent);
-    color: var(--accent);
-  }
-  .buy__chip--line {
-    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--color-border));
-    background: color-mix(in srgb, var(--accent) 6%, transparent);
-  }
-  .buy__call-body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    min-width: 0;
-  }
-  .buy__cap {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 0.8rem;
-    line-height: 1.3;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-  .buy__mail .buy__cap { color: var(--color-muted); }
-  .buy__num {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(1.45rem, 1.2rem + 0.8vw, 1.85rem);
-    line-height: 1.1;
-    letter-spacing: 0.04em;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-  .buy__addr {
-    font-size: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
-    font-weight: 500;
-    line-height: 1.3;
-    overflow-wrap: anywhere;
-  }
-
-  /* --- Online purchase (TicketingHub), once wired: one click loads it (CODE-09). --- */
-  .buy__open {
-    min-height: 52px;
-    padding-inline: 1.75rem;
-    transition:
-      background-color var(--duration-fast) var(--ease-out-expo),
-      transform var(--duration-fast) var(--ease-out-expo);
-  }
-  .buy__open:active { transform: translateY(1px) scale(0.98); }
-  .buy__open-busy,
-  .buy__spin { display: none; }
-  /* Loading: the label says so and a ring turns. aria-disabled, not disabled, so the focused
-     button keeps focus until the purchase takes it. */
-  .buy__shop.is-loading .buy__open { cursor: progress; }
-  .buy__shop.is-loading .buy__open-idle { display: none; }
-  .buy__shop.is-loading .buy__open-busy { display: inline; }
-  .buy__shop.is-loading .buy__spin {
+  .vcard__btn:active { transform: translateY(1px) scale(0.98); }
+  .vcard__btn-busy,
+  .vcard__spin { display: none; }
+  /* Waiting for TicketingHub after a press: the label says so and a ring turns, as on the
+     contact page's map (aria-busy for assistive technologies), so the wait shows on touch too. */
+  .vcard__btn.is-loading { cursor: progress; }
+  .vcard__btn.is-loading .vcard__btn-idle { display: none; }
+  .vcard__btn.is-loading .vcard__btn-busy { display: inline; }
+  .vcard__btn.is-loading .vcard__spin {
     display: inline-block;
     order: -1;
     width: 1.1rem;
@@ -712,104 +563,411 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
     border-inline-end-color: transparent;
     border-radius: 50%;
     /* Linear on purpose: a steady turn, not an entrance. Reduced motion stops it on its first frame. */
-    animation: buy-spin calc(var(--duration-slow) * 1.75) linear infinite;
+    animation: vcard-spin calc(var(--duration-slow) * 1.75) linear infinite;
   }
-  @keyframes buy-spin { to { transform: rotate(1turn); } }
-  .buy__note,
-  .buy__error {
-    margin: 0.85rem 0 0;
-    max-width: 44ch;
-    font-size: 0.875rem;
-    line-height: 1.5;
+  @keyframes vcard-spin {
+    to { transform: rotate(1turn); }
+  }
+
+  /* What shows depends on the external services' consent (data-buy, set before the cards paint):
+     off, the activation box; on, the buy buttons and the note on the payment. Hidden with display,
+     so a hidden control is out of the tab order and of the accessibility tree too. Without
+     JavaScript there is no data-buy and neither shows. */
+  .vtypes:not([data-buy='off']) .vbuy,
+  .vtypes:not([data-buy='on']) .vcard__buy,
+  .vtypes:not([data-buy='on']) .vpay { display: none; }
+
+  /* Side by side from tablets: one shared row per part (top, list, note, button), so the
+     perforations line up and the notes and the buttons sit on the same foot line. */
+  @media (min-width: 768px) {
+    .vtypes__list {
+      grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
+      grid-template-rows: repeat(4, auto);
+      row-gap: 0;
+    }
+    @supports (grid-template-rows: subgrid) {
+      .vcard {
+        display: grid;
+        grid-row: span 4;
+        grid-template-rows: subgrid;
+      }
+      .vcard__top { grid-row: 1; }
+      .vcard__body { grid-row: 2; align-self: start; }
+      .vcard__note { grid-row: 3; align-self: end; }
+      .vcard__buy { grid-row: 4; }
+    }
+  }
+
+  /* --- The step before choosing: activating the online purchase --- */
+  /* A raised panel opening on the accent seam, as the site's raised surfaces do: a step of the
+     purchase, not a warning. */
+  .vbuy {
+    position: relative;
+    display: grid;
+    gap: 1.25rem 2.5rem;
+    align-items: center;
+    margin-top: clamp(1.75rem, 4vw, 2.5rem);
+    padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 2.25rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--lift);
+  }
+  .vbuy::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: clamp(1.25rem, 3vw, 2.25rem);
+    width: 3rem;
+    height: 2px;
+    background: var(--accent);
+  }
+  .vbuy__text {
+    margin: 0;
+    max-width: 62ch;
     color: var(--color-muted);
+    font-size: 1rem;
+    line-height: 1.55;
     text-wrap: pretty;
   }
-  .buy__error { color: var(--color-foreground); }
-  .buy__mount:not([hidden]) { min-height: 36rem; }
-  /* With the online purchase, the phone and the email step back to an alternative. */
-  .buy__contacts--alt { margin-top: 1.75rem; }
-  .buy__contacts--alt .buy__call {
-    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--color-border));
-    background: var(--lift-2);
+  .vbuy__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+  }
+  .vbuy__activate { min-height: 2.75rem; }
+  .vbuy__activate:active { transform: translateY(1px) scale(0.98); }
+  /* The preferences: a link's look, as the footer's «Preferenze cookie». */
+  .vbuy__prefs {
+    min-height: 2.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 50%, transparent);
+    text-underline-offset: 4px;
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      text-decoration-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .vbuy__prefs:hover { color: var(--color-foreground); text-decoration-color: var(--accent); }
+  .vbuy__prefs:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+  /* --- The payment notice: a full-width line on the raised surface, the attention sign in the
+     accent; the sentence carries the meaning, never the colour. --- */
+  .vpay {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    margin: clamp(1.75rem, 4vw, 2.5rem) 0 0;
+    padding: 0.95rem clamp(1.1rem, 2.5vw, 1.5rem);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--color-border));
+    border-radius: var(--radius-md);
+    background: var(--lift);
     color: var(--color-foreground);
+    font-size: 1rem;
+    line-height: 1.5;
+    text-wrap: pretty;
   }
-  .buy__contacts--alt .buy__call .buy__cap { color: var(--color-muted); }
+  .vpay__icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    /* One line of text tall, so the sign sits on the first line whatever the wrap. */
+    height: 1.5em;
+    color: var(--accent);
+  }
 
-  /* Tablets: the two ways side by side. */
-  @media (min-width: 640px) {
-    .buy__contacts { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+  /* --- Under the cards: why the purchase did not load, if it did not --- */
+  /* Empty, the status region keeps no room but stays in the accessibility tree, so what it says
+     later is announced. */
+  .vbuy-foot__status {
+    margin: 0;
+    color: var(--color-foreground);
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
-  /* Desktop: the copy on the left, the ways to buy on the right. */
+  .vbuy-foot__status:not(:empty) { margin-top: clamp(1rem, 2vw, 1.5rem); }
+
   @media (min-width: 1024px) {
-    .buy__panel {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-      align-items: center;
-      column-gap: clamp(3rem, 6vw, 6rem);
-    }
-    .buy__contacts { grid-template-columns: minmax(0, 1fr); }
-    .buy__mount:not([hidden]) { grid-column: 1 / -1; }
-  }
-  @media (min-width: 1280px) {
-    .buy__contacts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .vbuy { grid-template-columns: minmax(0, 1fr) auto; }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .buy__call,
-    .buy__mail,
-    .buy__open { transition: none; }
+  /* TicketingHub's checkout overlay. Its document is light and the site's root is dark: with two
+     different colour schemes Chrome paints the iframe opaque, and the checkout sits on a blank
+     white page. The overlay's own scheme keeps it see-through over the site. */
+  #ticketinghub-overlay-iframe { color-scheme: normal; }
+
+  /* ============ Before playing (under the steps) ============ */
+  .vrules {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
   }
+  .vrules .incl { justify-self: stretch; }
 </style>
 
 <script>
-  // Click to load: TicketingHub receives nothing until the visitor asks to buy (CODE-09). The panel
-  // exists only once the embed is wired (see the page's frontmatter).
-  const root = document.querySelector<HTMLElement>('[data-voucher-shop]');
-  const idle = root?.querySelector<HTMLElement>('[data-shop-idle]');
-  const button = root?.querySelector<HTMLElement>('[data-shop-load]');
-  const mount = root?.querySelector<HTMLElement>('[data-shop-mount]');
-  const error = root?.querySelector<HTMLElement>('[data-shop-error]');
-
-  if (root?.dataset.src && idle && button && mount && error) {
-    let started = false;
-    button.addEventListener('click', () => {
-      if (started) return;
-      started = true;
-      root.classList.add('is-loading');
-      button.setAttribute('aria-disabled', 'true');
-      error.hidden = true;
-      mount.hidden = false;
-
-      // The purchase replaces the button once its script is in; if it never arrives, the button
-      // comes back with a line that points to the phone and the email below.
-      const fail = () => {
-        clearTimeout(timer);
-        started = false;
-        root.classList.remove('is-loading');
-        button.removeAttribute('aria-disabled');
-        mount.hidden = true;
-        mount.replaceChildren();
-        error.hidden = false;
+  // TicketingHub's checkout, one widget per voucher, as TicketingHub's popover snippets set it out:
+  // the button is ours, the script binds to it (data-th-manually-managed) and opens the checkout
+  // in a modal over the page. The script brings Google Analytics, so it loads only with consent to
+  // the external services (CODE-09): from the banner, or from the box above the cards, which is
+  // the contextual consent (src/scripts/consent.ts). Until then the box shows and the buttons do
+  // not (data-buy on the section, set before the cards paint by the inline script there).
+  interface Checkout {
+    show: () => void;
+    close: () => void;
+  }
+  declare global {
+    interface Window {
+      TicketinghubWidget?: {
+        new (el: Element, config: Record<string, unknown>): Checkout;
+        widgetConfig: (el: Element) => Record<string, unknown> | null;
       };
-      const timer = setTimeout(fail, 10000);
+    }
+  }
 
+  const SCRIPT = 'https://widget.ticketinghub.com/embedding/latest.js';
+  // How long a press waits for TicketingHub before the failure message.
+  const WAIT = 10000;
+  const section = document.getElementById('scegli');
+  const buttons = [...document.querySelectorAll<HTMLElement>('[data-vbuy-open]')];
+
+  if (section?.hasAttribute('data-buy') && buttons.length) {
+    const activate = section.querySelector<HTMLElement>('[data-vbuy-activate]');
+    const prefs = section.querySelector<HTMLElement>('[data-vbuy-prefs]');
+    const status = section.querySelector<HTMLElement>('[data-vbuy-status]');
+    const live = section.querySelector<HTMLElement>('[data-vbuy-live]');
+    const checkouts = new Map<Element, Checkout>();
+    let state: 'off' | 'loading' | 'ready' | 'failed' = 'off';
+    let wanted: HTMLElement | null = null;
+    let timer = 0;
+    // The wait ran out: further presses go straight to the message instead of waiting again.
+    let timedOut = false;
+    // The purchase activated from the box or from the preferences, whose controls then disappear
+    // or close: focus goes on to the first voucher.
+    let fromBox = false;
+    let fromPrefs = false;
+
+    // --- Waiting: the pressed button says so (label, ring, aria-busy) until its checkout opens ---
+    const busy = (b: HTMLElement | null, on: boolean) => {
+      if (!b) return;
+      b.classList.toggle('is-loading', on);
+      if (on) b.setAttribute('aria-busy', 'true');
+      else b.removeAttribute('aria-busy');
+    };
+    const want = (b: HTMLElement | null) => {
+      busy(wanted, false);
+      wanted = b;
+      busy(b, true);
+    };
+    const clearStatus = () => {
+      if (status) status.textContent = '';
+    };
+    // TicketingHub unreachable (offline, blocked) or a voucher's widget broken: the client's
+    // message under the cards, which points to the contacts in the closing section. Emptied and
+    // written again a moment later, so a repeated message is announced again.
+    const fail = () => {
+      clearTimeout(timer);
+      want(null);
+      if (!status) return;
+      status.textContent = '';
+      setTimeout(() => {
+        status.textContent = status.dataset.fail ?? '';
+      }, 100);
+    };
+
+    // --- The checkout as a modal (WCAG 2.4.3): focus goes in, the page behind is inert, and on
+    // closing focus comes back to the button that opened it ---
+    let opener: HTMLElement | null = null;
+    let current: Checkout | null = null;
+    let inert: Element[] = [];
+    const ready = new WeakSet<HTMLIFrameElement>();
+    // The opening already set up: TicketingHub may call show() again while it is open.
+    let shown = false;
+    let watch: MutationObserver | null = null;
+
+    const restore = () => {
+      watch?.disconnect();
+      watch = null;
+      shown = false;
+      for (const el of inert) el.removeAttribute('inert');
+      inert = [];
+      current = null;
+      const back = opener;
+      opener = null;
+      // TicketingHub has already put the page back where it was: focus without scrolling.
+      back?.focus({ preventScroll: true });
+    };
+
+    // Dispatched by TicketingHub's show(), right after it mounts the checkout's frame. Only the
+    // first of an opening counts: a second one would find the page already inert and lose the
+    // list to restore, and take focus back to the frame.
+    document.addEventListener('ticketinghub.shown', () => {
+      const overlay = document.getElementById('ticketinghub-overlay');
+      if (!overlay || !current || shown) return;
+      shown = true;
+      // Closed (its own X, Esc while focus is still here, TicketingHub itself): the overlay drops
+      // its showing class, or leaves the page.
+      watch = new MutationObserver(() => {
+        if (current && (!overlay.isConnected || !overlay.classList.contains('ticketinghub-is-showing'))) restore();
+      });
+      watch.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+      watch.observe(document.body, { childList: true, subtree: true });
+      inert = [...document.body.children].filter((el) => !el.contains(overlay) && !el.hasAttribute('inert'));
+      for (const el of inert) el.setAttribute('inert', '');
+      const frame = overlay.querySelector<HTMLIFrameElement>('#ticketinghub-overlay-iframe, iframe');
+      if (!frame) return;
+      frame.title = section.dataset.checkoutTitle ?? '';
+      // The same voucher reopened keeps its frame, already loaded; a new one is focused once in.
+      if (ready.has(frame)) frame.focus();
+      else {
+        frame.addEventListener(
+          'load',
+          () => {
+            ready.add(frame);
+            if (current) frame.focus();
+          },
+          { once: true }
+        );
+      }
+    });
+
+    // Esc closes the checkout only while focus is still in this document, before the frame takes
+    // it: inside TicketingHub's frame the key is theirs, and their checkout ignores it (known
+    // debt, docs/standards/README.md).
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && current) current.close();
+    });
+
+    const open = (b: HTMLElement) => {
+      const checkout = checkouts.get(b);
+      if (!checkout) return fail();
+      clearStatus();
+      opener = b;
+      current = checkout;
+      checkout.show();
+    };
+
+    const load = () => {
+      if (state !== 'off') return;
+      state = 'loading';
+      // Without a Google tag of ours on the page, TicketingHub installs its own with no consent
+      // defaults: give it the ones the visitor agreed to (advertising denied; statistics granted,
+      // which the external services include). Not window.gtag: TicketingHub would skip its tag.
+      if (!window.gtag) {
+        window.dataLayer = window.dataLayer || [];
+        function consentDefault(..._args: unknown[]) {
+          // gtag reads the arguments object, not an array.
+          window.dataLayer!.push(arguments);
+        }
+        consentDefault('consent', 'default', {
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+          analytics_storage: 'granted',
+        });
+      }
       const script = document.createElement('script');
-      script.src = root.dataset.src!;
+      script.src = SCRIPT;
       script.async = true;
-      // TODO(TicketingHub): give the script the attributes its embed snippet sets (the voucher
-      // widget's id is in root.dataset.id) and render the widget into `mount`.
       script.addEventListener(
         'load',
         () => {
           clearTimeout(timer);
-          root.classList.remove('is-loading');
-          idle.hidden = true;
-          mount.tabIndex = -1;
-          mount.focus({ preventScroll: true });
+          timedOut = false;
+          clearStatus();
+          const Widget = window.TicketinghubWidget;
+          if (Widget) {
+            for (const b of buttons) {
+              try {
+                // The modal last: a mode in a voucher's data-th-config never turns it into an embed.
+                checkouts.set(b, new Widget(b, { ...Widget.widgetConfig(b), mode: 'modal' }));
+              } catch {
+                // That voucher's widget id is not valid: its button reports it when pressed.
+              }
+            }
+          }
+          state = 'ready';
+          const b = wanted;
+          want(null);
+          if (b) open(b);
         },
         { once: true }
       );
-      script.addEventListener('error', fail, { once: true });
-      mount.append(script);
+      script.addEventListener(
+        'error',
+        () => {
+          state = 'failed';
+          fail();
+        },
+        { once: true }
+      );
+      document.head.append(script);
+    };
+
+    for (const b of buttons) {
+      b.addEventListener('click', () => {
+        if (state === 'ready') return open(b);
+        if (state === 'failed' || timedOut) return fail();
+        // Pressed before TicketingHub is in: its checkout opens as soon as it is, or the wait
+        // ends in the failure message.
+        want(b);
+        clearStatus();
+        clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          timedOut = true;
+          fail();
+        }, WAIT);
+      });
+    }
+
+    const announce = () => {
+      buttons[0].focus();
+      if (live) live.textContent = live.dataset.on ?? '';
+    };
+
+    activate?.addEventListener('click', () => {
+      // consent.ts defines it once the cookie library is running.
+      if (!window.__acceptExternal) return;
+      fromBox = true;
+      window.__acceptExternal();
+    });
+
+    // The choice arrives after the page (the banner, or a stored choice read by consent.ts), and
+    // again whenever it changes. Withdrawing reloads the page (consent.ts), so the purchase never
+    // needs switching off here.
+    const sync = () => {
+      const moveFocus = fromBox;
+      fromBox = false;
+      const on = !!window.__consent?.external;
+      section.setAttribute('data-buy', on ? 'on' : 'off');
+      if (!on) return;
+      load();
+      if (moveFocus) announce();
+    };
+    window.addEventListener('consent-change', sync);
+    if (window.__consent) sync();
+
+    // Opened from the box's link (focus on it as the dialog opens: a press before the cookie
+    // library ran leaves nothing behind), the preferences close after the choice: then focus goes
+    // on to the first voucher if the purchase is now active, or back to the link if not. A tick
+    // later, after the library's own handling of the choice and of the close.
+    window.addEventListener('cc:onModalShow', (e) => {
+      if ((e as CustomEvent<{ modalName?: string }>).detail?.modalName === 'preferencesModal') {
+        fromPrefs = !!prefs && document.activeElement === prefs;
+      }
+    });
+    window.addEventListener('cc:onModalHide', (e) => {
+      if (!fromPrefs || (e as CustomEvent<{ modalName?: string }>).detail?.modalName !== 'preferencesModal') return;
+      fromPrefs = false;
+      setTimeout(() => {
+        if (section.getAttribute('data-buy') === 'on') announce();
+        else prefs?.focus();
+      });
     });
   }
 </script>
