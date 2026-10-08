@@ -58,11 +58,11 @@ content:
           - { name: items, label: Elenco, type: string, list: true, description: "Un capo per riga, breve, es. «Pantaloni lunghi». Le righe vuote non compaiono" }
       - name: finalCta
         label: "Prenota (fondo di ogni pagina)"
-        description: "La sezione «Sei pronto a scendere in campo?» in fondo a home, attività e Softair VS Paintball, uguale ovunque. Telefono, WhatsApp, email, orari, indirizzo e «Come arrivare» sono i campi qui sopra; un dato vuoto non compare. La scritta gigante sul fondo è il «Nome sito»"
+        description: "La sezione «Sei pronto a scendere in campo?» in fondo a ogni pagina tranne quelle legali, uguale ovunque tranne il sottotitolo delle pagine attività. Telefono, WhatsApp, email, orari, indirizzo e «Come arrivare» sono i campi qui sopra; un dato vuoto non compare. La scritta gigante sul fondo è il «Nome sito»"
         type: object
         fields:
           - { name: title, label: Titolo, type: string, required: true, description: "Grande, al centro: le parole salgono una alla volta. Meglio breve, cinque o sei parole" }
-          - { name: subtitle, label: Sottotitolo, type: text }
+          - { name: subtitle, label: Sottotitolo, type: text, description: "Una riga sotto il titolo, in home e su ogni pagina che non ne ha uno suo: meglio una frase che valga per tutte le attività. Le pagine attività hanno il loro (Attività (pagine) › Prenota (fondo pagina)). Se vuoto non compare" }
           - { name: writeLabel, label: "Testo del bottone email", type: string, description: "Es. Scrivi. Se vuoto, il bottone email non compare" }
           - { name: phrases, label: "Parole della fascia inclinata", type: string, list: { max: 8 }, description: "Parole brevi che scorrono nella fascia in basso, es. le attività e «1.500 m²». Se la lista è vuota, la fascia non compare" }
       - name: footerRanger
@@ -596,6 +596,12 @@ content:
               # the activity's name can change later, its address cannot.
               value: "{path}"
               label: "{primary}"
+      - name: finalCta
+        label: Prenota (fondo pagina)
+        description: "La sezione «Sei pronto a scendere in campo?»: titolo, contatti e fascia sono quelli di Impostazioni generali › Prenota, uguali ovunque. Qui solo il sottotitolo di questa attività"
+        type: object
+        fields:
+          - { name: subtitle, label: Sottotitolo, type: text, description: "Es. «Prenota la tua sessione di arcotag a Milano.». Se vuoto, si usa il sottotitolo di Impostazioni generali › Prenota" }
 
   - name: paintball
     label: Softair VS Paintball

@@ -274,5 +274,8 @@
       "src/data/activities/arcotag.json",
       "src/data/activities/nerf.json"
     ]
+  },
+  "finalCta": {
+    "subtitle": "Prenota la tua sessione di tiro dinamico a Milano."
   }
 }

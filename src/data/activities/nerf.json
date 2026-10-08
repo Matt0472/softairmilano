@@ -258,5 +258,8 @@
       "src/data/activities/softair.json",
       "src/data/activities/tiro-dinamico.json"
     ]
+  },
+  "finalCta": {
+    "subtitle": "Prenota la tua sessione di Nerf a Milano."
   }
 }
