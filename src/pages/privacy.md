@@ -13,7 +13,7 @@ Special Force S.S.D. a R.L., con sede in Via Melegnano 26, 20019 Settimo Milanes
 
 ## Quali dati trattiamo e perché
 
-- **Richieste dai moduli del sito** (nome, telefono, email, attività, giorno preferito, numero di persone e messaggio): li usiamo solo per risponderti e organizzare la tua partita, il preventivo o la festa. Base giuridica: misure precontrattuali richieste da te (art. 6.1.b GDPR). L'invio tecnico dei moduli è gestito da Web3Forms, che recapita il messaggio alla nostra casella email.
+- **Richieste dai moduli del sito** (nome, telefono, email, attività, giorno preferito, numero di persone e messaggio): li usiamo solo per risponderti e organizzare la tua partita, il preventivo o la festa. Base giuridica: misure precontrattuali richieste da te (art. 6.1.b GDPR). L'invio tecnico dei moduli è gestito da Web3Forms, che recapita il messaggio alla nostra casella email. Quando inizi a compilare un modulo, e solo allora, si carica la verifica anti-spam hCaptcha (Intuition Machines Inc.), che serve a bloccare gli invii automatici e tratta alcuni dati tecnici del browser.
 - **Telefono ed email**: se ci contatti direttamente, usiamo i tuoi dati per risponderti e gestire la prenotazione (art. 6.1.b GDPR).
 - **Prenotazioni e voucher online**: la prenotazione e l'acquisto online sono un servizio esterno di TicketingHub Ltd, che tratta i dati dell'acquisto (anagrafica e pagamento) secondo la propria informativa, disponibile sul suo sito. Il servizio si attiva solo quando lo scegli tu (vedi la [cookie policy](/cookie)).
 - **Moduli di partecipazione**: il modulo online per i maggiorenni e quello cartaceo per i minorenni hanno una propria informativa, che trovi nel modulo stesso. Il modulo online è gestito con monday.com.
@@ -27,7 +27,7 @@ Nell'arena è presente un impianto di videosorveglianza, per la sicurezza del pe
 
 ## Chi può conoscere i tuoi dati
 
-I dati possono essere trattati, come fornitori tecnici, da: Cloudflare Inc. (hosting del sito e dei video), Web3Forms (recapito dei messaggi dei moduli), TicketingHub Ltd (prenotazioni e voucher online), monday.com Ltd (modulo di partecipazione online) e, solo con il tuo consenso o la tua scelta, Google LLC (statistiche e mappa). Alcuni di questi fornitori hanno sede fuori dall'Unione Europea: i trasferimenti avvengono sulla base di decisioni di adeguatezza o di clausole contrattuali standard approvate dalla Commissione Europea. I tuoi dati non vengono venduti né diffusi.
+I dati possono essere trattati, come fornitori tecnici, da: Cloudflare Inc. (hosting del sito e dei video), Web3Forms (recapito dei messaggi dei moduli), Intuition Machines Inc. (hCaptcha, la verifica anti-spam dei moduli), TicketingHub Ltd (prenotazioni e voucher online), monday.com Ltd (modulo di partecipazione online) e, solo con il tuo consenso o la tua scelta, Google LLC (statistiche e mappa). Alcuni di questi fornitori hanno sede fuori dall'Unione Europea: i trasferimenti avvengono sulla base di decisioni di adeguatezza o di clausole contrattuali standard approvate dalla Commissione Europea. I tuoi dati non vengono venduti né diffusi.
 
 ## Per quanto li conserviamo
 

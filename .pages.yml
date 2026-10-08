@@ -987,6 +987,7 @@ content:
       - { name: successTitle, label: "Invio riuscito: titolo", type: string, required: true, description: "Prende il posto del form quando la richiesta è partita" }
       - { name: successText, label: "Invio riuscito: testo", type: text, description: "Cosa succede adesso, es. come e quando ricontattate" }
       - { name: failureText, label: "Invio non riuscito: testo", type: string, required: true, description: "Compare sopra il bottone se la richiesta non parte (rete assente, servizio non raggiungibile)" }
+      - { name: captchaError, label: "Verifica anti-spam non fatta", type: string, required: true, description: "Compare sopra il bottone se si prova a inviare senza aver completato la verifica anti-spam (hCaptcha), es. «Completa la verifica anti-spam qui sopra, poi invia la richiesta.»" }
       - { name: failureCall, label: "Invio non riuscito: invito a chiamare", type: string, description: "Seguito dal numero di telefono di «Impostazioni generali», es. «Oppure chiamaci al». Se il telefono è vuoto, non compare" }
       - { name: emailSubject, label: "Oggetto dell'email che ricevi", type: string, description: "Seguito dall'attività scelta, es. «Richiesta dal sito: Nerf»" }
       - { name: emailSender, label: "Mittente dell'email che ricevi", type: string, description: "Il nome che vedi come mittente. Se vuoto, si usa il «Nome sito»" }

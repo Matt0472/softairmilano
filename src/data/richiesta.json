@@ -37,6 +37,7 @@
   "successTitle": "Richiesta inviata",
   "successText": "Grazie, l'abbiamo ricevuta. Ti ricontattiamo noi, per telefono o via email.",
   "failureText": "La richiesta non è partita: riprova tra qualche istante.",
+  "captchaError": "Completa la verifica anti-spam qui sopra, poi invia la richiesta.",
   "failureCall": "Oppure chiamaci al",
   "emailSubject": "Richiesta dal sito",
   "emailSender": "Sito SoftAir Milano"

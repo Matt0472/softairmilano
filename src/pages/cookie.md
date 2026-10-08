@@ -11,6 +11,8 @@ I cookie sono piccoli file che un sito salva nel browser per ricordare informazi
 
 Il sito non usa strumenti di profilazione e i suoi caratteri tipografici sono ospitati sui nostri server. L'unico cookie che salva sempre è `cc_cookie`, che ricorda la scelta che hai fatto nel banner: dura 6 mesi e non esce dal tuo browser.
 
+Fa eccezione il **modulo di richiesta**: quando inizi a compilarlo, e solo in quel momento, si carica la verifica anti-spam **hCaptcha** (Intuition Machines Inc.), che può usare propri cookie tecnici. Serve a impedire l'invio automatico di messaggi indesiderati; se non compili nessun modulo, non si carica.
+
 ## Statistiche (solo con il tuo consenso)
 
 Se le accetti, usiamo **Google Analytics 4** (Google LLC) per sapere, in forma aggregata, quante persone visitano il sito e quali pagine leggono. Imposta i cookie `_ga` e `_ga_` seguito da un codice, che durano fino a 2 anni. Le funzioni pubblicitarie restano spente. Senza il tuo consenso Google Analytics non viene caricato.

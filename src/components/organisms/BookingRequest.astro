@@ -1,12 +1,14 @@
 ---
-// Booking request on the activity pages, team building and the parties page, right above the closing call to action, and on the contact
-// page, where no activity is preselected and the list starts on its last entry («Altro»): the visitor asks
+// Booking request on the activity pages, team building and the parties page, right above the
+// closing call to action, and on the contact page, where no activity is preselected and the list
+// starts on its last entry («Altro»): the visitor asks
 // for a day and a group size, and Web3Forms emails the request to the arena. It renders only when
 // settings.json holds the Web3Forms access key and richiesta.json a title (CMS-10). The key is
 // public by design (it can only deliver to the account's own inbox), so it ships in the page.
 // Progressive enhancement: without JS the form posts natively and the browser checks the
 // constraints; with JS it posts JSON with fetch, flags errors inline under a summary that takes
-// focus, and answers in place (A11Y-12). No captcha and no third-party script, only a honeypot.
+// focus, and answers in place (A11Y-12). Against spam: a honeypot, and hCaptcha, which the
+// Web3Forms account requires; its script arrives only at the first touch on the form.
 // The heading stays beside the form on wide screens; below 1024px it sits above it.
 
 import Button from '../atoms/Button.astro';
@@ -151,6 +153,12 @@ const tel = telHref(phone);
             );
           })}
 
+          {/* hCaptcha, required by the Web3Forms account: the widget arrives only once the visitor
+              starts on the form (script below), so nothing third-party loads with the page. */}
+          <div class="req__captcha">
+            <div class="h-captcha" data-captcha="true" data-theme="dark" data-req-captcha></div>
+          </div>
+
           <div class="req__foot">
             <div class="req__alert" role="alert" data-req-alert></div>
             {/* Says «sending» aloud even when Enter was pressed in a field and focus stayed there (4.1.3). */}
@@ -175,6 +183,9 @@ const tel = telHref(phone);
             <h3 class="req__done-title">{copy.successTitle}</h3>
             {has(copy.successText) && <p class="req__done-text">{copy.successText}</p>}
           </div>
+        </template>
+        <template data-req-captcha-missing>
+          <p class="req__alert-text">{copy.captchaError}</p>
         </template>
         <template data-req-failure>
           <p class="req__alert-text">{copy.failureText}</p>
@@ -365,6 +376,12 @@ const tel = telHref(phone);
   }
   .req__summary-list a:hover { color: var(--color-foreground); }
 
+  /* The widget's own box (303×78, 164×144 when compact); the space is held so it arrives without a
+     jump. */
+  .req__captcha {
+    min-height: 78px;
+    margin-top: 0.5rem;
+  }
   .req__foot {
     display: flex;
     flex-direction: column;
@@ -506,6 +523,24 @@ const tel = telHref(phone);
 
     form.noValidate = true;
 
+    // hCaptcha (Web3Forms' shared site key, dark theme) loads at the first touch or focus on the
+    // form: a narrow column gets the compact widget, which fits 280px.
+    const captcha = form.querySelector<HTMLElement>('[data-req-captcha]')!;
+    let captchaRequested = false;
+    const loadCaptcha = () => {
+      if (captchaRequested) return;
+      captchaRequested = true;
+      if (form.clientWidth < 310) captcha.dataset.size = 'compact';
+      const script = document.createElement('script');
+      script.src = 'https://web3forms.com/client/script.js';
+      script.async = true;
+      document.head.append(script);
+    };
+    form.addEventListener('focusin', loadCaptcha, { once: true });
+    form.addEventListener('pointerdown', loadCaptcha, { once: true });
+    const captchaToken = () => form.querySelector<HTMLTextAreaElement>('textarea[name="h-captcha-response"]')?.value ?? '';
+    const resetCaptcha = () => (window as { hcaptcha?: { reset: () => void } }).hcaptcha?.reset();
+
     // The min written at build time ages with the deploy: today in the visitor's own calendar.
     if (date) {
       const d = new Date();
@@ -580,7 +615,7 @@ const tel = telHref(phone);
       if (activity?.value) subject.value = subjectFor(activity.value);
       const data: Record<string, string> = {};
       new FormData(form).forEach((v, k) => {
-        if (typeof v === 'string' && v.trim()) data[k] = v.trim();
+        if (typeof v === 'string' && v.trim() && k !== 'g-recaptcha-response') data[k] = v.trim();
       });
       // The email gives the day in words, as the visitor would say it.
       if (date?.value) {
@@ -618,6 +653,8 @@ const tel = telHref(phone);
         status.focus();
       } else {
         alertBox.replaceChildren(fromTemplate('failure'));
+        // A check is good for one try only: the visitor ticks it again before resending.
+        resetCaptcha();
       }
     };
 
@@ -632,6 +669,11 @@ const tel = telHref(phone);
         return;
       }
       summary.hidden = true;
+      if (!captchaToken()) {
+        loadCaptcha();
+        alertBox.replaceChildren(fromTemplate('captcha-missing'));
+        return;
+      }
       void send();
     });
   }
