@@ -3,7 +3,7 @@
   "name": "Arcotag",
   "seo": {
     "title": "Arcotag Milano al coperto, per gruppi e feste | SoftAir Milano",
-    "description": "Arcotag a Milano in un'arena indoor di 1.500 m²: archi e frecce a punta morbida, fino a 20 giocatori, dagli 8 anni. Con gli amici, di giorno o di sera.",
+    "description": "Arcotag a Milano in un'arena indoor di 1.500 m²: archi e frecce a punta morbida, fino a 30 giocatori, dagli 8 anni. Con gli amici, di giorno o di sera.",
     "image": "/uploads/arcotag-og.jpg",
     "imageAlt": "Due giocatori di arcotag con maschera protettiva tendono l'arco nell'arena indoor di Softair Milano."
   },
@@ -22,11 +22,11 @@
       "label": "Come funziona",
       "href": "#serata"
     },
-    "hudTag": "ARCO · MAX 20 GIOCATORI · 8+"
+    "hudTag": "ARCO · MAX 30 GIOCATORI · 8+"
   },
   "facts": [
     {
-      "value": "20",
+      "value": "30",
       "label": "giocatori al massimo"
     },
     {
@@ -63,7 +63,7 @@
   "evening": {
     "eyebrow": "",
     "title": "La vostra partita, un passo alla volta",
-    "text": "Che siate in pochi o in 20, al resto pensiamo noi. Tra briefing e gioco, una partita dura 1 ora e 45 minuti in tutto.",
+    "text": "Che siate in pochi o in 30, al resto pensiamo noi. Tra briefing e gioco, una partita dura 1 ora e 45 minuti in tutto.",
     "steps": [
       {
         "time": "Arrivo",
@@ -167,7 +167,7 @@
       },
       {
         "title": "Team building",
-        "text": "Fino a 20 persone, in arena o nella vostra location: strategia, comunicazione e risate.",
+        "text": "Fino a 30 persone, in arena o nella vostra location: strategia, comunicazione e risate.",
         "href": "/teambuilding",
         "featured": false
       }
@@ -182,7 +182,7 @@
         "when": "Lun–ven, 14:00–20:00",
         "price": "15",
         "unit": "€ a persona",
-        "note": "",
+        "note": "Minimo 8 quote",
         "badge": ""
       },
       {
@@ -190,7 +190,7 @@
         "when": "Lun–ven, dalle 20:00",
         "price": "20",
         "unit": "€ a persona",
-        "note": "",
+        "note": "Minimo 8 quote",
         "badge": "Serata tra amici"
       },
       {
@@ -198,15 +198,17 @@
         "when": "Sab–dom, pomeriggio e sera",
         "price": "25",
         "unit": "€ a persona",
-        "note": "",
+        "note": "Minimo 15 quote",
         "badge": ""
       }
     ],
     "notes": [
-      "Da 8 a 20 giocatori, solo il vostro gruppo in arena. Se siete meno di 8 potete giocare lo stesso, pagando 8 quote.",
-      "Sala feste: dal lunedì al venerdì è compresa nell'1 ora e 45 (decidete voi come dividere il tempo tra gioco e festa), oppure, se dopo di voi non ci sono altre partite, si prolunga di un'ora a 70 € nella sala interna o 50 € in quella esterna; sabato e domenica la sala esterna è compresa nell'1 ora e 45, riducendo il tempo di gioco.",
+      "Fino a 30 giocatori. Dal lunedì al venerdì il minimo è 8: se siete meno, si pagano comunque 8 quote. Sabato e domenica il minimo è 15: se siete meno, si pagano comunque 15 quote.",
       "Prenotazione obbligatoria."
-    ]
+    ],
+    "wear": {
+      "text": "Abbigliamento comodo, da scegliere in base alla temperatura: l'arena non è climatizzata né riscaldata."
+    }
   },
   "reviews": {
     "title": "Cosa dice chi ha giocato"
@@ -220,7 +222,7 @@
       },
       {
         "q": "Quanti giocatori servono?",
-        "a": "Da 8 a 20 giocatori, e il vostro gruppo gioca da solo: non vi uniamo ad altri. Se siete meno di 8 potete giocare lo stesso, pagando 8 quote."
+        "a": "Almeno 8 dal lunedì al venerdì e almeno 15 sabato e domenica: se siete meno potete giocare lo stesso, pagando comunque 8 o 15 quote. Al massimo si gioca in 30, e non vi uniamo ad altri gruppi."
       },
       {
         "q": "Quanto dura una partita?",
@@ -236,7 +238,7 @@
       },
       {
         "q": "Cosa devo indossare?",
-        "a": "Maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). L'arena non è climatizzata né riscaldata: se fa freddo, aggiungete qualche strato."
+        "a": "Abiti comodi, scelti in base alla temperatura: l'arena non è climatizzata né riscaldata, quindi se fa freddo vestitevi a strati."
       },
       {
         "q": "Si gioca anche se piove?",
@@ -244,7 +246,7 @@
       },
       {
         "q": "Possiamo festeggiare un compleanno?",
-        "a": "Sì. Le sale per la festa sono due, una interna e una esterna. Dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti: decidete voi come dividere il tempo tra gioco e festa, oppure, se dopo di voi non ci sono altre partite, prolungate di un'ora (70 € la sala interna, 50 € quella esterna). Il sabato e la domenica la sala esterna è compresa nell'1 ora e 45 minuti, riducendo il tempo di gioco. La torta potete portarla voi, il catering lo prepariamo su richiesta: trovi tutto nella pagina Occasioni."
+        "a": "Sì. Le sale per la festa sono due, una interna e una esterna. Dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti: decidete voi come dividere il tempo tra gioco e festa, oppure prolungate di un'ora (70 € la sala interna, 50 € quella esterna). Il sabato e la domenica la sala esterna è compresa nell'1 ora e 45 minuti, riducendo il tempo di gioco. La torta potete portarla voi, il catering lo prepariamo su richiesta: trovi tutto nella pagina Occasioni."
       },
       {
         "q": "Come si prenota?",

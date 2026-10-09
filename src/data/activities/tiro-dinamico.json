@@ -213,7 +213,10 @@
     "notes": [
       "Sabato e domenica solo su richiesta: i campi sono riservati al softair, e ogni richiesta va confermata dallo staff.",
       "Prenotazione obbligatoria."
-    ]
+    ],
+    "wear": {
+      "text": "Abbigliamento comodo, da scegliere in base alla temperatura: l'arena non è climatizzata né riscaldata."
+    }
   },
   "reviews": {
     "title": "Cosa dice chi ha giocato"
@@ -255,7 +258,7 @@
       },
       {
         "q": "Cosa devo indossare?",
-        "a": "Maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). L'arena non è climatizzata né riscaldata: se fa freddo, aggiungete qualche strato."
+        "a": "Abiti comodi, scelti in base alla temperatura: l'arena non è climatizzata né riscaldata, quindi se fa freddo vestitevi a strati."
       },
       {
         "q": "Come si prenota?",

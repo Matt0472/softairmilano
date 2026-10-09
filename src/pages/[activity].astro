@@ -59,6 +59,8 @@ interface Activity {
     text?: string;
     tiers?: { label: string; when?: string; price: string; unit?: string; note?: string; badge?: string }[];
     notes?: string[];
+    players?: { title?: string; text?: string };
+    wear?: { title?: string; text?: string; items?: string[] };
   };
   reviews?: { title: string };
   faq?: { title: string; items?: { q: string; a: string }[] };
@@ -86,6 +88,14 @@ const signature: Record<string, 'trajectory'> = { arcotag: 'trajectory' };
 // A section renders only when the client filled it in: Pages CMS always saves the object, so
 // its title (and its list, where it has one) is what decides (CMS-10).
 const { intro, evening, modes, howto, audiences, pricing, reviews, faq, related, finalCta } = data;
+
+// What to wear under the prices: the activity's own block when it has text or items, otherwise
+// the general one from settings; without its own title it takes the general title.
+const ownWear = pricing?.wear;
+const wear =
+  has(ownWear?.text) || ownWear?.items?.some(has)
+    ? { ...ownWear, title: has(ownWear?.title) ? ownWear.title : settings.wear?.title }
+    : settings.wear;
 
 const crumbs = [
   { label: 'Home', href: '/' },
@@ -136,7 +146,7 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
   {audiences && has(audiences.title) && !!audiences.items?.length && <AudienceGrid title={audiences.title} items={audiences.items} />}
 
   {pricing && has(pricing.title) && !!pricing.tiers?.length && (
-    <PriceTiers title={pricing.title} text={pricing.text} tiers={pricing.tiers} notes={pricing.notes} wear={settings.wear} cta={data.hero.ctaPrimary} />
+    <PriceTiers title={pricing.title} text={pricing.text} tiers={pricing.tiers} notes={pricing.notes} players={pricing.players} wear={wear} cta={data.hero.ctaPrimary} />
   )}
 
   {reviews && has(reviews.title) && <Reviews title={reviews.title} />}

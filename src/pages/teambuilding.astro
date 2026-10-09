@@ -1,9 +1,9 @@
 ---
 // Team building for companies (/teambuilding). Its action is a quote request, not a booked slot:
 // the hero's primary button leads to the request form, which arrives with «Team building» chosen.
-// Why softair builds a team, the formats and the companies that chose them, how a session runs,
-// the activities to pair with it (behind a CMS switch) and what to know before coming. Every
-// section renders only when its data is present (CMS-10).
+// Why softair builds a team, how a session runs, the formats with the options on request, the
+// companies that chose them, the activities to pair with it (behind a CMS switch) and what to
+// know before coming. Every section renders only when its data is present (CMS-10).
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/organisms/PageHero.astro';
@@ -25,7 +25,7 @@ import { has } from '../lib/fields';
 import { breadcrumbLd, faqLd } from '../lib/jsonld';
 import { flattenNav, type NavItem } from '../lib/nav';
 
-const { seo, hero, facts, intro, formats, clients, session, extras, reviews, faq, request } = page;
+const { seo, hero, facts, intro, session, formats, onRequest, clients, extras, reviews, faq, request } = page;
 
 const path = '/teambuilding';
 // The page name in the trail is its menu label (single source for both).
@@ -45,19 +45,22 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
 
   {intro && has(intro.title) && has(intro.text) && <AnswerBlock {...intro} />}
 
-  {formats && has(formats.title) && !!formats.items?.length && <ModeGrid {...formats} items={formats.items} />}
-
-  {/* Who chose the formats above, before how a session runs. */}
-  {clients && !!clients.items?.length && <ClientLogos title={clients.title} text={clients.text} items={clients.items} />}
-
-  {/* The hero's secondary button lands here. The options on request close the run of steps. */}
+  {/* The hero's secondary button lands here. */}
   {session && has(session.title) && !!session.steps?.length && (
-    <StepTimeline title={session.title} text={session.text} steps={session.steps} id="come-funziona">
-      {!!session.options?.length && (
-        <IncludedList title={session.optionsTitle} items={session.options} note={session.optionsNote} layout="row" />
-      )}
-    </StepTimeline>
+    <StepTimeline title={session.title} text={session.text} steps={session.steps} id="come-funziona" />
   )}
+
+  {/* The options on request apply to any formula, so they close the formats' plate as its last row. */}
+  {formats && has(formats.title) && !!formats.items?.length && (
+    <ModeGrid {...formats} items={formats.items}>
+      {has(onRequest?.title) && onRequest.items?.some(has) && (
+        <IncludedList title={onRequest.title} items={onRequest.items} note={onRequest.note} marker="plus" />
+      )}
+    </ModeGrid>
+  )}
+
+  {/* Who chose the formats above. */}
+  {clients && !!clients.items?.length && <ClientLogos title={clients.title} text={clients.text} items={clients.items} />}
 
   {/* Off until the client confirms these activities still run. */}
   {extras?.show && has(extras.title) && !!extras.items?.length && (

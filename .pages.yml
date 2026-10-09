@@ -50,7 +50,7 @@ content:
       - { name: rangerUrl, label: "Link arena outdoor (Ranger Softair)", type: string }
       - name: wear
         label: "Abbigliamento consigliato (pagine attività)"
-        description: "Il blocco sotto le note dei prezzi di Softair, Arcotag, Tiro dinamico e Nerf, uguale su tutte: si cambia qui una volta sola. Compare con almeno la frase o una voce dell'elenco; se sono vuote entrambe, non compare. Le domande frequenti «Cosa devo indossare?» delle pagine si scrivono a parte: se cambi l'elenco, aggiornale"
+        description: "Il blocco sotto le note dei prezzi delle pagine attività che non hanno un abbigliamento tutto loro (oggi il Softair; Arcotag, Tiro dinamico e Nerf hanno il proprio, in Prezzi › Abbigliamento). Compare con almeno la frase o una voce dell'elenco; se sono vuote entrambe, non compare. Il titolo vale anche per le attività con il blocco proprio, se lì è vuoto. Le domande frequenti «Cosa devo indossare?» delle pagine si scrivono a parte: se cambi l'elenco, aggiornale"
         type: object
         fields:
           - { name: title, label: Titolo, type: string, description: "Es. «Abbigliamento consigliato». Se vuoto, compaiono solo la frase e l'elenco" }
@@ -437,7 +437,7 @@ content:
             fields:
               - { name: label, label: Testo, type: string }
               - { name: href, label: Link, type: string }
-          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «CQB · MAX 30 GIOCATORI · 12+». I numeri devono essere quelli dei Dati chiave: se li cambi, aggiornala anche qui. Se vuota non compare" }
+          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «CQB · MAX 20 GIOCATORI · 12+». I numeri devono essere quelli dei Dati chiave: se li cambi, aggiornala anche qui. Se vuota non compare" }
       - name: facts
         label: Dati chiave (sotto il titolo)
         type: object
@@ -559,9 +559,24 @@ content:
               - { name: when, label: "Quando / per chi", type: string }
               - { name: price, label: "Prezzo (solo il numero)", type: string }
               - { name: unit, label: "Unità (es. € a persona)", type: string }
-              - { name: note, label: Nota, type: string }
+              - { name: note, label: Nota, type: string, description: "Breve, sotto il prezzo, es. «Minimo 8 quote». Se vuota non compare" }
               - { name: badge, label: "Badge (facoltativo, es. Serata tra amici)", type: string, description: "Mette in risalto la fascia: meglio una sola" }
-          - { name: notes, label: Note sotto i prezzi, type: string, list: true, description: "Una per riga. Sotto le note compare il blocco «Abbigliamento consigliato», uguale per tutte le attività: si cambia in Impostazioni generali" }
+          - name: players
+            label: Numero di giocatori
+            description: "Un blocco con il suo titolo prima delle note: quanti giocatori servono e come si gioca con altri gruppi. Se il testo è vuoto non compare (e la regola va nelle note)"
+            type: object
+            fields:
+              - { name: title, label: Titolo, type: string, description: "Es. «Numero di giocatori»" }
+              - { name: text, label: Testo, type: text }
+          - { name: notes, label: Note sotto i prezzi, type: string, list: true, description: "Una per riga. Sotto le note compare il blocco sull'abbigliamento: quello di questa attività, qui sotto, oppure, se è vuoto, quello generale di Impostazioni generali" }
+          - name: wear
+            label: Abbigliamento (solo per questa attività)
+            description: "Il blocco sotto le note dei prezzi, quando questa attività chiede un abbigliamento diverso da quello generale (es. arcotag, Nerf e tiro dinamico: basta un abbigliamento comodo). Compare con almeno il testo o una voce dell'elenco; se sono vuoti entrambi, compare il blocco generale di Impostazioni generali › Abbigliamento consigliato. Se cambi il testo, aggiorna anche la domanda «Cosa devo indossare?» della pagina"
+            type: object
+            fields:
+              - { name: title, label: Titolo, type: string, description: "Facoltativo. Se vuoto, si usa il titolo di Impostazioni generali › Abbigliamento consigliato" }
+              - { name: text, label: Testo, type: text, description: "Una o due frasi, es. «Abbigliamento comodo, da scegliere in base alla temperatura». Se testo ed elenco sono vuoti, compare il blocco generale" }
+              - { name: items, label: Elenco, type: string, list: true, description: "Facoltativo: un capo per riga, breve. Le righe vuote non compaiono" }
       - name: reviews
         label: Recensioni
         type: object
@@ -1223,14 +1238,14 @@ content:
             fields:
               - { name: label, label: Testo, type: string }
               - { name: href, label: Link, type: string, description: "Es. #come-funziona: porta a «Come si svolge». Se quella sezione non compare, svuota questo bottone" }
-          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «TEAM BUILDING · MAX 30 · 12+». I numeri devono essere quelli dei Dati chiave: se li cambi, aggiornala anche qui. Se vuota non compare" }
+          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «TEAM BUILDING · MAX 40». Il numero deve essere quello dei Dati chiave: se li cambi, aggiornala anche qui. Se vuota non compare" }
       - name: facts
         label: Dati chiave (sotto il titolo)
-        description: "Da 2 a 4 dati brevi; ognuno si legge di seguito, es. «30 persone al massimo». Un dato senza valore o senza etichetta non compare"
+        description: "Da 2 a 4 dati brevi; ognuno si legge di seguito, es. «40 persone al massimo». Un dato senza valore o senza etichetta non compare"
         type: object
         list: { max: 4 }
         fields:
-          - { name: value, label: "Valore (es. 30)", type: string }
+          - { name: value, label: "Valore (es. 40)", type: string }
           - { name: label, label: "Etichetta (es. persone al massimo)", type: string }
       - name: intro
         label: Perché il softair (in breve)
@@ -1244,6 +1259,22 @@ content:
             type: object
             list: { max: 5 }
             fields:
+              - { name: title, label: Titolo, type: string }
+              - { name: text, label: Testo, type: text }
+      - name: session
+        label: Come si svolge (passo per passo)
+        description: "Il bottone secondario dell'apertura porta qui (#come-funziona)"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text, description: "Durata e arbitraggio, in una frase" }
+          - name: steps
+            label: Passaggi
+            description: "Un passaggio senza titolo non compare"
+            type: object
+            list: true
+            fields:
+              - { name: time, label: "Momento (es. Briefing, Missioni)", type: string, description: "Se vuoto, compare il numero del passaggio" }
               - { name: title, label: Titolo, type: string }
               - { name: text, label: Testo, type: text }
       - name: formats
@@ -1276,46 +1307,35 @@ content:
                     - { name: map, label: "Mappa" }
               - name: stats
                 label: "Cifre (es. 20 persone al massimo)"
-                description: "Una cifra compare solo se ha sia il valore sia l'etichetta, e si legge di seguito: «20 persone al massimo». Meglio le stesse cifre, nello stesso ordine, in tutte le formule. Le età devono essere quelle delle pagine attività"
+                description: "Una cifra compare solo se ha sia il valore sia l'etichetta, e si legge di seguito: «20 persone al massimo». Meglio le stesse cifre, nello stesso ordine, in tutte le formule. I numeri di persone devono essere quelli della domanda «Quante persone possono partecipare?»"
                 type: object
                 list: true
                 fields:
                   - { name: value, label: "Valore (es. 20)", type: string }
                   - { name: label, label: "Etichetta (es. persone al massimo)", type: string }
+      - name: onRequest
+        label: Su richiesta (opzioni da aggiungere)
+        description: "L'ultima riga delle «Tre formule», con quello che si aggiunge a qualunque formula su richiesta, es. il catering. Compare solo se ci sono le formule. Niente prezzi: si danno con il preventivo. Se il titolo è vuoto o non c'è nessuna opzione, la sezione non compare"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Es. «Su richiesta». Se vuoto, la sezione non compare" }
+          - { name: items, label: Opzioni, type: string, list: true, description: "Una per riga, es. «Catering». Se non ce n'è nessuna, la sezione non compare" }
+          - { name: note, label: Nota sotto le opzioni, type: text, description: "Facoltativa, es. «Indicatele nella richiesta di preventivo». Se vuota non compare" }
       - name: clients
         label: Loro hanno scelto noi (loghi delle aziende)
-        description: "La striscia di loghi che scorre sotto le formule. Se l'elenco è vuoto, la sezione non compare"
+        description: "Il muro di loghi, fermo, subito dopo le formule e «Su richiesta». Se l'elenco è vuoto, la sezione non compare"
         type: object
         fields:
           - { name: title, label: Titolo, type: string, description: "Es. «Loro hanno scelto noi»" }
-          - { name: text, label: Testo, type: text, description: "Facoltativo, una frase. Se vuoto non compare" }
+          - { name: text, label: Testo, type: text, description: "Una o due frasi sotto il titolo, sui settori delle aziende dell'elenco. Deve restare vero: se togli un'azienda, controlla che il suo settore sia ancora nell'elenco. Se vuoto non compare" }
           - name: items
             label: Aziende
-            description: "Solo aziende che hanno davvero giocato da voi. L'ordine della lista è quello della striscia"
+            description: "Solo aziende che hanno davvero giocato da voi. L'ordine della lista è quello del muro: da sinistra a destra, riga per riga"
             type: object
             list: true
             fields:
               - { name: name, label: Nome dell'azienda, type: string, required: true, description: "Scritto come lo scrive l'azienda, es. «MediaWorld». È anche il testo alternativo del logo, e compare al posto del logo se il file manca" }
-              - { name: logo, label: Logo, type: image, description: "PNG con lo sfondo trasparente e il logo tutto bianco o grigio chiaro, ritagliato stretto attorno al logo. Tutti i loghi compaiono alla stessa altezza" }
-      - name: session
-        label: Come si svolge (passo per passo)
-        description: "Il bottone secondario dell'apertura porta qui (#come-funziona)"
-        type: object
-        fields:
-          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
-          - { name: text, label: Testo, type: text, description: "Durata e arbitraggio, in una frase" }
-          - name: steps
-            label: Passaggi
-            description: "Un passaggio senza titolo non compare"
-            type: object
-            list: true
-            fields:
-              - { name: time, label: "Momento (es. Briefing, Missioni)", type: string, description: "Se vuoto, compare il numero del passaggio" }
-              - { name: title, label: Titolo, type: string }
-              - { name: text, label: Testo, type: text }
-          - { name: optionsTitle, label: Titolo delle opzioni, type: string, description: "Es. «Su richiesta»" }
-          - { name: options, label: Opzioni su richiesta, type: string, list: true, description: "Una per riga, es. «Catering». Compaiono sotto i passaggi; senza opzioni il riquadro non compare. Niente prezzi: si danno con il preventivo" }
-          - { name: optionsNote, label: Nota sotto le opzioni, type: string, description: "Es. «Indicatele nella richiesta di preventivo». Se vuota non compare" }
+              - { name: logo, label: Logo, type: image, description: "PNG alto 96 pixel, sfondo trasparente, nei colori del marchio nella versione per fondi scuri: stretto ai lati, con margine sopra e sotto perché sembri grande quanto gli altri (una scritta occupa circa i due terzi dell'altezza, un simbolo quadrato tutta). Nel dubbio, fatelo preparare al tecnico." }
       - name: extras
         label: Attività da abbinare
         description: "Escape room, Enigma Bomb e Mistero di Milano vengono dal vecchio sito e potrebbero non essere più disponibili: verifica che ogni attività dell'elenco ci sia ancora. La sezione compare solo con l'interruttore acceso, un titolo e almeno una voce"

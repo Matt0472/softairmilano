@@ -3,8 +3,9 @@
 // row per tier on the right with large tabular figures in one aligned column.
 // Every tier is lit the same way; a tier the client wants to push gets a badge,
 // so emphasis never breaks the alignment or introduces a second colour.
-// What to wear sits between the notes and the CTA, as a plain list: a check
-// would read as "included in the price", next to the prices.
+// How many players a session takes opens the notes, as a short titled rule; what to wear sits
+// between the notes and the CTA, as a plain list: a check would read as "included in the price",
+// next to the prices.
 
 import Badge from '../atoms/Badge.astro';
 import Button from '../atoms/Button.astro';
@@ -28,22 +29,29 @@ interface Wear {
   text?: string;
   items?: string[];
 }
+interface Players {
+  title?: string;
+  text?: string;
+}
 interface Props {
   title: string;
   text?: string;
   tiers: Tier[];
   notes?: string[];
+  players?: Players;
   wear?: Wear;
   cta?: Cta;
   headingId?: string;
 }
 
-const { title, text, tiers, notes, wear, cta, headingId = 'price-title' } = Astro.props;
+const { title, text, tiers, notes, players, wear, cta, headingId = 'price-title' } = Astro.props;
 const list = (tiers ?? []).filter((t) => t?.label?.trim());
 const noteList = (notes ?? []).filter((n) => typeof n === 'string' && n.trim());
 const wearItems = (wear?.items ?? []).filter(has);
 // A sentence alone is a complete note: the block shows with either the text or the list.
 const hasWear = wearItems.length > 0 || has(wear?.text);
+// The players rule is its text: a title alone says nothing.
+const hasPlayers = has(players?.text);
 // Keep "6 €" and "14:00–18:00" on one line: a figure never wraps away from its unit or its range.
 const keep = (s?: string) => s?.replace(/(\d) €/g, '$1\u00a0€').replace(/(\d)–(\d)/g, '$1\u2060–\u2060$2');
 const hasCta = !!cta?.label?.trim() && !!cta?.href?.trim();
@@ -78,8 +86,14 @@ const hasTitle = !!title?.trim();
         ))}
       </ul>
 
-      {(noteList.length > 0 || hasWear || hasCta) && (
+      {(hasPlayers || noteList.length > 0 || hasWear || hasCta) && (
         <div class="price__after" data-reveal style="--i: 2">
+          {hasPlayers && (
+            <div class="price__players">
+              {has(players?.title) && <h3 class="price__block-title">{players!.title}</h3>}
+              <p class="price__block-text">{keep(players!.text)}</p>
+            </div>
+          )}
           {noteList.length > 0 && (
             <ul class="price__notes" role="list">
               {noteList.map((n) => <li>{keep(n)}</li>)}
@@ -87,8 +101,8 @@ const hasTitle = !!title?.trim();
           )}
           {hasWear && (
             <div class="price__wear">
-              {has(wear?.title) && <h3 class="price__wear-title">{wear!.title}</h3>}
-              {has(wear?.text) && <p class="price__wear-text">{wear!.text}</p>}
+              {has(wear?.title) && <h3 class="price__block-title">{wear!.title}</h3>}
+              {has(wear?.text) && <p class="price__block-text">{wear!.text}</p>}
               {wearItems.length > 0 && (
                 <ul class="price__wear-list" role="list">
                   {wearItems.map((it) => <li>{it}</li>)}
@@ -150,6 +164,14 @@ const hasTitle = !!title?.trim();
     background: var(--color-steel);
   }
 
+  /* How many players: the first block after the prices, set off from the notes by a hairline. */
+  .price__players {
+    margin-top: 1.75rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .price__players + .price__notes { margin-top: 1.5rem; }
+
   /* What to wear: set off from the notes by a hairline; the items go in two columns where the
      column is wide enough, so six short lines stay a compact block. */
   .price__wear {
@@ -157,15 +179,17 @@ const hasTitle = !!title?.trim();
     padding-top: 1.5rem;
     border-top: 1px solid var(--color-border);
   }
-  .price__wear-title {
+  /* Straight after the players block, its hairline already divides them. */
+  .price__players + .price__wear { border-top: 0; padding-top: 0; margin-top: 1.5rem; }
+  .price__block-title {
     margin: 0;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 1rem;
     letter-spacing: 0.08em;
   }
-  .price__wear-text {
-    margin: 0.5rem 0 0;
+  .price__block-text {
+    margin: 0.75rem 0 0;
     font-size: 0.93rem;
     color: var(--color-muted);
     text-wrap: pretty;

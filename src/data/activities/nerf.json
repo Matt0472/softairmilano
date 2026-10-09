@@ -3,7 +3,7 @@
   "name": "Nerf",
   "seo": {
     "title": "Nerf a Milano: battaglie e feste dai 6 anni | SoftAir Milano",
-    "description": "Battaglie Nerf a Milano in un'arena indoor di 1.500 m²: dardi in gommapiuma, fino a 20 giocatori, dai 6 anni. La festa di compleanno più scatenata, al coperto.",
+    "description": "Battaglie Nerf a Milano in un'arena indoor di 1.500 m²: dardi in gommapiuma, fino a 30 giocatori, dai 6 anni. La festa di compleanno più scatenata, al coperto.",
     "image": "/uploads/nerf-og.jpg",
     "imageAlt": ""
   },
@@ -23,11 +23,11 @@
       "label": "Come funziona",
       "href": "#serata"
     },
-    "hudTag": "NERF · MAX 20 GIOCATORI · 6+"
+    "hudTag": "NERF · MAX 30 GIOCATORI · 6+"
   },
   "facts": [
     {
-      "value": "20",
+      "value": "30",
       "label": "giocatori al massimo"
     },
     {
@@ -64,7 +64,7 @@
   "evening": {
     "eyebrow": "",
     "title": "La vostra festa, un passo alla volta",
-    "text": "Che siate in pochi o in 20, al resto pensiamo noi. Tra briefing e gioco, una partita dura 1 ora e 45 minuti in tutto.",
+    "text": "Che siate in pochi o in 30, al resto pensiamo noi. Tra briefing e gioco, una partita dura 1 ora e 45 minuti in tutto.",
     "steps": [
       {
         "time": "Arrivo",
@@ -156,7 +156,7 @@
       },
       {
         "title": "Amici e compagni di classe",
-        "text": "Fino a 20 giocatori, tutti in campo insieme: una squadra contro l'altra.",
+        "text": "Fino a 30 giocatori, tutti in campo insieme: una squadra contro l'altra.",
         "href": "",
         "featured": false
       },
@@ -177,7 +177,7 @@
         "when": "Lun–ven, 14:00–20:00",
         "price": "15",
         "unit": "€ a persona",
-        "note": "",
+        "note": "Minimo 8 quote",
         "badge": ""
       },
       {
@@ -185,7 +185,7 @@
         "when": "Lun–ven, dalle 20:00",
         "price": "20",
         "unit": "€ a persona",
-        "note": "",
+        "note": "Minimo 8 quote",
         "badge": ""
       },
       {
@@ -193,15 +193,17 @@
         "when": "Sab–dom, pomeriggio e sera",
         "price": "25",
         "unit": "€ a persona",
-        "note": "",
+        "note": "Minimo 15 quote",
         "badge": "Compleanni"
       }
     ],
     "notes": [
-      "Da 8 a 20 giocatori, solo il vostro gruppo in arena. Se siete meno di 8 potete giocare lo stesso, pagando 8 quote.",
-      "Sala feste: dal lunedì al venerdì è compresa nell'1 ora e 45 (decidete voi come dividere il tempo tra gioco e festa), oppure, se dopo di voi non ci sono altre partite, si prolunga di un'ora a 70 € nella sala interna o 50 € in quella esterna; sabato e domenica la sala esterna è compresa nell'1 ora e 45, riducendo il tempo di gioco.",
+      "Fino a 30 giocatori. Dal lunedì al venerdì il minimo è 8: se siete meno, si pagano comunque 8 quote. Sabato e domenica il minimo è 15: se siete meno, si pagano comunque 15 quote.",
       "Prenotazione obbligatoria."
-    ]
+    ],
+    "wear": {
+      "text": "Abbigliamento comodo, da scegliere in base alla temperatura: l'arena non è climatizzata né riscaldata."
+    }
   },
   "reviews": {
     "title": "Cosa dice chi ha giocato"
@@ -215,7 +217,7 @@
       },
       {
         "q": "Quanti possono giocare a una festa Nerf?",
-        "a": "Da 8 a 20 giocatori, e il vostro gruppo gioca da solo: non vi uniamo ad altri. Se siete meno di 8 potete giocare lo stesso, pagando 8 quote."
+        "a": "Fino a 30 giocatori, e non vi uniamo ad altri gruppi. Il minimo è 8 dal lunedì al venerdì e 15 sabato e domenica: se siete meno potete giocare lo stesso, pagando comunque 8 o 15 quote."
       },
       {
         "q": "Quanto dura una battaglia Nerf?",
@@ -231,11 +233,11 @@
       },
       {
         "q": "Come funziona la festa di compleanno?",
-        "a": "Le sale per la festa sono due, una interna e una esterna. Dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti: decidete voi come dividere il tempo tra gioco e festa, oppure, se dopo di voi non ci sono altre partite, prolungate di un'ora (70 € la sala interna, 50 € quella esterna). Il sabato e la domenica la sala esterna è compresa nell'1 ora e 45 minuti, riducendo il tempo di gioco. La torta potete portarla voi, il catering lo prepariamo su richiesta: trovi tutto nella pagina Occasioni."
+        "a": "Le sale per la festa sono due, una interna e una esterna. Dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti: decidete voi come dividere il tempo tra gioco e festa, oppure prolungate di un'ora (70 € la sala interna, 50 € quella esterna). Il sabato e la domenica la sala esterna è compresa nell'1 ora e 45 minuti, riducendo il tempo di gioco. La torta potete portarla voi, il catering lo prepariamo su richiesta: trovi tutto nella pagina Occasioni."
       },
       {
         "q": "Cosa devono indossare i bambini?",
-        "a": "Maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). L'arena non è climatizzata né riscaldata: se fa freddo, aggiungete qualche strato."
+        "a": "Abiti comodi, scelti in base alla temperatura: l'arena non è climatizzata né riscaldata, quindi se fa freddo meglio vestirli a strati."
       },
       {
         "q": "Si può giocare quando piove?",

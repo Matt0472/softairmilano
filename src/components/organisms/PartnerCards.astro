@@ -3,9 +3,10 @@
 // in the site's inner frame, then the name, a line and the partner's address with an outward arrow.
 // The whole card is one link, stretched from its title, so it has one short accessible name; a link
 // to another site opens in a new tab and says so. The heading comes first in the source, the photo
-// above it only on screen. Three cards share a row from 1024; tablets and landscape phones set each
-// card as a row (photo beside the copy), portrait phones stack them. A card without a photo keeps
-// its copy; one without a link stays a plain card, with no hover promise.
+// above it only on screen. Three cards share a row from 1024, four from 1280 (two by two before
+// that); tablets and landscape phones set each card as a row (photo beside the copy), portrait phones
+// stack them. A card without a photo keeps its copy; one without a link stays a plain card, with no
+// hover promise.
 
 import Icon from '../atoms/Icon.astro';
 import Picture from '../atoms/Picture.astro';
@@ -46,9 +47,12 @@ const list = (items ?? [])
     return { ...it, href, external, host: external ? hostOf(href) : '' };
   });
 
-// Never an empty cell: four cards go two by two, otherwise up to three a row.
-const cols = list.length === 4 ? 2 : Math.min(list.length, 3);
-const sizes = '(max-width: 599px) calc(100vw - 2.5rem), (max-width: 1023px) 40vw, (max-width: 1520px) 31vw, 480px';
+// Never an empty cell: up to three a row; four go two by two on small desktops, then four across.
+const four = list.length === 4;
+const cols = four ? 4 : Math.min(list.length, 3);
+const sizes = four
+  ? '(max-width: 599px) calc(100vw - 2.5rem), (max-width: 1023px) 40vw, (max-width: 1279px) 20vw, (max-width: 1520px) 23vw, 350px'
+  : '(max-width: 599px) calc(100vw - 2.5rem), (max-width: 1023px) 40vw, (max-width: 1520px) 31vw, 480px';
 ---
 
 {list.length > 0 && (
@@ -56,9 +60,9 @@ const sizes = '(max-width: 599px) calc(100vw - 2.5rem), (max-width: 1023px) 40vw
     <div class="shell">
       <SectionHead title={title} text={text} id={headingId} />
 
-      <ul class="pcards__grid" role="list" style={`--cols: ${cols}`}>
+      <ul class:list={['pcards__grid', four && 'pcards__grid--four']} role="list" style={`--cols: ${cols}`}>
         {list.map((it, i) => (
-          <li class:list={['pcards__card', has(it.href) && 'pcards__card--link']} data-reveal style={`--i: ${i % 3}`}>
+          <li class:list={['pcards__card', has(it.href) && 'pcards__card--link']} data-reveal style={`--i: ${i % cols}`}>
             <div class="pcards__body">
               <h3 class="pcards__title">
                 {has(it.href) ? (
@@ -234,6 +238,20 @@ const sizes = '(max-width: 599px) calc(100vw - 2.5rem), (max-width: 1023px) 40vw
 
   @media (min-width: 1024px) {
     .pcards__grid { grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); }
+  }
+  /* Four across would squeeze the copy below 1280: two by two, each card a row as on tablets. */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .pcards__grid--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pcards__grid--four .pcards__card {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      grid-template-rows: auto;
+      grid-template-areas: "media body";
+    }
+    .pcards__grid--four .pcards__media { aspect-ratio: auto; min-height: 10rem; }
+  }
+  /* Four across, the cards are as narrow as three at 1024, and the names scale down with them. */
+  @media (min-width: 1280px) {
+    .pcards__grid--four .pcards__title { font-size: clamp(1.4rem, 1.9vw, 1.85rem); }
   }
 
   @media (prefers-reduced-motion: reduce) {

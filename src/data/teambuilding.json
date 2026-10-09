@@ -2,7 +2,7 @@
   "published": true,
   "seo": {
     "title": "Team building a Milano con il softair | SoftAir Milano",
-    "description": "Team building aziendale a Milano con il softair: missioni a squadre in un'arena indoor di 1.500 m², fino a 30 persone, arbitrate dal nostro staff.",
+    "description": "Team building aziendale a Milano con il softair: missioni a squadre in un'arena indoor di 1.500 m², fino a 40 persone, arbitrate dal nostro staff.",
     "image": "",
     "imageAlt": ""
   },
@@ -22,11 +22,11 @@
       "label": "Come funziona",
       "href": "#come-funziona"
     },
-    "hudTag": "TEAM BUILDING · MAX 30 · 12+"
+    "hudTag": "TEAM BUILDING · MAX 40"
   },
   "facts": [
     {
-      "value": "30",
+      "value": "40",
       "label": "persone al massimo"
     },
     {
@@ -36,10 +36,6 @@
     {
       "value": "1.500 m²",
       "label": "al coperto"
-    },
-    {
-      "value": "12+",
-      "label": "anni"
     }
   ],
   "intro": {
@@ -68,6 +64,37 @@
       }
     ]
   },
+  "session": {
+    "title": "Come si svolge",
+    "text": "1 ora e 45 minuti in tutto, briefing compreso, con lo staff che arbitra dall'inizio alla fine.",
+    "steps": [
+      {
+        "time": "Briefing",
+        "title": "Regole e sicurezza",
+        "text": "Vi diamo tutte le protezioni e lo staff vi spiega regole, sicurezza e missioni della partita."
+      },
+      {
+        "time": "Missioni",
+        "title": "Una dopo l'altra",
+        "text": "Ogni missione ha le sue regole e i suoi obiettivi: la squadra decide insieme come completarla."
+      },
+      {
+        "time": "Vantaggi",
+        "title": "Ogni obiettivo conta",
+        "text": "Gli obiettivi raggiunti danno alla squadra un vantaggio nelle missioni successive e nello scontro finale."
+      },
+      {
+        "time": "Finale",
+        "title": "Lo scontro finale",
+        "text": "Le due squadre si affrontano un'ultima volta, con tutti i vantaggi conquistati lungo la partita."
+      },
+      {
+        "time": "Attestati",
+        "title": "Gli attestati",
+        "text": "A fine partita rilasciamo gli attestati a tutti i partecipanti."
+      }
+    ]
+  },
   "formats": {
     "eyebrow": "",
     "title": "Tre formule per la vostra squadra",
@@ -81,10 +108,6 @@
           {
             "value": "20",
             "label": "persone al massimo"
-          },
-          {
-            "value": "12+",
-            "label": "anni"
           }
         ]
       },
@@ -94,12 +117,8 @@
         "icon": "trophy",
         "stats": [
           {
-            "value": "30",
+            "value": "40",
             "label": "persone al massimo"
-          },
-          {
-            "value": "12+",
-            "label": "anni"
           }
         ]
       },
@@ -109,20 +128,25 @@
         "icon": "target",
         "stats": [
           {
-            "value": "20",
+            "value": "30",
             "label": "persone al massimo"
-          },
-          {
-            "value": "8+",
-            "label": "anni"
           }
         ]
       }
     ]
   },
+  "onRequest": {
+    "title": "Su richiesta",
+    "items": [
+      "Una sessione di training di 1 ora prima dell'attività, con un formatore esperto",
+      "Un'ora di gioco in più",
+      "Catering"
+    ],
+    "note": "Indicatele nella richiesta di preventivo. L'arena non è climatizzata né riscaldata: cosa indossare è nelle domande frequenti, più in basso."
+  },
   "clients": {
     "title": "Loro hanno scelto noi",
-    "text": "",
+    "text": "Tecnologia e telecomunicazioni, grande distribuzione, media, sanità, immobiliare, automotive, logistica, non profit: aziende di settori lontanissimi hanno fatto squadra nella nostra arena. Qualunque sia il vostro, in campo si parte tutti alla pari.",
     "items": [
       {
         "name": "Decathlon",
@@ -167,41 +191,24 @@
       {
         "name": "Vodafone",
         "logo": "/uploads/clienti/vodafone.png"
+      },
+      {
+        "name": "Knobs",
+        "logo": "/uploads/clienti/knobs.png"
+      },
+      {
+        "name": "Kampaay",
+        "logo": "/uploads/clienti/kampaay.png"
+      },
+      {
+        "name": "Norauto",
+        "logo": "/uploads/clienti/norauto.png"
+      },
+      {
+        "name": "Tempocasa",
+        "logo": "/uploads/clienti/tempocasa.png"
       }
     ]
-  },
-  "session": {
-    "title": "Come si svolge",
-    "text": "1 ora e 45 minuti in tutto, briefing compreso, con lo staff che arbitra dall'inizio alla fine.",
-    "steps": [
-      {
-        "time": "Briefing",
-        "title": "Regole e sicurezza",
-        "text": "Vi diamo tutte le protezioni e lo staff vi spiega regole, sicurezza e missioni della partita."
-      },
-      {
-        "time": "Missioni",
-        "title": "Una dopo l'altra",
-        "text": "Ogni missione ha le sue regole e i suoi obiettivi: la squadra decide insieme come completarla."
-      },
-      {
-        "time": "Vantaggi",
-        "title": "Ogni obiettivo conta",
-        "text": "Gli obiettivi raggiunti danno alla squadra un vantaggio nelle missioni successive e nello scontro finale."
-      },
-      {
-        "time": "Finale",
-        "title": "Lo scontro finale",
-        "text": "Le due squadre si affrontano un'ultima volta, con tutti i vantaggi conquistati lungo la partita."
-      }
-    ],
-    "optionsTitle": "Su richiesta",
-    "options": [
-      "Una sessione di training di 1 ora prima dell'attività, con un formatore esperto",
-      "Un'ora di gioco in più",
-      "Catering"
-    ],
-    "optionsNote": "Indicatele nella richiesta di preventivo. L'arena non è climatizzata né riscaldata: cosa indossare è nelle domande frequenti, più in basso."
   },
   "extras": {
     "show": true,
@@ -228,6 +235,13 @@
         "image": "/uploads/abbinabili-mistero-di-milano.jpg",
         "imageAlt": "Piazza del Duomo di Milano avvolta dal fumo sotto un cielo in tempesta, con la scritta «Il Mistero di Milano».",
         "href": "https://www.enigmaroom.it/escape-game-il-mistero-di-milano/"
+      },
+      {
+        "title": "The Game",
+        "text": "Sei sfide ad alta adrenalina, fino a 150 persone: alla fine resta un solo campione.",
+        "image": "/uploads/abbinabili-the-game.jpg",
+        "imageAlt": "La scritta «The Game» bianca su fondo rosa, con un cerchio, un triangolo e un quadrato viola tagliati ai bordi.",
+        "href": "https://www.enigmaroom.it/the-game/"
       }
     ]
   },
@@ -239,7 +253,7 @@
     "items": [
       {
         "q": "Quante persone possono partecipare?",
-        "a": "Fino a 20 persone con le partite di softair o con l'arcotag, fino a 30 con il torneo di softair."
+        "a": "Fino a 20 persone con le partite di softair, fino a 30 con l'arcotag e fino a 40 con il torneo di softair."
       },
       {
         "q": "Quanto dura il team building?",
@@ -254,10 +268,6 @@
         "a": "Sì. Il softair è adatto a tutti, donne e uomini, e si gioca in totale sicurezza: le protezioni le forniamo noi, il briefing spiega regole e sicurezza e lo staff arbitra ogni missione. Anzi, spesso le più agguerrite sono proprio le colleghe."
       },
       {
-        "q": "Da che età si può partecipare?",
-        "a": "Dai 12 anni per il softair e dagli 8 per l'arcotag. Il modulo è obbligatorio per tutti: i maggiorenni lo compilano online, i minorenni portano quello firmato da un genitore."
-      },
-      {
         "q": "Cosa si può aggiungere alla giornata?",
         "a": "Su richiesta, una sessione di training di 1 ora prima dell'attività con un formatore esperto, un'ora di gioco in più e il catering. Indicatelo nella richiesta di preventivo."
       },
@@ -267,7 +277,7 @@
       },
       {
         "q": "Cosa devono indossare i partecipanti?",
-        "a": "Maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). L'arena non è climatizzata né riscaldata: se fa freddo, aggiungete qualche strato."
+        "a": "Per il softair: maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). Per l'arcotag basta un abbigliamento comodo. L'arena non è climatizzata né riscaldata: se fa freddo, aggiungete qualche strato."
       },
       {
         "q": "Si gioca anche se piove?",
@@ -279,7 +289,7 @@
       },
       {
         "q": "Come si prenota?",
-        "a": "La prenotazione è obbligatoria. Compilate la richiesta di preventivo qui sotto e vi ricontattiamo noi; se preferite, chiamateci o scriveteci: telefono ed email sono in fondo alla pagina."
+        "a": "La prenotazione è obbligatoria. Compilate la richiesta di preventivo qui sotto e vi ricontattiamo noi; se preferite, chiamateci o scriveteci: telefono ed email sono in fondo alla pagina. Prima di giocare, ogni partecipante compila il modulo di partecipazione online."
       }
     ]
   },

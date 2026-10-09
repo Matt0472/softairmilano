@@ -1,6 +1,8 @@
 ---
 // "Tutto incluso" panel: a short checklist of what the price covers, with an
 // optional note. `layout="row"` spreads the items on one line from desktop up.
+// `marker="plus"` is for options that are added on request: a check would read as
+// "included in the price".
 
 import Icon from '../atoms/Icon.astro';
 
@@ -9,10 +11,11 @@ interface Props {
   items: string[];
   note?: string;
   layout?: 'stack' | 'row';
+  marker?: 'check' | 'plus';
   class?: string;
 }
 
-const { title, items, note, layout = 'stack', class: className } = Astro.props;
+const { title, items, note, layout = 'stack', marker = 'check', class: className } = Astro.props;
 const list = (items ?? []).filter((it) => typeof it === 'string' && it.trim());
 ---
 
@@ -22,7 +25,7 @@ const list = (items ?? []).filter((it) => typeof it === 'string' && it.trim());
     <ul class="incl__list" role="list">
       {list.map((it) => (
         <li class="incl__item">
-          <span class="incl__check"><Icon name="check" size={14} /></span>
+          <span class="incl__marker"><Icon name={marker} size={14} /></span>
           {it}
         </li>
       ))}
@@ -61,7 +64,7 @@ const list = (items ?? []).filter((it) => typeof it === 'string' && it.trim());
     line-height: 1.45;
     color: var(--color-foreground);
   }
-  .incl__check {
+  .incl__marker {
     flex: none;
     display: grid;
     place-items: center;
@@ -72,7 +75,7 @@ const list = (items ?? []).filter((it) => typeof it === 'string' && it.trim());
     color: var(--color-on-accent);
     background: var(--color-accent);
   }
-  .incl__check svg { stroke-width: 3; }
+  .incl__marker svg { stroke-width: 3; }
   .incl__note {
     margin: 1.1rem 0 0;
     padding-top: 1rem;

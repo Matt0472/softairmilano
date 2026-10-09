@@ -25,8 +25,8 @@
     },
     "people": {
       "label": "Numero di persone",
-      "max": 30,
-      "error": "Scrivi quante persone siete, da 1 a 30. Se siete di più, scrivilo nel messaggio."
+      "max": 40,
+      "error": "Scrivi quante persone siete, da 1 a 40. Se siete di più, scrivilo nel messaggio."
     },
     "message": {
       "label": "Messaggio"

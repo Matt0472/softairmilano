@@ -1,48 +1,34 @@
 ---
 // Items drifting slowly sideways in one or more rows, the edges fading out; row after row runs the
-// other way. Shared by the client logos and the reviews. Each row's first set is the real list; the
-// copies after it only close the loop, so they are hidden from assistive tech (and inert, unless the
-// parent keeps them hoverable).
+// other way (the reviews). Each row's first set is the real list; the copies after it only close
+// the loop, so they are hidden from assistive tech and inert.
 // No visible controls: the strip itself is the control (WCAG 2.2.2). It is one focusable element
 // whose name says what it does; a click, a tap, Enter or Space stops it or starts it again, and the
 // name follows (no live announcements). A mouse over it holds it, and so does keyboard focus on
 // it; a click or key while held starts it under the pointer or focus, so the strip always does what
 // the visitor sees it is about to do. Off screen it waits. With reduced motion nothing moves and
-// each row shows its first set only: wrapped in centred rows inside the page column
-// (`still="wrap"`, nothing to focus), or as one strip scrolled by hand, keyboard included
-// (`still="scroll"`).
-// The parent renders each item through a callback slot, called once per item, and may put a
-// heading above the rows in the `head` slot:
-// <Marquee rows={[a, b]} ...><SectionHead slot="head" ... />{(item) => <li>…</li>}</Marquee>
+// each row shows its first set only, as one strip scrolled by hand, keyboard included.
+// The parent renders each item through a callback slot, called once per item:
+// <Marquee rows={[a, b]} ...>{(item) => <li>…</li>}</Marquee>
 
 interface Props {
   /** The items of each row. */
   rows: unknown[][];
   /** Seconds each item takes to pass: a long row drifts as calmly as a short one. */
   pace: number;
-  /** The strip's accessible name while drifting, once stopped, and (`scroll`) under reduced motion. */
-  labels: { running: string; stopped: string; still?: string };
-  /** What reduced motion shows: the first set wrapped in rows, or one strip scrolled by hand. */
-  still?: 'wrap' | 'scroll';
+  /** The strip's accessible name while drifting, once stopped, and under reduced motion. */
+  labels: { running: string; stopped: string; still: string };
   /** Items a row needs before it loops, so one set always runs past the widest screen. */
-  fill?: number;
-  /** Copies are inert, so nothing in them can be reached. A parent whose items hold no controls can
-      keep them live, so its hover styles work on every copy (inert content ignores the pointer). */
-  inertCopies?: boolean;
+  fill: number;
   class?: string;
-  /** Classes of the bar that holds the `head` slot. */
-  headClass?: string;
 }
 
 const {
   rows,
   pace,
   labels,
-  still = 'wrap',
-  fill = 16,
-  inertCopies = true,
+  fill,
   class: className,
-  headClass,
 } = Astro.props;
 
 // Each row rendered once, then repeated: the loop moves by exactly one set, so the seam never shows.
@@ -59,19 +45,13 @@ const lines = await Promise.all(
 
 {lines.length > 0 && (
   <div
-    class:list={['mq', `mq--${still}`, className]}
+    class:list={['mq', className]}
     style={`--mq-pace: ${pace}s`}
     data-marquee
     data-running={labels.running}
     data-stopped={labels.stopped}
     data-still={labels.still}
   >
-    {Astro.slots.has('head') && (
-      <div class:list={['mq__head', headClass]} data-reveal>
-        <slot name="head" />
-      </div>
-    )}
-
     <div class="mq__rows" role="group" tabindex="0" aria-label={labels.running} data-marquee-strip>
       {lines.map((line) => (
         <div class="mq__row" style={`--mq-n: ${line.count}; --mq-copies: ${line.copies}`}>
@@ -80,7 +60,7 @@ const lines = await Promise.all(
               copy === 0 ? (
                 <ul class="mq__set" role="list" set:html={line.html} />
               ) : (
-                <ul class="mq__set" aria-hidden="true" inert={inertCopies} set:html={line.html} />
+                <ul class="mq__set" aria-hidden="true" inert set:html={line.html} />
               )
             )}
           </div>
@@ -153,25 +133,13 @@ const lines = await Promise.all(
     .mq__set { padding: 0; }
     .mq__set[aria-hidden] { display: none; }
 
-    /* Static in full: one set, wrapped in centred rows inside the page column. */
-    .mq--wrap .mq__row {
-      width: 100%;
-      max-width: var(--shell-max);
-      margin-inline: auto;
-      padding-inline: var(--shell-gutter);
-    }
-    .mq--wrap .mq__set {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
     /* One strip the visitor scrolls sideways; the rows move together. */
-    .mq--scroll .mq__rows {
+    .mq__rows {
       grid-template-columns: max-content;
       overflow-x: auto;
       overscroll-behavior-x: contain;
     }
-    .mq--scroll .mq__row { overflow: visible; }
+    .mq__row { overflow: visible; }
   }
 </style>
 
@@ -184,16 +152,9 @@ const lines = await Promise.all(
     if (!strip) return;
     const { running = '', stopped: stoppedLabel = '', still } = root.dataset;
 
-    // Nothing moves: a strip scrolled by hand keeps its focus, under the name that says so; wrapped
-    // rows have nothing to focus.
+    // Nothing moves: the strip scrolled by hand keeps its focus, under the name that says so.
     if (reduce) {
-      if (root.classList.contains('mq--scroll')) {
-        strip.setAttribute('aria-label', still ?? '');
-      } else {
-        strip.removeAttribute('tabindex');
-        strip.removeAttribute('role');
-        strip.removeAttribute('aria-label');
-      }
+      strip.setAttribute('aria-label', still ?? '');
       return;
     }
 

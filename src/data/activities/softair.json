@@ -216,11 +216,13 @@
         "badge": ""
       }
     ],
+    "players": {
+      "title": "Numero di giocatori",
+      "text": "Il numero minimo di giocatori affinché si possa iniziare l’attività è di 8 persone. Più gruppi possono prenotare allo stesso orario fino al raggiungimento totale dei 20 giocatori. Qualora foste in meno di 8 è possibile essere aggregati ad altri gruppi in modo da raggiungere il numero ottimale. Più si è, maggiore è il divertimento! Per richiedere l’esclusiva dell’arena contattare telefonicamente lo staff."
+    },
     "notes": [
-      "Si parte da 8 giocatori e si arriva a 20: allo stesso orario possono giocare più gruppi. Se siete meno di 8 vi uniamo a un altro gruppo; per avere l'arena in esclusiva, chiamate lo staff.",
       "Ricarica da 300 colpi: 3 €. Granate: 6 €.",
       "Tessera Élite: un timbro a partita, al quinto la successiva è gratis.",
-      "Sala feste: è compresa nell'1 ora e 45 solo con l'arena in esclusiva (decidete voi come dividere il tempo tra gioco e festa); giocando insieme ad altri gruppi la sala non si può usare. Se dopo di voi non ci sono altre partite, si prolunga di un'ora a 70 € nella sala interna o 50 € in quella esterna.",
       "Prenotazione obbligatoria."
     ]
   },

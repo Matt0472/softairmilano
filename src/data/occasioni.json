@@ -2,7 +2,7 @@
   "published": true,
   "seo": {
     "title": "Feste di compleanno e addii al celibato a Milano | SoftAir Milano",
-    "description": "Feste di compleanno per grandi e bambini e addii al celibato e al nubilato a Milano: softair, arcotag o Nerf al coperto, fino a 20 giocatori, con sala feste.",
+    "description": "Compleanni per grandi e bambini e addii al celibato e al nubilato a Milano: softair, arcotag o Nerf al coperto, fino a 30 giocatori, con sala feste.",
     "image": "",
     "imageAlt": ""
   },
@@ -22,11 +22,11 @@
       "label": "Come funziona",
       "href": "#come-funziona"
     },
-    "hudTag": "FESTE · MAX 20 · 6+"
+    "hudTag": "FESTE · MAX 30 · 6+"
   },
   "facts": [
     {
-      "value": "20",
+      "value": "30",
       "label": "giocatori al massimo"
     },
     {
@@ -56,7 +56,7 @@
       },
       {
         "name": "Quanti",
-        "text": "Fino a 20 giocatori."
+        "text": "Fino a 20 con il softair, 30 con arcotag e Nerf."
       },
       {
         "name": "Attività",
@@ -72,7 +72,7 @@
   },
   "bachelor": {
     "title": "Addio al celibato e al nubilato",
-    "text": "Vuoi festeggiare in modo adrenalinico il tuo addio al celibato o nubilato? Stessa arena, stesse attività e gruppi fino a 20 persone. Chiamaci per realizzare qualcosa di indimenticabile.",
+    "text": "Vuoi festeggiare in modo adrenalinico il tuo addio al celibato o nubilato? Stessa arena, stesse attività e gruppi fino a 30 persone (20 con il softair). Chiamaci per realizzare qualcosa di indimenticabile.",
     "image": "/uploads/occ-addio.jpeg",
     "imageAlt": "Un gruppo di amiche in tenuta da gioco ride intorno alla sposa, che porta un velo bianco sopra il casco."
   },
@@ -108,7 +108,7 @@
     "items": [
       {
         "title": "Arcotag e Nerf, dal lunedì al venerdì",
-        "text": "La sala è compresa nell'1 ora e 45: decidete voi quanto tempo giocare e quanto festeggiare. Oppure prolungate di un'ora, se dopo di voi non ci sono altre partite.",
+        "text": "La sala è compresa nell'1 ora e 45: decidete voi quanto tempo giocare e quanto festeggiare. Oppure prolungate di un'ora.",
         "stats": [
           {
             "value": "1 h 45",
@@ -153,7 +153,7 @@
       {
         "time": "",
         "title": "Data, giocatori, attività",
-        "text": "Scegli il giorno, quanti sarete, fino a 20, e l'attività: softair, arcotag o Nerf."
+        "text": "Scegli il giorno, l'attività (softair, arcotag o Nerf) e quanti sarete: fino a 20 con il softair, fino a 30 con arcotag e Nerf."
       },
       {
         "time": "",
@@ -186,7 +186,7 @@
     "items": [
       {
         "q": "Quante persone possono partecipare alla festa?",
-        "a": "Fino a 20 giocatori, sia per i compleanni sia per gli addii al celibato e al nubilato. Con arcotag e Nerf il vostro gruppo gioca da solo e, se siete meno di 8, si pagano comunque 8 quote. Con il softair, se siete meno di 8 vi uniamo a un altro gruppo, a meno che non prendiate l'arena in esclusiva."
+        "a": "Fino a 20 giocatori con il softair e fino a 30 con arcotag e Nerf, sia per i compleanni sia per gli addii al celibato e al nubilato. Con arcotag e Nerf non vi uniamo ad altri gruppi: il minimo è 8 dal lunedì al venerdì e 15 sabato e domenica, e se siete meno si pagano comunque 8 o 15 quote. Con il softair, se siete meno di 8 vi uniamo a un altro gruppo, a meno che non prendiate l'arena in esclusiva."
       },
       {
         "q": "Da che età si può giocare?",
@@ -194,7 +194,7 @@
       },
       {
         "q": "Come funziona la sala feste?",
-        "a": "Le sale sono due, una interna e una esterna. Con arcotag e Nerf, dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti e decidete voi come dividere il tempo tra gioco e festa; il sabato e la domenica è compresa la sala esterna, riducendo il tempo di gioco. Con il softair la sala si usa solo prenotando l'arena in esclusiva, ed è compresa nell'1 ora e 45 minuti. In tutti i casi, se dopo di voi non ci sono altre partite, si può prolungare di un'ora: 70 € la sala interna, 50 € quella esterna."
+        "a": "Le sale sono due, una interna e una esterna. Con arcotag e Nerf, dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti e decidete voi come dividere il tempo tra gioco e festa; il sabato e la domenica è compresa la sala esterna, riducendo il tempo di gioco. Con il softair la sala si usa solo prenotando l'arena in esclusiva, ed è compresa nell'1 ora e 45 minuti. In tutti i casi si può prolungare di un'ora, a 70 € la sala interna o 50 € quella esterna: con il softair, solo se dopo di voi non ci sono altre partite."
       },
       {
         "q": "Posso portare la torta?",
@@ -218,7 +218,7 @@
       },
       {
         "q": "Come ci si veste?",
-        "a": "Maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). L'arena non è climatizzata né riscaldata: se fa freddo, aggiungi qualche strato."
+        "a": "Dipende dall'attività. Per arcotag e Nerf basta un abbigliamento comodo, scelto in base alla temperatura. Per il softair: maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). L'arena non è climatizzata né riscaldata: se fa freddo, aggiungi qualche strato."
       },
       {
         "q": "Dove si trova l'arena?",

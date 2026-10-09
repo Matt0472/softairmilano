@@ -2,7 +2,7 @@
 layout: ../layouts/LegalLayout.astro
 title: Termini e condizioni
 description: Le condizioni per prenotare le attività di SoftAir Milano e per acquistare e usare i voucher regalo.
-updated: 8 ottobre 2026
+updated: 9 ottobre 2026
 ---
 
 Questi termini valgono per le prenotazioni delle attività di SoftAir Milano (softair, arcotag, tiro dinamico, Nerf, feste e team building) e per l'acquisto e l'uso dei voucher regalo, fatti dal sito, al telefono, via email o con il servizio di prenotazione online.
@@ -21,13 +21,13 @@ L'arena SoftAir Milano è gestita da Special Force S.S.D. a R.L., Via Melegnano 
 ## Giocatori
 
 - **Softair**: da 8 a 20 giocatori. Allo stesso orario possono giocare più gruppi, fino a 20 in tutto; se siete meno di 8 vi uniamo a un altro gruppo. L'arena in esclusiva si chiede allo staff.
-- **Arcotag e Nerf**: da 8 a 20 giocatori, e il gruppo gioca da solo. Se siete meno di 8 potete giocare lo stesso, pagando 8 quote.
+- **Arcotag e Nerf**: fino a 30 giocatori, senza unire gruppi diversi. Il minimo è 8 giocatori dal lunedì al venerdì e 15 il sabato e la domenica: un gruppo più piccolo può giocare lo stesso, pagando comunque 8 o 15 quote.
 - **Tiro dinamico**: da 1 a 8 persone.
-- **Team building**: fino a 30 persone con il torneo di softair.
+- **Team building**: fino a 40 persone con il torneo di softair.
 
 ## Sala feste
 
-Le sale per festeggiare sono due, una interna e una esterna. Con arcotag e Nerf, dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti, che il gruppo divide tra gioco e festa; il sabato e la domenica è compresa la sala esterna, riducendo il tempo di gioco. Con il softair la sala si usa solo prenotando l'arena in esclusiva, ed è compresa nell'1 ora e 45 minuti. In tutti i casi, se dopo non ci sono altre partite, si può prolungare di un'ora: 70 € la sala interna, 50 € quella esterna.
+Le sale per festeggiare sono due, una interna e una esterna. Con arcotag e Nerf, dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti, che il gruppo divide tra gioco e festa; il sabato e la domenica è compresa la sala esterna, riducendo il tempo di gioco. Con il softair la sala si usa solo prenotando l'arena in esclusiva, ed è compresa nell'1 ora e 45 minuti. In tutti i casi si può prolungare di un'ora, a 70 € la sala interna o 50 € quella esterna; con il softair, solo se dopo non ci sono altre partite.
 
 ## Età e moduli
 

@@ -1,14 +1,15 @@
 ---
-// "Loro hanno scelto noi": the companies that played with us, as a full-bleed strip of logos
-// drifting slowly across the page (Marquee: the strip itself stops and starts it, hover and focus
-// hold it, off screen it waits). Each logo's alt is the company name. With reduced motion the logos stand still, wrapped
-// in rows. Logos are delivered monochrome and light, so they all share one height and one tint. A
-// logo whose file is missing shows the company name instead, so the strip never shows a broken image.
+// "Loro hanno scelto noi": the companies that played with us, all of them at once in a still
+// register of logos under the heading and its line on who they are. A company weighing the page
+// scans the names; nothing drifts past before it is read. Each logo is in its brand's own colours
+// (the brand's variant for dark grounds), straight on the page. The files share one canvas height
+// with the optical padding built in, so one height for every logo reads as one even register.
+// Each logo's alt is the company name; a logo whose file is missing shows the name instead, so
+// the register never shows a broken image.
 
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import sharp from 'sharp';
-import Marquee from '../molecules/Marquee.astro';
 import SectionHead from '../molecules/SectionHead.astro';
 import { has } from '../../lib/fields';
 
@@ -38,74 +39,88 @@ const list = await Promise.all(
     })
 );
 
-type Logo = (typeof list)[number];
+// Five across on desktops: each row rises left to right.
+const COLS = 5;
 ---
 
 {list.length > 0 && (
   <section class="logos band" aria-labelledby={hasTitle ? headingId : undefined}>
-    <Marquee
-      rows={[list]}
-      pace={6}
-      labels={{
-        running: 'Loghi delle aziende in scorrimento. Premi Invio per fermarli',
-        stopped: 'Loghi delle aziende fermi. Premi Invio per farli ripartire',
-      }}
-      headClass="shell"
-      inertCopies={false}
-    >
-      <SectionHead slot="head" title={title} text={text} id={headingId} />
-      {(c: Logo) => (
-        <li class="logos__item">
-          {c.logo ? (
-            <img class="logos__img" src={c.logo} alt={c.name} width={c.width} height={c.height} loading="lazy" decoding="async" />
-          ) : (
-            <span class="logos__name">{c.name}</span>
-          )}
-        </li>
-      )}
-    </Marquee>
+    <div class="shell">
+      <SectionHead title={title} text={text} id={headingId} />
+
+      <ul class="logos__wall" role="list">
+        {list.map((c, i) => (
+          <li class="logos__item" data-reveal style={`--i: ${i % COLS}`}>
+            {c.logo ? (
+              <img class="logos__img" src={c.logo} alt={c.name} width={c.width} height={c.height} loading="lazy" decoding="async" />
+            ) : (
+              <span class="logos__name">{c.name}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   </section>
 )}
 
 <style is:global>
   .logos {
-    /* One height for every logo: wide wordmarks and square marks read as one row. */
-    --logo-h: clamp(1.75rem, 2.6vw, 2.5rem);
-    padding-block: clamp(3.5rem, 7vw, 5.5rem) clamp(4rem, 8vw, 6.5rem);
-  }
-  /* Edge to edge, so the focus ring sits inside the strip. */
-  .logos .mq {
-    --mq-gap: clamp(2.75rem, 5.5vw, 5rem);
-    --mq-ring: -2px;
-  }
-  .logos .mq__rows { margin-top: clamp(2.25rem, 4.5vw, 3.5rem); }
-  /* Wrapped under reduced motion, the rows keep their distance. */
-  .logos .mq__set {
-    align-items: center;
-    row-gap: clamp(1.75rem, 4vw, 2.5rem);
+    /* One height for every logo, never above 48px: the files are 96px tall, sharp on 2× screens. */
+    --logo-h: 2.25rem;
+    --cols: 2;
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
   }
 
-  /* Each logo in its brand's own colours, or the brand's own variant for dark grounds, straight
-     on the page: one height for every mark, so wide wordmarks and square emblems read as one row. */
+  /* A register, not a cloud: each logo on its own rule, set on the page column's left edge like the
+     heading, so the wall reads as a list of names. A short last row simply ends, like a line of text. */
+  .logos__wall {
+    list-style: none;
+    margin: clamp(2.75rem, 5.5vw, 4.5rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2.6vw, 2.75rem);
+  }
   .logos__item {
-    flex: none;
     display: flex;
     align-items: center;
-    height: var(--logo-h);
+    min-width: 0;
+    padding-top: clamp(1.25rem, 2.6vw, 2.1rem);
+    border-top: 1px solid var(--color-border);
   }
+  /* A wordmark too wide for its slot (the narrowest phones) shrinks inside its box, never stretched. */
   .logos__img {
     width: auto;
-    max-width: none;
+    max-width: 100%;
     height: var(--logo-h);
+    object-fit: contain;
+    object-position: left center;
   }
+  /* As tall as a logo, so a row of names keeps the register's rhythm. */
   .logos__name {
+    display: flex;
+    align-items: center;
+    min-height: var(--logo-h);
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: calc(var(--logo-h) * 0.62);
-    line-height: 1;
+    font-size: calc(var(--logo-h) * 0.5);
+    line-height: 1.15;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    white-space: nowrap;
+    text-wrap: balance;
     color: var(--color-muted);
+  }
+
+  @media (min-width: 600px) {
+    .logos {
+      --cols: 3;
+      --logo-h: clamp(2.25rem, 5.5vw, 3rem);
+    }
+  }
+  @media (min-width: 1024px) {
+    .logos {
+      --cols: 5;
+      --logo-h: clamp(2.5rem, 3.6vw, 3rem);
+    }
   }
 </style>

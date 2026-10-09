@@ -8,12 +8,16 @@
 // files are not links, so nothing promises a click. A file may carry a readout
 // of figures (stages, targets), pinned to its foot so the readouts line up
 // across a row; each figure reads as one phrase ("16 bersagli ravvicinati"),
-// like the hero facts. The plate always fills its rows: a short last row widens
-// its files instead of leaving a gap.
+// like the hero facts. Where no file has more than one figure, the plate has no
+// table to line up: each file's figure stands large on its own rule instead. The
+// plate always fills its rows: a short last row widens its files instead of
+// leaving a gap. What applies to every file (options on request) closes the
+// plate as its last row, inside the corners (default slot).
 
 import type { ComponentProps } from 'astro/types';
 import Icon from '../atoms/Icon.astro';
 import SectionHead from '../molecules/SectionHead.astro';
+import { slotHtml } from '../../lib/slots';
 
 type IconName = ComponentProps<typeof Icon>['name'];
 
@@ -51,6 +55,9 @@ const list = (items ?? [])
   }));
 const hasTitle = !!title?.trim();
 const pad = (n: number) => String(n + 1).padStart(2, '0');
+// Decided per plate, not per file, so one plate never mixes the two readouts.
+const lone = list.some((m) => m.stats.length > 0) && list.every((m) => m.stats.length <= 1);
+const footHtml = await slotHtml(Astro.slots);
 
 // Desktop: three files per row on a 6-column grid. A remainder of two shares the
 // last row; a remainder of one turns the last two rows into pairs (4 = 2 + 2).
@@ -87,7 +94,11 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
                 )}
                 <h3 class="modes__title">{m.title}</h3>
                 {m.text?.trim() && <p class="modes__text">{m.text}</p>}
-                {m.stats.length > 0 && (
+                {m.stats.length > 0 && (lone ? (
+                  <p class="modes__figure">
+                    <span class="modes__value">{m.stats[0].value}</span> <span class="modes__label">{m.stats[0].label}</span>
+                  </p>
+                ) : (
                   <ul class="modes__stats" role="list">
                     {m.stats.map((s) => (
                       <li class="modes__stat">
@@ -95,11 +106,18 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
                       </li>
                     ))}
                   </ul>
-                )}
+                ))}
               </div>
             </li>
           ))}
         </ol>
+        {footHtml && (
+          <div class="modes__foot">
+            <div data-reveal>
+              <Fragment set:html={footHtml} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   </section>
@@ -297,16 +315,47 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
     color: var(--color-muted);
   }
 
+  /* The lone figure ("40 persone al massimo"): nothing to line up, so it stands large on its own
+     rule, opened by an accent tick like the hero facts, its label on the figure's baseline. A label
+     too long to sit beside it drops under it. */
+  .modes__figure {
+    grid-area: stats;
+    align-self: end;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 0.85rem;
+    margin: clamp(2rem, 3.4vw, 2.75rem) 0 0;
+    padding-top: clamp(1.1rem, 1.9vw, 1.5rem);
+    border-top: 1px solid var(--color-border);
+  }
+  .modes__figure::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 22px;
+    height: 2px;
+    background: var(--accent);
+  }
+  .modes__figure .modes__value {
+    font-size: clamp(2.75rem, 4.4vw, 4rem);
+    line-height: 0.85;
+    letter-spacing: 0.01em;
+  }
+
   /* A file wide enough (a whole row on tablets, a half row on wide desktops) sets
      its readout beside the copy instead of below it. */
   @container (min-width: 40rem) {
-    .modes__body:has(.modes__stats) {
+    .modes__body:has(.modes__stats, .modes__figure) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       grid-template-rows: auto auto 1fr;
       grid-template-areas: "mark stats" "title stats" "text stats";
       column-gap: calc(var(--pad-x) * 2);
     }
-    .modes__stats { margin-top: 0; }
+    .modes__stats,
+    .modes__figure { margin-top: 0; }
   }
 
   /* Pointing at a file: it lifts a step, the sight locks onto the emblem (or the
@@ -343,7 +392,7 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
     grid-template-areas: "title" "text" "stats";
   }
   @container (min-width: 40rem) {
-    .modes--plain .modes__body:not(:has(.modes__mark)):has(.modes__stats) {
+    .modes--plain .modes__body:not(:has(.modes__mark)):has(.modes__stats, .modes__figure) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       grid-template-rows: auto 1fr;
       grid-template-areas: "title stats" "text stats";
@@ -394,6 +443,46 @@ const colFor = (i: number) => (i < count - tail ? i % 3 : (i - (count - tail)) %
       align-self: end;
       margin: 0;
       padding-left: var(--pad-x);
+    }
+  }
+
+  /* The plate's last row, what applies to every file (an IncludedList of options on request): on
+     the files' plane, the hairline above as its only edge, so it reads as part of the plate rather
+     than a panel of its own. */
+  .modes__foot {
+    border-top: 1px solid var(--color-border);
+    padding: clamp(1.6rem, 2.8vw, 2.25rem) 1.1rem clamp(1.75rem, 3vw, 2.5rem);
+  }
+  .modes__foot .incl {
+    border: 0;
+    border-radius: 0;
+    background: none;
+    padding: 0;
+  }
+  .modes__foot .incl__note {
+    max-width: 65ch;
+    padding-top: 0;
+    border-top: 0;
+  }
+  /* From tablets the foot takes the columns of a full row of files, so the options and the note each
+     line up with a file's copy: the title above them on two columns, beside them on three. */
+  @media (min-width: 600px) {
+    .modes__foot { padding-inline: 0; }
+    .modes__foot .incl {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+    .modes__foot .incl > * { padding-inline: var(--pad-x); }
+    .modes__foot .incl__title { grid-column: 1 / -1; }
+    .modes__foot .incl__list { grid-template-columns: minmax(0, 1fr); }
+    .modes__foot .incl__note { margin: 0; }
+  }
+  @media (min-width: 1024px) {
+    .modes__foot .incl { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .modes__foot .incl__title {
+      grid-column: auto;
+      margin: 0;
     }
   }
 
