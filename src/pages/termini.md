@@ -27,7 +27,7 @@ L'arena SoftAir Milano è gestita da Special Force S.S.D. a R.L., Via Melegnano 
 
 ## Sala feste
 
-Le sale per festeggiare sono due, una interna e una esterna. Con arcotag e Nerf, dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti, che il gruppo divide tra gioco e festa; il sabato e la domenica è compresa la sala esterna, riducendo il tempo di gioco. Con il softair la sala si usa solo prenotando l'arena in esclusiva, ed è compresa nell'1 ora e 45 minuti. In tutti i casi si può prolungare di un'ora, a 70 € la sala interna o 50 € quella esterna; con il softair, solo se dopo non ci sono altre partite.
+La festa si organizza insieme alla partita. La sala feste e il catering si prenotano su richiesta: tempi, condizioni e prezzi sono quelli indicati nel preventivo.
 
 ## Età e moduli
 

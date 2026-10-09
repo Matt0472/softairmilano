@@ -1,0 +1,198 @@
+---
+// The party pages (/festa-di-compleanno, /addio-al-celibato): one template, one data file each.
+// Like team building, their action is a quote request: the hero's primary button leads to the
+// request form, which arrives with the page's party chosen. The party opens on its photo; then the
+// activities to pick from (by age), what the party adds on request (room, catering), how a party
+// is booked with what to know before the day, the reviews and the questions. Every section renders
+// only when its data is present (CMS-10).
+
+import { existsSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import BaseLayout from './BaseLayout.astro';
+import PageHero from '../components/organisms/PageHero.astro';
+import SplitFeature from '../components/organisms/SplitFeature.astro';
+import ActivityLinks from '../components/organisms/ActivityLinks.astro';
+import ModeGrid from '../components/organisms/ModeGrid.astro';
+import StepTimeline from '../components/organisms/StepTimeline.astro';
+import Reviews from '../components/organisms/Reviews.astro';
+import FaqAccordion from '../components/organisms/FaqAccordion.astro';
+import BookingRequest from '../components/organisms/BookingRequest.astro';
+import FinalCta from '../components/organisms/FinalCta.astro';
+import Button from '../components/atoms/Button.astro';
+import Icon from '../components/atoms/Icon.astro';
+import IncludedList from '../components/molecules/IncludedList.astro';
+import Reveal from '../components/molecules/Reveal.astro';
+import navigation from '../data/navigation.json';
+import settings from '../data/settings.json';
+import { has, decodePath } from '../lib/fields';
+import { breadcrumbLd, faqLd } from '../lib/jsonld';
+import { flattenNav, type NavItem } from '../lib/nav';
+import { telHref } from '../lib/phone';
+
+interface Cta { label: string; href: string }
+interface PartyPage {
+  published?: boolean;
+  seo: { title: string; description?: string; image?: string; imageAlt?: string };
+  hero: {
+    eyebrow?: string;
+    title: string;
+    subtitle?: string;
+    image: string;
+    imageMobile?: string;
+    imageAlt: string;
+    focus?: string;
+    ctaPrimary?: Cta;
+    ctaSecondary?: Cta;
+    hudTag?: string;
+  };
+  facts?: { value: string; label: string }[];
+  intro?: {
+    title: string;
+    text?: string;
+    image: string;
+    imageMobile?: string;
+    imageAlt: string;
+    itemsTitle?: string;
+    items?: { name: string; text: string }[];
+    invite?: string;
+    inviteLabel?: string;
+    showPhone?: boolean;
+  };
+  activities?: { title: string; items?: { title: string; desc?: string; image: string; imageMobile?: string; href: string }[] };
+  partyRoom?: {
+    title: string;
+    text?: string;
+    items?: { title: string; text: string; stats?: { value: string; label: string }[] }[];
+  };
+  booking?: {
+    title: string;
+    text?: string;
+    steps?: { time?: string; title: string; text: string }[];
+    notesTitle?: string;
+    notes?: string[];
+    notesNote?: string;
+    link?: { label?: string; href?: string };
+  };
+  reviews?: { title: string };
+  faq?: { title: string; items?: { q: string; a: string }[] };
+  request?: { title?: string; text?: string; activity?: string };
+}
+
+interface Props {
+  page: PartyPage;
+  /** The page's address as the menu writes it, e.g. "/festa-di-compleanno". */
+  path: string;
+}
+
+const { page, path } = Astro.props;
+const { seo, hero, facts, intro, activities, partyRoom, booking, reviews, faq, request } = page;
+
+// The page name in the trail is its menu label (single source for both).
+const pageName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === path)?.label || hero.title;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: pageName, href: path },
+];
+
+// The guests' invitation, when the client uploads one: the link says what it is and how much it
+// weighs ("PDF, 1,2 MB"), read from the file at build time, and a file that is not there gets no
+// link at all, as on /modulistica.
+const kb = 1024;
+const fileWeight = (bytes: number) =>
+  bytes < kb * kb ? `${Math.max(1, Math.round(bytes / kb))} KB` : `${(bytes / kb / kb).toFixed(1).replace('.', ',')} MB`;
+const inviteSrc = intro?.invite?.trim() ?? '';
+const inviteFile = inviteSrc.startsWith('/') ? join(process.cwd(), 'public', decodePath(inviteSrc)) : '';
+const invite =
+  has(intro?.inviteLabel) && inviteFile && existsSync(inviteFile)
+    ? {
+        href: inviteSrc,
+        label: intro.inviteLabel,
+        meta: [inviteSrc.split('.').pop()?.toUpperCase(), fileWeight(statSync(inviteFile).size)].filter(has).join(', '),
+      }
+    : undefined;
+
+// A party whose copy says «Chiamaci» (`showPhone`) gets the number from the site settings right under it.
+const { phone } = settings;
+const tel = intro?.showPhone ? telHref(phone) : '';
+
+const faqItems = (faq?.items ?? []).filter((f) => has(f.q) && has(f.a));
+const faqData = faqLd(faqItems);
+const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])];
+const activityItems = (activities?.items ?? []).filter((a) => has(a.title) && has(a.image) && has(a.href));
+const notes = (booking?.notes ?? []).filter(has);
+const formsLink = has(booking?.link?.label) && has(booking?.link?.href) ? booking.link : undefined;
+---
+
+{/* The social card's alt follows its image: the hero's alt only when the card is the page's own
+    image; with the site's default image, only an alt written for it. */}
+<BaseLayout title={seo.title} description={seo.description} image={seo.image} imageAlt={has(seo.image) ? seo.imageAlt || hero.imageAlt : seo.imageAlt} jsonLd={jsonLd}>
+  <PageHero {...hero} focus={hero.focus === 'right' ? 'right' : 'center'} facts={facts} crumbs={crumbs} />
+
+  {/* The party, built around its photo: without one the copy would sit beside an empty column, so it waits. */}
+  {intro && has(intro.title) && has(intro.image) && (
+    <SplitFeature
+      title={intro.title}
+      text={intro.text}
+      image={intro.image}
+      imageMobile={intro.imageMobile}
+      imageAlt={intro.imageAlt}
+      ratio="3 / 2"
+      itemsTitle={intro.itemsTitle}
+      items={intro.items}
+      headingId="intro-title"
+    >
+      {(invite || tel) && (
+        <div class="flex flex-wrap gap-3">
+          {invite && (
+            <Button href={invite.href} variant="secondary" download="">
+              <Icon name="download" size={18} />
+              {invite.label}
+              <span class="font-sans text-sm font-normal normal-case tracking-normal text-muted">{invite.meta}</span>
+            </Button>
+          )}
+          {tel && (
+            <Button href={tel} variant="secondary" class="tabular-nums" aria-label={`Chiama il ${phone}`}>
+              <Icon name="phone" size={18} />
+              {phone}
+            </Button>
+          )}
+        </div>
+      )}
+    </SplitFeature>
+  )}
+
+  {activities && has(activities.title) && activityItems.length > 0 && (
+    <ActivityLinks title={activities.title} items={activityItems} headingId="attivita-title" />
+  )}
+
+  {partyRoom && has(partyRoom.title) && !!partyRoom.items?.length && (
+    <ModeGrid title={partyRoom.title} text={partyRoom.text} items={partyRoom.items} headingId="sala-title" />
+  )}
+
+  {/* The hero's secondary button lands here. What to know before the day closes the run of steps. */}
+  {booking && has(booking.title) && !!booking.steps?.length && (
+    <StepTimeline title={booking.title} text={booking.text} steps={booking.steps} id="come-funziona">
+      {notes.length > 0 && <IncludedList title={booking.notesTitle} items={notes} note={booking.notesNote} layout="row" />}
+      {formsLink && (
+        <div class="party-forms">
+          <Button href={formsLink.href} variant="secondary">{formsLink.label}</Button>
+        </div>
+      )}
+    </StepTimeline>
+  )}
+
+  {reviews && has(reviews.title) && <Reviews title={reviews.title} />}
+
+  {faq && has(faq.title) && faqItems.length > 0 && <FaqAccordion title={faq.title} items={faqItems} />}
+
+  <BookingRequest activity={request?.activity} title={request?.title} text={request?.text} />
+
+  <FinalCta {...settings.finalCta} />
+
+  <Reveal />
+</BaseLayout>
+
+<style>
+  /* The forms link under the "Da sapere" panel; on its own when the panel is empty. */
+  .party-forms:not(:first-child) { margin-top: 1.25rem; }
+</style>

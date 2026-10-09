@@ -19,7 +19,7 @@ import FinalCta from '../components/organisms/FinalCta.astro';
 import page from '../data/modulistica.json';
 import navigation from '../data/navigation.json';
 import settings from '../data/settings.json';
-import { has } from '../lib/fields';
+import { has, decodePath } from '../lib/fields';
 import { breadcrumbLd } from '../lib/jsonld';
 import { flattenNav, type NavItem } from '../lib/nav';
 
@@ -45,7 +45,7 @@ const fileWeight = (bytes: number) =>
 const download = (src?: string): { href: string; meta: string } | undefined => {
   if (!has(src) || !src.trim().startsWith('/')) return undefined;
   const href = src.trim();
-  const file = join(process.cwd(), 'public', decodeURI(href));
+  const file = join(process.cwd(), 'public', decodePath(href));
   if (!existsSync(file)) return undefined;
   const type = href.split('.').pop()?.toUpperCase() ?? '';
   const weight = fileWeight(statSync(file).size);

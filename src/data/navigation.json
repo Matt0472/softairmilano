@@ -40,7 +40,21 @@
     },
     {
       "label": "Occasioni",
-      "href": "/occasioni"
+      "href": "",
+      "children": [
+        {
+          "label": "Compleanni",
+          "href": "/festa-di-compleanno",
+          "badge": "",
+          "desc": "Feste per grandi e bambini, dai 6 anni"
+        },
+        {
+          "label": "Addio al celibato",
+          "href": "/addio-al-celibato",
+          "badge": "",
+          "desc": "Addio al celibato e al nubilato in arena"
+        }
+      ]
     },
     {
       "label": "Team building",

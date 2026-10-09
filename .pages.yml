@@ -75,7 +75,7 @@ content:
           - { name: text, label: Descrizione, type: string }
       - name: footerHeadings
         label: Titoli delle colonne nel footer
-        description: "Le colonne del menu si fanno da sole dal «Menu di navigazione»: ogni voce con un sottomenu (es. Attività, Info) è una colonna con il suo nome; le voci senza sottomenu (Corso, Occasioni…) stanno insieme in una colonna sola. «Home» non compare: ci porta già il logo"
+        description: "Le colonne del menu si fanno da sole dal «Menu di navigazione»: ogni voce con un sottomenu (es. Attività, Info) è una colonna con il suo nome; le voci senza sottomenu (Corso, Team building…) stanno insieme in una colonna sola. «Home» non compare: ci porta già il logo"
         type: object
         fields:
           - { name: pages, label: "Colonna delle voci senza sottomenu", type: string, required: true, description: "Es. Scopri" }
@@ -1382,10 +1382,10 @@ content:
           - { name: text, label: Testo, type: text, description: "Se vuoto, si usa quello di «Form di richiesta»" }
           - { name: activity, label: Attività già scelta nel form, type: string, description: "Compare nell'elenco «Attività» del form, già selezionata, e nell'oggetto dell'email che ricevete (es. «Richiesta dal sito: Team building»)" }
 
-  - name: occasioni
-    label: Occasioni (compleanni e addii al celibato)
+  - name: compleanno
+    label: Festa di compleanno
     type: file
-    path: src/data/occasioni.json
+    path: src/data/compleanno.json
     fields:
       - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina sparisce dal sito, dal menu e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
       - name: seo
@@ -1400,10 +1400,10 @@ content:
         label: Apertura
         type: object
         fields:
-          - { name: eyebrow, label: Sopratitolo, type: string, description: "Es. «Feste di gruppo · Milano». Se vuoto non compare" }
+          - { name: eyebrow, label: Sopratitolo, type: string, description: "Es. «Feste per grandi e bambini». Se vuoto non compare" }
           - { name: title, label: "Titolo principale (H1)", type: string, required: true }
           - { name: subtitle, label: Sottotitolo (massimo 20 parole), type: text }
-          - { name: image, label: "Immagine (desktop, 16:9)", type: image, required: true, description: "Meglio una foto diversa da quelle di «Compleanni» e di «Addio al celibato e al nubilato»: la stessa foto due volte nella pagina stanca" }
+          - { name: image, label: "Immagine (desktop, 16:9)", type: image, required: true, description: "Meglio una foto diversa da quella dell'«Introduzione»: la stessa foto due volte nella pagina stanca" }
           - { name: imageMobile, label: "Immagine (mobile, verticale)", type: image, description: "Verticale, con il soggetto nel terzo alto: la metà bassa ospita i testi. Se vuota, si usa l'immagine per computer" }
           - { name: imageAlt, label: Testo alternativo immagine, type: string, required: true }
           - name: focus
@@ -1428,7 +1428,7 @@ content:
             fields:
               - { name: label, label: Testo, type: string }
               - { name: href, label: Link, type: string, description: "Es. #come-funziona: porta a «Come si prenota». Se quella sezione non compare, svuota questo bottone" }
-          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «FESTE · MAX 30 · 6+». I numeri devono essere quelli dei Dati chiave: se li cambi, aggiornala anche qui. Se vuota non compare" }
+          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «COMPLEANNI · MAX 30 · 6+». I numeri devono essere quelli dei Dati chiave: se li cambi, aggiornala anche qui. Se vuota non compare" }
       - name: facts
         label: Dati chiave (sotto il titolo)
         description: "Da 2 a 4 dati brevi; ognuno si legge di seguito, es. «30 giocatori al massimo». Un dato senza valore o senza etichetta non compare"
@@ -1437,36 +1437,28 @@ content:
         fields:
           - { name: value, label: "Valore (es. 30)", type: string }
           - { name: label, label: "Etichetta (es. giocatori al massimo)", type: string }
-      - name: birthdays
-        label: Compleanni (foto ed elenco)
-        description: "La prima sezione dopo l'apertura, con la foto a sinistra. Compare solo con titolo e foto: senza foto la sezione resta nascosta"
+      - name: intro
+        label: Introduzione (foto e testo)
+        description: "La prima sezione dopo l'apertura, con la foto a sinistra del testo; sui telefoni la foto sta sopra. Compare solo con titolo e foto"
         type: object
         fields:
-          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: title, label: Titolo, type: string, description: "Meglio diverso dal titolo dell'apertura, che dice già di che festa si tratta. Se vuoto, la sezione non compare" }
           - { name: text, label: Testo, type: text, description: "Qui l'indirizzo non serve: basta «Milano». L'indirizzo è nei contatti e nelle domande frequenti" }
-          - { name: image, label: "Foto (orizzontale, 3:2)", type: image, description: "Se vuota, la sezione non compare" }
+          - { name: image, label: "Foto (orizzontale, 3:2)", type: image, description: "Meglio diversa dall'immagine dell'apertura: la stessa foto due volte nella pagina stanca. Se vuota, la sezione non compare" }
           - { name: imageMobile, label: "Foto (mobile, verticale 4:5)", type: image, description: "Per i telefoni, con il soggetto al centro. Se vuota, si usa la foto orizzontale" }
           - { name: imageAlt, label: Testo alternativo foto, type: string }
-          - { name: itemsTitle, label: Titolo dell'elenco, type: string, description: "Es. «In breve»" }
+          - { name: itemsTitle, label: Titolo dell'elenco, type: string, description: "Es. «In breve». Compare solo se l'elenco ha almeno una voce" }
           - name: items
             label: Elenco
-            description: "Voci brevi, meglio in numero pari: stanno due per riga. Le età devono essere quelle delle pagine attività: se ne cambi una, aggiornala anche lì. Una voce senza nome non compare"
+            description: "Facoltativo. Es. per chi, quanti, attività, quando. Voci brevi, meglio in numero pari: stanno due per riga. Le età devono essere quelle delle pagine attività: se ne cambi una, aggiornala anche lì. Una voce senza nome non compare"
             type: object
             list: true
             fields:
               - { name: name, label: Nome, type: string }
               - { name: text, label: Testo, type: string }
-          - { name: invite, label: Invito per gli ospiti (PDF), type: file, options: { extensions: [pdf] }, description: "Facoltativo: l'invito da inoltrare o stampare per gli invitati. Se c'è, sotto l'elenco compare il bottone per scaricarlo, con formato e peso accanto (es. «PDF, 1,2 MB»). Meglio un file leggero, sotto i 2 MB: lo scaricano soprattutto dal telefono" }
+          - { name: invite, label: Invito per gli ospiti (PDF), type: file, options: { extensions: [pdf] }, description: "Facoltativo: l'invito da inoltrare o stampare per gli invitati. Se c'è, sotto il testo e l'elenco compare il bottone per scaricarlo, con formato e peso accanto (es. «PDF, 1,2 MB»). Meglio un file leggero, sotto i 2 MB: lo scaricano soprattutto dal telefono" }
           - { name: inviteLabel, label: Testo del bottone dell'invito, type: string, description: "Es. «Scarica l'invito». Il bottone compare solo se ci sono sia il testo sia il file" }
-      - name: bachelor
-        label: Addio al celibato e al nubilato (foto e testo)
-        description: "Compare solo con titolo e foto. Sotto il testo compare il numero di telefono di «Impostazioni generali»"
-        type: object
-        fields:
-          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
-          - { name: text, label: Testo, type: text }
-          - { name: image, label: "Foto (orizzontale, 3:2)", type: image, description: "Compare a destra del testo; sui telefoni sopra il testo, un po' ritagliata ai lati: tieni il soggetto al centro. Se vuota, la sezione non compare" }
-          - { name: imageAlt, label: Testo alternativo foto, type: string }
+          - { name: showPhone, label: Mostra il telefono, type: boolean, default: false, description: "Acceso: sotto il testo e l'elenco compare il bottone per chiamare, con il numero di «Impostazioni generali». Utile se il testo dice «Chiamaci». Senza numero in «Impostazioni generali» non compare" }
       - name: activities
         label: Scegli l'attività
         description: "Le attività tra cui scegliere, ognuna con la sua foto e il link alla sua pagina. Se il titolo è vuoto o non c'è nessuna voce, la sezione non compare"
@@ -1486,27 +1478,27 @@ content:
               - { name: href, label: Link, type: string, description: "La pagina dell'attività, es. /softair" }
       - name: partyRoom
         label: Sala feste e catering
-        description: "Le regole della sala feste, una scheda per periodo della settimana. Se il titolo è vuoto o non c'è nessuna voce, la sezione non compare"
+        description: "Cosa comprende la festa, una scheda per parte (la partita, la sala feste, il catering): sala e catering si aggiungono su richiesta. Niente prezzi né regole della sala: i dettagli si danno con il preventivo. La stessa sezione c'è anche in «Addio al celibato», e le domande sulle feste delle pagine attività e i Termini dicono la stessa cosa. Se il titolo è vuoto o non c'è nessuna voce, la sezione non compare"
         type: object
         fields:
           - { name: title, label: Titolo, type: string }
-          - { name: text, label: Testo, type: text, description: "La torta e il catering, in una o due frasi. Niente prezzi: si danno con il preventivo" }
+          - { name: text, label: Testo, type: text, description: "Una frase su come si organizza la festa, es. «su richiesta si aggiungono la sala feste e il catering». Niente prezzi: si danno con il preventivo" }
           - name: items
             label: Schede
-            description: "Es. «Dal lunedì al venerdì» e «Sabato e domenica». Una voce senza nome non compare"
+            description: "Es. «La partita», «La sala feste», «Il catering». Una voce senza nome non compare"
             type: object
             list: true
             fields:
               - { name: title, label: Nome, type: string }
               - { name: text, label: Descrizione (una frase), type: text }
               - name: stats
-                label: "Durate (es. 1 h 45 di partita)"
-                description: "Una durata compare solo se ha sia il valore sia l'etichetta, e si legge di seguito: «+1 h di sala feste»"
+                label: "Dati in evidenza (facoltativi)"
+                description: "Oggi vuoti: durate e prezzi della sala non vanno qui, si danno con il preventivo. Un dato compare solo se ha sia il valore sia l'etichetta, e si legge di seguito"
                 type: object
                 list: true
                 fields:
-                  - { name: value, label: "Valore (es. 1 h 45)", type: string }
-                  - { name: label, label: "Etichetta (es. di sala feste)", type: string }
+                  - { name: value, label: Valore, type: string }
+                  - { name: label, label: Etichetta, type: string }
       - name: booking
         label: Come si prenota (passo per passo)
         description: "Il bottone secondario dell'apertura porta qui (#come-funziona)"
@@ -1558,7 +1550,177 @@ content:
         fields:
           - { name: title, label: Titolo, type: string, description: "Es. «Richiedi un preventivo», lo stesso testo del bottone principale dell'apertura. Se vuoto, si usa quello di «Form di richiesta»" }
           - { name: text, label: Testo, type: text, description: "Se vuoto, si usa quello di «Form di richiesta»" }
-          - { name: activity, label: Attività già scelta nel form, type: string, description: "Compare nell'elenco «Attività» del form, già selezionata, e nell'oggetto dell'email che ricevete (es. «Richiesta dal sito: Festa o addio al celibato»)" }
+          - { name: activity, label: Attività già scelta nel form, type: string, description: "Compare nell'elenco «Attività» del form, già selezionata, e nell'oggetto dell'email che ricevete (es. «Richiesta dal sito: Festa di compleanno»)" }
+
+  - name: addioCelibato
+    label: Addio al celibato
+    type: file
+    path: src/data/addio-celibato.json
+    fields:
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina sparisce dal sito, dal menu e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
+      - name: seo
+        label: SEO e anteprima social
+        type: object
+        fields:
+          - { name: title, label: Titolo della pagina (Google), type: string, description: "Circa 60 caratteri", required: true }
+          - { name: description, label: Descrizione (Google), type: text, description: "Circa 155 caratteri" }
+          - { name: image, label: Immagine per i social, type: image, description: "Orizzontale, 1200×630 (JPG o PNG). Se vuota si usa l'immagine social predefinita di «Impostazioni generali»" }
+          - { name: imageAlt, label: Testo alternativo immagine social, type: string, description: "Descrive l'immagine per i social. Se vuoto si usa quello dell'apertura" }
+      - name: hero
+        label: Apertura
+        type: object
+        fields:
+          - { name: eyebrow, label: Sopratitolo, type: string, description: "Es. «Per lo sposo o la sposa». Se vuoto non compare" }
+          - { name: title, label: "Titolo principale (H1)", type: string, required: true }
+          - { name: subtitle, label: Sottotitolo (massimo 20 parole), type: text }
+          - { name: image, label: "Immagine (desktop, 16:9)", type: image, required: true, description: "Meglio una foto diversa da quella dell'«Introduzione»: la stessa foto due volte nella pagina stanca" }
+          - { name: imageMobile, label: "Immagine (mobile, verticale)", type: image, description: "Verticale, con il soggetto nel terzo alto: la metà bassa ospita i testi. Se vuota, si usa l'immagine per computer" }
+          - { name: imageAlt, label: Testo alternativo immagine, type: string, required: true }
+          - name: focus
+            label: Dove sta il soggetto della foto (desktop)
+            description: "«A destra» se la foto lascia libera la parte sinistra per il titolo: su portatili e schermi più stretti il soggetto resta nell'inquadratura. Se non scegli, vale «Al centro»"
+            type: select
+            options:
+              values:
+                - { name: center, label: Al centro }
+                - { name: right, label: A destra }
+          - name: ctaPrimary
+            label: Bottone principale
+            description: "Porta al form di richiesta in fondo alla pagina (#richiesta). Compare solo se ha sia il testo sia il link"
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string, description: "Lo stesso testo del titolo del form, es. «Richiedi un preventivo»" }
+              - { name: href, label: Link, type: string, description: "Es. #richiesta" }
+          - name: ctaSecondary
+            label: Bottone secondario
+            description: "Compare solo se ha sia il testo sia il link"
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string }
+              - { name: href, label: Link, type: string, description: "Es. #come-funziona: porta a «Come si prenota». Se quella sezione non compare, svuota questo bottone" }
+          - { name: hudTag, label: "Scritta tattica sulla foto (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra sulla foto (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «ADDIO AL CELIBATO · MAX 30». I numeri devono essere quelli dei Dati chiave: se li cambi, aggiornala anche qui. Se vuota non compare" }
+      - name: facts
+        label: Dati chiave (sotto il titolo)
+        description: "Da 2 a 4 dati brevi; ognuno si legge di seguito, es. «30 giocatori al massimo». Un dato senza valore o senza etichetta non compare"
+        type: object
+        list: { max: 4 }
+        fields:
+          - { name: value, label: "Valore (es. 30)", type: string }
+          - { name: label, label: "Etichetta (es. giocatori al massimo)", type: string }
+      - name: intro
+        label: Introduzione (foto e testo)
+        description: "La prima sezione dopo l'apertura, con la foto a sinistra del testo; sui telefoni la foto sta sopra. Compare solo con titolo e foto"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Meglio diverso dal titolo dell'apertura, che dice già di che festa si tratta. Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text, description: "Qui l'indirizzo non serve: basta «Milano». L'indirizzo è nei contatti e nelle domande frequenti" }
+          - { name: image, label: "Foto (orizzontale, 3:2)", type: image, description: "Meglio diversa dall'immagine dell'apertura: la stessa foto due volte nella pagina stanca. Se vuota, la sezione non compare" }
+          - { name: imageMobile, label: "Foto (mobile, verticale 4:5)", type: image, description: "Per i telefoni, con il soggetto al centro. Se vuota, si usa la foto orizzontale" }
+          - { name: imageAlt, label: Testo alternativo foto, type: string }
+          - { name: itemsTitle, label: Titolo dell'elenco, type: string, description: "Es. «In breve». Compare solo se l'elenco ha almeno una voce" }
+          - name: items
+            label: Elenco
+            description: "Facoltativo. Voci brevi, meglio in numero pari: stanno due per riga. Le età devono essere quelle delle pagine attività: se ne cambi una, aggiornala anche lì. Una voce senza nome non compare"
+            type: object
+            list: true
+            fields:
+              - { name: name, label: Nome, type: string }
+              - { name: text, label: Testo, type: string }
+          - { name: invite, label: Invito per gli ospiti (PDF), type: file, options: { extensions: [pdf] }, description: "Facoltativo: l'invito da inoltrare o stampare per gli invitati. Se c'è, sotto il testo e l'elenco compare il bottone per scaricarlo, con formato e peso accanto (es. «PDF, 1,2 MB»). Meglio un file leggero, sotto i 2 MB: lo scaricano soprattutto dal telefono" }
+          - { name: inviteLabel, label: Testo del bottone dell'invito, type: string, description: "Es. «Scarica l'invito». Il bottone compare solo se ci sono sia il testo sia il file" }
+          - { name: showPhone, label: Mostra il telefono, type: boolean, default: false, description: "Acceso: sotto il testo e l'elenco compare il bottone per chiamare, con il numero di «Impostazioni generali». Va acceso quando il testo dice «Chiamaci». Senza numero in «Impostazioni generali» non compare" }
+      - name: activities
+        label: Scegli l'attività
+        description: "Le attività tra cui scegliere, ognuna con la sua foto e il link alla sua pagina. Se il titolo è vuoto o non c'è nessuna voce, la sezione non compare"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string }
+          - name: items
+            label: Attività
+            description: "L'ordine della lista è quello della pagina: la prima compare aperta. Una voce senza nome, foto o link non compare"
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Nome, type: string, description: "Breve, su una riga, es. «Softair»" }
+              - { name: desc, label: Descrizione, type: string, description: "Una riga che comincia dall'età minima, es. «Dai 12 anni. Missioni a squadre nel villaggio al coperto.». Le età devono essere quelle delle pagine attività" }
+              - { name: image, label: "Foto (orizzontale)", type: image }
+              - { name: imageMobile, label: "Foto (mobile, verticale 4:5)", type: image, description: "Se vuota, si usa la foto orizzontale" }
+              - { name: href, label: Link, type: string, description: "La pagina dell'attività, es. /softair" }
+      - name: partyRoom
+        label: Sala feste e catering
+        description: "Cosa comprende la festa, una scheda per parte (la partita, la sala feste, il catering): sala e catering si aggiungono su richiesta. Niente prezzi né regole della sala: i dettagli si danno con il preventivo. La stessa sezione c'è anche in «Festa di compleanno», e le domande sulle feste delle pagine attività e i Termini dicono la stessa cosa. Se il titolo è vuoto o non c'è nessuna voce, la sezione non compare"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string }
+          - { name: text, label: Testo, type: text, description: "Una frase su come si organizza la festa, es. «su richiesta si aggiungono la sala feste e il catering». Niente prezzi: si danno con il preventivo" }
+          - name: items
+            label: Schede
+            description: "Es. «La partita», «La sala feste», «Il catering». Una voce senza nome non compare"
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Nome, type: string }
+              - { name: text, label: Descrizione (una frase), type: text }
+              - name: stats
+                label: "Dati in evidenza (facoltativi)"
+                description: "Oggi vuoti: durate e prezzi della sala non vanno qui, si danno con il preventivo. Un dato compare solo se ha sia il valore sia l'etichetta, e si legge di seguito"
+                type: object
+                list: true
+                fields:
+                  - { name: value, label: Valore, type: string }
+                  - { name: label, label: Etichetta, type: string }
+      - name: booking
+        label: Come si prenota (passo per passo)
+        description: "Il bottone secondario dell'apertura porta qui (#come-funziona)"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - { name: text, label: Testo, type: text }
+          - name: steps
+            label: Passaggi
+            description: "Un passaggio senza titolo non compare"
+            type: object
+            list: true
+            fields:
+              - { name: time, label: "Momento (facoltativo)", type: string, description: "Se vuoto, compare il numero del passaggio (01, 02…)" }
+              - { name: title, label: Titolo, type: string }
+              - { name: text, label: Testo, type: text }
+          - { name: notesTitle, label: Titolo del riquadro, type: string, description: "Es. «Da sapere»" }
+          - { name: notes, label: Da sapere, type: string, list: true, description: "Una per riga, es. «Prenotazione obbligatoria». Compaiono in un riquadro sotto i passaggi; senza voci il riquadro non compare" }
+          - { name: notesNote, label: Nota in fondo al riquadro, type: string, description: "Se vuota non compare" }
+          - name: link
+            label: Bottone sotto il riquadro
+            description: "Compare solo se ha sia il testo sia il link"
+            type: object
+            fields:
+              - { name: label, label: Testo, type: string, description: "Es. «Vai ai moduli»" }
+              - { name: href, label: Link, type: string, description: "Es. /modulistica" }
+      - name: reviews
+        label: Recensioni
+        type: object
+        fields:
+          - { name: title, label: "Titolo (le recensioni si modificano in «Recensioni»)", type: string, description: "Voto e recensioni sono gli stessi in ogni pagina e si cambiano in «Recensioni». Se il titolo è vuoto, la sezione non compare" }
+      - name: faq
+        label: Domande frequenti
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Se vuoto, la sezione non compare" }
+          - name: items
+            label: Domande
+            description: "Una domanda senza risposta non compare"
+            type: object
+            list: true
+            fields:
+              - { name: q, label: Domanda, type: string }
+              - { name: a, label: Risposta, type: text }
+      - name: request
+        label: Form di richiesta preventivo
+        description: "Il form in fondo alla pagina (#richiesta). Campi, messaggi e bottone di invio si modificano in «Form di richiesta» e valgono per tutte le pagine"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Es. «Richiedi un preventivo», lo stesso testo del bottone principale dell'apertura. Se vuoto, si usa quello di «Form di richiesta»" }
+          - { name: text, label: Testo, type: text, description: "Se vuoto, si usa quello di «Form di richiesta»" }
+          - { name: activity, label: Attività già scelta nel form, type: string, description: "Compare nell'elenco «Attività» del form, già selezionata, e nell'oggetto dell'email che ricevete (es. «Richiesta dal sito: Addio al celibato o nubilato»)" }
 
   - name: voucher
     label: Voucher regalo

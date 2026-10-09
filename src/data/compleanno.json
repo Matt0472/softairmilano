@@ -1,15 +1,15 @@
 {
   "published": true,
   "seo": {
-    "title": "Feste di compleanno e addii al celibato a Milano | SoftAir Milano",
-    "description": "Compleanni per grandi e bambini e addii al celibato e al nubilato a Milano: softair, arcotag o Nerf al coperto, fino a 30 giocatori, con sala feste.",
+    "title": "Festa di compleanno a Milano con sala feste | SoftAir Milano",
+    "description": "Festa di compleanno a Milano per bambini dai 6 anni e adulti: softair, arcotag o Nerf in un'arena al coperto, fino a 30 giocatori, con sala feste e catering.",
     "image": "",
     "imageAlt": ""
   },
   "hero": {
-    "eyebrow": "Feste di gruppo · Milano",
-    "title": "Compleanni e addii al celibato a Milano",
-    "subtitle": "Softair, arcotag o Nerf nella nostra arena al coperto, e si festeggia in sala feste.",
+    "eyebrow": "Feste per grandi e bambini",
+    "title": "Feste di compleanno a Milano",
+    "subtitle": "Una sfida a squadre nella nostra arena al coperto, con softair, arcotag o Nerf; su richiesta, sala feste e catering.",
     "image": "/uploads/occasioni-hero.jpeg",
     "imageMobile": "/uploads/occasioni-hero-mobile.jpeg",
     "imageAlt": "Su una cassa di legno dell'arena, a festa appena finita: una coroncina di carta dorata, frecce a punta morbida, una maschera protettiva e festoni, con un palloncino sgonfio a terra.",
@@ -22,29 +22,29 @@
       "label": "Come funziona",
       "href": "#come-funziona"
     },
-    "hudTag": "FESTE · MAX 30 · 6+"
+    "hudTag": "COMPLEANNI · MAX 30 · 6+"
   },
   "facts": [
     {
       "value": "30",
-      "label": "giocatori al massimo"
-    },
-    {
-      "value": "3",
-      "label": "attività a scelta"
+      "label": "giocatori, 20 con il softair"
     },
     {
       "value": "6+",
       "label": "anni"
     },
     {
+      "value": "3",
+      "label": "attività a scelta"
+    },
+    {
       "value": "1.500 m²",
       "label": "al coperto"
     }
   ],
-  "birthdays": {
-    "title": "Compleanni",
-    "text": "Un compleanno alternativo, per adulti e bambini: 100% divertente e adatto a tutti. Si gioca a squadre nella nostra arena di Milano, poi la festa continua in sala.",
+  "intro": {
+    "title": "Un compleanno alternativo",
+    "text": "Per adulti e bambini: 100% divertente e adatto a tutti. Si gioca a squadre nella nostra arena di Milano e, se vuoi, la festa continua in sala feste.",
     "image": "/uploads/occ-compleanno.jpeg",
     "imageMobile": "",
     "imageAlt": "Ragazzi con maschera protettiva e blaster in gommapiuma festeggiano a braccia alzate; il festeggiato porta una corona di carta.",
@@ -68,13 +68,8 @@
       }
     ],
     "invite": "/uploads/invito-festa-compleanno.pdf",
-    "inviteLabel": "Scarica l'invito"
-  },
-  "bachelor": {
-    "title": "Addio al celibato e al nubilato",
-    "text": "Vuoi festeggiare in modo adrenalinico il tuo addio al celibato o nubilato? Stessa arena, stesse attività e gruppi fino a 30 persone (20 con il softair). Chiamaci per realizzare qualcosa di indimenticabile.",
-    "image": "/uploads/occ-addio.jpeg",
-    "imageAlt": "Un gruppo di amiche in tenuta da gioco ride intorno alla sposa, che porta un velo bianco sopra il casco."
+    "inviteLabel": "Scarica l'invito",
+    "showPhone": false
   },
   "activities": {
     "title": "Scegli l'attività",
@@ -104,45 +99,19 @@
   },
   "partyRoom": {
     "title": "Sala feste e catering",
-    "text": "Le sale per festeggiare sono due, una interna e una esterna. Con arcotag e Nerf la sala c'è sempre; con il softair, prenotando l'arena in esclusiva. La torta puoi portarla tu, il catering lo prepariamo su richiesta, anche con merende personalizzate.",
+    "text": "La festa si organizza insieme alla partita; su richiesta si aggiungono la sala feste e il catering.",
     "items": [
       {
-        "title": "Arcotag e Nerf, dal lunedì al venerdì",
-        "text": "La sala è compresa nell'1 ora e 45: decidete voi quanto tempo giocare e quanto festeggiare. Oppure prolungate di un'ora.",
-        "stats": [
-          {
-            "value": "1 h 45",
-            "label": "tra partita e sala, briefing compreso"
-          },
-          {
-            "value": "70 €",
-            "label": "un'ora in più nella sala interna"
-          },
-          {
-            "value": "50 €",
-            "label": "un'ora in più nella sala esterna"
-          }
-        ]
+        "title": "La partita",
+        "text": "Softair, arcotag o Nerf, nella nostra arena al coperto: la festa comincia in campo."
       },
       {
-        "title": "Arcotag e Nerf, sabato e domenica",
-        "text": "La sala esterna è compresa nell'1 ora e 45: si gioca un po' meno per fare spazio alla festa.",
-        "stats": [
-          {
-            "value": "1 h 45",
-            "label": "in tutto, partita e sala esterna"
-          }
-        ]
+        "title": "La sala feste",
+        "text": "Su richiesta puoi prenotare la sala feste, per festeggiare dopo la partita."
       },
       {
-        "title": "Softair, con l'arena in esclusiva",
-        "text": "La sala è compresa nell'1 ora e 45, e se dopo di voi non ci sono altre partite si prolunga di un'ora. Giocando insieme ad altri gruppi, la sala non si può usare.",
-        "stats": [
-          {
-            "value": "1 h 45",
-            "label": "tra partita e sala, arena solo per voi"
-          }
-        ]
+        "title": "Il catering",
+        "text": "Su richiesta prepariamo il catering, anche con merende personalizzate. Alla torta ci pensiamo noi, oppure puoi portarla tu."
       }
     ]
   },
@@ -158,7 +127,7 @@
       {
         "time": "",
         "title": "Il dopo partita",
-        "text": "Dicci se vuoi la sala feste e il catering, per esempio merende personalizzate. La torta puoi portarla tu."
+        "text": "Dicci se vuoi la sala feste e il catering, per esempio merende personalizzate, e se alla torta pensiamo noi o la porti tu."
       },
       {
         "time": "",
@@ -182,11 +151,11 @@
     "title": "Cosa dice chi ha giocato da noi"
   },
   "faq": {
-    "title": "Domande frequenti su feste e addii al celibato",
+    "title": "Domande frequenti sulle feste di compleanno",
     "items": [
       {
         "q": "Quante persone possono partecipare alla festa?",
-        "a": "Fino a 20 giocatori con il softair e fino a 30 con arcotag e Nerf, sia per i compleanni sia per gli addii al celibato e al nubilato. Con arcotag e Nerf non vi uniamo ad altri gruppi: il minimo è 8 dal lunedì al venerdì e 15 sabato e domenica, e se siete meno si pagano comunque 8 o 15 quote. Con il softair, se siete meno di 8 vi uniamo a un altro gruppo, a meno che non prendiate l'arena in esclusiva."
+        "a": "Fino a 20 giocatori con il softair e fino a 30 con arcotag e Nerf. Con arcotag e Nerf non vi uniamo ad altri gruppi: il minimo è 8 dal lunedì al venerdì e 15 sabato e domenica, e se siete meno si pagano comunque 8 o 15 quote. Con il softair, se siete meno di 8 vi uniamo a un altro gruppo, a meno che non prendiate l'arena in esclusiva."
       },
       {
         "q": "Da che età si può giocare?",
@@ -194,11 +163,11 @@
       },
       {
         "q": "Come funziona la sala feste?",
-        "a": "Le sale sono due, una interna e una esterna. Con arcotag e Nerf, dal lunedì al venerdì la sala è compresa nell'1 ora e 45 minuti e decidete voi come dividere il tempo tra gioco e festa; il sabato e la domenica è compresa la sala esterna, riducendo il tempo di gioco. Con il softair la sala si usa solo prenotando l'arena in esclusiva, ed è compresa nell'1 ora e 45 minuti. In tutti i casi si può prolungare di un'ora, a 70 € la sala interna o 50 € quella esterna: con il softair, solo se dopo di voi non ci sono altre partite."
+        "a": "La festa si organizza insieme alla partita. Su richiesta puoi prenotare la sala feste e il catering, anche con merende personalizzate: scrivilo nella richiesta di preventivo e ti rispondiamo con tutti i dettagli."
       },
       {
         "q": "Posso portare la torta?",
-        "a": "Sì, la torta puoi portarla tu. Il catering lo prepariamo su richiesta, anche con merende personalizzate."
+        "a": "Sì: alla torta ci pensiamo noi, oppure puoi portarla tu. Il catering lo prepariamo su richiesta, anche con merende personalizzate."
       },
       {
         "q": "Quanto costa una festa?",
@@ -207,10 +176,6 @@
       {
         "q": "Quando si può fare la festa?",
         "a": "La mattina, il pomeriggio o la sera, con qualsiasi tempo: l'arena è coperta e illuminata."
-      },
-      {
-        "q": "Si può organizzare qualcosa di speciale per un addio al celibato o al nubilato?",
-        "a": "Sì: chiamaci per realizzare qualcosa di indimenticabile. Il numero è in fondo alla pagina."
       },
       {
         "q": "Serve un modulo per giocare?",
@@ -233,6 +198,6 @@
   "request": {
     "title": "Richiedi un preventivo",
     "text": "Dicci la data, quanti siete e quale attività preferisci, e se vuoi la sala feste e il catering: ti rispondiamo con la nostra migliore offerta.",
-    "activity": "Festa o addio al celibato"
+    "activity": "Festa di compleanno"
   }
 }

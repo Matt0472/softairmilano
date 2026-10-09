@@ -1,0 +1,190 @@
+{
+  "published": true,
+  "seo": {
+    "title": "Addio al celibato e al nubilato a Milano | SoftAir Milano",
+    "description": "Addio al celibato o al nubilato a Milano: softair, arcotag o Nerf in arena al coperto di 1.500 m², fino a 30 amici, anche la sera, con sala feste e catering.",
+    "image": "",
+    "imageAlt": ""
+  },
+  "hero": {
+    "eyebrow": "Per lo sposo o la sposa",
+    "title": "Addio al celibato e al nubilato a Milano",
+    "subtitle": "Lo sposo o la sposa contro tutti, a softair, arcotag o Nerf nella nostra arena al coperto, anche la sera.",
+    "image": "/uploads/occ-addio.jpeg",
+    "imageMobile": "/uploads/occ-addio-mobile.jpeg",
+    "imageAlt": "Un gruppo di amiche in tenuta da gioco ride intorno alla sposa, che porta un velo bianco sopra il casco.",
+    "focus": "center",
+    "ctaPrimary": {
+      "label": "Richiedi un preventivo",
+      "href": "#richiesta"
+    },
+    "ctaSecondary": {
+      "label": "Come funziona",
+      "href": "#come-funziona"
+    },
+    "hudTag": "ADDIO AL CELIBATO · MAX 30"
+  },
+  "facts": [
+    {
+      "value": "30",
+      "label": "giocatori, 20 con il softair"
+    },
+    {
+      "value": "3",
+      "label": "attività a scelta"
+    },
+    {
+      "value": "1 h 45",
+      "label": "di gioco e briefing"
+    },
+    {
+      "value": "1.500 m²",
+      "label": "al coperto"
+    }
+  ],
+  "intro": {
+    "title": "Un addio che non si dimentica",
+    "text": "Vuoi un addio al celibato o al nubilato adrenalinico? A softair lo sposo o la sposa si scorta come un VIP o si bracca in un Highlander; ad arcotag è uno contro tutti, con frecce a punta morbida e nessun rischio per il grande giorno. Fino a 30 persone (20 con il softair), anche la sera, e se vuoi, dopo la partita, si festeggia in sala feste. Chiamaci per realizzare qualcosa di indimenticabile.",
+    "image": "/uploads/occ-serata.jpeg",
+    "imageMobile": "/uploads/occ-serata-mobile.jpeg",
+    "imageAlt": "Un gruppo di amici e amiche in gilet da gioco, con i fucili replica a tracolla, si dà il cinque ridendo tra le barricate di legno dell'arena al coperto.",
+    "itemsTitle": "",
+    "items": [],
+    "invite": "",
+    "inviteLabel": "",
+    "showPhone": true
+  },
+  "activities": {
+    "title": "Scegli l'attività",
+    "items": [
+      {
+        "title": "Softair",
+        "desc": "Dai 12 anni. Missioni a squadre nel villaggio al coperto.",
+        "image": "/uploads/att-softair.jpeg",
+        "imageMobile": "/uploads/att-softair-mobile.jpeg",
+        "href": "/softair"
+      },
+      {
+        "title": "Arcotag",
+        "desc": "Dagli 8 anni. Arco e frecce a punta morbida, a squadre.",
+        "image": "/uploads/att-arcotag.jpeg",
+        "imageMobile": "/uploads/att-arcotag-mobile.jpeg",
+        "href": "/arcotag"
+      },
+      {
+        "title": "Nerf",
+        "desc": "Dai 6 anni. Blaster e dardi in gommapiuma, a squadre.",
+        "image": "/uploads/att-nerf.jpeg",
+        "imageMobile": "/uploads/att-nerf-mobile.jpeg",
+        "href": "/nerf"
+      }
+    ]
+  },
+  "partyRoom": {
+    "title": "Sala feste e catering",
+    "text": "La festa si organizza insieme alla partita; su richiesta si aggiungono la sala feste e il catering.",
+    "items": [
+      {
+        "title": "La partita",
+        "text": "Softair, arcotag o Nerf, nella nostra arena al coperto: la festa comincia in campo."
+      },
+      {
+        "title": "La sala feste",
+        "text": "Su richiesta puoi prenotare la sala feste, per festeggiare dopo la partita."
+      },
+      {
+        "title": "Il catering",
+        "text": "Su richiesta prepariamo il catering, per festeggiare tutti insieme dopo la sfida. Alla torta ci pensiamo noi, oppure puoi portarla tu."
+      }
+    ]
+  },
+  "booking": {
+    "title": "Come si prenota",
+    "text": "La prenotazione è obbligatoria e parte dalla richiesta in fondo alla pagina.",
+    "steps": [
+      {
+        "time": "",
+        "title": "Data, giocatori, attività",
+        "text": "Scegli il giorno, l'attività (softair, arcotag o Nerf) e quanti sarete: fino a 20 con il softair, fino a 30 con arcotag e Nerf."
+      },
+      {
+        "time": "",
+        "title": "Il dopo partita",
+        "text": "Dicci se vuoi la sala feste e il catering, e se alla torta pensiamo noi o la porti tu."
+      },
+      {
+        "time": "",
+        "title": "La nostra offerta",
+        "text": "Ti rispondiamo con la nostra migliore offerta per la tua festa."
+      }
+    ],
+    "notesTitle": "Da sapere",
+    "notes": [
+      "Prenotazione obbligatoria",
+      "Modulo obbligatorio per ogni giocatore",
+      "Arena non climatizzata né riscaldata: vestiti a strati se fa freddo"
+    ],
+    "notesNote": "Il modulo: online per i maggiorenni, su carta e firmato da un genitore per i minorenni.",
+    "link": {
+      "label": "Vai ai moduli",
+      "href": "/modulistica"
+    }
+  },
+  "reviews": {
+    "title": "Cosa dice chi ha giocato da noi"
+  },
+  "faq": {
+    "title": "Domande frequenti sull'addio al celibato e al nubilato",
+    "items": [
+      {
+        "q": "Quante persone possono partecipare?",
+        "a": "Fino a 20 giocatori con il softair e fino a 30 con arcotag e Nerf. Con arcotag e Nerf non vi uniamo ad altri gruppi: il minimo è 8 dal lunedì al venerdì e 15 sabato e domenica, e se siete meno si pagano comunque 8 o 15 quote. Con il softair, se siete meno di 8 vi uniamo a un altro gruppo, a meno che non prendiate l'arena in esclusiva."
+      },
+      {
+        "q": "Si può organizzare qualcosa di speciale per un addio al celibato o al nubilato?",
+        "a": "Sì: chiamaci per realizzare qualcosa di indimenticabile. Il numero è in fondo alla pagina."
+      },
+      {
+        "q": "Serve esperienza?",
+        "a": "No. L'attrezzatura è inclusa e il briefing prima della partita spiega tutto: si gioca anche se nessuno del gruppo ha mai provato."
+      },
+      {
+        "q": "Come funziona la sala feste?",
+        "a": "La festa si organizza insieme alla partita. Su richiesta puoi prenotare la sala feste e il catering: scrivilo nella richiesta di preventivo e ti rispondiamo con tutti i dettagli."
+      },
+      {
+        "q": "Posso portare la torta?",
+        "a": "Sì: alla torta ci pensiamo noi, oppure puoi portarla tu. Il catering lo prepariamo su richiesta."
+      },
+      {
+        "q": "Quanto costa un addio al celibato?",
+        "a": "Dipende dal giorno, dal numero di giocatori, dall'attività e da sala feste e catering: compila la richiesta di preventivo e ti rispondiamo con la nostra migliore offerta."
+      },
+      {
+        "q": "Quando si può fare la festa?",
+        "a": "La mattina, il pomeriggio o la sera, con qualsiasi tempo: l'arena è coperta e illuminata."
+      },
+      {
+        "q": "Serve un modulo per giocare?",
+        "a": "Sì, è obbligatorio per ogni giocatore: i maggiorenni lo compilano online, i minorenni portano quello su carta firmato da un genitore. Li trovi nella pagina Modulistica."
+      },
+      {
+        "q": "Come ci si veste?",
+        "a": "Dipende dall'attività. Per arcotag e Nerf basta un abbigliamento comodo, scelto in base alla temperatura. Per il softair: maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). L'arena non è climatizzata né riscaldata: se fa freddo, aggiungi qualche strato."
+      },
+      {
+        "q": "Dove si trova l'arena?",
+        "a": "In Via Melegnano 26 a Settimo Milanese, alle porte di Milano: parcheggio facile e bus 433 dalla metro M1 Bisceglie."
+      },
+      {
+        "q": "Come si prenota?",
+        "a": "La prenotazione è obbligatoria. Compila la richiesta qui sotto con la data, il numero di giocatori e l'attività, e dicci se vuoi la sala feste e il catering: ti rispondiamo con la nostra migliore offerta. Se preferisci, chiamaci o scrivici: telefono ed email sono in fondo alla pagina."
+      }
+    ]
+  },
+  "request": {
+    "title": "Richiedi un preventivo",
+    "text": "Dicci la data, quanti siete e quale attività preferisci, e se vuoi la sala feste e il catering: ti rispondiamo con la nostra migliore offerta.",
+    "activity": "Addio al celibato o nubilato"
+  }
+}

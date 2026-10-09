@@ -13,11 +13,12 @@
 # The comparison page moved to a clearer address
 /paintball/ /softair-vs-paintball/ 301
 /paintball /softair-vs-paintball/ 301
+# The parties page of the preview, split in two: birthdays keep the old WordPress address
+/occasioni/ /festa-di-compleanno/ 301
+/occasioni /festa-di-compleanno/ 301
 # Old pages of the WordPress site with no page of their own here
-/festa-di-compleanno/ /occasioni/ 301
-/festa-di-compleanno /occasioni/ 301
-/eventi/ /occasioni/ 301
-/eventi /occasioni/ 301
+/eventi/ /addio-al-celibato/ 301
+/eventi /addio-al-celibato/ 301
 /landing-agosto-2024/ /softair/ 301
 /landing-agosto-2024 /softair/ 301
 /landing-agosto-2024-2/ /softair/ 301

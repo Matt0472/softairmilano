@@ -19,7 +19,8 @@ const ROOT = process.cwd();
 /** Fixed pages and the data file that holds their switch. Home, legal pages and 404 are always on. */
 const PAGE_FILES: Record<string, string> = {
   '/corso-softair': 'src/data/corso.json',
-  '/occasioni': 'src/data/occasioni.json',
+  '/festa-di-compleanno': 'src/data/compleanno.json',
+  '/addio-al-celibato': 'src/data/addio-celibato.json',
   '/teambuilding': 'src/data/teambuilding.json',
   '/softair-vs-paintball': 'src/data/paintball.json',
   '/voucher-regalo': 'src/data/voucher.json',
@@ -46,7 +47,7 @@ const articleOff = (file: string): boolean => {
   return !!head && /^published:\s*false\b/im.test(head[1]);
 };
 
-/** Every switched-off address, without the trailing slash (e.g. "/occasioni", "/blog/x"). */
+/** Every switched-off address, without the trailing slash (e.g. "/teambuilding", "/blog/x"). */
 export function offPaths(): Set<string> {
   const off = new Set<string>();
   for (const [path, file] of Object.entries(PAGE_FILES)) if (jsonOff(file)) off.add(path);

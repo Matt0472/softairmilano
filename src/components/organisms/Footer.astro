@@ -40,6 +40,11 @@ for (const it of (navigation.items as NavItem[]).filter((i) => has(i.label))) {
     pages.links.push(it);
   }
 }
+// From 768 to 1023 the brand row takes the menu's columns (never fewer than three), so the Ranger
+// card lines up with them: a third of the row rounded up to whole columns, the identity the rest.
+const brandCols = Math.max(columns.length, 3);
+const rangerCols = Math.ceil(brandCols / 3);
+const brandGrid = `--id-cols: ${brandCols - rangerCols}; --ranger-cols: ${rangerCols}; --brand-cols: ${brandCols}`;
 
 // Same rule as the header: the current page is marked, and only it is in the accent colour.
 const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
@@ -73,7 +78,7 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
 
 <footer class="foot">
   <div class="shell foot__main">
-    <div class="foot__brand">
+    <div class="foot__brand" style={brandGrid}>
       <div class="foot__id">
         <a href="/" class="foot__logo" aria-label={`${siteName} — home`}>
           <img src="/logo/logo-white-120.webp" alt="" width="121" height="120" loading="lazy" decoding="async" />
@@ -195,8 +200,8 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
     background: var(--color-surface);
   }
 
-  /* Phone: one stack. 768: brand row, three menu columns, contacts in two. 1024: menu and contacts
-     side by side under the brand. 1280: brand, menu and contacts in one row. */
+  /* Phone: one stack. 768: brand row, one column per menu group, contacts in two. 1024: menu and
+     contacts side by side under the brand. 1280: brand, menu and contacts in one row. */
   .foot__main {
     position: relative;
     display: grid;
@@ -504,14 +509,16 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
     .foot__legal { justify-content: flex-end; column-gap: 1rem; }
   }
 
-  /* 768–1023: the card sits over the third menu column; the contacts split in two. */
+  /* 768–1023: the card sits over the last menu columns (the counts are set in the markup); the
+     contacts split in two. */
   @media (min-width: 768px) and (max-width: 1023px) {
     .foot__brand {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(var(--brand-cols), minmax(0, 1fr));
       column-gap: var(--col-gap);
       align-items: start;
     }
-    .foot__id { grid-column: span 2; }
+    .foot__id { grid-column: span var(--id-cols); }
+    .foot__ranger { grid-column: span var(--ranger-cols); }
     .foot__list--contacts {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
