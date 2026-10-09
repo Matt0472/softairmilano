@@ -3,7 +3,7 @@
     "title": "I cookie di SoftAir Milano",
     "text": "Usiamo cookie tecnici e, solo se accetti, statistiche di visita e servizi esterni come la prenotazione online. Puoi cambiare idea da «Preferenze cookie», in fondo alla pagina.",
     "acceptAll": "Accetta tutti",
-    "rejectAll": "Rifiuta",
+    "rejectAll": "Accetta solo essenziali",
     "preferences": "Preferenze"
   },
   "preferences": {
@@ -11,7 +11,7 @@
     "text": "Scegli quali cookie accettare. Puoi cambiare idea in qualsiasi momento da «Preferenze cookie», in fondo a ogni pagina.",
     "save": "Salva le preferenze",
     "acceptAll": "Accetta tutti",
-    "rejectAll": "Rifiuta tutti",
+    "rejectAll": "Accetta solo essenziali",
     "close": "Chiudi"
   },
   "categories": {

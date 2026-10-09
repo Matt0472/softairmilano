@@ -25,14 +25,14 @@ content:
       - { name: defaultOgImage, label: Immagine social predefinita, type: image, description: "L'anteprima che compare quando qualcuno condivide il sito su WhatsApp, Facebook o LinkedIn, per le pagine che non hanno una loro immagine social. JPG orizzontale 1200×630: i social non mostrano gli SVG" }
       - { name: footerTagline, label: Frase sotto il logo nel footer, type: string }
       - { name: phone, label: Telefono, type: string }
-      - { name: whatsapp, label: WhatsApp, type: string, description: "Il numero, scritto come il telefono, es. «375 595 6805». Accende WhatsApp nella sezione Prenota, in Contatti e il bottone WhatsApp sul telefono. Se vuoto, WhatsApp non compare da nessuna parte" }
+      - { name: whatsapp, label: WhatsApp, type: string, description: "Il numero, scritto come il telefono, es. «375 595 6805». Accende WhatsApp nella sezione Prenota, in Contatti e il bottone WhatsApp in basso a sinistra. Se vuoto, WhatsApp non compare da nessuna parte" }
       - name: whatsappButton
-        label: Bottone WhatsApp sul telefono
-        description: "Il bottone tondo con il simbolo di WhatsApp in basso a sinistra, solo su telefoni e tablet piccoli: compare dopo l'apertura della pagina e si nasconde dalla sezione Prenota in giù e mentre sono aperti il banner dei cookie o il menu. Un tocco apre WhatsApp sul numero qui sopra, con il messaggio già scritto. Senza il numero WhatsApp non compare"
+        label: Bottone WhatsApp
+        description: "Il bottone tondo con il simbolo di WhatsApp in basso a sinistra, su ogni pagina, da telefono e da computer: compare insieme alla freccia «Torna su», appena si scorre la pagina, e poi resta. Si fa da parte solo mentre sono aperti il banner dei cookie o il menu e mentre si scrive in un campo. Un tocco o un clic apre WhatsApp (da computer, WhatsApp Web in una nuova scheda) sul numero qui sopra, con il messaggio già scritto. Senza il numero WhatsApp non compare"
         type: object
         fields:
           - { name: show, label: Mostra il bottone, type: boolean, default: true, description: "Spento: il bottone sparisce da tutte le pagine. WhatsApp resta nella sezione Prenota e in Contatti" }
-          - { name: label, label: "Nome del bottone (per i lettori di schermo)", type: string, required: true, description: "Non si vede: lo legge ad alta voce il telefono a chi non vede lo schermo. Dice cosa fa il bottone, es. «Scrivici su WhatsApp»" }
+          - { name: label, label: "Nome del bottone (per i lettori di schermo)", type: string, required: true, description: "Non si vede: lo legge ad alta voce il lettore di schermo, sul telefono o sul computer, a chi non vede lo schermo. Dice cosa fa il bottone, es. «Scrivici su WhatsApp»" }
           - { name: message, label: Messaggio già scritto, type: text, description: "Il testo che il visitatore trova già scritto in WhatsApp: può cambiarlo prima di inviarlo. Breve, es. «Ciao! Vorrei informazioni per prenotare una partita.». Se vuoto, WhatsApp si apre senza messaggio" }
       - { name: email, label: Email, type: string }
       - { name: address, label: Indirizzo, type: text }
@@ -1707,7 +1707,7 @@ content:
           - { name: title, label: Titolo, type: string }
           - { name: text, label: Testo, type: text, description: "Breve e vero: cosa usa il sito e che si può cambiare idea. Niente nomi di servizi che il sito non usa" }
           - { name: acceptAll, label: Bottone «Accetta tutti», type: string, required: true }
-          - { name: rejectAll, label: Bottone «Rifiuta», type: string, required: true, description: "Ha lo stesso peso di «Accetta tutti», come chiede il Garante" }
+          - { name: rejectAll, label: Bottone «Accetta solo essenziali», type: string, required: true, description: "Rifiuta tutto tranne i cookie essenziali. Ha lo stesso peso di «Accetta tutti», come chiede il Garante" }
           - { name: preferences, label: Bottone «Preferenze», type: string, required: true }
       - name: preferences
         label: Finestra «Preferenze cookie»
@@ -1716,9 +1716,9 @@ content:
         fields:
           - { name: title, label: Titolo, type: string }
           - { name: text, label: Testo introduttivo, type: text, description: "Sotto compaiono da soli i link a privacy e cookie policy del footer" }
-          - { name: save, label: Bottone «Salva le preferenze», type: string, required: true }
           - { name: acceptAll, label: Bottone «Accetta tutti», type: string, required: true }
-          - { name: rejectAll, label: Bottone «Rifiuta tutti», type: string, required: true }
+          - { name: rejectAll, label: Bottone «Accetta solo essenziali», type: string, required: true, description: "Spegne tutto tranne i cookie essenziali e chiude la finestra" }
+          - { name: save, label: Bottone «Salva le preferenze», type: string, required: true }
           - { name: close, label: Testo per chiudere la finestra, type: string, required: true, description: "Letto dai lettori di schermo sulla X, es. «Chiudi»" }
       - name: categories
         label: Categorie

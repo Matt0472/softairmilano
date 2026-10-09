@@ -36,13 +36,15 @@ import Icon from '../atoms/Icon.astro';
       transform var(--duration-base) var(--ease-out-expo),
       visibility 0s;
   }
-  /* Marks 600px down the document: once it has scrolled above the viewport, the button shows. */
+  /* Spans the first 600px of the document: once none of it is in view, the button shows. A band
+     rather than a 1px mark, so a jump past it (an anchor, on a short screen) always changes what
+     the observer sees and is noticed. */
   .scroll-top__sentinel {
     position: absolute;
-    top: 600px;
+    top: 0;
     left: 0;
     width: 1px;
-    height: 1px;
+    height: 600px;
     pointer-events: none;
   }
 </style>
@@ -51,9 +53,10 @@ import Icon from '../atoms/Icon.astro';
   const btn = document.getElementById('scroll-top');
   const sentinel = document.getElementById('scroll-top-sentinel');
   if (btn && sentinel) {
-    // An observer rather than a scroll listener: no work per frame, no layout read at load.
-    new IntersectionObserver(([entry]) => {
-      btn.dataset.visible = String(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+    // An observer rather than a scroll listener: no work per frame, no layout read at load. The
+    // latest entry: two may queue up while the page restores its scroll on load.
+    new IntersectionObserver((entries) => {
+      btn.dataset.visible = String(!entries[entries.length - 1].isIntersecting);
     }).observe(sentinel);
 
     btn.addEventListener('click', (e) => {

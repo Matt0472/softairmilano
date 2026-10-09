@@ -417,7 +417,9 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-block: 0.75rem 1rem;
+    /* Phones: at the end of the page the last row clears the fixed WhatsApp and back-to-top
+       buttons (44px, 20px in) in the bottom corners. */
+    padding-block: 0.75rem 4.5rem;
     font-size: 0.8125rem;
     color: var(--color-muted);
   }
@@ -434,8 +436,6 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
     margin: 0;
     padding: 0;
     list-style: none;
-    /* Phones: the last links wrap before the fixed back-to-top button (44px, 20px in). */
-    padding-right: 3.5rem;
   }
   .foot__fine,
   .foot__author {
@@ -496,12 +496,12 @@ const copy = [`© ${year} ${siteName}`, has(settings.vatNumber) ? `P.IVA ${setti
       column-gap: 1rem;
       padding-block: 0.5rem;
     }
-    .foot__copy { justify-self: start; }
     .foot__credit { justify-self: center; }
-    /* With the gutter, the links end 5rem from the edge: clear of the fixed back-to-top button
-       (44px, 20px in). A margin on this side only keeps the centre true. */
+    /* With the gutter, the © starts and the links end 5rem from the edges: clear of the fixed
+       WhatsApp and back-to-top buttons (44px, 20px in). */
+    .foot__copy { justify-self: start; margin-left: 3rem; }
     .foot__legal-nav { justify-self: end; margin-right: 3rem; }
-    .foot__legal { justify-content: flex-end; column-gap: 1rem; padding-right: 0; }
+    .foot__legal { justify-content: flex-end; column-gap: 1rem; }
   }
 
   /* 768–1023: the card sits over the third menu column; the contacts split in two. */

@@ -104,7 +104,7 @@
 @layer base {
   :root {
     color-scheme: dark;
-    /* The fixed "back to top" button sits in the bottom corner: keyboard focus scrolls clear of it (A11Y-05). */
+    /* The fixed WhatsApp and "back to top" buttons sit in the bottom corners: keyboard focus scrolls clear of them (A11Y-05). */
     scroll-padding-bottom: 5rem;
     /* The scrollbar's room is always kept, so a scroll lock (the cookie banner hides the page's
        overflow) never slides the page sideways on desktops with classic scrollbars (CLS). */
