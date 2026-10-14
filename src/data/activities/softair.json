@@ -212,7 +212,7 @@
         "when": "Con la vostra attrezzatura",
         "price": "15",
         "unit": "€ a persona",
-        "note": "Pallini propri solo non bio, al massimo 0,28 g",
+        "note": "Pallini propri solo non bio, al massimo 0,28 g. Protezione di occhi e bocca obbligatoria",
         "badge": ""
       }
     ],
@@ -262,7 +262,7 @@
       },
       {
         "q": "Posso usare la mia attrezzatura?",
-        "a": "Sì, con il profilo Veterano a 15 €. Nell'arena si usano solo pallini non bio, al massimo da 0,28 g."
+        "a": "Sì, con il profilo Veterano a 15 €. La protezione di occhi e bocca è obbligatoria, e nell'arena si usano solo pallini non bio, al massimo da 0,28 g."
       },
       {
         "q": "Si gioca anche se piove?",

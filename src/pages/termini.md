@@ -2,7 +2,7 @@
 layout: ../layouts/LegalLayout.astro
 title: Termini e condizioni
 description: Le condizioni per prenotare le attività di SoftAir Milano e per acquistare e usare i voucher regalo.
-updated: 9 ottobre 2026
+updated: 14 ottobre 2026
 ---
 
 Questi termini valgono per le prenotazioni delle attività di SoftAir Milano (softair, arcotag, tiro dinamico, Nerf, feste e team building) e per l'acquisto e l'uso dei voucher regalo, fatti dal sito, al telefono, via email o con il servizio di prenotazione online.
@@ -38,7 +38,7 @@ La festa si organizza insieme alla partita. La sala feste e il catering si preno
 
 - Prima di giocare lo staff spiega le regole e l'uso dell'attrezzatura; le sue indicazioni vanno sempre seguite.
 - In campo la maschera protettiva si tiene sempre indossata.
-- Le repliche softair restano entro 1 joule, come prevede la legge. Chi usa la propria attrezzatura può usare solo pallini non bio, al massimo da 0,28 g.
+- Le repliche softair restano entro 1 joule, come prevede la legge. Chi usa la propria attrezzatura deve proteggere occhi e bocca e può usare solo pallini non bio, al massimo da 0,28 g.
 - Lo staff può interrompere il gioco o allontanare chi non rispetta le regole di sicurezza.
 
 ## Voucher regalo
