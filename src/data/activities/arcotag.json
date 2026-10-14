@@ -182,7 +182,7 @@
         "when": "Lun–ven, 14:00–20:00",
         "price": "15",
         "unit": "€ a persona",
-        "note": "Minimo 8 quote",
+        "note": "",
         "badge": ""
       },
       {
@@ -190,7 +190,7 @@
         "when": "Lun–ven, dalle 20:00",
         "price": "20",
         "unit": "€ a persona",
-        "note": "Minimo 8 quote",
+        "note": "",
         "badge": "Serata tra amici"
       },
       {
@@ -198,12 +198,13 @@
         "when": "Sab–dom, pomeriggio e sera",
         "price": "25",
         "unit": "€ a persona",
-        "note": "Minimo 15 quote",
+        "note": "",
         "badge": ""
       }
     ],
     "notes": [
-      "Fino a 30 giocatori. Dal lunedì al venerdì il minimo è 8: se siete meno, si pagano comunque 8 quote. Sabato e domenica il minimo è 15: se siete meno, si pagano comunque 15 quote.",
+      "Fino a 30 giocatori, con l'arena in esclusiva per il vostro gruppo. Dal lunedì al venerdì il minimo è 8: se siete meno, si pagano comunque 8 quote. Sabato e domenica il minimo è 15: se siete meno, si pagano comunque 15 quote.",
+      "Saletta feste su richiesta.",
       "Prenotazione obbligatoria."
     ],
     "wear": {
@@ -222,7 +223,7 @@
       },
       {
         "q": "Quanti giocatori servono?",
-        "a": "Almeno 8 dal lunedì al venerdì e almeno 15 sabato e domenica: se siete meno potete giocare lo stesso, pagando comunque 8 o 15 quote. Al massimo si gioca in 30, e non vi uniamo ad altri gruppi."
+        "a": "Almeno 8 dal lunedì al venerdì e almeno 15 sabato e domenica: se siete meno potete giocare lo stesso, pagando comunque 8 o 15 quote. Al massimo si gioca in 30, e l'arena è in esclusiva per il vostro gruppo: non vi uniamo ad altri."
       },
       {
         "q": "Quanto dura una partita?",

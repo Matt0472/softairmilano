@@ -559,7 +559,7 @@ content:
               - { name: when, label: "Quando / per chi", type: string }
               - { name: price, label: "Prezzo (solo il numero)", type: string }
               - { name: unit, label: "Unità (es. € a persona)", type: string }
-              - { name: note, label: Nota, type: string, description: "Breve, sotto il prezzo, es. «Minimo 8 quote». Se vuota non compare" }
+              - { name: note, label: Nota, type: string, description: "Breve, sotto il prezzo, es. «Fucile, maschera e 300 colpi». Se vuota non compare" }
               - { name: badge, label: "Badge (facoltativo, es. Serata tra amici)", type: string, description: "Mette in risalto la fascia: meglio una sola" }
           - name: players
             label: Numero di giocatori
