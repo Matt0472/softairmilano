@@ -2140,7 +2140,7 @@
       <p class="where"><span>Nel pannello</span> Attività (pagine) › Softair, Arcotag, Tiro dinamico, Nerf</p>
       <p>
         Una scheda per attività, e ogni scheda è una pagina del sito. Tutte hanno le stesse sezioni,
-        nello stesso ordine: Apertura, In breve, Come funziona, la sezione con foto ed elenco,
+        nello stesso ordine: Apertura, In breve, Video, Come funziona, la sezione con foto ed elenco,
         Missioni o percorsi, Per chi è, Prezzi, Recensioni, Domande frequenti, Altre attività, il
         form di richiesta e Prenota. Una sezione vuota non compare, così ogni attività usa solo
         quelle che le servono: le missioni, per esempio, ci sono solo nel softair e nel tiro
@@ -2219,6 +2219,43 @@
         <div>
           <dt>Punti forti › Titolo · Testo</dt>
           <dd><p class="empty">un punto senza titolo non compare.</p></dd>
+        </div>
+      </dl>
+
+      <h3>Video (sotto «In breve»)</h3>
+      <p>
+        Facoltativo: lo stesso riquadro di «Dentro l'azione» della home (capitolo <a href="#home">10</a>),
+        che parte da solo senza audio appena arriva sullo schermo, largo oppure verticale accanto al
+        testo. Oggi c'è nel tiro dinamico, verticale e con l'audio.
+      </p>
+      <dl class="fields">
+        <div>
+          <dt>Titolo · Testo</dt>
+          <dd><p>Una o due righe. Con il formato «Verticale» stanno a sinistra del video: compilateli, altrimenti la colonna resta vuota.</p></dd>
+        </div>
+        <div>
+          <dt>Formato del video</dt>
+          <dd><p>«Largo»: il video occupa tutta la larghezza, come in home. «Verticale»: per i video girati con il telefono; su computer sta a destra del titolo e del testo, sul telefono a tutta larghezza.</p><p class="empty">è largo.</p></dd>
+        </div>
+        <div>
+          <dt>Il video ha l'audio</dt>
+          <dd><p>Spento: il video resta sempre muto e il pulsante dell'audio non compare. Il pulsante di pausa c'è sempre.</p><p class="empty">il pulsante dell'audio c'è.</p></dd>
+        </div>
+        <div>
+          <dt>Video (computer e tablet)</dt>
+          <dd><p>L'indirizzo del file .mp4 caricato su Cloudflare R2: molto largo (circa 2,5:1, es. 1920×756) con «Largo», verticale 4:5 (es. 864×1080) con «Verticale».</p><p class="empty">la sezione non compare.</p></dd>
+        </div>
+        <div>
+          <dt>Video (telefono)</dt>
+          <dd><p>Facoltativo. Con «Largo»: una versione verticale 4:5 (es. 604×756) per i telefoni in verticale. Con «Verticale»: una versione più leggera dello stesso video 4:5 per tutti i telefoni.</p><p class="empty">con «Largo» i telefoni vedono la striscia larga; con «Verticale» usano il video per computer.</p></dd>
+        </div>
+        <div>
+          <dt>Immagine poster (computer e tablet) · Immagine poster (telefono)</dt>
+          <dd><p>Un fotogramma di ciascun video, nello stesso formato: si vede finché il video non parte. Il poster per telefono serve solo se c'è il video per telefono.</p><p class="empty">senza poster per computer c'è un riquadro scuro; senza quello per telefono si usa il poster per computer.</p></dd>
+        </div>
+        <div>
+          <dt>Descrizione del video · Testo del pulsante YouTube</dt>
+          <dd><p>Come in home: la descrizione la leggono i lettori di schermo; il pulsante porta al canale YouTube di Impostazioni generali.</p></dd>
         </div>
       </dl>
 
@@ -2556,11 +2593,11 @@
         </div>
         <div>
           <dt>Testo con le iscrizioni aperte <span class="limit">max 90</span></dt>
-          <dd><p>Es. «Iscrizioni aperte per la prima parte: si parte il 7 ottobre». Breve: sul telefono va su due righe.</p><p class="empty">con le iscrizioni aperte non compare nulla.</p></dd>
+          <dd><p>Es. «Iscrizioni aperte: si parte il 7 ottobre». Breve: sul telefono va su due righe.</p><p class="empty">con le iscrizioni aperte non compare nulla.</p></dd>
         </div>
         <div>
           <dt>Testo con le iscrizioni chiuse <span class="limit">max 90</span></dt>
-          <dd><p>Es. «Iscrizioni chiuse: riaprono per la seconda parte, che inizia il 3 marzo».</p><p class="empty">con le iscrizioni chiuse non compare nulla.</p></dd>
+          <dd><p>Es. «Iscrizioni chiuse: non riaprono fino alla prossima stagione».</p><p class="empty">con le iscrizioni chiuse non compare nulla.</p></dd>
         </div>
       </dl>
       <h4>Il giro dell'anno</h4>
@@ -2575,29 +2612,19 @@
           </thead>
           <tbody>
             <tr>
-              <td>Dall'inizio della stagione all'inizio della prima parte (oggi il 7 ottobre)</td>
+              <td>Dall'inizio della stagione all'inizio del corso (oggi il 7 ottobre)</td>
               <td class="nowrap">acceso</td>
-              <td>«Iscrizioni aperte per la prima parte: si parte il 7 ottobre»</td>
+              <td>«Iscrizioni aperte: si parte il 7 ottobre»</td>
             </tr>
             <tr>
-              <td>Da quando parte la prima parte</td>
+              <td>Da quando parte il corso, per tutta la stagione (le iscrizioni non riaprono per la seconda parte)</td>
               <td class="nowrap">spento</td>
-              <td>«Iscrizioni chiuse: riaprono per la seconda parte, che inizia il 3 marzo»</td>
-            </tr>
-            <tr>
-              <td>Qualche settimana prima della seconda parte (prima del 3 marzo)</td>
-              <td class="nowrap">acceso, e riscrivete il testo «aperte»</td>
-              <td>«Iscrizioni aperte per la seconda parte: si riparte il 3 marzo»</td>
-            </tr>
-            <tr>
-              <td>Da marzo, quando parte la seconda parte</td>
-              <td class="nowrap">spento, e riscrivete il testo «chiuse»</td>
-              <td>«Iscrizioni chiuse: riaprono a ottobre per la nuova stagione», oppure «Iscrizioni chiuse, alla prossima stagione»</td>
+              <td>«Iscrizioni chiuse: non riaprono fino alla prossima stagione»</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p>Ogni volta che spostate l'interruttore, rileggete il testo che comparirà: deve dire la parte e la data giuste.</p>
+      <p>Ogni volta che spostate l'interruttore, rileggete il testo che comparirà: deve dire la data giusta.</p>
 
       <h3>In breve</h3>
       <dl class="fields">
@@ -3135,10 +3162,11 @@
         Cosa comprende una festa, in tre schede senza prezzi: «La partita», «La sala feste», «Il
         catering». Le pagine delle feste dicono solo che sala e catering si aggiungono <strong>su
         richiesta</strong>: sul sito non ci sono regole né prezzi della sala, i dettagli si danno
-        con il preventivo. La torta viene prima di tutto: «alla torta ci pensiamo noi, oppure puoi portarla tu», nella
-        scheda del catering, nel secondo passaggio di «Come si prenota» e nella domanda «Posso
-        portare la torta?» di tutte e due le pagine (e nelle domande sui compleanni di Softair,
-        Arcotag e Nerf). Le merende personalizzate ci sono solo nei compleanni.
+        con il preventivo. Solo nei compleanni, la torta viene prima di tutto: «alla torta ci pensiamo noi, oppure puoi
+        portarla tu», nella scheda del catering, nel secondo passaggio di «Come si prenota» e nella
+        domanda «Posso portare la torta?» (e nelle domande sui compleanni di Softair, Arcotag e
+        Nerf). Anche le merende personalizzate ci sono solo nei compleanni: nell'addio al celibato
+        né torta né merende.
       </p>
       <dl class="fields">
         <div>
@@ -3712,7 +3740,7 @@
           <summary>Sala feste e catering <span class="today">oggi: su richiesta, con i dettagli nel preventivo</span></summary>
           <div>
             <ul>
-              <li><strong>Festa di compleanno</strong> e <strong>Addio al celibato</strong>: Apertura › Sottotitolo (nei compleanni), Introduzione › Testo, Sala feste e catering (testo e schede), Come si prenota › secondo passaggio, domande «Come funziona la sala feste?» e «Posso portare la torta?».</li>
+              <li><strong>Festa di compleanno</strong> e <strong>Addio al celibato</strong>: Apertura › Sottotitolo (nei compleanni), Introduzione › Testo, Sala feste e catering (testo e schede), Come si prenota › secondo passaggio, domande «Come funziona la sala feste?» e, nei compleanni, «Posso portare la torta?».</li>
               <li><strong>Softair</strong>: domanda «Si può festeggiare un compleanno?».</li>
               <li><strong>Arcotag</strong>: domanda «Possiamo festeggiare un compleanno?».</li>
               <li><strong>Nerf</strong>: domanda «Come funziona la festa di compleanno?».</li>

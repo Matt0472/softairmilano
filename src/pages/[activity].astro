@@ -6,6 +6,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/organisms/PageHero.astro';
 import AnswerBlock from '../components/organisms/AnswerBlock.astro';
+import ActionVideo from '../components/organisms/ActionVideo.astro';
 import StepTimeline from '../components/organisms/StepTimeline.astro';
 import ModeGrid from '../components/organisms/ModeGrid.astro';
 import SplitFeature from '../components/organisms/SplitFeature.astro';
@@ -44,6 +45,18 @@ interface Activity {
   };
   facts?: { value: string; label: string }[];
   intro?: { title: string; text: string; points?: { title: string; text: string }[] };
+  video?: {
+    title: string;
+    text?: string;
+    videoSrc: string;
+    videoSrcMobile?: string;
+    poster?: string;
+    posterMobile?: string;
+    videoAlt?: string;
+    youtubeLabel?: string;
+    format?: 'wide' | 'portrait';
+    sound?: boolean;
+  };
   evening?: { eyebrow?: string; title: string; text?: string; steps?: { time?: string; title: string; text: string; link?: { label?: string; href?: string } }[] };
   modes?: {
     eyebrow?: string;
@@ -87,7 +100,7 @@ const signature: Record<string, 'trajectory'> = { arcotag: 'trajectory' };
 
 // A section renders only when the client filled it in: Pages CMS always saves the object, so
 // its title (and its list, where it has one) is what decides (CMS-10).
-const { intro, evening, modes, howto, audiences, pricing, reviews, faq, related, finalCta } = data;
+const { intro, video, evening, modes, howto, audiences, pricing, reviews, faq, related, finalCta } = data;
 
 // What to wear under the prices: the activity's own block when it has text or items, otherwise
 // the general one from settings; without its own title it takes the general title.
@@ -131,6 +144,9 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
   </PageHero>
 
   {intro && has(intro.title) && has(intro.text) && <AnswerBlock {...intro} />}
+
+  {/* The activity on video, as the home's «Dentro l'azione». */}
+  {video && has(video.videoSrc) && <ActionVideo {...video} headingId="video-title" />}
 
   {evening && has(evening.title) && !!evening.steps?.length && <StepTimeline {...evening} steps={evening.steps} id="serata" />}
 

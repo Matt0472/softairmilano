@@ -61,6 +61,18 @@
       }
     ]
   },
+  "video": {
+    "title": "Il percorso in azione",
+    "text": "Bersagli, tempo e precisione: guardalo, poi tocca a te.",
+    "videoSrc": "https://pub-03634caa58304887b733482b0c916e61.r2.dev/tiro-dinamico.mp4",
+    "videoSrcMobile": "https://pub-03634caa58304887b733482b0c916e61.r2.dev/tiro-dinamico-mobile.mp4",
+    "poster": "/uploads/tiro-dinamico-video-poster.jpg",
+    "posterMobile": "/uploads/tiro-dinamico-video-poster-mobile.jpg",
+    "videoAlt": "Tiro dinamico nell'arena indoor: un tiratore con gilet tattico, occhiali e maschera percorre lo stage tra casette di legno e reti mimetiche e colpisce i bersagli.",
+    "youtubeLabel": "",
+    "format": "portrait",
+    "sound": true
+  },
   "evening": {
     "eyebrow": "",
     "title": "La vostra sfida, un passo alla volta",

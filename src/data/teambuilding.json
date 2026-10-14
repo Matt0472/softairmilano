@@ -87,11 +87,6 @@
         "time": "Finale",
         "title": "Lo scontro finale",
         "text": "Le due squadre si affrontano un'ultima volta, con tutti i vantaggi conquistati lungo la partita."
-      },
-      {
-        "time": "Attestati",
-        "title": "Gli attestati",
-        "text": "A fine partita rilasciamo gli attestati a tutti i partecipanti."
       }
     ]
   },
@@ -138,9 +133,12 @@
   "onRequest": {
     "title": "Su richiesta",
     "items": [
-      "Una sessione di training di 1 ora prima dell'attività, con un formatore esperto",
+      "Welcome coffee",
+      "Un corso di softair di 1 ora prima della partita, con un formatore esperto",
       "Un'ora di gioco in più",
-      "Catering"
+      "Catering",
+      "Noleggio della sala conferenze",
+      "Attestati di partecipazione"
     ],
     "note": "Indicatele nella richiesta di preventivo. L'arena non è climatizzata né riscaldata: cosa indossare è nelle domande frequenti, più in basso."
   },
@@ -257,7 +255,7 @@
       },
       {
         "q": "Quanto dura il team building?",
-        "a": "Una sessione di softair dura 1 ora e 45 minuti in tutto, briefing compreso. Su richiesta si aggiungono una sessione di training di 1 ora prima, con un formatore esperto, o un'ora di gioco in più."
+        "a": "Una sessione di softair dura 1 ora e 45 minuti in tutto, briefing compreso. Su richiesta si aggiungono un corso di softair di 1 ora prima della partita, con un formatore esperto, o un'ora di gioco in più."
       },
       {
         "q": "Quanto costa?",
@@ -269,7 +267,7 @@
       },
       {
         "q": "Cosa si può aggiungere alla giornata?",
-        "a": "Su richiesta, una sessione di training di 1 ora prima dell'attività con un formatore esperto, un'ora di gioco in più e il catering. Indicatelo nella richiesta di preventivo."
+        "a": "Su richiesta: welcome coffee, un corso di softair di 1 ora prima della partita con un formatore esperto, un'ora di gioco in più, catering, noleggio della sala conferenze e attestati di partecipazione. Indicatelo nella richiesta di preventivo."
       },
       {
         "q": "Si può fare fuori dall'arena?",

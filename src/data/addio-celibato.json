@@ -94,7 +94,7 @@
       },
       {
         "title": "Il catering",
-        "text": "Su richiesta prepariamo il catering, per festeggiare tutti insieme dopo la sfida. Alla torta ci pensiamo noi, oppure puoi portarla tu."
+        "text": "Su richiesta prepariamo il catering, per festeggiare tutti insieme dopo la sfida."
       }
     ]
   },
@@ -110,7 +110,7 @@
       {
         "time": "",
         "title": "Il dopo partita",
-        "text": "Dicci se vuoi la sala feste e il catering, e se alla torta pensiamo noi o la porti tu."
+        "text": "Dicci se vuoi la sala feste e il catering."
       },
       {
         "time": "",
@@ -151,10 +151,6 @@
       {
         "q": "Come funziona la sala feste?",
         "a": "La festa si organizza insieme alla partita. Su richiesta puoi prenotare la sala feste e il catering: scrivilo nella richiesta di preventivo e ti rispondiamo con tutti i dettagli."
-      },
-      {
-        "q": "Posso portare la torta?",
-        "a": "Sì: alla torta ci pensiamo noi, oppure puoi portarla tu. Il catering lo prepariamo su richiesta."
       },
       {
         "q": "Quanto costa un addio al celibato?",

@@ -458,6 +458,28 @@ content:
             fields:
               - { name: title, label: Titolo, type: string }
               - { name: text, label: Testo, type: text }
+      - name: video
+        label: "Video (sotto «In breve»)"
+        description: "Facoltativo, come «Dentro l'azione» in home, largo oppure verticale (vedi «Formato del video»). Parte da solo, senza audio, appena è a schermo; il pulsante di pausa c'è sempre. Se il video per computer è vuoto, la sezione non compare"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Con il formato «Verticale» titolo e testo stanno a sinistra del video: compilali" }
+          - { name: text, label: Testo, type: text, description: "Una o due righe accanto o sopra il video" }
+          - name: format
+            label: Formato del video
+            description: "Largo: il video occupa tutta la larghezza, come in home. Verticale: per i video girati con il telefono; su computer sta a destra di titolo e testo, sul telefono a tutta larghezza. Se non scegli, vale «Largo»"
+            type: select
+            options:
+              values:
+                - { name: wide, label: "Largo (2,5:1), come in home" }
+                - { name: portrait, label: "Verticale (4:5), accanto al testo" }
+          - { name: sound, label: "Il video ha l'audio", type: boolean, default: true, description: "Spento: il video è sempre muto e il pulsante per l'audio non compare. Il pulsante di pausa c'è sempre" }
+          - { name: videoSrc, label: "Video (computer e tablet): URL Cloudflare R2, .mp4", type: string, description: "Con «Largo»: orizzontale e molto largo (circa 2,5:1, es. 1920×756), soggetto al centro. Con «Verticale»: 4:5 (es. 864×1080). Se vuoto, la sezione non compare" }
+          - { name: videoSrcMobile, label: "Video (telefono): URL Cloudflare R2, .mp4", type: string, description: "Facoltativo. Con «Largo»: versione verticale 4:5 (es. 604×756) per i telefoni in verticale; se vuoto, si vede la striscia larga. Con «Verticale»: una versione più leggera dello stesso video 4:5 (es. 604×756) per tutti i telefoni; se vuoto, i telefoni usano il video per computer" }
+          - { name: poster, label: "Immagine poster (computer e tablet)", type: image, description: "Un fotogramma del video, nello stesso formato: si vede finché il video non parte. Se vuota, al suo posto c'è un riquadro scuro" }
+          - { name: posterMobile, label: "Immagine poster (telefono)", type: image, description: "Un fotogramma del video per telefono, nello stesso formato. Serve solo se c'è il video per telefono; se vuota, si usa il poster per computer" }
+          - { name: videoAlt, label: "Descrizione del video (accessibilità)", type: string, description: "Cosa si vede nel video, in una frase: la legge chi usa un lettore di schermo. Se vuota, si usa il titolo della sezione" }
+          - { name: youtubeLabel, label: "Testo del pulsante YouTube", type: string, options: { maxlength: 24 }, description: "Compare sul video, in basso a sinistra, e porta al canale indicato in «Impostazioni generali» → «Social (URL dei profili)» → «YouTube». Se vuoto, si usa il nome del canale preso dall'indirizzo (es. @softairmilano4590), o «YouTube» se l'indirizzo non contiene un nome con la @. Breve: sul telefono un testo più lungo di «@softairmilano4590» viene tagliato con «…». Se l'indirizzo YouTube manca, il pulsante non compare" }
       - name: evening
         label: Come funziona (passo per passo)
         type: object
@@ -852,12 +874,12 @@ content:
           - { name: label, label: "Etichetta (es. anni)", type: string }
       - name: enrollment
         label: Iscrizioni
-        description: "Lo stato delle iscrizioni compare sotto i bottoni dell'apertura e sotto il calendario. Con l'interruttore acceso si vede il primo testo, spento il secondo. Ogni volta che lo sposti, controlla che il testo che compare dica la parte e la data giuste"
+        description: "Lo stato delle iscrizioni compare sotto i bottoni dell'apertura e sotto il calendario. Con l'interruttore acceso si vede il primo testo, spento il secondo. Ogni volta che lo sposti, controlla che il testo che compare dica la data giusta"
         type: object
         fields:
-          - { name: open, label: Iscrizioni aperte, type: boolean, description: "Acceso: iscrizioni aperte. Spento: iscrizioni chiuse. Durante l'anno: acceso fino all'inizio della prima parte, spento dopo; quando lo riaccendi per la seconda parte, riscrivi il testo «aperte» (es. «…per la seconda parte: si riparte il 3 marzo»); quando parte la seconda, spegnilo e riscrivi il testo «chiuse» (es. «riaprono a ottobre per la nuova stagione»)" }
-          - { name: openText, label: "Testo con le iscrizioni aperte", type: string, options: { maxlength: 90 }, description: "Es. «Iscrizioni aperte per la prima parte: si parte il 7 ottobre». Breve: sul telefono va su due righe. Se vuoto, con le iscrizioni aperte non compare nulla" }
-          - { name: closedText, label: "Testo con le iscrizioni chiuse", type: string, options: { maxlength: 90 }, description: "Es. «Iscrizioni chiuse: riaprono per la seconda parte, che inizia il 3 marzo». Se vuoto, con le iscrizioni chiuse non compare nulla" }
+          - { name: open, label: Iscrizioni aperte, type: boolean, description: "Acceso: iscrizioni aperte. Spento: iscrizioni chiuse. Durante l'anno: acceso fino all'inizio del corso, poi spento per tutta la stagione: le iscrizioni non riaprono per la seconda parte" }
+          - { name: openText, label: "Testo con le iscrizioni aperte", type: string, options: { maxlength: 90 }, description: "Es. «Iscrizioni aperte: si parte il 7 ottobre». Breve: sul telefono va su due righe. Se vuoto, con le iscrizioni aperte non compare nulla" }
+          - { name: closedText, label: "Testo con le iscrizioni chiuse", type: string, options: { maxlength: 90 }, description: "Es. «Iscrizioni chiuse: non riaprono fino alla prossima stagione». Se vuoto, con le iscrizioni chiuse non compare nulla" }
       - name: intro
         label: In breve
         type: object

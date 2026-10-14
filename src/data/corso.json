@@ -44,8 +44,8 @@
   ],
   "enrollment": {
     "open": true,
-    "openText": "Iscrizioni aperte per la prima parte: si parte il 7 ottobre",
-    "closedText": "Iscrizioni chiuse: riaprono per la seconda parte, che inizia il 3 marzo"
+    "openText": "Iscrizioni aperte: si parte il 7 ottobre",
+    "closedText": "Iscrizioni chiuse: non riaprono fino alla prossima stagione"
   },
   "intro": {
     "title": "Il corso in breve",
@@ -101,7 +101,7 @@
   },
   "calendar": {
     "title": "Il calendario 2026–2027",
-    "text": "Ogni mercoledì dalle 21:00 alle 22:30: un corso unico, da ottobre a maggio, con la pausa d'inverno in mezzo. A corso iniziato non ci si iscrive: si entra all'inizio della prima o della seconda parte, e il primo allenamento è gratis.",
+    "text": "Ogni mercoledì dalle 21:00 alle 22:30: un corso unico, da ottobre a maggio, con la pausa d'inverno in mezzo. Ci si iscrive solo prima dell'inizio, a ottobre: le iscrizioni non riaprono per la seconda parte. Il primo allenamento è gratis.",
     "steps": [
       {
         "time": "7 ott – 16 dic 2026",
@@ -111,7 +111,7 @@
       {
         "time": "Dic – feb",
         "title": "La pausa d'inverno",
-        "text": "Tra le due parti ci si ferma, e le iscrizioni si riaprono per la seconda parte."
+        "text": "Tra le due parti ci si ferma; le iscrizioni non riaprono per la seconda parte."
       },
       {
         "time": "3 mar – 26 mag 2027",
@@ -145,7 +145,7 @@
       },
       {
         "q": "Posso iscrivermi a corso iniziato?",
-        "a": "No: ci si iscrive prima che parta una delle due parti, a ottobre o a marzo. Il primo allenamento è comunque gratis e senza impegno."
+        "a": "No: ci si iscrive solo prima dell'inizio del corso, a ottobre, e le iscrizioni non riaprono per la seconda parte. Il primo allenamento è comunque gratis e senza impegno."
       },
       {
         "q": "Dove si fanno gli allenamenti?",

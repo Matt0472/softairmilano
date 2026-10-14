@@ -1,10 +1,12 @@
 ---
-// "Dentro l'azione": the home's video, wide from the start. Title and text sit above; under them
-// the clip runs across the page in a cinema frame, with the camera readout (REC · CAM 01), the
-// controls and the channel's YouTube chip always on it. A vertical 4:5 cut, when set, plays on
-// portrait phones. Native self-hosted <video> on Cloudflare R2 (MEDIA-07), muted and looping: it
-// plays whenever the frame is on screen, even with reduced motion (known debt, A11Y-07), and
-// pauses when it leaves; only the sound waits for a tap.
+// "Dentro l'azione": a clip in a cinema frame, with the camera readout (REC · CAM 01), the
+// controls and the channel's YouTube chip always on it. Native self-hosted <video> on Cloudflare R2
+// (MEDIA-07), muted and looping: it plays whenever the frame is on screen (with reduced motion only
+// after play, unless `playWithReducedMotion`: the home's known debt, A11Y-07) and pauses when it
+// leaves; only the sound waits for a tap, and a clip without audio has no sound button.
+// Two formats. 'wide' (the home): the clip runs across the page under the title and text, and a
+// vertical 4:5 cut, when set, plays on portrait phones. 'portrait' (a clip shot upright): 4:5 on
+// every screen, beside the copy where the screen is wide enough and under it elsewhere.
 
 import Icon from '../atoms/Icon.astro';
 import Picture from '../atoms/Picture.astro';
@@ -15,28 +17,60 @@ import { has } from '../../lib/fields';
 interface Props {
   title: string;
   text?: string;
-  /** Wide cut (R2 .mp4), ~2.54:1. */
+  /** Wide format: the wide cut, ~2.54:1. Portrait format: the 4:5 cut, for phones too when there is no `videoSrcMobile`. (R2 .mp4) */
   videoSrc: string;
-  /** Vertical 4:5 cut for portrait phones (R2 .mp4). */
+  /** Wide format: a 4:5 cut for portrait phones. Portrait format: the 4:5 cut for phones. (R2 .mp4) */
   videoSrcMobile?: string;
-  /** A still of the wide cut, shown until the clip plays. */
+  /** A still of `videoSrc`, shown until the clip plays. */
   poster?: string;
-  /** A still of the vertical cut. */
+  /** A still of `videoSrcMobile`. */
   posterMobile?: string;
   /** What the clip shows, for screen readers; empty uses the title. */
   videoAlt?: string;
   /** Text of the YouTube chip; empty uses the channel handle from its address. */
   youtubeLabel?: string;
+  /** 'wide' (default) or 'portrait': a clip shot upright, 4:5 on every screen. */
+  format?: 'wide' | 'portrait';
+  /** False for a clip without an audio track: no sound button, always muted. */
+  sound?: boolean;
+  /** Whether the clip starts by itself when the visitor asks for reduced motion: true only for
+      the home's, the recorded exception (A11Y-07); false waits for the play button. */
+  playWithReducedMotion?: boolean;
   headingId?: string;
 }
 
-const { title, text, videoSrc, videoSrcMobile, poster, posterMobile, videoAlt, youtubeLabel, headingId = 'action-title' } = Astro.props;
+const {
+  title,
+  text,
+  videoSrc,
+  videoSrcMobile,
+  poster,
+  posterMobile,
+  videoAlt,
+  youtubeLabel,
+  format = 'wide',
+  sound,
+  playWithReducedMotion = false,
+  headingId = 'action-title',
+} = Astro.props;
 
-const portraitMedia = '(max-width: 767px) and (orientation: portrait)';
+const vertical = format === 'portrait';
+// Where the phone files take over: the wide format's 4:5 cut only on portrait phones (a landscape
+// phone keeps the wide frame); the portrait format's two cuts share a ratio, so on every phone.
+const mobileMedia = vertical ? '(max-width: 767px)' : '(max-width: 767px) and (orientation: portrait)';
 const hasTitle = has(title);
-const portrait = has(videoSrcMobile);
-// Without the vertical cut a portrait phone shows the wide frame, so it gets the wide still too.
-const stillMobile = portrait && has(posterMobile) ? posterMobile : undefined;
+// Only an explicit «no audio» silences the clip: a missing or empty CMS value keeps the sound button.
+const hasSound = sound !== false;
+const phoneCut = has(videoSrcMobile);
+// A 4:5 frame on portrait phones, from either format.
+const portrait = vertical || phoneCut;
+// The phone's still belongs to the phone's cut: without it the phone plays `videoSrc` and shows its still.
+const stillMobile = phoneCut && has(posterMobile) ? posterMobile : undefined;
+// The portrait frame's rendered width (PERF-04), measured against the layout below; the wide frame
+// spans the page, the Picture's default.
+const stillSizes = vertical
+  ? '(orientation: landscape) and (min-width: 640px) and (max-width: 1023px) min(50vw, (100vh - 6rem) * 0.8), (max-width: 767px) calc(100vw - 2.5rem), (max-width: 1023px) calc(100vw - 4rem), min(48vw, 46rem)'
+  : undefined;
 const youtubeUrl = settings.social?.youtube?.trim() ?? '';
 const youtubeHandle = youtubeUrl.split('/').filter(Boolean).pop() ?? '';
 const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith('@') ? youtubeHandle : 'YouTube';
@@ -44,19 +78,20 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
 
 {has(videoSrc) && (
   <section
-    class:list={['action band', portrait && 'action--portrait']}
+    class:list={['action band', portrait && 'action--portrait', vertical && 'action--vertical', !hasSound && 'action--silent']}
     aria-labelledby={hasTitle ? headingId : undefined}
     data-action
+    data-hold-reduced={playWithReducedMotion ? undefined : ''}
   >
     <div class="shell" data-reveal>
-      <SectionHead title={title} text={text} id={headingId} align="center" />
+      <SectionHead title={title} text={text} id={headingId} align={vertical ? 'start' : 'center'} />
     </div>
 
     <div class="action__fit" data-reveal style="--i: 1">
       <div class="action__box" data-box>
         <div class="action__frame">
           {has(poster) && (
-            <Picture src={poster} srcMobile={stillMobile} alt="" mobileMedia={portraitMedia} class="action__poster" />
+            <Picture src={poster} srcMobile={stillMobile} alt="" mobileMedia={mobileMedia} sizes={stillSizes} class="action__poster" />
           )}
           <video
             class="action__video"
@@ -67,7 +102,7 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
             aria-label={has(videoAlt) ? videoAlt : hasTitle ? title : undefined}
             data-video
           >
-            {portrait && <source src={videoSrcMobile} type="video/mp4" media={portraitMedia} />}
+            {phoneCut && <source src={videoSrcMobile} type="video/mp4" media={mobileMedia} />}
             <source src={videoSrc} type="video/mp4" />
           </video>
           <div class="action__hud" aria-hidden="true">
@@ -94,10 +129,12 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
             <Icon name="pause" size={20} class="action__ico action__ico--pause" />
             <Icon name="play" size={20} class="action__ico action__ico--play" />
           </button>
-          <button class="action__btn" type="button" aria-label="Attiva l'audio" data-sound>
-            <Icon name="speakerOff" size={20} class="action__ico action__ico--muted" />
-            <Icon name="speaker" size={20} class="action__ico action__ico--sound" />
-          </button>
+          {hasSound && (
+            <button class="action__btn" type="button" aria-label="Attiva l'audio" data-sound>
+              <Icon name="speakerOff" size={20} class="action__ico action__ico--muted" />
+              <Icon name="speaker" size={20} class="action__ico action__ico--sound" />
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -118,11 +155,16 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
     --hud-pad: calc(var(--hud-inset) + 0.75rem);
     /* The buttons' size (A11Y-09): the chip matches their height and keeps clear of them. */
     --btn: 44px;
+    /* The controls' row: play and sound, or play alone on a clip without audio. */
+    --controls: calc(2 * var(--btn) + 0.5rem);
     padding-block: clamp(4rem, 9vw, 7rem) clamp(4.5rem, 10vw, 8rem);
   }
+  .action--silent { --controls: var(--btn); }
   @media (max-width: 767px) and (orientation: portrait) {
     .action--portrait { --ratio: 0.8; }
   }
+  /* A clip shot upright keeps its 4:5 frame on every screen. */
+  .action--vertical { --ratio: 0.8; }
 
   /* The frame runs wider than the text column: the page width less its gutters. */
   .action__fit {
@@ -138,6 +180,24 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
     aspect-ratio: var(--ratio);
     /* The chip and the controls rearrange on the frame's own width (container queries below). */
     container-type: inline-size;
+  }
+
+  /* Under the copy, a portrait frame narrowed by a short screen lines up with the copy's left edge. */
+  .action--vertical .action__box { margin-inline: 0; }
+
+  /* Wide enough (a desktop, a landscape tablet or phone): the copy on the left and the 4:5 frame on
+     the right, half the content width and never taller than the screen. The section takes the
+     .shell's bounds itself, so its plane still runs edge to edge (DES-03). */
+  @media (min-width: 1024px), (min-width: 640px) and (orientation: landscape) {
+    .action--vertical {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) min(50%, (100svh - 6rem) * var(--ratio));
+      column-gap: clamp(2.5rem, 6vw, 7rem);
+      align-items: center;
+      padding-inline: max(var(--shell-gutter), (100% - var(--shell-max)) / 2 + var(--shell-gutter));
+    }
+    .action--vertical > .shell { padding-inline: 0; }
+    .action--vertical .action__fit { margin-top: 0; padding-inline: 0; }
   }
 
   .action__frame {
@@ -255,8 +315,8 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
     align-items: center;
     gap: 8px;
     height: var(--btn);
-    /* Never under the controls: two buttons, their gap and a gap of its own. */
-    max-width: calc(100% - 2 * var(--hud-pad) - 2 * var(--btn) - 1.25rem);
+    /* Never under the controls: their row and a gap of its own. */
+    max-width: calc(100% - 2 * var(--hud-pad) - var(--controls) - 0.75rem);
     padding: 0 16px 0 13px;
     border-radius: 999px;
     border: 1px solid color-mix(in srgb, var(--color-foreground) 22%, transparent);
@@ -290,7 +350,7 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
   @media (max-width: 767px) and (orientation: portrait) {
     .action:not(.action--portrait) .action__box { margin-bottom: calc(var(--btn) + 0.75rem); }
     .action:not(.action--portrait) .action__controls { top: calc(100% + 0.75rem); right: 0; bottom: auto; }
-    .action:not(.action--portrait) .action__yt { top: calc(100% + 0.75rem); left: 0; bottom: auto; max-width: calc(100% - 2 * var(--btn) - 1.25rem); }
+    .action:not(.action--portrait) .action__yt { top: calc(100% + 0.75rem); left: 0; bottom: auto; max-width: calc(100% - var(--controls) - 0.75rem); }
   }
   @media (max-width: 399px) {
     .action:not(.action--portrait) .action__rec { display: none; }
@@ -298,21 +358,25 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
 </style>
 
 <script>
-  const root = document.querySelector<HTMLElement>('[data-action]');
-  const box = root?.querySelector<HTMLElement>('[data-box]');
-  const video = root?.querySelector<HTMLVideoElement>('[data-video]');
-  const playBtn = root?.querySelector<HTMLButtonElement>('[data-play]');
-  const soundBtn = root?.querySelector<HTMLButtonElement>('[data-sound]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (root && box && video && playBtn && soundBtn) {
-    let userPaused = false;
+  document.querySelectorAll<HTMLElement>('[data-action]').forEach((root) => {
+    const box = root.querySelector<HTMLElement>('[data-box]');
+    const video = root.querySelector<HTMLVideoElement>('[data-video]');
+    const playBtn = root.querySelector<HTMLButtonElement>('[data-play]');
+    // Absent on a clip without audio.
+    const soundBtn = root.querySelector<HTMLButtonElement>('[data-sound]');
+    if (!box || !video || !playBtn) return;
+
+    // A clip held with reduced motion counts as paused by the visitor until they press play.
+    let userPaused = reduce && root.hasAttribute('data-hold-reduced');
 
     const sync = () => {
       const playing = !video.paused;
       root.classList.toggle('is-playing', playing);
       root.classList.toggle('is-muted', video.muted);
       playBtn.setAttribute('aria-label', playing ? 'Metti in pausa il video' : 'Avvia il video');
-      soundBtn.setAttribute('aria-label', video.muted ? "Attiva l'audio" : "Disattiva l'audio");
+      soundBtn?.setAttribute('aria-label', video.muted ? "Attiva l'audio" : "Disattiva l'audio");
     };
     ['play', 'pause', 'volumechange'].forEach((ev) => video.addEventListener(ev, sync));
     sync();
@@ -333,9 +397,9 @@ const youtubeText = has(youtubeLabel) ? youtubeLabel : youtubeHandle.startsWith(
       if (video.paused) { userPaused = false; play(); }
       else { userPaused = true; video.pause(); }
     });
-    soundBtn.addEventListener('click', () => {
+    soundBtn?.addEventListener('click', () => {
       video.muted = !video.muted;
       if (!video.muted && video.paused) { userPaused = false; play(); }
     });
-  }
+  });
 </script>
