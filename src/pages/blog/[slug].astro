@@ -4,6 +4,8 @@
 // text in the long-text typography shared with the legal pages, then «Altri articoli» (the three
 // newest others) and the closing section every page ends on. Only published articles get a page,
 // none when the blog itself is off (src/lib/blog.ts, src/lib/pages.ts).
+// Beside the text, the aids set in blog.json (the contents, «Esperienze consigliate», the social
+// channels): how they sit at each width is told by the comments in the styles below.
 
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
@@ -11,28 +13,46 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Picture from '../../components/atoms/Picture.astro';
 import PhotoFrame from '../../components/molecules/PhotoFrame.astro';
 import Prose from '../../components/molecules/Prose.astro';
+import ArticleToc from '../../components/molecules/ArticleToc.astro';
 import BlogPosts from '../../components/organisms/BlogPosts.astro';
+import ExperienceCards, { type Experience } from '../../components/organisms/ExperienceCards.astro';
 import FinalCta from '../../components/organisms/FinalCta.astro';
+import FollowChannels from '../../components/organisms/FollowChannels.astro';
 import TextHero from '../../components/organisms/TextHero.astro';
 import blog from '../../data/blog.json';
+import home from '../../data/home.json';
 import navigation from '../../data/navigation.json';
 import settings from '../../data/settings.json';
 import { coverOf, formatDate, getPosts, isoDate, postHref, readingMinutes, type Post } from '../../lib/blog';
 import { has } from '../../lib/fields';
 import { blogPostingLd, breadcrumbLd } from '../../lib/jsonld';
 import { flattenNav, type NavItem } from '../../lib/nav';
+import { isLive } from '../../lib/pages';
+import { socialLinks } from '../../lib/social';
+
+interface Activity {
+  name: string;
+  hero?: { image?: string };
+  pricing?: { tiers?: { price?: string }[] };
+}
+interface BlogRail {
+  tocTitle?: string;
+  experiences?: { title?: string; items?: string[] };
+  follow?: { title?: string };
+}
 
 export const getStaticPaths = (async () =>
   (await getPosts()).map((post) => ({ params: { slug: post.id }, props: { post } }))) satisfies GetStaticPaths;
 
 const { post } = Astro.props as { post: Post };
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const { title, description, date, imageAlt } = post.data;
 const cover = coverOf(post);
 const href = postHref(post);
 const others = (await getPosts()).filter((p) => p.id !== post.id).slice(0, 3);
 
-const blogName = flattenNav(navigation.items as NavItem[]).find((it) => it.href === '/blog')?.label || blog.hero.title;
+const menu = flattenNav(navigation.items as NavItem[]);
+const blogName = menu.find((it) => it.href === '/blog')?.label || blog.hero.title;
 const crumbs = [
   { label: 'Home', href: '/' },
   { label: blogName, href: '/blog' },
@@ -45,6 +65,53 @@ const jsonLd = [
   breadcrumbLd(crumbs, Astro.site),
   blogPostingLd({ title, description, date: isoDate(date), href, image: cover }, Astro.site, settings.siteUrl),
 ];
+
+// The aids belong to every article and are switched off from blog.json: no title, no block.
+const { tocTitle, experiences, follow } = blog as BlogRail;
+
+// The contents: the article's H2s, only when there are at least two to choose between.
+const sections = headings.filter((h) => h.depth === 2 && has(h.text));
+const toc = has(tocTitle) && sections.length >= 2 ? { title: tocTitle, headings: sections } : undefined;
+
+// «Esperienze consigliate»: references to activity files (as `related.order` on the activity
+// pages), resolved here. An unknown file, a repeat or an activity whose page is off is skipped.
+// Photo: the activity's card in the home's «Attività» (its «Provate anche» photo, else its photo),
+// else the activity's own opening; line: the menu's description; price: the lowest of its tiers.
+const slugOf = (file: string) => file.split('/').pop()!.replace(/\.json$/, '');
+const activityFiles = import.meta.glob<{ default: Activity }>('../../data/activities/*.json', { eager: true });
+const activities = new Map(Object.entries(activityFiles).map(([file, mod]) => [slugOf(file), mod.default]));
+const menuDesc = new Map(menu.map((n) => [n.href, 'desc' in n ? n.desc : undefined]));
+const formatAmount = (n: number) => new Intl.NumberFormat('it-IT', { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 }).format(n);
+// The tiers' prices are free text in the CMS: the first figure of each counts, and a tier without
+// one (or at zero) is no starting price.
+const lowestPrice = (tiers: { price?: string }[] = []): string | undefined => {
+  const prices = tiers
+    .map((t) => Number((t.price ?? '').match(/\d+(?:[.,]\d+)?/)?.[0].replace(',', '.')))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  return prices.length ? formatAmount(Math.min(...prices)) : undefined;
+};
+const slugs = [...new Set((experiences?.items ?? []).filter(has).map(slugOf))];
+const xpItems: Experience[] = slugs
+  .flatMap((slug) => {
+    const data = activities.get(slug);
+    const path = `/${slug}`;
+    if (!data || !has(data.name) || !isLive(path)) return [];
+    const card = home.activities.find((a) => a.href === path);
+    const image = [card?.linkImage, card?.image, data.hero?.image].find(has);
+    return [{ name: data.name, href: path, image, desc: menuDesc.get(path) || undefined, price: lowestPrice(data.pricing?.tiers) }];
+  })
+  .slice(0, 3);
+const xpTitle = experiences?.title;
+const xp = has(xpTitle) && xpItems.length > 0 ? { title: xpTitle, items: xpItems } : undefined;
+
+// «Seguici sui nostri canali social»: the site's profiles, under the activities. The same list
+// FollowChannels shows decides whether the block is there.
+const followTitle = follow?.title;
+const followed = has(followTitle) && socialLinks().length > 0 ? followTitle : undefined;
+
+// Layout: any aid gives the text a rail; contents plus a right-hand block make three columns.
+const hasRail = !!(toc || xp || followed);
+const three = !!(toc && (xp || followed));
 ---
 
 <BaseLayout
@@ -71,13 +138,31 @@ const jsonLd = [
     <div class="article__inner shell">
       {cover && (
         <div class="article__cover">
-          <Picture src={cover} alt={imageAlt ?? ''} sizes="(max-width: 1023px) calc(100vw - 2.5rem), 60rem" eager class="article__img" />
+          <Picture src={cover} alt={imageAlt ?? ''} sizes="(max-width: 767px) calc(100vw - 2.5rem), (max-width: 1519px) calc(100vw - 4rem), 1456px" eager class="article__img" />
           <PhotoFrame />
         </div>
       )}
-      <Prose class="article__body">
-        <Content />
-      </Prose>
+      <div class:list={['article__layout', hasRail && 'article__layout--rail', three && 'article__layout--three']}>
+        {/* Wide screens: the contents in the left column, first in the reading order as on screen. */}
+        {toc && three && <ArticleToc variant="rail" title={toc.title} headings={toc.headings} labelId="toc-side-title" class="article__toc--side" />}
+        <div class="article__main">
+          {toc && <ArticleToc variant="fold" title={toc.title} headings={toc.headings} labelId="toc-fold-title" />}
+          <Prose class="article__body">
+            <Content />
+          </Prose>
+        </div>
+        {hasRail && (
+          <div class="article__rail">
+            <div class="article__rail-track">
+              <div class="article__rail-in">
+                {toc && <ArticleToc variant="rail" title={toc.title} headings={toc.headings} labelId="toc-rail-title" class="article__toc--stacked" />}
+                {xp && <ExperienceCards title={xp.title} items={xp.items} class="article__xp" />}
+              </div>
+            </div>
+            {followed && <FollowChannels title={followed} class="article__follow" />}
+          </div>
+        )}
+      </div>
     </div>
   </article>
 
@@ -100,11 +185,11 @@ const jsonLd = [
   .article__inner {
     padding-block: 0 clamp(4.5rem, 10vw, 8rem);
   }
-  /* Wider than the text, on the same left edge: the photo leads, the column reads. */
+  /* The photo leads across the container, as the other pages' wide media; from desktop a
+     cinematic crop keeps it from filling the screen before the text starts. */
   .article__cover {
     position: relative;
     overflow: hidden;
-    max-width: 60rem;
     aspect-ratio: 16 / 9;
     border-radius: var(--radius-lg);
     background: var(--color-surface-2);
@@ -117,5 +202,105 @@ const jsonLd = [
     height: 100%;
   }
   .article__img { object-fit: cover; }
-  .article__cover + .article__body { margin-top: clamp(2.5rem, 6vw, 4rem); }
+  .article__cover + .article__layout { margin-top: clamp(2.5rem, 6vw, 4rem); }
+  /* A jump from the contents leaves the section's hairline a little below the screen's edge. */
+  .article__body h2 { scroll-margin-top: 1.5rem; }
+
+  /* The text's measure is the Prose's 36em at its 1.0625rem: no column ever changes it. The cap
+     keeps a sticky aid clear of the top and of the corner buttons at the bottom (the root's
+     scroll-padding). */
+  .article__layout {
+    --measure: 38.25rem;
+    --rail-cap: calc(100dvh - 7rem);
+  }
+
+  /* Phones and tablets: the activities and the channels follow the text, on its measure. The side
+     contents only exist for the three columns (below desktop the fold serves). */
+  .article__xp,
+  .article__follow {
+    max-width: var(--measure);
+    margin-top: clamp(3.5rem, 9vw, 4.5rem);
+  }
+  .article__rail:has(.article__xp) .article__follow { margin-top: clamp(2.5rem, 6vw, 3rem); }
+  .article__layout .article__toc--side { display: none; }
+
+  @media (min-width: 1024px) {
+    .article__cover { aspect-ratio: 21 / 9; }
+
+    /* Text and one rail, centred together; a text without aids is centred on its own. */
+    .article__layout {
+      max-width: var(--measure);
+      margin-inline: auto;
+    }
+    .article__layout--rail {
+      max-width: 60rem;
+      display: grid;
+      grid-template-columns: var(--measure) minmax(0, 1fr);
+      column-gap: clamp(3rem, 4vw, 4rem);
+    }
+    /* The contents and the cards stay in view together; under the cap the contents list gives way
+       and the cards never leave the screen. The channels wait at the foot of the rail, where the
+       stuck part comes to rest: on these screens there is rarely room for them up there. */
+    .article__rail {
+      display: flex;
+      flex-direction: column;
+    }
+    .article__rail-track { flex: 1 0 auto; }
+    .article__rail-in {
+      position: sticky;
+      top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      max-height: var(--rail-cap);
+    }
+    .article__xp {
+      flex: none;
+      margin-top: 0;
+    }
+    .article__follow { margin-top: 0; }
+    .article__rail:has(.article__xp) .article__follow { margin-top: 2.5rem; }
+  }
+
+  /* Wide screens, with the contents and a right-hand block: three columns across the container,
+     the text in the middle. The side columns share what is left, never narrower than they read
+     well, so the text is centred once there is room. Contents on the left, the activities and
+     the channels together on the right, each side in view on its own. */
+  @media (min-width: 1280px) {
+    .article__layout--three {
+      grid-template-columns: minmax(12.5rem, 1fr) var(--measure) minmax(17rem, 1fr);
+      column-gap: clamp(2.5rem, 4vw, 6rem);
+      max-width: none;
+    }
+    .article__layout--three .article__toc--side {
+      display: flex;
+      grid-area: 1 / 1;
+      position: sticky;
+      top: 2rem;
+      align-self: start;
+      max-height: var(--rail-cap);
+    }
+    .article__layout--three .article__toc--stacked { display: none; }
+    .article__layout--three .article__main { grid-area: 1 / 2; }
+    .article__layout--three .article__rail {
+      grid-area: 1 / 3;
+      position: sticky;
+      top: 2rem;
+      align-self: start;
+    }
+    .article__layout--three .article__rail-in {
+      position: static;
+      max-height: none;
+    }
+  }
+
+  /* A screen too short for the cards plus a few entries of the contents: the aids scroll away
+     with the page. */
+  @media (min-width: 1024px) and (max-height: 39.99rem) {
+    .article__rail-in,
+    .article__layout--three :is(.article__toc--side, .article__rail) {
+      position: static;
+      max-height: none;
+    }
+  }
 </style>

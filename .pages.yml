@@ -121,7 +121,7 @@ content:
               - { name: label, label: Etichetta, type: string }
               - { name: href, label: Link, type: string }
               - { name: badge, label: "Badge (es. Il più richiesto)", type: string, description: "Facoltativo: brevissimo" }
-              - { name: desc, label: Descrizione di una riga, type: string, description: "Visibile solo nel menu a tendina da computer" }
+              - { name: desc, label: Descrizione di una riga, type: string, description: "Una riga: nel menu a tendina da computer, sotto le schede di «Provate anche», nelle «Esperienze consigliate» del blog e nella pagina 404. Se vuota: nel menu e nella 404 c'è solo il nome; in «Provate anche» si usa la descrizione di Home › Attività; nelle «Esperienze consigliate» la scheda resta senza riga" }
       - name: cta
         label: Bottone Prenota del menu
         type: object
@@ -249,7 +249,7 @@ content:
           - { name: pills, label: "Etichette (età, modalità…)", type: string, list: true }
           - { name: image, label: "Immagine (desktop)", type: image }
           - { name: imageMobile, label: "Immagine (mobile, verticale 4:5, soggetto al centro) — opzionale", type: image }
-          - { name: linkImage, label: "Foto nella galleria «Provate anche» (facoltativa)", type: image, description: "La foto della scheda di questa attività nella galleria in fondo alle altre pagine attività. Se vuota, si usa la foto qui sopra" }
+          - { name: linkImage, label: "Foto nella galleria «Provate anche» (facoltativa)", type: image, description: "La foto della scheda di questa attività nella galleria in fondo alle altre pagine attività e nelle «Esperienze consigliate» del blog. Se vuota, si usa la foto qui sopra" }
           - { name: linkImageMobile, label: "Foto nella galleria «Provate anche», telefono (facoltativa)", type: image, description: "Verticale. Se vuota, si usa la foto orizzontale della galleria" }
           - { name: imageAlt, label: "Testo alternativo immagine", type: string }
           - name: focus
@@ -396,7 +396,7 @@ content:
     view:
       primary: name
     fields:
-      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina dell'attività sparisce dal sito, dal menu, dalla home, da «Provate anche» e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
+      - { name: published, label: Pagina online, type: boolean, default: true, description: "Spenta: la pagina dell'attività sparisce dal sito, dal menu, dalla home, da «Provate anche», dalle «Esperienze consigliate» del blog e da ogni link che ci porta, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. Vale per il sito pubblicato e per l'anteprima online" }
       - { name: name, label: Nome attività, type: string, required: true, description: "Alla creazione diventa l'indirizzo della pagina (es. arcotag → /arcotag); cambiarlo dopo non cambia l'indirizzo. Nomi riservati: paintball, contatti e le altre pagine del menu" }
       - name: seo
         label: SEO e anteprima social
@@ -579,7 +579,7 @@ content:
             fields:
               - { name: label, label: Nome, type: string }
               - { name: when, label: "Quando / per chi", type: string }
-              - { name: price, label: "Prezzo (solo il numero)", type: string }
+              - { name: price, label: "Prezzo (solo il numero)", type: string, description: "Il numero più basso fra le fasce compare come «da …» nelle «Esperienze consigliate» del blog (conta solo il numero, non l'unità)" }
               - { name: unit, label: "Unità (es. € a persona)", type: string }
               - { name: note, label: Nota, type: string, description: "Breve, sotto il prezzo, es. «Fucile, maschera e 300 colpi». Se vuota non compare" }
               - { name: badge, label: "Badge (facoltativo, es. Serata tra amici)", type: string, description: "Mette in risalto la fascia: meglio una sola" }
@@ -1847,7 +1847,7 @@ content:
 
   - name: blog
     label: Pagina Blog
-    description: "La pagina /blog: l'apertura e l'elenco degli articoli, dal più recente. Gli articoli si scrivono in «Blog — articoli»"
+    description: "La pagina /blog (l'apertura e l'elenco degli articoli, dal più recente) e le parti uguali in ogni articolo: l'indice, le esperienze consigliate e gli articoli suggeriti. Gli articoli si scrivono in «Blog — articoli»"
     type: file
     path: src/data/blog.json
     fields:
@@ -1869,6 +1869,30 @@ content:
           - { name: subtitle, label: Sottotitolo (massimo 20 parole), type: text, description: "Di cosa parlano gli articoli. Se vuoto non compare" }
           - { name: hudTag, label: "Scritta tattica nella cornice (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «Guide · Regole · Attrezzatura». Compare anche in cima a ogni articolo. Se vuota non compare" }
       - { name: listTitle, label: Titolo sopra l'elenco degli articoli, type: string, description: "Es. «Tutti gli articoli». Se vuoto non compare: l'elenco segue subito l'apertura" }
+      - { name: tocTitle, label: "Titolo dell'indice (in ogni articolo)", type: string, description: "Es. «In questo articolo»: sopra l'indice delle sezioni dell'articolo, che resta in vista mentre si legge. Sugli schermi larghi (da circa 1280 px) sta a sinistra del testo, con le schede a destra; fra 1024 e 1279 px sta a destra, sopra le schede; sotto i 1024 px (telefoni e tablet) è un riquadro in cima al testo che si apre con un tocco. Vale per tutti gli articoli. L'indice lo fa il sito con i titoli delle sezioni (H2) del testo: per avere l'indice, dividi l'articolo in sezioni con i titoli. L'indice compare con almeno due titoli H2; con uno solo, o nessuno, non compare. Se vuoto, l'indice non compare in nessun articolo" }
+      - name: experiences
+        label: "Esperienze consigliate (in ogni articolo)"
+        description: "Le schede delle attività accanto a ogni articolo, che restano in vista mentre si legge: dai 1024 px di larghezza in su stanno a destra del testo (fra 1024 e 1279 px sotto l'indice); sotto i 1024 px (telefoni e tablet) vengono dopo il testo. Vale per tutti gli articoli. Ogni scheda porta alla pagina dell'attività"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Es. «Esperienze consigliate». Se vuoto, le schede non compaiono" }
+          - name: items
+            label: Attività da consigliare
+            description: "Fino a tre: scegli le attività e trascinale per cambiare l'ordine. Il resto della scheda arriva da solo e si cambia lì. Il nome è il «Nome attività» della sua pagina. Il prezzo «da …» è il numero più basso fra le fasce di Prezzi della pagina (conta solo il numero, non l'unità); senza un numero la riga «da» non compare. La foto è quella di «Provate anche» in Home › Attività, se manca la foto di quella scheda, se manca anche quella la foto dell'apertura della pagina; senza nessuna foto compare un simbolo. La descrizione di una riga viene dal Menu di navigazione; se è vuota, la scheda resta senza riga. Un'attività con «Pagina online» spenta, o scelta due volte, non compare. Se vuoto, le schede non compaiono"
+            type: reference
+            list: { max: 3 }
+            options:
+              collection: activities
+              # Same reference as the activities' related.order: the file path, which stays put when
+              # the activity's name changes.
+              value: "{path}"
+              label: "{primary}"
+      - name: follow
+        label: "Seguici sui social (in ogni articolo)"
+        description: "Un blocco sotto le «Esperienze consigliate» con le icone dei profili social: i profili sono quelli di Impostazioni generali › Social (URL dei profili), e si cambiano lì. Vale per tutti gli articoli. Se il titolo è vuoto, o in Impostazioni generali non c'è nessun profilo, il blocco non compare"
+        type: object
+        fields:
+          - { name: title, label: Titolo, type: string, description: "Es. «Seguici sui nostri canali social». Se vuoto, il blocco non compare" }
       - { name: moreTitle, label: "Titolo degli articoli suggeriti (in fondo a ogni articolo)", type: string, description: "Es. «Altri articoli»: in fondo a ogni articolo, sopra qualche altro articolo da leggere. Vale per tutti gli articoli. Se vuoto, gli articoli suggeriti non compaiono" }
       - { name: readMore, label: Testo del bottone sulle schede, type: string, description: "Es. «Leggi l'articolo»: in fondo a ogni scheda, nell'elenco del blog e negli articoli suggeriti. Tutta la scheda porta all'articolo; se vuoto il bottone non compare" }
 
@@ -1893,9 +1917,9 @@ content:
       - { name: title, label: "Titolo dell'articolo (H1)", type: string, required: true, description: "Compare grande in cima all'articolo, nell'elenco del blog e su Google. Quando crei l'articolo diventa anche il nome del file, cioè l'indirizzo (vedi sopra); cambiarlo dopo non cambia l'indirizzo" }
       - { name: description, label: "Riassunto (elenco del blog e Google)", type: text, required: true, options: { maxlength: 160 }, description: "Una o due frasi su cosa trova chi legge: compare sotto il titolo nell'elenco del blog, in apertura dell'articolo e come descrizione su Google. Massimo 160 caratteri" }
       - { name: date, label: Data di pubblicazione, type: date, required: true, options: { format: yyyy-MM-dd }, description: "Compare sull'articolo; nell'elenco del blog in cima c'è il più recente. Per un articolo nuovo è già la data di oggi" }
-      - { name: image, label: Immagine di copertina, type: image, description: "Orizzontale 16:9, almeno 1600 px di larghezza (JPG): compare in cima all'articolo, nell'elenco del blog e nelle anteprime sui social. Se vuota, l'articolo compare senza foto e sui social si usa l'immagine predefinita di «Impostazioni generali»" }
+      - { name: image, label: Immagine di copertina, type: image, description: "Orizzontale 16:9, almeno 1600 px di larghezza (JPG): compare in cima all'articolo, nell'elenco del blog e nelle anteprime sui social. Sul computer, in cima all'articolo, la foto si taglia anche sopra e sotto: tieni il soggetto nella fascia centrale. Se vuota, l'articolo compare senza foto e sui social si usa l'immagine predefinita di «Impostazioni generali»" }
       - { name: imageAlt, label: Testo alternativo della copertina, type: string, description: "Obbligatorio se c'è la copertina: una frase che dice cosa si vede, per chi non vede le immagini e per Google, es. «Pallini da softair bianchi sparsi su un tavolo di legno». Senza copertina lascialo vuoto" }
-      - { name: body, label: Testo dell'articolo, type: rich-text, description: "I titoli delle sezioni partono dal secondo livello (H2), poi H3: il primo livello è già il titolo dell'articolo. Ogni immagine nel testo ha bisogno del suo testo alternativo. I link alle pagine del sito si scrivono senza dominio, es. /softair o /blog/softair-sulla-neve" }
+      - { name: body, label: Testo dell'articolo, type: rich-text, description: "I titoli delle sezioni partono dal secondo livello (H2), poi H3: il primo livello è già il titolo dell'articolo. Ogni titolo H2 diventa una voce dell'indice «In questo articolo»: l'indice compare con almeno due titoli H2; con uno solo, o nessuno, non compare. Ogni immagine nel testo ha bisogno del suo testo alternativo. I link alle pagine del sito si scrivono senza dominio, es. /softair o /blog/softair-sulla-neve" }
 
   - name: cookieBanner
     label: Banner dei cookie

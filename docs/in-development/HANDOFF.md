@@ -216,6 +216,7 @@ npm run manuale      # rigenera solo il manuale
    - `VsComparison`: media query desktop-first (`max-width`), da far valutare al `responsive-specialist`;
    - un atomo «bottone con freccia», oggi copiato in CourseTeaser, TeaserBanner, VoucherTeaser e ActivitiesStory;
    - helper per slug, `menuLabel` e link di Google Maps;
+   - social: Footer, ContactHero e SocialChannels vanno portati su `src/lib/social.ts` (`socialLinks()`), e i pulsanti tondi del footer in una molecola condivisa con `FollowChannels` (oggi copiati);
    - `list: { max }` senza `collapsible` in `.pages.yml`: verificare nell'editor di Pages CMS se dà errore;
    - cannibalizzazione degli articoli paintball con /softair-vs-paintball (vedi la revisione SEO);
    - lo sticky dei prezzi sui portatili bassi (circa 768 px di altezza): verifica dello specialista responsive;

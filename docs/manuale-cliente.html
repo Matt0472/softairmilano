@@ -1014,8 +1014,8 @@
           404. Se tutte le voci di un sottomenu sono spente, sparisce anche il sottomenu.
         </li>
         <li>
-          Un'attività spenta esce anche dalle attività della home e dalla galleria «Provate anche»
-          delle altre attività.
+          Un'attività spenta esce anche dalle attività della home, dalla galleria «Provate anche»
+          delle altre attività e dalle «Esperienze consigliate» accanto agli articoli del blog.
         </li>
         <li>
           In tutti gli altri punti del sito i link verso quella pagina perdono l'indirizzo. Così i
@@ -1188,7 +1188,7 @@
             <tr><td>Team building › Attività da abbinare</td><td>orizzontale 16:9</td><td>—</td></tr>
             <tr><td>Team building › Loghi</td><td>PNG alto 96 px, trasparente, nei colori del marchio per fondi scuri, con margine sopra e sotto</td><td>—</td></tr>
             <tr><td>Home › Video (poster)</td><td>fotogramma del video, 2,5:1</td><td>fotogramma 4:5</td></tr>
-            <tr><td>Blog › Copertina</td><td>orizzontale 16:9, almeno 1600 pixel di larghezza</td><td>— (nelle schede l'immagine è un po' più alta e si taglia ai lati: tenete il soggetto al centro)</td></tr>
+            <tr><td>Blog › Copertina</td><td>orizzontale 16:9, almeno 1600 pixel di larghezza</td><td>— (nelle schede l'immagine è un po' più alta e si taglia ai lati; sul computer, in cima all'articolo, la foto si taglia anche sopra e sotto: tenete il soggetto al centro, nella fascia centrale)</td></tr>
           </tbody>
         </table>
       </div>
@@ -1705,8 +1705,8 @@
         <div>
           <dt>Sottomenu › Descrizione di una riga</dt>
           <dd>
-            <p>Si vede nella tendina da computer, sotto il nome. È anche la riga sotto ogni scheda della galleria «Provate anche» delle attività e dell'elenco della pagina 404. Le età che cita devono essere quelle delle pagine.</p>
-            <p class="empty">nella galleria si usa la descrizione di Home › Attività.</p>
+            <p>Si vede nella tendina da computer, sotto il nome. È anche la riga sotto ogni scheda della galleria «Provate anche» delle attività, delle «Esperienze consigliate» accanto agli articoli del blog e dell'elenco della pagina 404. Le età che cita devono essere quelle delle pagine.</p>
+            <p class="empty">nel menu e nella 404 c'è solo il nome; in «Provate anche» si usa la descrizione di Home › Attività; nelle «Esperienze consigliate» la scheda resta senza riga.</p>
           </dd>
         </div>
         <div>
@@ -1898,7 +1898,7 @@
         <div>
           <dt>Attività › Foto nella galleria «Provate anche» (facoltativa) · versione telefono</dt>
           <dd>
-            <p>La foto di questa attività nella galleria in fondo alle altre pagine attività, se volete che sia diversa da quella della home. La versione telefono è verticale.</p>
+            <p>La foto di questa attività nella galleria in fondo alle altre pagine attività e nelle «Esperienze consigliate» accanto agli articoli del blog, se volete che sia diversa da quella della home. La versione telefono è verticale e vale solo per la galleria. Nel blog la foto è un piccolo quadrato, di cui si vede il centro.</p>
             <p class="empty">si usa la foto della home; senza la versione telefono, la foto orizzontale della galleria.</p>
           </dd>
         </div>
@@ -2176,7 +2176,8 @@
           <dd>
             <p>
               Acceso per una pagina nuova. Spento, l'attività sparisce dal sito, dal menu, dalle
-              attività della home, da «Provate anche» e da ogni link che ci porta (capitolo
+              attività della home, da «Provate anche», dalle «Esperienze consigliate» del blog e
+              da ogni link che ci porta (capitolo
               <a href="#online">04</a>).
             </p>
           </dd>
@@ -2353,7 +2354,7 @@
         </div>
         <div>
           <dt>Fasce di prezzo › Prezzo (solo il numero) · Unità</dt>
-          <dd><p>«35» e «€ a persona»: il numero va da solo, il resto nell'unità.</p></dd>
+          <dd><p>«35» e «€ a persona»: il numero va da solo, il resto nell'unità. Il numero più basso fra le fasce compare come «da …» nelle «Esperienze consigliate» del blog (conta solo il numero, non l'unità; capitolo <a href="#blog">22</a>).</p></dd>
         </div>
         <div>
           <dt>Fasce di prezzo › Nota · Badge</dt>
@@ -3373,13 +3374,14 @@
       <p class="where"><span>Nel pannello</span> Pagina Blog · Blog — articoli</p>
       <p>
         Il blog ha due voci nel pannello. «Pagina Blog» è la pagina <code>/blog</code>, con
-        l'elenco degli articoli. «Blog — articoli» è la raccolta degli articoli, uno per file, e ogni
+        l'elenco degli articoli, e le parti uguali in tutti gli articoli: l'indice, le esperienze
+        consigliate, il blocco dei social e gli articoli suggeriti. «Blog — articoli» è la raccolta degli articoli, uno per file, e ogni
         articolo è una pagina del sito: <code>/blog/nome-del-file</code>. Nel menu il blog sta sotto
         «Info».
       </p>
       <ul>
         <li><strong>La pagina del blog</strong>, dall'alto: l'apertura con accanto l'articolo più recente in grande, poi le schede degli altri articoli dal più recente, e Prenota.</li>
-        <li><strong>Un articolo</strong>, dall'alto: l'apertura (briciole di pane, titolo, riassunto, data e minuti di lettura), la copertina, il testo, «Altri articoli» e Prenota. I minuti di lettura il sito li conta da solo.</li>
+        <li><strong>Un articolo</strong>, dall'alto: l'apertura (briciole di pane, titolo, riassunto, data e minuti di lettura), la copertina, il testo con accanto l'indice, le esperienze consigliate e i social (su telefoni e tablet l'indice va in cima al testo e il resto dopo), «Altri articoli» e Prenota. I minuti di lettura il sito li conta da solo.</li>
       </ul>
 
       <h3>Pagina Blog</h3>
@@ -3405,6 +3407,22 @@
           <dd><p>Es. «Tutti gli articoli».</p><p class="empty">non compare: l'elenco segue subito l'apertura.</p></dd>
         </div>
         <div>
+          <dt>Titolo dell'indice (in ogni articolo)</dt>
+          <dd><p>Es. «In questo articolo»: sopra l'indice delle sezioni, in ogni articolo. Le voci dell'indice non si scrivono qui: le fa il sito con i titoli H2 del testo, e l'indice compare con almeno due (qui sotto, «Accanto all'articolo»).</p><p class="empty">l'indice non compare in nessun articolo.</p></dd>
+        </div>
+        <div>
+          <dt>Esperienze consigliate (in ogni articolo) › Titolo</dt>
+          <dd><p>Es. «Esperienze consigliate»: sopra le schede delle attività, in ogni articolo.</p><p class="empty">le schede non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Esperienze consigliate (in ogni articolo) › Attività da consigliare <span class="limit">max 3</span></dt>
+          <dd><p>Le attività da proporre a chi legge, oggi Softair, Arcotag e Tiro dinamico. Si scelgono dall'elenco di «Attività (pagine)» e si trascinano per cambiare l'ordine. Nome, prezzo, foto e descrizione non si scrivono qui: arrivano da soli (qui sotto).</p><p class="empty">le schede non compaiono.</p></dd>
+        </div>
+        <div>
+          <dt>Seguici sui social (in ogni articolo) › Titolo</dt>
+          <dd><p>Es. «Seguici sui nostri canali social»: sopra le icone dei profili social, sotto le esperienze consigliate. I profili sono quelli di <strong>Impostazioni generali › Social (URL dei profili)</strong> (capitolo <a href="#impostazioni">08</a>), e si cambiano lì.</p><p class="empty">il blocco non compare. Non compare neanche quando in Impostazioni generali non c'è nessun profilo.</p></dd>
+        </div>
+        <div>
           <dt>Titolo degli articoli suggeriti (in fondo a ogni articolo)</dt>
           <dd><p>Es. «Altri articoli»: in fondo a ogni articolo, sopra le schede dei tre articoli più recenti, tranne quello che si sta leggendo. Vale per tutti gli articoli.</p><p class="empty">gli articoli suggeriti non compaiono.</p></dd>
         </div>
@@ -3419,6 +3437,47 @@
         <li>L'ordine è quello della «Data di pubblicazione»: l'articolo più recente compare in grande nell'apertura, gli altri seguono come schede.</li>
         <li>Ogni scheda mostra copertina, data, titolo, riassunto e bottone. Le schede affiancate hanno tutte la stessa altezza: titolo e riassunto si fermano a tre righe, e un testo più lungo si taglia con «…».</li>
         <li>L'elenco si divide in pagine da 9 articoli (la prima ne ha uno in più, quello in evidenza): <code>/blog</code>, <code>/blog/2</code>, <code>/blog/3</code>…, con i numeri delle pagine in fondo. Le pagine si creano da sole quando aggiungete articoli.</li>
+      </ul>
+
+      <h3>Accanto all'articolo</h3>
+      <p>
+        Ogni articolo ha accanto tre parti, uguali per tutti gli articoli, che restano in vista
+        mentre si legge. Dove stanno dipende dalla larghezza dello schermo:
+      </p>
+      <ul>
+        <li><strong>schermi larghi</strong> (da circa 1280 pixel): l'indice a sinistra del testo, le esperienze consigliate e i social a destra;</li>
+        <li><strong>computer più piccoli</strong> (da 1024 a 1279 pixel): tutto a destra del testo, l'indice in alto;</li>
+        <li><strong>telefoni e tablet</strong> (sotto i 1024 pixel): l'indice è un riquadro chiuso in cima al testo, che si apre con un tocco; le esperienze consigliate e i social vengono dopo l'articolo.</li>
+      </ul>
+      <p>Un articolo senza indice ha il resto a destra del testo, anche sugli schermi larghi.</p>
+      <ul>
+        <li>
+          <strong>L'indice «In questo articolo»</strong> elenca le sezioni dell'articolo, cioè i
+          suoi titoli di secondo livello (H2), e porta alla sezione che si tocca. Sul computer
+          evidenzia la sezione che si sta leggendo e, se le voci sono tante, scorre da solo dentro
+          la sua colonna. Lo fa il sito: per cambiare una voce si cambia il titolo nel testo
+          dell'articolo. <strong>L'indice compare con almeno due titoli H2; con uno solo, o nessuno,
+          non compare.</strong>
+        </li>
+        <li>
+          <strong>Le «Esperienze consigliate»</strong> sono fino a tre piccole schede, una per
+          attività, che portano alla sua pagina. Quali attività, e in che ordine, si sceglie in
+          «Pagina Blog»; il resto arriva da solo e si cambia dove nasce:
+          <ul>
+            <li>il nome: il «Nome attività» della sua pagina in <strong>Attività (pagine)</strong>;</li>
+            <li>il prezzo: «da» e il numero più basso fra le fasce di <strong>Attività (pagine) › Prezzi</strong>. Conta solo il numero, non l'unità: nel tiro dinamico vince il 20 € a persona sul 60 € in totale. Se nessuna fascia ha un numero, la riga «da» non compare. Se cambiate il listino, la scheda si aggiorna da sola;</li>
+            <li>la foto: quella di «Provate anche» della sua scheda in <strong>Home › Attività</strong>; se manca, la foto di quella scheda; se manca anche quella, la foto dell'apertura della pagina dell'attività. Senza nessuna foto compare un simbolo;</li>
+            <li>la descrizione di una riga: <strong>Menu di navigazione › Sottomenu › Descrizione di una riga</strong> (capitolo <a href="#menu">09</a>). Se è vuota, la scheda resta senza riga.</li>
+          </ul>
+          Un'attività spenta con «Pagina online» non compare, e le altre restano; un'attività scelta
+          due volte compare una volta sola.
+        </li>
+        <li>
+          <strong>«Seguici sui social»</strong> è un blocco sotto le esperienze consigliate, con il
+          suo titolo e le icone dei profili social di <strong>Impostazioni generali › Social (URL dei
+          profili)</strong> (capitolo <a href="#impostazioni">08</a>). Senza titolo, o senza nessun
+          profilo, non compare.
+        </li>
       </ul>
 
       <h3>Scrivere un articolo nuovo</h3>
@@ -3445,7 +3504,7 @@
         <div>
           <dt>Immagine di copertina</dt>
           <dd>
-            <p>Orizzontale 16:9, larga almeno 1600 pixel, in JPG. Compare in cima all'articolo, sulle schede (un po' più alta, quindi si taglia ai lati: tenete il soggetto al centro) e nelle anteprime sui social.</p>
+            <p>Orizzontale 16:9, larga almeno 1600 pixel, in JPG. Compare in cima all'articolo, sulle schede e nelle anteprime sui social. Sulle schede è un po' più alta, quindi si taglia ai lati; sul computer, in cima all'articolo, la foto si taglia anche sopra e sotto: tenete il soggetto al centro, nella fascia centrale.</p>
             <p class="empty">l'articolo compare senza foto, e sui social si usa l'«Immagine social predefinita».</p>
           </dd>
         </div>
@@ -3459,6 +3518,7 @@
             <p>Qui c'è un editor vero: titoli, grassetti, elenchi, link, immagini.</p>
             <ul>
               <li>I titoli delle sezioni partono dal <strong>secondo livello</strong> (H2), poi il terzo (H3): il primo livello è già il titolo dell'articolo.</li>
+              <li><strong>Dividete l'articolo in sezioni con i titoli (H2).</strong> Ogni H2 diventa una voce dell'indice «In questo articolo», e aiuta Google a capire di cosa parla ogni parte. L'indice compare con almeno due titoli H2; con uno solo, o nessuno, non compare. Titoli brevi, che dicono cosa c'è sotto (es. «Cosa indossare»), si leggono meglio anche nell'indice.</li>
               <li>I link alle pagine del sito si scrivono senza dominio: <code>/softair</code>, <code>/blog/softair-sulla-neve</code>. Quelli ai siti esterni con <code>https://</code>.</li>
               <li>Ogni immagine nel testo ha bisogno del suo testo alternativo.</li>
             </ul>
@@ -3756,6 +3816,7 @@
               <li><strong>Pagina dell'attività</strong>: Prezzi › Fasce e note, e la domanda «Quanto costa…» (nel softair anche «Posso usare la mia attrezzatura?», che cita il Veterano).</li>
               <li><strong>Softair VS Paintball</strong>: Prezzi, che devono essere uguali a quelli del softair, compresa la nota sulla Tessera Élite.</li>
               <li>La ricarica da 300 colpi (oggi 3 €): note dei prezzi del softair e voucher.</li>
+              <li>Da non toccare: il «da …» delle «Esperienze consigliate» accanto agli articoli del blog si aggiorna da solo con le fasce.</li>
             </ul>
           </div>
         </details>
@@ -3850,6 +3911,7 @@
           <div>
             <ul>
               <li><strong>Menu</strong> (sottomenu Attività, con la descrizione di una riga), <strong>Home › Attività</strong>, <strong>Scegli l'attività</strong> di Festa di compleanno e di Addio al celibato (se ci si fanno feste), <strong>Modulistica › Età minime</strong>, <strong>Impostazioni generali › Prenota › Parole della fascia inclinata</strong>.</li>
+              <li>Facoltativo: <strong>Pagina Blog › Esperienze consigliate</strong>, se volete proporla accanto agli articoli (al massimo tre attività).</li>
               <li><strong>Termini e condizioni</strong>: l'elenco delle attività, giocatori ed età.</li>
             </ul>
           </div>
@@ -3860,7 +3922,7 @@
             <ul>
               <li>Quando cambia una qualsiasi delle regole qui sopra, cercate le sue parole anche negli articoli di «Blog — articoli»: il sito non li corregge.</li>
               <li>Un articolo superato si può aggiornare, oppure spegnere con «Articolo online».</li>
-              <li>I link scritti a mano negli articoli verso una pagina spenta o cancellata restano: toglieteli (capitolo <a href="#online">04</a>).</li>
+              <li>I link scritti a mano negli articoli verso una pagina spenta perdono il collegamento da soli; verso una pagina cancellata invece restano: toglieteli (capitolo <a href="#online">04</a>).</li>
             </ul>
           </div>
         </details>

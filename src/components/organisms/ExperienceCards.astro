@@ -1,0 +1,187 @@
+---
+// «Esperienze consigliate» beside a blog article: up to three activities as compact cards, each
+// a link to its activity page (photo, name, the menu's one-line description, «da» the lowest
+// price). No booking button: the activity page sells. The whole card is one link, stretched from
+// the name, so a screen reader hears the name once, as on the blog's cards (BlogCard). The page
+// resolves the items; a card without a description or a price simply lacks that line.
+
+import Icon from '../atoms/Icon.astro';
+import Overline from '../atoms/Overline.astro';
+import Picture from '../atoms/Picture.astro';
+
+export interface Experience {
+  name: string;
+  href: string;
+  image?: string;
+  desc?: string;
+  /** The lowest price, already written for reading ("15", "12,50"). */
+  price?: string;
+}
+interface Props {
+  title: string;
+  items: Experience[];
+  headingId?: string;
+  class?: string;
+}
+
+const { title, items, headingId = 'experiences-title', class: className } = Astro.props;
+---
+
+{items.length > 0 && (
+  <aside class:list={['xp', className]} aria-labelledby={headingId}>
+    <Overline as="h2" id={headingId}>{title}</Overline>
+    <ul class="xp__list" role="list">
+      {items.map((x) => (
+        <li class="xp__card">
+          <div class="xp__media">
+            {x.image ? <Picture src={x.image} alt="" sizes="4.5rem" class="xp__img" /> : <Icon name="crosshair" size={28} class="xp__mark" />}
+          </div>
+          <div class="xp__body">
+            <h3 class="xp__name"><a class="xp__link" href={x.href}>{x.name}</a></h3>
+            {x.desc && <p class="xp__desc">{x.desc}</p>}
+            {/* Interface microcopy (CMS-02): the word before a computed starting price. */}
+            {x.price && <p class="xp__price">da <span class="xp__amount">{x.price}&nbsp;€</span></p>}
+          </div>
+          <Icon name="arrowUpRight" size={18} class="xp__go" />
+        </li>
+      ))}
+    </ul>
+  </aside>
+)}
+
+<style is:global>
+  .xp {
+    display: grid;
+    gap: 1rem;
+  }
+  .xp__list {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .xp__card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.7rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--lift, var(--color-surface));
+    transition:
+      border-color var(--duration-base) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .xp__media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    background: var(--lift-2, var(--color-surface-2));
+  }
+  .xp__media picture,
+  .xp__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .xp__img {
+    object-fit: cover;
+    transition: transform calc(var(--duration-slow) * 2) var(--ease-out-expo);
+  }
+  /* No photo: the site's mark, quiet, so the card keeps its shape. */
+  .xp__mark {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    color: var(--color-steel);
+  }
+
+  /* Only the name makes room for the arrow; the line and the price run under it. */
+  .xp__name {
+    margin: 0;
+    padding-right: 1.75rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    transition: color var(--duration-base) var(--ease-out-expo);
+  }
+  .xp__link {
+    color: inherit;
+    text-decoration: none;
+    /* Reached with Tab near the foot of the screen, the whole card (and its ring) scrolls clear of
+       the corner buttons, not just the name. */
+    scroll-margin-bottom: 6rem;
+  }
+  /* Stretched link: the whole card is the target. */
+  .xp__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: var(--radius-md);
+  }
+  .xp__desc {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+  .xp__price {
+    margin: 0.35rem 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.3;
+    color: var(--color-muted);
+  }
+  .xp__amount {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-foreground);
+  }
+  .xp__go {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    color: var(--color-accent);
+    transition: transform var(--duration-base) var(--ease-out-expo);
+  }
+
+  /* Pointer and keyboard light the card the same way: tinted edge, lit name, the arrow leaning
+     out, the photo leaning in. */
+  .xp__card:active { transform: translateY(1px) scale(0.99); }
+  @media (hover: hover) {
+    .xp__card:hover { border-color: color-mix(in srgb, var(--color-accent) 50%, var(--color-border)); }
+    .xp__card:hover .xp__name { color: var(--color-accent-hover); }
+    .xp__card:hover .xp__go { transform: translate(2px, -2px); }
+    .xp__card:hover .xp__img { transform: scale(1.06); }
+  }
+  /* The ring goes round the card, the real target. */
+  .xp__card:has(.xp__link:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-color: color-mix(in srgb, var(--color-accent) 50%, var(--color-border));
+  }
+  @supports selector(:has(*)) {
+    .xp__link:focus-visible { outline: none; }
+  }
+  .xp__card:has(.xp__link:focus-visible) .xp__name { color: var(--color-accent-hover); }
+  .xp__card:has(.xp__link:focus-visible) .xp__go { transform: translate(2px, -2px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .xp__card:active,
+    .xp__card:hover .xp__go,
+    .xp__card:hover .xp__img,
+    .xp__card:has(.xp__link:focus-visible) .xp__go { transform: none; }
+  }
+</style>

@@ -1,0 +1,252 @@
+---
+// An article's table of contents, built from its H2s, in two shapes for the layouts of the article
+// page: `fold` sits at the top of the text on phones and tablets, a native disclosure that starts
+// closed; `rail` stands open beside the text from desktop, follows the reading (the section whose
+// heading last crossed the upper part of the screen is marked current) and, when its column is
+// short of room, scrolls on its own, fading at the cut, while the current entry stays in view.
+// The page places and caps the rail (`class`); the list gives way inside it. The label is never a
+// heading: the article's outline stays the client's sections. A jump goes through Lenis when it
+// runs (CODE-10); with reduced motion there is no Lenis and the browser's own jump is instant.
+
+import Icon from '../atoms/Icon.astro';
+import Overline from '../atoms/Overline.astro';
+
+interface Heading {
+  slug: string;
+  text: string;
+}
+interface Props {
+  title: string;
+  headings: Heading[];
+  variant: 'fold' | 'rail';
+  /** Names the navigation landmark; must be unique on the page. */
+  labelId: string;
+  class?: string;
+}
+
+const { title, headings, variant, labelId, class: className } = Astro.props;
+---
+
+{variant === 'fold' ? (
+  <details class:list={['toc toc--fold', className]} data-toc>
+    <summary class="toc__summary">
+      <span class="toc__summary-label" id={labelId}>{title}</span>
+      <Icon name="chevronDown" size={20} class="toc__chevron" />
+    </summary>
+    <nav aria-labelledby={labelId}>
+      <ol class="toc__list" role="list">
+        {headings.map((h) => <li><a class="toc__link" href={`#${h.slug}`}>{h.text}</a></li>)}
+      </ol>
+    </nav>
+  </details>
+) : (
+  <nav class:list={['toc toc--rail', className]} aria-labelledby={labelId} data-toc data-toc-spy>
+    <Overline id={labelId}>{title}</Overline>
+    <ol class="toc__list" role="list">
+      {headings.map((h) => <li><a class="toc__link" href={`#${h.slug}`}>{h.text}</a></li>)}
+    </ol>
+  </nav>
+)}
+
+<style is:global>
+  .toc__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* Every entry is a full-height row (RESP-04). The track and the current mark are drawn inside
+     each link, so a list that scrolls never clips them (nor the focus ring, drawn inside too). */
+  .toc__link {
+    position: relative;
+    display: block;
+    padding: 0.75rem 0 0.75rem 1.1rem;
+    box-shadow: inset 1px 0 var(--color-border);
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    color: var(--color-muted);
+    text-decoration: none;
+    text-wrap: pretty;
+    transition: color var(--duration-base) var(--ease-out-expo);
+  }
+  .toc__link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7rem;
+    bottom: 0.7rem;
+    width: 2px;
+    background: var(--color-accent);
+    opacity: 0;
+    transform: scaleY(0.4);
+    transition:
+      opacity var(--duration-base) var(--ease-out-expo),
+      transform var(--duration-slow) var(--ease-out-expo);
+  }
+  .toc__link:hover,
+  .toc__link[aria-current='true'] { color: var(--color-foreground); }
+  .toc__link[aria-current='true']::before { opacity: 1; transform: none; }
+  .toc__link:active { transform: translateY(1px); }
+  .toc__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Desktop: open, and as tall as its column lets it be: under a height cap the list gives way and
+     scrolls on its own, fading at the cut until its end is reached. */
+  .toc--rail {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 0;
+  }
+  .toc--rail .toc__list {
+    /* The offsetParent of the links: the script centres the current one from their offsetTop. */
+    position: relative;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* An entry reached with Tab stops clear of the fade at the cut, where its contrast would drop. */
+    scroll-padding-block: 0.25rem 2.75rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+  .toc--rail .toc__list[data-lenis-prevent]:not([data-end]) {
+    mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent);
+  }
+
+  /* Phones and tablets: closed by default, a tap at the top of the text opens it. The label is
+     the disclosure's control, so it reads stronger than the desktop label. */
+  .toc--fold {
+    margin-bottom: clamp(2rem, 6vw, 2.5rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--lift, var(--color-surface));
+  }
+  .toc__summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0 1rem;
+    border-radius: inherit;
+    list-style: none;
+    transition: background-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .toc__summary::-webkit-details-marker { display: none; }
+  .toc__summary-label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+  }
+  .toc__chevron {
+    flex: none;
+    margin-left: auto;
+    color: var(--color-accent);
+    transition: transform var(--duration-base) var(--ease-out-expo);
+  }
+  .toc--fold[open] .toc__chevron { transform: rotate(180deg); }
+  .toc__summary:active { background: var(--lift-2, var(--color-surface-2)); }
+  .toc__summary:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .toc--fold .toc__list { margin: 0 1rem 1rem; }
+
+  @media (hover: hover) {
+    .toc__summary:hover { background: var(--lift-2, var(--color-surface-2)); }
+  }
+
+  @media (min-width: 1024px) {
+    .toc--fold { display: none; }
+    .toc--rail { display: flex; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toc__link:active { transform: none; }
+  }
+</style>
+
+<script>
+  const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const targetOf = (a: HTMLAnchorElement) => document.getElementById(decodeURIComponent(a.hash.slice(1)));
+
+  // Through Lenis, so the page glides there instead of snapping (CODE-10); the address takes the
+  // section's hash, as a native jump would. Focus follows the jump (SmoothScroll), and Lenis reads
+  // the heading's scroll-margin. A click with a modifier (new tab, new window) stays the browser's.
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-toc] a')) {
+    link.addEventListener('click', (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const lenis = (window as any).__lenis;
+      const target = targetOf(link);
+      if (!lenis || !target) return;
+      e.preventDefault();
+      lenis.scrollTo(target);
+      history.pushState(null, '', link.hash);
+    });
+  }
+
+  // Scroll-spy for the open contents (the page may hold one per desktop layout, only one shown, all
+  // listing the same headings): the current section is the last one whose heading is above a line
+  // at 30% of the screen. One observer for the headings, whose area runs from far above the page
+  // down to that line, so it wakes exactly when a heading crosses it, however far a jump goes; then
+  // it reads where the headings are and marks every list (CODE-10: no work on every frame).
+  const spies = [...document.querySelectorAll<HTMLElement>('[data-toc-spy] .toc__list')].map((list) => ({
+    list,
+    links: [...list.querySelectorAll<HTMLAnchorElement>('a')],
+  }));
+  if (spies.length) {
+    const heads = spies[0].links.map(targetOf);
+    let current = -1;
+    const overflows = (list: HTMLElement) => list.scrollHeight > list.clientHeight + 1;
+
+    // Inside a list that scrolls, the current entry is brought to its middle; never the page, and
+    // never while the keyboard is in the list: the focused entry must stay where it is.
+    const centre = ({ list, links }: (typeof spies)[number]) => {
+      const active = links[current];
+      if (!active || !overflows(list) || list.contains(document.activeElement)) return;
+      const top = active.offsetTop - (list.clientHeight - active.offsetHeight) / 2;
+      list.scrollTo({ top, behavior: reduce() ? 'auto' : 'smooth' });
+    };
+
+    for (const spy of spies) {
+      const { list } = spy;
+      // A list cut short scrolls under the wheel itself, not Lenis; one that fits leaves the wheel
+      // to the page. A list that has just become cut short (its layout has just appeared, or the
+      // screen has shrunk) brings the current entry into view once.
+      let cut = false;
+      new ResizeObserver(() => {
+        const now = overflows(list);
+        list.toggleAttribute('data-lenis-prevent', now);
+        if (now && !cut) centre(spy);
+        cut = now;
+      }).observe(list);
+      // Its last entry in view lifts the fade at the cut.
+      const last = list.lastElementChild;
+      if (last) {
+        new IntersectionObserver(([e]) => list.toggleAttribute('data-end', e.isIntersecting), { root: list, threshold: 0.9 }).observe(last);
+      }
+    }
+
+    const update = () => {
+      const line = innerHeight * 0.3;
+      let next = -1;
+      heads.forEach((h, i) => {
+        if (h && h.getBoundingClientRect().top <= line) next = i;
+      });
+      if (next === current) return;
+      current = next;
+      for (const spy of spies) {
+        spy.links.forEach((a, i) => (i === current ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+        centre(spy);
+      }
+    };
+
+    const io = new IntersectionObserver(update, { rootMargin: '99999px 0px -70% 0px' });
+    for (const h of heads) if (h) io.observe(h);
+  }
+</script>

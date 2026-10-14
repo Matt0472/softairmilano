@@ -13,6 +13,18 @@
     "subtitle": "Attrezzatura, protezioni, regole e curiosità sul softair, raccontate da chi lo fa giocare ogni giorno."
   },
   "listTitle": "Tutti gli articoli",
+  "tocTitle": "In questo articolo",
+  "experiences": {
+    "title": "Esperienze consigliate",
+    "items": [
+      "src/data/activities/softair.json",
+      "src/data/activities/arcotag.json",
+      "src/data/activities/tiro-dinamico.json"
+    ]
+  },
+  "follow": {
+    "title": "Seguici sui nostri canali social"
+  },
   "moreTitle": "Altri articoli",
   "readMore": "Leggi l'articolo"
 }
