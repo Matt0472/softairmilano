@@ -11,7 +11,7 @@
     "imageAlt": "Giocatore di softair in tenuta tattica che prende la mira nella luce di un'arena indoor.",
     "eyebrow": "Softair indoor a Milano",
     "title": "Diventa protagonista di un film d'azione",
-    "subtitle": "Per tutti, anche se non hai mai preso in mano un fucile: lo staff ti guida, tu ti diverti.",
+    "subtitle": "Per tutti, anche se non hai mai preso in mano una replica: lo staff ti guida, tu ti diverti! Massima adrenalina per un'esperienza indimenticabile!",
     "ctaPrimary": {
       "label": "Prenota",
       "href": "#prenota"
@@ -91,7 +91,7 @@
   "activities": [
     {
       "title": "Softair",
-      "desc": "Il cuore dell'arena: partite a missioni in un villaggio al coperto. Per veterani e per chi imbraccia un'arma softair per la prima volta.",
+      "desc": "Il cuore dell'arena: partite a missioni in un villaggio al coperto. Per veterani e per chi imbraccia una replica da softair per la prima volta.",
       "pills": [
         "Dai 12 anni",
         "A squadre",
@@ -209,7 +209,7 @@
   "voucher": {
     "eyebrow": "Idea regalo",
     "title": "Regala una partita di softair",
-    "text": "Chi riceve il voucher sceglie il giorno e l'ora, entro 6 mesi. Il giorno della partita lo porta stampato in arena.",
+    "text": "Chi riceve il voucher sceglie il giorno e l'ora, entro 6 mesi. Dopo aver prenotato, lo stampa e lo porta in arena il giorno della partita.",
     "cta": {
       "label": "Scopri il voucher",
       "href": "/voucher-regalo"
