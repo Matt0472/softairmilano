@@ -54,7 +54,7 @@ content:
         type: object
         fields:
           - { name: title, label: Titolo, type: string, description: "Es. «Abbigliamento consigliato». Se vuoto, compaiono solo la frase e l'elenco" }
-          - { name: text, label: Frase sopra l'elenco, type: string, description: "Es. «L'arena non è climatizzata né riscaldata». Se vuota non compare" }
+          - { name: text, label: Frase sopra l'elenco, type: string, description: "Facoltativa, una frase sopra l'elenco. Se vuota non compare" }
           - { name: items, label: Elenco, type: string, list: true, description: "Un capo per riga, breve, es. «Pantaloni lunghi». Le righe vuote non compaiono" }
       - name: finalCta
         label: "Prenota (fondo di ogni pagina)"
@@ -1343,6 +1343,8 @@ content:
           - { name: title, label: Titolo, type: string, description: "Es. «Su richiesta». Se vuoto, la sezione non compare" }
           - { name: items, label: Opzioni, type: string, list: true, description: "Una per riga, es. «Catering». Se non ce n'è nessuna, la sezione non compare" }
           - { name: note, label: Nota sotto le opzioni, type: text, description: "Facoltativa, es. «Indicatele nella richiesta di preventivo». Se vuota non compare" }
+          - { name: noteLinkLabel, label: "Nota: testo del link finale", type: string, description: "Facoltativo, es. «qui»: chiude la frase della nota con un link. Serve anche l'indirizzo qui sotto" }
+          - { name: noteLinkHref, label: "Nota: indirizzo del link", type: string, description: "Es. #faq-cosa-devono-indossare-i-partecipanti per aprire una domanda frequente di questa pagina: #faq- e poi la domanda in minuscolo, senza accenti né punteggiatura, con i trattini al posto degli spazi. Se cambi il testo della domanda, cambia anche questo indirizzo" }
       - name: clients
         label: Loro hanno scelto noi (loghi delle aziende)
         description: "Il muro di loghi, fermo, subito dopo le formule e «Su richiesta». Se l'elenco è vuoto, la sezione non compare"

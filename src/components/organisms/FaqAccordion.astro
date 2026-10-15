@@ -2,10 +2,12 @@
 // FAQ as native <details>/<summary>: keyboard and screen-reader support come
 // from the platform, and every answer is in the HTML for crawlers. The page
 // builds the FAQPage JSON-LD from the same items. Exclusive: one answer open at a
-// time (DES-11). One reading column, title above the list.
+// time (DES-11). One reading column, title above the list. Every question has its own address
+// (#faq- and the question as a slug): a link to it, from the page or from elsewhere, opens it.
 
 import Icon from '../atoms/Icon.astro';
 import SectionHead from '../molecules/SectionHead.astro';
+import { slugify } from '../../lib/slug';
 
 interface Item {
   q: string;
@@ -34,7 +36,7 @@ const hasTitle = !!title?.trim();
 
         <div class="faq__list" data-reveal style="--i: 1">
           {list.map((it) => (
-            <details class="faq__item" name={headingId}>
+            <details class="faq__item" name={headingId} id={`faq-${slugify(it.q)}`}>
               <summary class="faq__q">
                 <span class="faq__q-text">{it.q}</span>
                 <span class="faq__icon"><Icon name="plus" size={18} /></span>
@@ -130,6 +132,23 @@ const hasTitle = !!title?.trim();
 </style>
 
 <script>
+  // A link to a question (#faq-…) opens it and puts the focus on it: on arrival, on a hash change
+  // and on a click on the same link again (no hash change then).
+  const openFromHash = (hash: string) => {
+    if (!hash.startsWith('#faq-')) return;
+    const item = document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (!(item instanceof HTMLDetailsElement)) return;
+    item.open = true;
+    item.querySelector<HTMLElement>('summary')?.focus({ preventScroll: true });
+  };
+  openFromHash(location.hash);
+  addEventListener('hashchange', () => openFromHash(location.hash));
+  // On window, so it runs after SmoothScroll's document listener and the focus ends on the summary.
+  addEventListener('click', (e) => {
+    const link = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="#faq-"]');
+    if (link && link.hash === location.hash) openFromHash(link.hash);
+  });
+
   // Exclusive accordion: the shared `name` makes opening one answer close the others natively.
   // Older engines ignore `name`, so replicate it there.
   if (!('name' in HTMLDetailsElement.prototype)) {

@@ -227,7 +227,7 @@
       "Prenotazione obbligatoria."
     ],
     "wear": {
-      "text": "Abbigliamento comodo, da scegliere in base alla temperatura: l'arena non è climatizzata né riscaldata."
+      "text": "Abbigliamento comodo, da scegliere in base alla temperatura."
     }
   },
   "reviews": {
@@ -270,7 +270,7 @@
       },
       {
         "q": "Cosa devo indossare?",
-        "a": "Abiti comodi, scelti in base alla temperatura: l'arena non è climatizzata né riscaldata, quindi se fa freddo vestitevi a strati."
+        "a": "Abiti comodi, scelti in base alla temperatura."
       },
       {
         "q": "Come si prenota?",

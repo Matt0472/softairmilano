@@ -104,7 +104,13 @@
 @layer base {
   :root {
     color-scheme: dark;
-    /* The fixed WhatsApp and "back to top" buttons sit in the bottom corners: keyboard focus scrolls clear of them (A11Y-05). */
+    /* The fixed header (Header.astro) is a bar this tall once the page scrolls; at the very top its
+       floating pill sits a little lower, still inside the clearance. Anchor jumps, Lenis jumps and
+       keyboard focus stop clear of it, and of the WhatsApp and "back to top" buttons in the bottom
+       corners (A11Y-05, WCAG 2.4.11). Sticky aids stand on the same line under the bar. */
+    --header-h: 4rem;
+    --header-clear: calc(var(--header-h) + 1.5rem);
+    scroll-padding-top: var(--header-clear);
     scroll-padding-bottom: 5rem;
     /* The scrollbar's room is always kept, so a scroll lock (the cookie banner hides the page's
        overflow) never slides the page sideways on desktops with classic scrollbars (CLS). */
@@ -167,6 +173,8 @@
       animation-duration: 0.001ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
+      /* A staged change (the header's pill and bar) must not wait either. */
+      transition-delay: 0s !important;
       scroll-behavior: auto !important;
     }
   }

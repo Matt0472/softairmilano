@@ -70,10 +70,14 @@ template) sta nell'agente `design-specialist`; i **valori** stanno in `src/style
   | Bocciato | Al suo posto |
   |---|---|
   | Sezione 3D (three.js) in home | Niente 3D; la storia è in git (`64933b2`) |
-  | Topbar classica + hamburger | Navbar **floating a pillola** |
+  | Topbar classica + hamburger | Navbar **floating a pillola** in cima alla pagina; dopo lo scroll si apre in una barra a tutta larghezza, fissa |
   | Scrim pesante sull'hero | Immagine piena, text-shadow + gradiente sottile in basso |
   | `object-fit: contain` / letterbox su mobile | Immagini verticali dedicate |
   | Scroll-snap automatico nella scroll-story | Scroll libero |
   | Favicon ricavata dal logo (fucili illeggibili a 16px) | Mirino (`public/favicon.svg`) |
   | Embed YouTube | `<video>` self-hosted (`MEDIA-07`) |
   | Accento ambra `#f5a524` | Ciano `#00CCFF` |
+
+  Decisione dell'utente, 15 ott 2026: pillola in cima alla pagina, barra a tutta larghezza (logo,
+  menu, Prenota) dopo lo scroll. La navbar segue il visitatore su tutte le pagine; il passaggio da
+  pillola a barra e ritorno è animato (`--ease-out-expo`), istantaneo con `prefers-reduced-motion`.

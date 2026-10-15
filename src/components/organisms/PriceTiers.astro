@@ -308,12 +308,12 @@ const hasTitle = !!title?.trim();
     color: var(--color-foreground);
   }
 
-  /* A short ledger beside a longer left column stays in view while the notes are read, so the
-     prices are still beside the CTA. */
+  /* A short ledger beside a longer left column stays in view, below the header, while the notes
+     are read, so the prices are still beside the CTA. */
   @media (min-width: 1024px) {
     .price__list {
       position: sticky;
-      top: clamp(1.5rem, 6vh, 4rem);
+      top: var(--header-clear);
     }
   }
 

@@ -49,7 +49,7 @@
   },
   "intro": {
     "title": "Il corso in breve",
-    "text": "Il corso di softair di SoftAir Milano è aperto a principianti ed esperti, dai 16 anni. Si tiene ogni mercoledì dalle 21:00 alle 22:30, da ottobre 2026 a maggio 2027 con una pausa in inverno, nella nostra arena al coperto a Milano e nell'arena nel bosco di Ranger Softair Milano. Le lezioni le tiene un istruttore qualificato e, se non hai l'attrezzatura, la noleggi da noi."
+    "text": "Il corso di softair di SoftAir Milano è aperto a principianti ed esperti, dai 16 anni. Si tiene ogni mercoledì dalle 21:00 alle 22:30, da ottobre 2026 a maggio 2027, in due parti con una pausa in mezzo, nella nostra arena al coperto a Milano e nell'arena nel bosco di Ranger Softair Milano. Le lezioni le tiene un istruttore qualificato e, se non hai l'attrezzatura, la noleggi da noi."
   },
   "trial": {
     "title": "La prova gratuita",
@@ -101,7 +101,7 @@
   },
   "calendar": {
     "title": "Il calendario 2026–2027",
-    "text": "Ogni mercoledì dalle 21:00 alle 22:30: un corso unico, da ottobre a maggio, con la pausa d'inverno in mezzo. Ci si iscrive solo prima dell'inizio, a ottobre: le iscrizioni non riaprono per la seconda parte. Il primo allenamento è gratis.",
+    "text": "Ogni mercoledì dalle 21:00 alle 22:30: un corso unico, da ottobre a maggio, in due parti con una pausa in mezzo. Ci si iscrive solo prima dell'inizio, a ottobre: le iscrizioni non riaprono per la seconda parte. Il primo allenamento è gratis.",
     "steps": [
       {
         "time": "7 ott – 16 dic 2026",
@@ -109,14 +109,9 @@
         "text": "Gli allenamenti d'autunno, ogni mercoledì fino a metà dicembre."
       },
       {
-        "time": "Dic – feb",
-        "title": "La pausa d'inverno",
-        "text": "Tra le due parti ci si ferma; le iscrizioni non riaprono per la seconda parte."
-      },
-      {
         "time": "3 mar – 26 mag 2027",
         "title": "Seconda parte",
-        "text": "Si riprende dopo l'inverno e si va avanti fino a fine maggio."
+        "text": "Si riprende dopo la pausa e si va avanti fino a fine maggio."
       },
       {
         "time": "A fine corso",
@@ -152,8 +147,8 @@
         "a": "Nella nostra arena al coperto, in Via Melegnano 26 a Settimo Milanese, e nell'arena nel bosco di Ranger Softair Milano."
       },
       {
-        "q": "Com'è la temperatura in arena?",
-        "a": "L'arena non è riscaldata né climatizzata: vestitevi in base alla stagione."
+        "q": "Come ci si veste per gli allenamenti?",
+        "a": "Con abiti comodi, scelti in base alla stagione."
       }
     ]
   }

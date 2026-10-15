@@ -177,7 +177,8 @@ const { title, headings, variant, labelId, class: className } = Astro.props;
 
   // Through Lenis, so the page glides there instead of snapping (CODE-10); the address takes the
   // section's hash, as a native jump would. Focus follows the jump (SmoothScroll), and Lenis reads
-  // the heading's scroll-margin. A click with a modifier (new tab, new window) stays the browser's.
+  // the root's scroll-padding, so the heading lands below the fixed header. A click with a modifier
+  // (new tab, new window) stays the browser's.
   for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-toc] a')) {
     link.addEventListener('click', (e) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;

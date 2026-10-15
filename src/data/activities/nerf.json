@@ -10,7 +10,7 @@
   "hero": {
     "eyebrow": "Arena indoor · Milano",
     "title": "Nerf a Milano",
-    "subtitle": "Blaster, dardi in gommapiuma e un villaggio al coperto: la battaglia dei più piccoli, dai 6 anni.",
+    "subtitle": "Blaster, dardi in gommapiuma e un villaggio al coperto: una battaglia per tutti, dai 6 anni.",
     "image": "/uploads/nerf-hero.jpeg",
     "imageMobile": "/uploads/nerf-hero-mobile.jpeg",
     "imageAlt": "Giocatori con maschera protettiva e blaster Nerf tra casette di legno e reti mimetiche; un dardo in gommapiuma è appena partito da un blaster.",
@@ -198,12 +198,13 @@
       }
     ],
     "notes": [
-      "Fino a 30 giocatori, con l'arena in esclusiva per il vostro gruppo. Dal lunedì al venerdì il minimo è 8: se siete meno, si pagano comunque 8 quote. Sabato e domenica il minimo è 15: se siete meno, si pagano comunque 15 quote.",
+      "Fino a 30 giocatori. Dal lunedì al venerdì il minimo è 8: se siete meno, si pagano comunque 8 quote. Sabato e domenica il minimo è 15: se siete meno, si pagano comunque 15 quote.",
+      "Arena in esclusiva per il vostro gruppo.",
       "Saletta feste su richiesta.",
       "Prenotazione obbligatoria."
     ],
     "wear": {
-      "text": "Abbigliamento comodo, da scegliere in base alla temperatura: l'arena non è climatizzata né riscaldata."
+      "text": "Abbigliamento comodo, da scegliere in base alla temperatura."
     }
   },
   "reviews": {
@@ -238,7 +239,7 @@
       },
       {
         "q": "Cosa devono indossare i bambini?",
-        "a": "Abiti comodi, scelti in base alla temperatura: l'arena non è climatizzata né riscaldata, quindi se fa freddo meglio vestirli a strati."
+        "a": "Abiti comodi, scelti in base alla temperatura."
       },
       {
         "q": "Si può giocare quando piove?",

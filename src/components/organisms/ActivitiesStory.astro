@@ -126,7 +126,8 @@ const portraitMedia = '(max-width: 820px) and (orientation: portrait)';
     align-items: center;
     align-content: center;
     gap: clamp(1.5rem, 4vw, 3.5rem);
-    padding: clamp(1rem, 4vh, 2.5rem) var(--shell-gutter) clamp(3rem, 7vh, 4.5rem);
+    /* The header's bar lies over the pinned stage: the scene is centred in what it leaves free. */
+    padding: calc(var(--header-h) + clamp(1rem, 4vh, 2.5rem)) var(--shell-gutter) clamp(3rem, 7vh, 4.5rem);
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--duration-slow) var(--ease-out-expo);
@@ -246,7 +247,8 @@ const portraitMedia = '(max-width: 820px) and (orientation: portrait)';
      the copy sits BELOW on the band's plane, so the subject is never covered by
      text. A short gradient blends the bottom of the image into the copy panel. */
   @media (max-width: 820px) {
-    .acts__scene { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; align-items: stretch; align-content: stretch; gap: 0; max-width: none; padding: 0; }
+    /* The photo starts under the header's bar, so the bar never hides the subject's head (DES-09). */
+    .acts__scene { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; align-items: stretch; align-content: stretch; gap: 0; max-width: none; padding: var(--header-h) 0 0; }
     .acts__media { grid-row: 1; height: auto; min-height: 0; transform: none; opacity: 1; border-radius: 0; }
     /* Portrait sources keep their subject in the upper-middle: bias the crop
        upwards so short viewports (which show a center band) never cut heads. */

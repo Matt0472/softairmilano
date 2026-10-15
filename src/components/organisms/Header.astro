@@ -30,16 +30,20 @@ const navItemClass = 'flex min-h-11 items-center gap-1.5 whitespace-nowrap round
 const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
 ---
 
-{/* Floating nav overlaid on the full-bleed hero (no classic top bar). */}
-<header class="pointer-events-none absolute inset-x-0 top-0 z-50">
-  <div class="shell pointer-events-auto flex items-center justify-between gap-4 py-5" data-nav-bar>
-    <a href="/" class="inline-flex shrink-0 items-center [filter:drop-shadow(0_1px_10px_color-mix(in_srgb,var(--color-background)_60%,transparent))]">
-      <img src="/logo/logo-white-120.webp" alt={settings.siteName} width="121" height="120" class="h-12 w-auto" />
+<div class="nav-sentinel" aria-hidden="true" data-nav-sentinel="bar"></div>
+<div class="nav-sentinel nav-sentinel--pill" aria-hidden="true" data-nav-sentinel="pill"></div>
+
+{/* Fixed, so it follows the visitor: a floating pill at the top of a page, a full-width bar once it scrolls. */}
+<header class="site-header pointer-events-none fixed inset-x-0 top-0 z-50">
+  <div class="nav-plate" aria-hidden="true" data-nav-plate></div>
+  <div class="nav-bar shell flex items-center justify-between gap-4 py-5 *:pointer-events-auto" data-nav-bar>
+    <a href="/" class="nav-logo inline-flex shrink-0 items-center">
+      <img src="/logo/logo-white-120.webp" alt={settings.siteName} width="121" height="120" class="h-12 w-auto [filter:drop-shadow(0_1px_10px_color-mix(in_srgb,var(--color-background)_60%,transparent))]" />
     </a>
 
     {/* Desktop: pill nav, while it fits on one line (see the inline script below) */}
     <nav
-      class="nav-pill hidden items-center gap-0.5 rounded-full border border-foreground/10 bg-background/60 p-1 backdrop-blur-md lg:flex"
+      class="nav-pill hidden items-center gap-0.5 rounded-full border border-transparent p-1 lg:flex"
       aria-label="Principale"
       data-nav-pill
     >
@@ -101,18 +105,22 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
     {showCta && (
       <a
         href={cta.href}
-        class="nav-cta hidden min-h-11 shrink-0 items-center rounded-md bg-accent px-5 font-display text-sm font-semibold uppercase tracking-wide whitespace-nowrap text-on-accent transition-colors hover:bg-accent-hover lg:inline-flex"
+        class="nav-cta hidden min-h-11 shrink-0 items-center rounded-md bg-accent px-5 font-display text-sm font-semibold uppercase tracking-wide whitespace-nowrap text-on-accent transition-colors hover:bg-accent-hover motion-safe:active:translate-y-px lg:inline-flex"
         data-nav-cta
       >
         {cta.label}
       </a>
     )}
 
-    {/* Mobile, and desktop while the pill does not fit: floating pill toggle */}
+    {/*
+      Phones: the icon and the label alone, lit like the logo over the opening; the tap target (44px) is
+      padding that reaches into the gutter, so the label lines up with the page's edge. Desktop while the
+      pill does not fit: a glass pill of its own.
+    */}
     <button
       id="menu-toggle"
       type="button"
-      class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-foreground/10 bg-background/60 px-4 font-display text-sm uppercase tracking-wide text-foreground backdrop-blur-md lg:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      class="-mr-2 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-2 font-display text-sm uppercase tracking-wide text-foreground transition-colors [filter:drop-shadow(0_1px_10px_color-mix(in_srgb,var(--color-background)_60%,transparent))] hover:text-accent motion-safe:active:translate-y-px lg:mr-0 lg:hidden lg:border lg:border-foreground/10 lg:bg-background/60 lg:px-4 lg:backdrop-blur-md lg:[filter:none] lg:hover:border-foreground/25 lg:hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       aria-expanded="false"
       aria-controls="mobile-menu"
       aria-label="Apri il menu"
@@ -126,7 +134,9 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
     Pill or Menu button, by measure rather than by breakpoint: the client can add menu items, so from lg up
     the header turns compact whenever the pill would not fit on one line beside the logo and Prenota
     (RESP-09). Inline, so the first check lands before the first paint (the bundled script below runs after
-    parsing); the observer repeats it on resize and when the web font replaces its fallback.
+    parsing); the observer repeats it on resize and when the web font replaces its fallback. The same
+    pass measures what the bar unfolds from: the pill's box, or the whole row without it, and how far
+    the row rises to the bar's middle.
   */}
   <script is:inline>
     (() => {
@@ -134,6 +144,21 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
       const bar = header.querySelector('[data-nav-bar]');
       const pill = header.querySelector('[data-nav-pill]');
       const cta = header.querySelector('[data-nav-cta]');
+      const plate = header.querySelector('[data-nav-plate]');
+      const shape = () => {
+        const w = header.clientWidth;
+        const h = plate.offsetHeight;
+        const row = bar.getBoundingClientRect();
+        const from = pill.offsetWidth > 0 && !header.hasAttribute('data-nav-compact') ? pill.getBoundingClientRect() : null;
+        // Offsets against the row, which may be mid-rise: the rise moves both alike.
+        const x = from ? from.left + from.width / 2 - w / 2 : 0;
+        const y = from ? from.top - row.top + from.height / 2 : bar.offsetHeight / 2;
+        plate.style.setProperty('--plate-x', `${x}px`);
+        plate.style.setProperty('--plate-y', `${y - h / 2}px`);
+        plate.style.setProperty('--plate-sx', String(from ? from.width / w : 1));
+        plate.style.setProperty('--plate-sy', String((from ? from.height : bar.offsetHeight) / h));
+        header.style.setProperty('--nav-rise', `${(h - bar.offsetHeight) / 2}px`);
+      };
       const fit = () => {
         const s = getComputedStyle(bar);
         const room = bar.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight);
@@ -142,11 +167,14 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
         const pillWidth = pill.scrollWidth + pill.offsetWidth - pill.clientWidth;
         const need = bar.firstElementChild.offsetWidth + gap + pillWidth + (cta ? gap + cta.offsetWidth : 0);
         const compact = pill.offsetWidth > 0 && need > room;
-        if (compact === header.hasAttribute('data-nav-compact')) return;
-        header.toggleAttribute('data-nav-compact', compact);
-        header.dispatchEvent(new Event('navfit'));
+        if (compact !== header.hasAttribute('data-nav-compact')) {
+          header.toggleAttribute('data-nav-compact', compact);
+          header.dispatchEvent(new Event('navfit'));
+        }
+        shape();
       };
       const observer = new ResizeObserver(fit);
+      observer.observe(header);
       observer.observe(bar);
       observer.observe(pill);
     })();
@@ -220,8 +248,85 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
 </header>
 
 <style is:global>
+  .nav-sentinel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: var(--header-h);
+    visibility: hidden;
+  }
+  .nav-sentinel--pill { height: 1rem; }
+
+  /*
+    Pill to bar. Past the page's opening (data-nav-scrolled, set by the observer below) the bar's
+    glass grows from the pill's box to the whole width and the pill's own glass gives way to it,
+    so the pill opens out to the edges and its round ends square off; the row rises to the bar's
+    middle and the logo settles to 44px, still a full target (RESP-04). Back at the top the glass
+    folds onto the pill and fades as it lands, while the pill's glass returns. Without the pill
+    (phones, compact header) the glass closes from the row's height down to the bar's. Slow enough
+    to be watched opening out; the fades and the lag before them scale with the move. Transform
+    and opacity only (CODE-07); with reduced motion the switch is instant (global.css).
+  */
+  .site-header {
+    --nav-morph: calc(var(--duration-slow) * 2.25);
+    --nav-fade: calc(var(--duration-base) * 1.5);
+    --nav-lag: calc(var(--duration-fast) * 1.5);
+  }
+  .nav-plate {
+    position: absolute;
+    z-index: -2;
+    inset: 0 0 auto;
+    height: var(--header-h);
+    border-bottom: 1px solid var(--color-border);
+    /* 86%: muted labels hold 4.5:1 even over a white or cyan patch (A11Y-02). */
+    background: color-mix(in srgb, var(--color-background) 86%, transparent);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(var(--blur-md));
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(var(--plate-x, 0px), var(--plate-y, 0px)) scale(var(--plate-sx, 1), var(--plate-sy, 1));
+    transition:
+      transform var(--nav-morph) var(--ease-out-expo),
+      opacity var(--nav-fade) var(--ease-out-expo) var(--nav-lag);
+  }
+  /* The bar takes the clicks that land between its controls, so nothing under it is hit by mistake. */
+  [data-nav-scrolled] .nav-plate {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    transition:
+      transform var(--nav-morph) var(--ease-out-expo),
+      opacity var(--nav-lag) var(--ease-out-expo);
+  }
+  .nav-bar,
+  .nav-logo { transition: transform var(--nav-morph) var(--ease-out-expo); }
+  [data-nav-scrolled] .nav-bar { transform: translateY(var(--nav-rise, 0px)); }
+  .nav-logo { transform-origin: left center; }
+  [data-nav-scrolled] .nav-logo { transform: scale(calc(44 / 48)); }
+
+  /* The pill's glass, on a layer of its own so it can give way to the bar's. It covers the pill's
+     transparent border, which keeps the pill's box the same in both states. */
+  .nav-pill { position: relative; }
+  .nav-pill::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: -1px;
+    border: 1px solid color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-background) 60%, transparent);
+    backdrop-filter: blur(var(--blur-md));
+    pointer-events: none;
+    transition: opacity var(--nav-fade) var(--ease-out-expo) var(--nav-lag);
+  }
+  [data-nav-scrolled] .nav-pill::before {
+    opacity: 0;
+    transition: opacity var(--nav-fade) var(--ease-out-expo);
+  }
+
   /* Desktop "Attività" dropdown: a disclosure (button + list of links), not an ARIA menu. The panel
-     is solid rather than blurred: a backdrop-filter nested inside the blurred pill cannot sample the page. */
+     is solid rather than blurred, so it reads the same under the pill and under the bar. */
   .nav-dd__chevron { transition: transform var(--duration-base) var(--ease-out-expo); }
   .nav-dd[data-open='true'] .nav-dd__chevron { transform: rotate(180deg); }
 
@@ -345,6 +450,22 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
 <script>
   const header = document.querySelector<HTMLElement>('body > header');
 
+  // Pill or bar: the bar once its sentinel has scrolled away, the pill once the shorter one shows again,
+  // and in between the header stays as it is, so a page resting near the top never flickers. Observers,
+  // so nothing runs while the page scrolls (CODE-10).
+  const toBar = document.querySelector('[data-nav-sentinel="bar"]');
+  const toPill = document.querySelector('[data-nav-sentinel="pill"]');
+  if (header && toBar && toPill) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.target === toBar && !e.isIntersecting) header.setAttribute('data-nav-scrolled', '');
+        if (e.target === toPill && e.isIntersecting) header.removeAttribute('data-nav-scrolled');
+      }
+    });
+    io.observe(toBar);
+    io.observe(toPill);
+  }
+
   // Mobile full-screen menu: modal while open.
   const toggle = document.getElementById('menu-toggle');
   const closeBtn = document.getElementById('menu-close');
@@ -382,7 +503,10 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && isOpen()) setOpen(false);
     });
-    // Focus goes back to the menu button, unless the link leads to a section of this page (handled above).
+    // Focus goes back to the menu button, unless the link leads to a section of this page: SmoothScroll
+    // hands that section the focus, and the menu must not take it back.
+    const sectionFor = (a: HTMLAnchorElement) =>
+      a.hash.length > 1 && a.pathname === location.pathname ? document.getElementById(decodeURIComponent(a.hash.slice(1))) : null;
     for (const a of menu.querySelectorAll('a')) a.addEventListener('click', () => setOpen(false, !sectionFor(a)));
     // From 1024px up the overlay is hidden unless the header is compact: losing it must not leave the page inert.
     const desktop = matchMedia('(min-width: 1024px)');

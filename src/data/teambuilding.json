@@ -140,7 +140,9 @@
       "Noleggio della sala conferenze",
       "Attestati di partecipazione"
     ],
-    "note": "Indicatele nella richiesta di preventivo. L'arena non è climatizzata né riscaldata: cosa indossare è nelle domande frequenti, più in basso."
+    "note": "Indicatele nella richiesta di preventivo. Cosa indossare lo trovate segnato",
+    "noteLinkLabel": "qui",
+    "noteLinkHref": "#faq-cosa-devono-indossare-i-partecipanti"
   },
   "clients": {
     "title": "Loro hanno scelto noi",
@@ -275,7 +277,7 @@
       },
       {
         "q": "Cosa devono indossare i partecipanti?",
-        "a": "Per il softair: maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). Per l'arcotag basta un abbigliamento comodo. L'arena non è climatizzata né riscaldata: se fa freddo, aggiungete qualche strato."
+        "a": "Per il softair: maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci). Per l'arcotag basta un abbigliamento comodo."
       },
       {
         "q": "Si gioca anche se piove?",

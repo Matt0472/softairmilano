@@ -54,7 +54,7 @@ const jsonLd = [breadcrumbLd(crumbs, Astro.site), ...(faqData ? [faqData] : [])]
   {formats && has(formats.title) && !!formats.items?.length && (
     <ModeGrid {...formats} items={formats.items}>
       {has(onRequest?.title) && onRequest.items?.some(has) && (
-        <IncludedList title={onRequest.title} items={onRequest.items} note={onRequest.note} marker="plus" />
+        <IncludedList title={onRequest.title} items={onRequest.items} note={onRequest.note} noteLink={{ label: onRequest.noteLinkLabel, href: onRequest.noteLinkHref }} marker="plus" />
       )}
     </ModeGrid>
   )}

@@ -10,12 +10,17 @@ interface Props {
   title?: string;
   items: string[];
   note?: string;
+  /** A link that closes the note, e.g. «qui» to the FAQ answer it points to. */
+  noteLink?: { label?: string; href?: string };
   layout?: 'stack' | 'row';
   marker?: 'check' | 'plus';
   class?: string;
 }
 
-const { title, items, note, layout = 'stack', marker = 'check', class: className } = Astro.props;
+const { title, items, note, noteLink, layout = 'stack', marker = 'check', class: className } = Astro.props;
+const link = noteLink?.label?.trim() && noteLink?.href?.trim() ? { label: noteLink.label.trim(), href: noteLink.href.trim() } : undefined;
+// The note's sentence ends after the link: a full stop unless the label already closes it.
+const linkEnd = link && !/[.!?…]$/.test(link.label) ? '.' : '';
 const list = (items ?? []).filter((it) => typeof it === 'string' && it.trim());
 ---
 
@@ -30,7 +35,11 @@ const list = (items ?? []).filter((it) => typeof it === 'string' && it.trim());
         </li>
       ))}
     </ul>
-    {note?.trim() && <p class="incl__note">{note}</p>}
+    {note?.trim() && (
+      <p class="incl__note">
+        {note.trim()}{link && <> <a class="incl__link" href={link.href}>{link.label}</a>{linkEnd}</>}
+      </p>
+    )}
   </div>
 )}
 
@@ -83,6 +92,14 @@ const list = (items ?? []).filter((it) => typeof it === 'string' && it.trim());
     font-size: 0.9rem;
     color: var(--color-muted);
   }
+  .incl__link {
+    color: var(--color-foreground);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--color-accent);
+  }
+  .incl__link:hover { color: var(--color-accent); }
+  .incl__link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 2px; }
 
   @media (min-width: 900px) {
     .incl--row {

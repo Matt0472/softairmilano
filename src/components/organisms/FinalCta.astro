@@ -150,9 +150,12 @@ const wordmark = words.map((w) => [...w].map((ch) => ({ ch, i: n++ })));
     border-top: 1px solid var(--color-border);
     background: var(--color-background);
     view-timeline: --finale block;
-    /* The root's scroll-padding (kept clear for the corner buttons) would shrink the timeline's
-       viewport by its height: measure against the whole screen, as the content is pinned to it. */
+    /* The root's scroll-padding (kept clear for the header and the corner buttons) would shrink the
+       timeline's viewport by its height: measure against the whole screen, as the content is pinned to it. */
     view-timeline-inset: 0;
+    /* A jump here (#prenota) opens the curtain all the way, to the top of the screen: the header's bar
+       lies over its empty top, as over an opening, rather than over the end of the page before it. */
+    scroll-margin-top: calc(-1 * var(--header-clear));
   }
   /* Prenota links move focus here: no ring on the whole section, the actions carry their own. */
   .finale:focus { outline: none; }
@@ -467,6 +470,9 @@ const wordmark = words.map((w) => [...w].map((ch) => ({ ch, i: n++ })));
     opacity: 1;
     transition: opacity calc(var(--duration-slow) * 3) var(--ease-out-expo);
   }
+  /* A title the visitor has already scrolled past is in place, with no entrance, for the way back. */
+  .finale.is-armed.is-past .finale__word-in { transition: none; }
+  .finale.is-armed.is-past .finale__lock { animation: none; }
   /* Keyboard focus on the section or inside it skips what is still to come. */
   .finale.is-armed:is(:focus-visible, :has(:focus-visible)) :is(.finale__word-in, .finale__wordmark-ch, .finale__ticker) {
     opacity: 1;
@@ -563,12 +569,20 @@ const wordmark = words.map((w) => [...w].map((ch) => ({ ch, i: n++ })));
     // Entrance. The section's first report decides whether it is armed (only when it starts below
     // the fold); then the floor and the title each play once half of it is in sight. The observer
     // measures what the curtain leaves uncovered, since the section clips its pinned content.
+    // A fast scroll or a jump can carry the title past the screen between two reports, so a second
+    // observer, whose area reaches far above the screen, watches the section rise: once the
+    // curtain's edge is above the title's middle the title plays, or, already scrolled past, is
+    // simply in place for the way back up.
     if ('IntersectionObserver' in window) {
       const parts = new Map<Element, string>();
       const floor = finale.querySelector('[data-finale-floor]');
       const head = finale.querySelector('[data-finale-head]');
       if (floor) parts.set(floor, 'is-floor');
       if (head) parts.set(head, 'is-in');
+      const play = (el: Element) => {
+        finale.classList.add(parts.get(el)!);
+        io.unobserve(el);
+      };
       const io = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
@@ -577,19 +591,33 @@ const wordmark = words.map((w) => [...w].map((ch) => ({ ch, i: n++ })));
               if (entry.boundingClientRect.top < window.innerHeight) {
                 finale.classList.add('is-floor', 'is-in');
                 io.disconnect();
+                rise.disconnect();
                 return;
               }
               finale.classList.add('is-armed');
             } else if (entry.intersectionRatio >= 0.5) {
-              finale.classList.add(parts.get(entry.target)!);
-              io.unobserve(entry.target);
+              play(entry.target);
             }
           }
         },
         { threshold: [0, 0.5] }
       );
+      const rise = new IntersectionObserver(
+        ([entry]) => {
+          if (!head || !finale.classList.contains('is-armed')) return;
+          const h = head.getBoundingClientRect();
+          if (entry.boundingClientRect.top > h.top + h.height / 2) return;
+          finale.classList.toggle('is-past', h.bottom <= 0);
+          play(head);
+          // The floor lies below the title: uncovered too, unless it has yet to scroll into view.
+          if (floor && floor.getBoundingClientRect().top < window.innerHeight) play(floor);
+          rise.disconnect();
+        },
+        { rootMargin: '99999px 0px 0px 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+      );
       io.observe(finale);
       parts.forEach((_, el) => io.observe(el));
+      rise.observe(finale);
     }
 
     // While the section is still being uncovered, a control inside it can sit under the page's edge

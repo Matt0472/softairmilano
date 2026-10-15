@@ -91,12 +91,11 @@
   "activities": [
     {
       "title": "Softair",
-      "desc": "Il cuore dell'arena: partite a missioni in un villaggio al coperto. Per veterani e per chi imbraccia una replica da softair per la prima volta.",
+      "desc": "Il cuore dell'arena: partite a missioni in un villaggio al coperto, per tutti, anche per chi imbraccia una replica da softair per la prima volta.",
       "pills": [
         "Dai 12 anni",
         "A squadre",
-        "Principianti",
-        "Esperti e veterani"
+        "Per tutti"
       ],
       "image": "/uploads/att-softair.jpeg",
       "imageMobile": "/uploads/att-softair-mobile.jpeg",
@@ -141,7 +140,7 @@
     },
     {
       "title": "Nerf",
-      "desc": "Battaglie con dardi in gommapiuma: scatenate e sicurissime, l'ideale per i più piccoli e per le feste.",
+      "desc": "Battaglie con dardi in gommapiuma: scatenate e sicurissime, per tutti dai 6 anni e perfette per le feste.",
       "pills": [
         "Dai 6 anni",
         "Super sicuro",
@@ -209,7 +208,7 @@
   "voucher": {
     "eyebrow": "Idea regalo",
     "title": "Regala una partita di softair",
-    "text": "Chi riceve il voucher sceglie il giorno e l'ora, entro 6 mesi. Dopo aver prenotato, lo stampa e lo porta in arena il giorno della partita.",
+    "text": "Chi riceve il voucher sceglie il giorno e l'ora, entro 6 mesi. Una volta prenotato lo si stampa e lo si porta in arena il giorno della giocata.",
     "cta": {
       "label": "Scopri il voucher",
       "href": "/voucher-regalo"
@@ -218,7 +217,7 @@
   "course": {
     "eyebrow": "",
     "title": "Il corso di softair",
-    "text": "Ti allena un istruttore qualificato, nell'arena al coperto e in quella all'aperto, fino ai tornei contro altre squadre. Un corso unico, da ottobre a maggio, con una pausa in inverno.",
+    "text": "Ti allena un istruttore qualificato, nell'arena al coperto e in quella all'aperto, fino ai tornei contro altre squadre. Un corso unico, da ottobre a maggio, in due parti con una pausa in mezzo.",
     "facts": [
       {
         "value": "Ogni mercoledì",

@@ -203,15 +203,13 @@ const three = !!(toc && (xp || followed));
   }
   .article__img { object-fit: cover; }
   .article__cover + .article__layout { margin-top: clamp(2.5rem, 6vw, 4rem); }
-  /* A jump from the contents leaves the section's hairline a little below the screen's edge. */
-  .article__body h2 { scroll-margin-top: 1.5rem; }
-
-  /* The text's measure is the Prose's 36em at its 1.0625rem: no column ever changes it. The cap
-     keeps a sticky aid clear of the top and of the corner buttons at the bottom (the root's
+  /* The text's measure is the Prose's 36em at its 1.0625rem: no column ever changes it. A sticky
+     aid stands on the line the header keeps clear, where a jump from the contents lands a section's
+     hairline too; the cap keeps it clear of the corner buttons at the bottom (the root's
      scroll-padding). */
   .article__layout {
     --measure: 38.25rem;
-    --rail-cap: calc(100dvh - 7rem);
+    --rail-cap: calc(100dvh - var(--header-clear) - 5rem);
   }
 
   /* Phones and tablets: the activities and the channels follow the text, on its measure. The side
@@ -248,7 +246,7 @@ const three = !!(toc && (xp || followed));
     .article__rail-track { flex: 1 0 auto; }
     .article__rail-in {
       position: sticky;
-      top: 2rem;
+      top: var(--header-clear);
       display: flex;
       flex-direction: column;
       gap: 2.5rem;
@@ -276,7 +274,7 @@ const three = !!(toc && (xp || followed));
       display: flex;
       grid-area: 1 / 1;
       position: sticky;
-      top: 2rem;
+      top: var(--header-clear);
       align-self: start;
       max-height: var(--rail-cap);
     }
@@ -285,7 +283,7 @@ const three = !!(toc && (xp || followed));
     .article__layout--three .article__rail {
       grid-area: 1 / 3;
       position: sticky;
-      top: 2rem;
+      top: var(--header-clear);
       align-self: start;
     }
     .article__layout--three .article__rail-in {
@@ -294,9 +292,9 @@ const three = !!(toc && (xp || followed));
     }
   }
 
-  /* A screen too short for the cards plus a few entries of the contents: the aids scroll away
-     with the page. */
-  @media (min-width: 1024px) and (max-height: 39.99rem) {
+  /* A screen too short for the cards plus a few entries of the contents under the header: the
+     aids scroll away with the page. */
+  @media (min-width: 1024px) and (max-height: 43.99rem) {
     .article__rail-in,
     .article__layout--three :is(.article__toc--side, .article__rail) {
       position: static;

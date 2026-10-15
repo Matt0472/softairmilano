@@ -117,8 +117,8 @@ const hasTitle = !!title?.trim();
     overflow: hidden;
     background: var(--lift);
   }
-  /* A landscape photo beside a long list stays in view while the list is read. */
-  .split--landscape .split__media { position: sticky; top: 2rem; }
+  /* A landscape photo beside a long list stays in view, below the header, while the list is read. */
+  .split--landscape .split__media { position: sticky; top: var(--header-clear); }
   .split__media picture,
   .split__img {
     position: absolute;
