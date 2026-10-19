@@ -111,7 +111,7 @@
       },
       {
         "title": "Il catering",
-        "text": "Su richiesta prepariamo il catering, anche con merende personalizzate. Alla torta ci pensiamo noi, oppure puoi portarla tu."
+        "text": "Su richiesta organizziamo il catering, anche con merende personalizzate. Alla torta ci pensiamo noi, oppure puoi portarla tu."
       }
     ]
   },
@@ -167,7 +167,7 @@
       },
       {
         "q": "Posso portare la torta?",
-        "a": "Sì: alla torta ci pensiamo noi, oppure puoi portarla tu. Il catering lo prepariamo su richiesta, anche con merende personalizzate."
+        "a": "Sì: alla torta ci pensiamo noi, oppure puoi portarla tu. Il catering lo organizziamo su richiesta, anche con merende personalizzate."
       },
       {
         "q": "Quanto costa una festa?",
@@ -183,7 +183,7 @@
       },
       {
         "q": "Come ci si veste?",
-        "a": "Dipende dall'attività. Per arcotag e Nerf basta un abbigliamento comodo, scelto in base alla temperatura. Per il softair: maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci)."
+        "a": "Dipende dall'attività. Per arcotag e Nerf basta un abbigliamento comodo. Per il softair: maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci)."
       },
       {
         "q": "Dove si trova l'arena?",

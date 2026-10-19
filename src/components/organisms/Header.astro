@@ -415,6 +415,8 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
   }
   .mm-group__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
   .mm-group__grid > li { display: flex; }
+  /* An odd last card takes the whole row instead of leaving a hole beside it. */
+  .mm-group__grid > li:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .mm-group__link {
     display: flex;
     flex: 1;

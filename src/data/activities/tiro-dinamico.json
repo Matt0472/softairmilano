@@ -227,7 +227,7 @@
       "Prenotazione obbligatoria."
     ],
     "wear": {
-      "text": "Abbigliamento comodo, da scegliere in base alla temperatura."
+      "text": "Abbigliamento comodo."
     }
   },
   "reviews": {
@@ -270,7 +270,7 @@
       },
       {
         "q": "Cosa devo indossare?",
-        "a": "Abiti comodi, scelti in base alla temperatura."
+        "a": "Abiti comodi, in cui muoverti liberamente."
       },
       {
         "q": "Come si prenota?",

@@ -204,7 +204,7 @@
       "Prenotazione obbligatoria."
     ],
     "wear": {
-      "text": "Abbigliamento comodo, da scegliere in base alla temperatura."
+      "text": "Abbigliamento comodo."
     }
   },
   "reviews": {
@@ -239,7 +239,7 @@
       },
       {
         "q": "Cosa devono indossare i bambini?",
-        "a": "Abiti comodi, scelti in base alla temperatura."
+        "a": "Abiti comodi, in cui muoverti liberamente."
       },
       {
         "q": "Si può giocare quando piove?",

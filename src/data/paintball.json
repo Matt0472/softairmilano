@@ -25,7 +25,7 @@
   },
   "intro": {
     "title": "Softair o paintball: la differenza in breve",
-    "text": "Sono due giochi a squadre simili: cambia quello che si spara. Nel paintball sono sfere di vernice da circa 3 grammi, che macchiano e spesso lasciano lividi. Nel softair sono pallini di plastica da 6 mm e da 0,20 a 0,30 grammi, sparati da repliche realistiche che per legge restano sotto 1 joule: fa meno male, non sporca e si gioca anche al chiuso. Per questo, per giocare a Milano in un'arena indoor, il softair è la scelta naturale.",
+    "text": "Sono due giochi a squadre simili: cambia quello che si spara. Nel paintball sono sfere di vernice da circa 3 grammi, che macchiano e spesso lasciano lividi. Nel softair sono pallini di plastica riciclabile o biologici da 6 mm e da 0,20 a 0,30 grammi, sparati da repliche realistiche che per legge restano sotto 1 joule: fa meno male, non sporca e si gioca anche al chiuso. Per questo, per giocare a Milano in un'arena indoor, il softair è la scelta naturale.",
     "points": [
       {
         "title": "Fa meno male",
@@ -37,7 +37,7 @@
       },
       {
         "title": "È più realistico",
-        "text": "Repliche fedeli di armi vere, colpo singolo o raffica."
+        "text": "Repliche realistiche, colpo singolo o raffica."
       },
       {
         "title": "Al coperto",
@@ -54,7 +54,7 @@
     "rows": [
       {
         "topic": "Cosa si spara",
-        "softair": "Pallini di plastica da 6 mm, da 0,20 a 0,30 g",
+        "softair": "Pallini di plastica riciclabile o biologici da 6 mm, da 0,20 a 0,30 g",
         "paintball": "Sfere di gelatina e vernice da circa 17 mm e 3 g"
       },
       {
@@ -235,7 +235,7 @@
       },
       {
         "q": "Qual è la differenza principale tra softair e paintball?",
-        "a": "Il softair punta su realismo e strategia, con repliche fedeli e pallini di plastica da 6 mm; il paintball è più immediato e usa sfere di vernice che macchiano."
+        "a": "Il softair punta su realismo e strategia, con repliche fedeli e pallini di plastica riciclabile o biologici da 6 mm; il paintball è più immediato e usa sfere di vernice che macchiano."
       },
       {
         "q": "Il softair fa male come il paintball?",

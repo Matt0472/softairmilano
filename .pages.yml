@@ -75,7 +75,7 @@ content:
           - { name: text, label: Descrizione, type: string }
       - name: footerHeadings
         label: Titoli delle colonne nel footer
-        description: "Le colonne del menu si fanno da sole dal «Menu di navigazione»: ogni voce con un sottomenu (es. Attività, Info) è una colonna con il suo nome; le voci senza sottomenu (Corso, Team building…) stanno insieme in una colonna sola. «Home» non compare: ci porta già il logo"
+        description: "Le colonne del menu si fanno da sole dal «Menu di navigazione»: ogni voce con un sottomenu (es. Attività, Info) è una colonna con il suo nome; le voci senza sottomenu (Modulistica, Team building…) stanno insieme in una colonna sola. «Home» non compare: ci porta già il logo"
         type: object
         fields:
           - { name: pages, label: "Colonna delle voci senza sottomenu", type: string, required: true, description: "Es. Scopri" }
@@ -597,7 +597,7 @@ content:
             type: object
             fields:
               - { name: title, label: Titolo, type: string, description: "Facoltativo. Se vuoto, si usa il titolo di Impostazioni generali › Abbigliamento consigliato" }
-              - { name: text, label: Testo, type: text, description: "Una o due frasi, es. «Abbigliamento comodo, da scegliere in base alla temperatura». Se testo ed elenco sono vuoti, compare il blocco generale" }
+              - { name: text, label: Testo, type: text, description: "Una o due frasi, es. «Abbigliamento comodo». Se testo ed elenco sono vuoti, compare il blocco generale" }
               - { name: items, label: Elenco, type: string, list: true, description: "Facoltativo: un capo per riga, breve. Le righe vuote non compaiono" }
       - name: reviews
         label: Recensioni

@@ -2,14 +2,14 @@
   "published": true,
   "seo": {
     "title": "Addio al celibato e al nubilato a Milano | SoftAir Milano",
-    "description": "Addio al celibato o al nubilato a Milano: softair, arcotag o Nerf in arena al coperto di 1.500 m², fino a 30 amici, anche la sera, con sala feste e catering.",
+    "description": "Addio al celibato o al nubilato a Milano: missioni e giochi a tema, sposo o sposa anche in costume, fino a 30 amici in arena al coperto, anche la sera.",
     "image": "",
     "imageAlt": ""
   },
   "hero": {
     "eyebrow": "Per lo sposo o la sposa",
     "title": "Addio al celibato e al nubilato a Milano",
-    "subtitle": "Lo sposo o la sposa contro tutti, a softair, arcotag o Nerf nella nostra arena al coperto, anche la sera.",
+    "subtitle": "Missioni e giochi a tema per lo sposo o la sposa, che può venire in costume: softair, arcotag o Nerf nella nostra arena al coperto, anche la sera.",
     "image": "/uploads/occ-addio.jpeg",
     "imageMobile": "/uploads/occ-addio-mobile.jpeg",
     "imageAlt": "Un gruppo di amiche in tenuta da gioco ride intorno alla sposa, che porta un velo bianco sopra il casco.",
@@ -44,12 +44,29 @@
   ],
   "intro": {
     "title": "Un addio che non si dimentica",
-    "text": "Vuoi un addio al celibato o al nubilato adrenalinico? A softair lo sposo o la sposa si scorta come un VIP o si bracca in un Highlander; ad arcotag è uno contro tutti, con frecce a punta morbida e nessun rischio per il grande giorno. Fino a 30 persone (20 con il softair), anche la sera, e se vuoi, dopo la partita, si festeggia in sala feste. Chiamaci per realizzare qualcosa di indimenticabile.",
+    "text": "Un addio al celibato o al nubilato merita più di una partita qualsiasi: qui lo sposo o la sposa è il protagonista, in campo e, se vuoi, in sala feste dopo la partita. Chiamaci e lo organizziamo insieme.",
     "image": "/uploads/occ-serata.jpeg",
     "imageMobile": "/uploads/occ-serata-mobile.jpeg",
     "imageAlt": "Un gruppo di amici e amiche in gilet da gioco, con i fucili replica a tracolla, si dà il cinque ridendo tra le barricate di legno dell'arena al coperto.",
-    "itemsTitle": "",
-    "items": [],
+    "itemsTitle": "In breve",
+    "items": [
+      {
+        "name": "Il gioco",
+        "text": "Missioni classiche e, se vuoi, giochi a tema per lo sposo o la sposa."
+      },
+      {
+        "name": "Il costume",
+        "text": "Lo sposo o la sposa può venire in costume: lo scegliete voi amici."
+      },
+      {
+        "name": "Quanti",
+        "text": "Fino a 20 con il softair, 30 con arcotag e Nerf."
+      },
+      {
+        "name": "Quando",
+        "text": "Anche la sera: giorno e ora li organizziamo insieme, in base alla disponibilità."
+      }
+    ],
     "invite": "",
     "inviteLabel": "",
     "showPhone": true
@@ -86,7 +103,7 @@
     "items": [
       {
         "title": "La partita",
-        "text": "Softair, arcotag o Nerf, nella nostra arena al coperto: la festa comincia in campo."
+        "text": "Missioni classiche e, se vuoi, giochi a tema per lo sposo o la sposa: la festa comincia in campo."
       },
       {
         "title": "La sala feste",
@@ -94,7 +111,7 @@
       },
       {
         "title": "Il catering",
-        "text": "Su richiesta prepariamo il catering, per festeggiare tutti insieme dopo la sfida."
+        "text": "Su richiesta organizziamo il catering, per festeggiare tutti insieme dopo la sfida."
       }
     ]
   },
@@ -109,8 +126,8 @@
       },
       {
         "time": "",
-        "title": "Il dopo partita",
-        "text": "Dicci se vuoi la sala feste e il catering."
+        "title": "Giochi a tema e dopo partita",
+        "text": "Dicci se vuoi i giochi a tema per lo sposo o la sposa, la sala feste e il catering."
       },
       {
         "time": "",
@@ -142,7 +159,11 @@
       },
       {
         "q": "Si può organizzare qualcosa di speciale per un addio al celibato o al nubilato?",
-        "a": "Sì: chiamaci per realizzare qualcosa di indimenticabile. Il numero è in fondo alla pagina."
+        "a": "Sì: alle missioni classiche aggiungiamo, se vuoi, giochi a tema pensati per lo sposo o la sposa. Chiamaci e lo organizziamo insieme: il numero è in fondo alla pagina."
+      },
+      {
+        "q": "Lo sposo o la sposa può venire in costume?",
+        "a": "Certo: è il suo giorno, e il costume lo scegliete voi amici."
       },
       {
         "q": "Serve esperienza?",
@@ -166,7 +187,7 @@
       },
       {
         "q": "Come ci si veste?",
-        "a": "Dipende dall'attività. Per arcotag e Nerf basta un abbigliamento comodo, scelto in base alla temperatura. Per il softair: maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci)."
+        "a": "Dipende dall'attività. Per arcotag e Nerf basta un abbigliamento comodo. Per il softair: maglietta a maniche lunghe o felpa con cappuccio, pantaloni lunghi, scaldacollo o pashmina, scarpe comode e guanti aderenti (non quelli da sci)."
       },
       {
         "q": "Dove si trova l'arena?",
@@ -174,13 +195,13 @@
       },
       {
         "q": "Come si prenota?",
-        "a": "La prenotazione è obbligatoria. Compila la richiesta qui sotto con la data, il numero di giocatori e l'attività, e dicci se vuoi la sala feste e il catering: ti rispondiamo con la nostra migliore offerta. Se preferisci, chiamaci o scrivici: telefono ed email sono in fondo alla pagina."
+        "a": "La prenotazione è obbligatoria. Compila la richiesta qui sotto con la data, il numero di giocatori e l'attività, e dicci se vuoi i giochi a tema, la sala feste e il catering: ti rispondiamo con la nostra migliore offerta. Se preferisci, chiamaci o scrivici: telefono ed email sono in fondo alla pagina."
       }
     ]
   },
   "request": {
     "title": "Richiedi un preventivo",
-    "text": "Dicci la data, quanti siete e quale attività preferisci, e se vuoi la sala feste e il catering: ti rispondiamo con la nostra migliore offerta.",
+    "text": "Dicci la data, quanti siete e quale attività preferisci, e se vuoi i giochi a tema per lo sposo o la sposa, la sala feste e il catering: ti rispondiamo con la nostra migliore offerta.",
     "activity": "Addio al celibato o nubilato"
   }
 }

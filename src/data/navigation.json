@@ -31,12 +31,18 @@
           "href": "/nerf",
           "badge": "",
           "desc": "Dardi in gommapiuma, per tutti dai 6 anni"
+        },
+        {
+          "label": "Corso",
+          "href": "/corso-softair",
+          "badge": "",
+          "desc": "Allenamenti con un istruttore, dai 16 anni"
         }
       ]
     },
     {
-      "label": "Corso",
-      "href": "/corso-softair"
+      "label": "Modulistica",
+      "href": "/modulistica"
     },
     {
       "label": "Occasioni",
@@ -68,12 +74,6 @@
       "label": "Info",
       "href": "",
       "children": [
-        {
-          "label": "Modulistica",
-          "href": "/modulistica",
-          "badge": "",
-          "desc": "I moduli da compilare prima di giocare"
-        },
         {
           "label": "Voucher regalo",
           "href": "/voucher-regalo",
