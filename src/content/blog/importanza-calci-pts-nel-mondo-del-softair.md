@@ -1,6 +1,7 @@
 ---
 published: true
 title: "L'importanza dei calci PTS nel mondo del softair"
+slug: importanza-calci-pts-nel-mondo-del-softair
 description: "Perché scegliere un calcio PTS per il fucile da softair: comodità, adattabilità, precisione, resistenza ed estetica, per giocare meglio le tue partite."
 date: 2023-06-27
 image: /uploads/blog-importanza-calci-pts-nel-mondo-del-softair.jpg

@@ -1234,8 +1234,10 @@
       <h3>I video</h3>
       <p>
         I video non si caricano dal pannello: stanno su Cloudflare R2, e nel campo va il loro
-        indirizzo (che finisce in <code>.mp4</code>). Per un video nuovo chiedete al tecnico di
-        caricarlo: vi darà l'indirizzo da incollare.
+        indirizzo, che comincia con <code>https://media.softairmilano.it/</code> e finisce in
+        <code>.mp4</code>. Per un video nuovo chiedete al tecnico di caricarlo: vi darà l'indirizzo
+        da incollare. Un video che ne sostituisce un altro ha sempre un nome nuovo, così nessuno
+        continua a vedere quello vecchio.
       </p>
     </section>
 
@@ -3404,6 +3406,10 @@
           <dd><p>Es. «Guide · Regole · Attrezzatura». È la stessa anche in cima a ogni articolo.</p><p class="empty">non compare.</p></dd>
         </div>
         <div>
+          <dt>Articolo in evidenza</dt>
+          <dd><p>L'articolo grande in cima al blog, prima dell'elenco: sceglietelo dall'elenco degli articoli. Resta lì finché non lo cambiate, anche quando pubblicate articoli nuovi; nell'elenco sotto non compare una seconda volta.</p><p class="empty">in evidenza va l'articolo più recente (anche se l'articolo scelto è spento).</p></dd>
+        </div>
+        <div>
           <dt>Titolo sopra l'elenco degli articoli</dt>
           <dd><p>Es. «Tutti gli articoli».</p><p class="empty">non compare: l'elenco segue subito l'apertura.</p></dd>
         </div>
@@ -3485,13 +3491,19 @@
       <p>In «Blog — articoli» aggiungete una voce e compilate i campi, nell'ordine del pannello.</p>
       <dl class="fields">
         <div>
-          <dt>Articolo online</dt>
-          <dd><p>Acceso per pubblicarlo. Spento, l'articolo resta salvato ma non è sul sito: utile per prepararlo con calma.</p></dd>
+          <dt>Articolo online (spento = bozza)</dt>
+          <dd><p>Un articolo nuovo parte spento, come bozza: resta salvato ma non è sul sito, così lo preparate con calma anche in più volte. Quando è pronto accendetelo e salvate: va online in un paio di minuti.</p></dd>
         </div>
         <div>
           <dt>Titolo dell'articolo (H1)</dt>
           <dd>
-            <p>Grande in cima all'articolo, sulle schede e su Google. <strong>Quando create l'articolo diventa anche il nome del file, cioè l'indirizzo</strong>: prima del primo salvataggio potete accorciarlo (es. <code>softair-sulla-neve</code>). Dopo, cambiare il titolo non cambia l'indirizzo.</p>
+            <p>Grande in cima all'articolo, sulle schede e su Google. Cambiarlo non cambia l'indirizzo, che è il campo qui sotto.</p>
+          </dd>
+        </div>
+        <div>
+          <dt>Indirizzo dell'articolo <span class="limit">max 80</span></dt>
+          <dd>
+            <p>La parte finale dell'indirizzo: <code>softair-sulla-neve</code> diventa <code>softairmilano.it/blog/softair-sulla-neve</code>. Poche parole in minuscolo, separate da trattini, senza spazi né accenti (se scrivete spazi o maiuscole, il sito le sistema da solo). Ogni articolo deve averne uno diverso. <strong>Con un articolo già online non cambiatelo</strong> (qui sotto, «Non cambiate l'indirizzo»).</p>
           </dd>
         </div>
         <div>
@@ -3545,12 +3557,12 @@
         perdono il collegamento da soli: le parole restano, come testo normale.
       </p>
       <div class="callout stop">
-        <span class="label">Non rinominate il file</span>
+        <span class="label">Non cambiate l'indirizzo</span>
         <p>
-          Il nome del file è l'indirizzo dell'articolo: <code>softair-sulla-neve.md</code> diventa
-          <code>/blog/softair-sulla-neve</code>. Rinominarlo cambia l'indirizzo, e i link già
-          condivisi, quelli scritti in altri articoli e quelli su Google portano alla pagina «non
-          trovata». Con un articolo già online, non fatelo mai: cambiate il titolo, che si può.
+          «Indirizzo dell'articolo» è l'indirizzo della pagina: <code>softair-sulla-neve</code>
+          diventa <code>/blog/softair-sulla-neve</code>. Cambiarlo con un articolo già online fa
+          finire i link già condivisi, quelli scritti in altri articoli e quelli su Google sulla
+          pagina «non trovata». Non fatelo mai: cambiate il titolo, che si può.
         </p>
       </div>
       <div class="callout">

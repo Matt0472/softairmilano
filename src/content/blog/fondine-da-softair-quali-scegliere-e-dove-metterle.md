@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Fondine da Softair: quali scegliere e dove metterle"
+slug: fondine-da-softair-quali-scegliere-e-dove-metterle
 description: "Fondine da softair: dove metterle (cintura, coscia, petto o spalla) e quali materiali scegliere tra pelle, nylon e kydex, con pregi e difetti."
 date: 2024-07-22
 image: /uploads/blog-fondine-da-softair-quali-scegliere-e-dove-metterle.jpg

@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Softair sulla neve: un'esperienza unica nel suo genere"
+slug: softair-sulla-neve
 description: "Giocare a softair sulla neve: freddo e movimenti, batterie che si scaricano, repliche a gas che non sparano e mimetiche bianche. Cosa considerare."
 date: 2022-01-07
 image: /uploads/blog-softair-sulla-neve.jpg

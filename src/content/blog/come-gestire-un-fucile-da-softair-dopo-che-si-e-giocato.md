@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Come gestire un fucile da Softair dopo che si è giocato?"
+slug: come-gestire-un-fucile-da-softair-dopo-che-si-e-giocato
 description: "Cosa fare con il fucile da softair a fine partita: svuotare il caricatore, scaricare la molla e l'hop-up, togliere la batteria e riporlo nella custodia."
 date: 2022-02-02
 image: /uploads/blog-come-gestire-un-fucile-da-softair-dopo-che-si-e-giocato.jpg

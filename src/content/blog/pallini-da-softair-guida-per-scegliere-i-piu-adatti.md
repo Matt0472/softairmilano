@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Pallini da Softair: guida per scegliere i più adatti"
+slug: pallini-da-softair-guida-per-scegliere-i-piu-adatti
 description: "Come scegliere i pallini da softair: biodegradabili o no, grammatura da 0,20 a 0,40 g, colore e qualità, per trovare quelli adatti alla tua replica."
 date: 2022-01-19
 image: /uploads/blog-pallini-da-softair-guida-per-scegliere-i-piu-adatti.jpg

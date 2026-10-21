@@ -11,6 +11,8 @@ settings:
 media:
   input: public/uploads
   output: /uploads
+  # Uploaded files are renamed safe (lowercase, dashes, no spaces): their address stays clean.
+  rename: safe
 
 content:
   - name: settings
@@ -1870,6 +1872,15 @@ content:
           - { name: title, label: "Titolo principale (H1)", type: string, required: true, description: "Breve, es. «Blog»" }
           - { name: subtitle, label: Sottotitolo (massimo 20 parole), type: text, description: "Di cosa parlano gli articoli. Se vuoto non compare" }
           - { name: hudTag, label: "Scritta tattica nella cornice (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «Guide · Regole · Attrezzatura». Compare anche in cima a ogni articolo. Se vuota non compare" }
+      - name: featured
+        label: Articolo in evidenza
+        description: "L'articolo grande in cima al blog, prima dell'elenco. Resta lì finché non lo cambi, anche quando pubblichi articoli nuovi. Se vuoto, o se l'articolo scelto è spento, in evidenza va il più recente"
+        type: reference
+        options:
+          collection: blogPosts
+          # The article's file path: it stays put when the title changes.
+          value: "{path}"
+          label: "{primary}"
       - { name: listTitle, label: Titolo sopra l'elenco degli articoli, type: string, description: "Es. «Tutti gli articoli». Se vuoto non compare: l'elenco segue subito l'apertura" }
       - { name: tocTitle, label: "Titolo dell'indice (in ogni articolo)", type: string, description: "Es. «In questo articolo»: sopra l'indice delle sezioni dell'articolo, che resta in vista mentre si legge. Sugli schermi larghi (da circa 1280 px) sta a sinistra del testo, con le schede a destra; fra 1024 e 1279 px sta a destra, sopra le schede; sotto i 1024 px (telefoni e tablet) è un riquadro in cima al testo che si apre con un tocco. Vale per tutti gli articoli. L'indice lo fa il sito con i titoli delle sezioni (H2) del testo: per avere l'indice, dividi l'articolo in sezioni con i titoli. L'indice compare con almeno due titoli H2; con uno solo, o nessuno, non compare. Se vuoto, l'indice non compare in nessun articolo" }
       - name: experiences
@@ -1900,13 +1911,15 @@ content:
 
   - name: blogPosts
     label: Blog — articoli
-    description: "Un file per articolo. Il nome del file è l'indirizzo dell'articolo: softair-sulla-neve → /blog/softair-sulla-neve. Quando crei un articolo il nome si fa dal titolo e puoi accorciarlo prima di salvare; dopo resta quello anche se cambi il titolo. Rinominare il file cambia l'indirizzo: i link già condivisi e quelli su Google smettono di funzionare, quindi non farlo con un articolo già online. Per togliere un articolo dal sito senza perderlo, spegni «Articolo online» invece di cancellarlo"
+    description: "Un file per articolo. L'indirizzo di ogni articolo è il suo campo «Indirizzo dell'articolo»: softair-sulla-neve → softairmilano.it/blog/softair-sulla-neve. Cambiarlo con un articolo già online cambia l'indirizzo: i link già condivisi e quelli su Google smettono di funzionare. Per togliere un articolo dal sito senza perderlo, spegni «Articolo online» invece di cancellarlo"
     type: collection
     path: src/content/blog
     format: yaml-frontmatter
+    # The file is named after «Indirizzo dell'articolo» (slugified) and its input is hidden: the
+    # client only ever sees the address, the .md is ours.
     filename:
-      template: "{primary}.md"
-      field: create
+      template: "{fields.slug}.md"
+      field: false
     view:
       primary: title
       fields: [title, date, published]
@@ -1915,13 +1928,14 @@ content:
         sort: date
         order: desc
     fields:
-      - { name: published, label: Articolo online, type: boolean, default: true, description: "Spento: l'articolo sparisce dall'elenco del blog e dagli articoli suggeriti, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. I link a questo articolo scritti nel testo di altri articoli diventano testo normale da soli. Vale per il sito pubblicato e per l'anteprima online" }
-      - { name: title, label: "Titolo dell'articolo (H1)", type: string, required: true, description: "Compare grande in cima all'articolo, nell'elenco del blog e su Google. Quando crei l'articolo diventa anche il nome del file, cioè l'indirizzo (vedi sopra); cambiarlo dopo non cambia l'indirizzo" }
+      - { name: published, label: "Articolo online (spento = bozza)", type: boolean, default: false, description: "Un articolo nuovo parte come bozza: accendilo quando è pronto e salva, e va online in un paio di minuti. Spento: l'articolo sparisce dall'elenco del blog e dagli articoli suggeriti, e chi apre il suo indirizzo vede la pagina «non trovata». Si riaccende quando vuoi. I link a questo articolo scritti nel testo di altri articoli diventano testo normale da soli. Vale per il sito pubblicato e per l'anteprima online" }
+      - { name: title, label: "Titolo dell'articolo (H1)", type: string, required: true, description: "Compare grande in cima all'articolo, nell'elenco del blog e su Google. Cambiarlo non cambia l'indirizzo dell'articolo, che è il campo qui sotto" }
+      - { name: slug, label: "Indirizzo dell'articolo", type: string, required: true, options: { maxlength: 80 }, description: "La parte finale dell'indirizzo: softairmilano.it/blog/… Poche parole in minuscolo separate da trattini, senza spazi né accenti, es. softair-sulla-neve (se scrivi spazi o maiuscole il sito le sistema da solo). Ogni articolo deve averne uno diverso. Con un articolo già online non cambiarlo: i link già condivisi e quelli su Google porterebbero alla pagina «non trovata»" }
       - { name: description, label: "Riassunto (elenco del blog e Google)", type: text, required: true, options: { maxlength: 160 }, description: "Una o due frasi su cosa trova chi legge: compare sotto il titolo nell'elenco del blog, in apertura dell'articolo e come descrizione su Google. Massimo 160 caratteri" }
       - { name: date, label: Data di pubblicazione, type: date, required: true, options: { format: yyyy-MM-dd }, description: "Compare sull'articolo; nell'elenco del blog in cima c'è il più recente. Per un articolo nuovo è già la data di oggi" }
       - { name: image, label: Immagine di copertina, type: image, description: "Orizzontale 16:9, almeno 1600 px di larghezza (JPG): compare in cima all'articolo, nell'elenco del blog e nelle anteprime sui social. Sul computer, in cima all'articolo, la foto si taglia anche sopra e sotto: tieni il soggetto nella fascia centrale. Se vuota, l'articolo compare senza foto e sui social si usa l'immagine predefinita di «Impostazioni generali»" }
       - { name: imageAlt, label: Testo alternativo della copertina, type: string, description: "Obbligatorio se c'è la copertina: una frase che dice cosa si vede, per chi non vede le immagini e per Google, es. «Pallini da softair bianchi sparsi su un tavolo di legno». Senza copertina lascialo vuoto" }
-      - { name: body, label: Testo dell'articolo, type: rich-text, description: "I titoli delle sezioni partono dal secondo livello (H2), poi H3: il primo livello è già il titolo dell'articolo. Ogni titolo H2 diventa una voce dell'indice «In questo articolo»: l'indice compare con almeno due titoli H2; con uno solo, o nessuno, non compare. Ogni immagine nel testo ha bisogno del suo testo alternativo. I link alle pagine del sito si scrivono senza dominio, es. /softair o /blog/softair-sulla-neve" }
+      - { name: body, label: Testo dell'articolo, type: rich-text, options: { switcher: false }, description: "I titoli delle sezioni partono dal secondo livello (H2), poi H3: il primo livello è già il titolo dell'articolo. Ogni titolo H2 diventa una voce dell'indice «In questo articolo»: l'indice compare con almeno due titoli H2; con uno solo, o nessuno, non compare. Ogni immagine nel testo ha bisogno del suo testo alternativo. I link alle pagine del sito si scrivono senza dominio, es. /softair o /blog/softair-sulla-neve" }
 
   - name: cookieBanner
     label: Banner dei cookie
@@ -1989,7 +2003,7 @@ content:
       - { name: title, label: Titolo della pagina, type: string, required: true }
       - { name: description, label: Descrizione per Google e anteprime, type: text }
       - { name: updated, label: Ultimo aggiornamento, type: string, description: "Es. «8 ottobre 2026». Aggiornala ogni volta che cambi il testo. Se vuota, la riga non compare" }
-      - { name: body, label: Testo della pagina, type: rich-text, description: "I titoli partono dal secondo livello (il primo è il titolo della pagina). I link alle pagine del sito si scrivono senza dominio, es. /contatti" }
+      - { name: body, label: Testo della pagina, type: rich-text, options: { switcher: false }, description: "I titoli partono dal secondo livello (il primo è il titolo della pagina). I link alle pagine del sito si scrivono senza dominio, es. /contatti" }
 
   - name: cookiePolicy
     label: Cookie policy
@@ -2001,7 +2015,7 @@ content:
       - { name: title, label: Titolo della pagina, type: string, required: true }
       - { name: description, label: Descrizione per Google e anteprime, type: text }
       - { name: updated, label: Ultimo aggiornamento, type: string, description: "Es. «8 ottobre 2026». Aggiornala ogni volta che cambi il testo. Se vuota, la riga non compare" }
-      - { name: body, label: Testo della pagina, type: rich-text, description: "I titoli partono dal secondo livello (il primo è il titolo della pagina). I link alle pagine del sito si scrivono senza dominio, es. /contatti" }
+      - { name: body, label: Testo della pagina, type: rich-text, options: { switcher: false }, description: "I titoli partono dal secondo livello (il primo è il titolo della pagina). I link alle pagine del sito si scrivono senza dominio, es. /contatti" }
 
   - name: terms
     label: Termini e condizioni
@@ -2013,4 +2027,4 @@ content:
       - { name: title, label: Titolo della pagina, type: string, required: true }
       - { name: description, label: Descrizione per Google e anteprime, type: text }
       - { name: updated, label: Ultimo aggiornamento, type: string, description: "Es. «8 ottobre 2026». Aggiornala ogni volta che cambi il testo. Se vuota, la riga non compare" }
-      - { name: body, label: Testo della pagina, type: rich-text, description: "I titoli partono dal secondo livello (il primo è il titolo della pagina). I link alle pagine del sito si scrivono senza dominio, es. /contatti" }
+      - { name: body, label: Testo della pagina, type: rich-text, options: { switcher: false }, description: "I titoli partono dal secondo livello (il primo è il titolo della pagina). I link alle pagine del sito si scrivono senza dominio, es. /contatti" }

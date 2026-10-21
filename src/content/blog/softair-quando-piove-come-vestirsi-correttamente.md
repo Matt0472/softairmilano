@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Softair quando piove: come vestirsi correttamente?"
+slug: softair-quando-piove-come-vestirsi-correttamente
 description: "Come vestirsi per giocare a softair sotto la pioggia: strati per il busto, pantaloni impermeabili, scarpe, accessori e protezione dell'equipaggiamento."
 date: 2024-09-13
 image: /uploads/blog-softair-quando-piove-come-vestirsi-correttamente.jpg

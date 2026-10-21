@@ -1,6 +1,6 @@
 ---
-// The blog (/blog): the text-only opening with the newest article beside it, the others as cards,
-// newest first, and the closing section every page ends on. Each page holds POSTS_PER_PAGE cards
+// The blog (/blog): the text-only opening with the featured article beside it (chosen in the CMS,
+// else the newest: src/lib/blog.ts), the others as cards, newest first, and the closing section every page ends on. Each page holds POSTS_PER_PAGE cards
 // (the first one also the featured article) and the list goes on at /blog/2, /blog/3. The
 // articles are the «Blog — articoli» collection (only the published ones, src/lib/blog.ts), the
 // page's copy is blog.json; switched off, the whole blog
@@ -16,7 +16,7 @@ import TextHero from '../../components/organisms/TextHero.astro';
 import blog from '../../data/blog.json';
 import navigation from '../../data/navigation.json';
 import settings from '../../data/settings.json';
-import { coverOf, getPosts, isoDate, postHref, POSTS_PER_PAGE, type Post } from '../../lib/blog';
+import { coverOf, featuredPost, getPosts, isoDate, postHref, POSTS_PER_PAGE, type Post } from '../../lib/blog';
 import { has } from '../../lib/fields';
 import { blogLd, breadcrumbLd } from '../../lib/jsonld';
 import { flattenNav, type NavItem } from '../../lib/nav';
@@ -25,8 +25,11 @@ import { flattenNav, type NavItem } from '../../lib/nav';
 // full grid, so it holds one article more than the others.
 export const getStaticPaths = (async () => {
   const posts = await getPosts();
-  const pages = [posts.slice(0, POSTS_PER_PAGE + 1)];
-  for (let i = POSTS_PER_PAGE + 1; i < posts.length; i += POSTS_PER_PAGE) pages.push(posts.slice(i, i + POSTS_PER_PAGE));
+  // The featured article leads the first page and is not repeated among the cards.
+  const featured = featuredPost(posts, (blog as { featured?: string }).featured);
+  const others = posts.filter((post) => post !== featured);
+  const pages = [[...(featured ? [featured] : []), ...others.slice(0, POSTS_PER_PAGE)]];
+  for (let i = POSTS_PER_PAGE; i < others.length; i += POSTS_PER_PAGE) pages.push(others.slice(i, i + POSTS_PER_PAGE));
   return pages.map((data, i) => ({
     params: { page: i === 0 ? undefined : String(i + 1) },
     props: { page: { data, currentPage: i + 1, lastPage: pages.length } },
@@ -49,7 +52,7 @@ const crumbs = [
   ...(first ? [] : [{ label: pageLabel, href: pageHref(page.currentPage) }]),
 ];
 
-// The newest article opens the first page; the others follow as cards.
+// The featured article opens the first page; the others follow as cards.
 const [featured, ...rest] = first ? page.data : [undefined, ...page.data];
 
 const jsonLd = [

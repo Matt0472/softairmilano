@@ -13,6 +13,7 @@
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { articleSlug } from './slug';
 
 const ROOT = process.cwd();
 
@@ -41,11 +42,12 @@ const jsonOff = (file: string): boolean => {
     return false;
   }
 };
-// An article's switch sits in its front matter.
-const articleOff = (file: string): boolean => {
-  const head = readFileSync(join(ROOT, file), 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  return !!head && /^published:\s*false\b/im.test(head[1]);
-};
+// An article's switch and address sit in its front matter.
+const frontMatter = (file: string): string =>
+  readFileSync(join(ROOT, file), 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+const articleOff = (head: string): boolean => /^published:\s*false\b/im.test(head);
+const slugIn = (head: string): string | undefined =>
+  head.match(/^slug:[ \t]*(?:"([^"]*)"|'([^']*)'|(.*?))[ \t]*$/m)?.slice(1).find((v) => v !== undefined);
 
 /** Every switched-off address, without the trailing slash (e.g. "/teambuilding", "/blog/x"). */
 export function offPaths(): Set<string> {
@@ -55,12 +57,13 @@ export function offPaths(): Set<string> {
     if (name.endsWith('.json') && jsonOff(join(ACTIVITIES_DIR, name))) off.add(`/${name.replace(/\.json$/, '')}`);
   }
   // With the blog page off, its articles go too; a blog with no article online goes off itself.
-  // An article's address is its file name, which the CMS already writes as a slug.
+  // An article's address is its «Indirizzo dell'articolo», else its file name (src/lib/slug.ts).
   const articles = existsSync(join(ROOT, BLOG_DIR)) ? readdirSync(join(ROOT, BLOG_DIR)).filter((n) => n.endsWith('.md')) : [];
   const blogOff = off.has('/blog');
   let live = 0;
   for (const name of articles) {
-    if (blogOff || articleOff(join(BLOG_DIR, name))) off.add(`/blog/${name.replace(/\.md$/, '')}`);
+    const head = frontMatter(join(BLOG_DIR, name));
+    if (blogOff || articleOff(head)) off.add(`/blog/${articleSlug(slugIn(head), name)}`);
     else live += 1;
   }
   if (!live) off.add('/blog');

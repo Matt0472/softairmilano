@@ -11,8 +11,8 @@ import { decodePath } from './fields';
 export type Post = CollectionEntry<'blog'>;
 
 /** Cards on one page of the list: three full rows of three. The first page also opens with the
- *  newest article, featured; past that the list goes on in numbered pages (lighter pages, and each
- *  one a page of its own for search engines). */
+ *  featured article (featuredPost); past that the list goes on in numbered pages (lighter pages,
+ *  and each one a page of its own for search engines). */
 export const POSTS_PER_PAGE = 9;
 
 export const postHref = (post: Post): string => `/blog/${post.id}`;
@@ -22,6 +22,11 @@ export const coverOf = (post: Post): string | undefined => {
   const src = post.data.image;
   return src?.startsWith('/') && existsSync(join(process.cwd(), 'public', decodePath(src))) ? src : undefined;
 };
+
+/** The article that opens the blog: the one chosen in the CMS («Articolo in evidenza», its file
+ *  path), or the newest when none is chosen or the chosen one is not published. */
+export const featuredPost = (posts: Post[], chosen: string | undefined): Post | undefined =>
+  posts.find((post) => post.filePath === chosen) ?? posts[0];
 
 export async function getPosts(): Promise<Post[]> {
   const off = offPaths();

@@ -11,6 +11,9 @@ Sito di **SoftAir Milano**, arena/villaggio militare indoor di ~1.500 mq a Milan
 **italiano**. Oggi `softairmilano.it` è un WordPress su Aruba: il nuovo sito Astro lo sostituisce allo
 switch, mantenendo il dominio (procedura in `docs/cutover-checklist.md`).
 
+**Online dal 21 ott 2026** su Cloudflare Pages (`softairmilano.it`); il vecchio WordPress resta su Aruba
+come copia, sullo stesso hosting di altri tre siti del cliente (non si disdice).
+
 **Obiettivo primario: vendere le partite/sessioni di softair**: tutto porta alla **prenotazione
 (TicketingHub)**. Obiettivi secondari: **far crescere il corso** e **recuperare la fetta paintball**
 (convertire al softair chi cerca il paintball). Sito **veloce**, **mobile-first**, aggiornabile in
@@ -49,8 +52,9 @@ Lo **stato del lavoro** (cosa è fatto, cosa manca, cosa manca dal cliente) è i
 - **Tailwind CSS** `^4` via plugin Vite `@tailwindcss/vite` (non l'integrazione Astro).
 - **@astrojs/sitemap**, **lenis** (smooth scroll globale), **@fontsource** (Inter, Oswald), **sharp** (dev).
 - **Pages CMS** (pagescms.org), config in `.pages.yml`, contenuti in `src/data/*.json`.
-- **Cloudflare Pages** in produzione (dominio gestito dalla dashboard Cloudflare, redirect in
-  `_redirects`); **anteprima** su GitHub Pages: https://softairmilano-anteprima.mapped-dev.it.
+- **Cloudflare Pages** in produzione (progetto `softairmilano`, account Cloudflare del cliente; DNS,
+  `www` → dominio principale e HTTPS nella dashboard, redirect dei vecchi indirizzi in `_redirects`);
+  **anteprima** `noindex` su GitHub Pages: https://softairmilano-anteprima.mapped-dev.it.
 - **GitHub** `Matt0472/softairmilano` (pubblico), **TicketingHub** (prenotazioni), **GA4** dopo consenso
   (opzionale: Cloudflare Web Analytics, senza cookie), video su **Cloudflare R2**, immagini AI con
   **Gemini** (`scripts/genera-immagine.mjs`).
@@ -67,7 +71,7 @@ npx astro preview --port 4322                                                   
 npx lighthouse http://127.0.0.1:4322/ --chrome-flags="--headless=new"            # Lighthouse sulla build
 ```
 
-Produzione indicizzabile: `PUBLIC_SITE_INDEXABLE=true`, **solo il giorno dello switch**.
+Produzione indicizzabile: `PUBLIC_SITE_INDEXABLE=true`, impostata **solo** nel progetto Cloudflare Pages.
 
 ## Delega agli agenti
 
@@ -122,8 +126,9 @@ dì in una riga quale usi, poi usala.
 Riguardano come si lavora qui, non come deve essere il codice (quello è in `docs/standards/`).
 
 - **Mai commit né push senza un ok esplicito**: prima si mostrano le modifiche (screenshot, anteprima
-  locale, diff), poi si aspetta (`GIT-01`). Ogni push su `main` va online sull'anteprima.
-- **Il sito resta `noindex` fino allo switch** (`SEO-10`). Mai toccare il flag di indicizzazione, il
+  locale, diff), poi si aspetta (`GIT-01`). **Ogni push su `main` va in produzione** su softairmilano.it
+  (`GIT-02`), e anche ogni salvataggio del cliente dal CMS: prima di lavorare, `git pull`.
+- **Solo la produzione è indicizzabile** (`SEO-10`). Mai toccare il flag di indicizzazione, il
   DNS o Cloudflare di tua iniziativa: gli interruttori di produzione li aziona l'utente (`GIT-08`).
 - **Mai segreti nei file**: la API key sta in `.env` e il repo è pubblico (`GIT-04`).
 - **Verifica nel browser vero con Playwright MCP**, non nella pane dell'app: la pane congela le

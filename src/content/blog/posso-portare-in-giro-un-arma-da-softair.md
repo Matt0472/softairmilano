@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Posso portare in giro un'arma da Softair?"
+slug: posso-portare-in-giro-un-arma-da-softair
 description: "Si può portare in giro una replica da softair? No, ma si può trasportare: la differenza tra porto e trasporto, la custodia, il tappo rosso e le sanzioni."
 date: 2022-01-29
 image: /uploads/blog-posso-portare-in-giro-un-arma-da-softair.jpg

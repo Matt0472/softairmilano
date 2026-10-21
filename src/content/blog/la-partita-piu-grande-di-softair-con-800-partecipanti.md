@@ -1,6 +1,7 @@
 ---
 published: true
 title: "La partita più grande di Softair con 800 partecipanti!"
+slug: la-partita-piu-grande-di-softair-con-800-partecipanti
 description: "La partita di softair più grande di sempre: 800 giocatori da tutto il mondo e circa 40 ore di gioco, di giorno e di notte, in Georgia, negli Stati Uniti."
 date: 2022-03-06
 image: /uploads/blog-la-partita-piu-grande-di-softair-con-800-partecipanti.jpg

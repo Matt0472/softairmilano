@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Softair: meglio un campo interno o un campo esterno?"
+slug: campo-da-softair-meglio-interno-o-esterno
 description: "Softair al coperto o all'aperto? Meteo, terreno, dimensioni e illuminazione: pro e contro di un campo da softair interno e di uno esterno."
 date: 2021-12-23
 image: /uploads/blog-campo-da-softair-meglio-interno-o-esterno.jpg

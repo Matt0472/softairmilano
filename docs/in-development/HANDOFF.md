@@ -224,9 +224,16 @@ npm run manuale      # rigenera solo il manuale
    - il percorso del manuale (`/manuale-sam-3c9e/`) è leggibile nel repo pubblico: `CMS-13` lo presuppone segreto, quindi valutare di leggerlo da una variabile di CI oppure correggere la regola;
    - `npm run manuale` e `genera-manuale.mjs` sono in italiano per `CMS-12`, mentre `CODE-01` vuole nomi in inglese: va corretta una delle due regole.
 
-## Da chiudere prima del go-live
-- **JSON-LD:** `geo` e `openingHoursSpecification`.
-- **Indicizzazione:** chiave IndexNow e `robots.txt` legato all'interruttore fatti (`src/lib/indexing.ts`, `src/pages/robots.txt.ts`); resta `PUBLIC_SITE_INDEXABLE=true` **solo il giorno dello switch** (`SEO-10`, `GIT-08`).
-- **Video R2:** da `r2.dev` a un dominio proprio. Il bucket sta sull'account Cloudflare del cliente (lo stesso di Bosco della Luna): il dominio `softairmilano.it` e il progetto Pages vanno su quell'account.
-- **GA4:** lo configuriamo noi con l'account Google del cliente, poi l'ID in `settings.gaMeasurementId`; senza, il banner non offre le statistiche.
-- **Al go-live:** 301 da `www.` al dominio nudo con una regola Cloudflare; Search Console, Bing Webmaster e Rich Results Test (`docs/geo-e-indicizzazione.md`).
+## Go-live (21 ott 2026)
+Il sito è online su **https://softairmilano.it** dalle 14:07 del 21 ott 2026. Procedura in `docs/cutover-checklist.md`.
+- **Cloudflare, account del cliente** (lo stesso di Bosco della Luna / campodizucchemilano.it):
+  - progetto Pages `softairmilano`, collegato al repo con l'app GitHub «Cloudflare Workers and Pages». Variabili: `NODE_VERSION=22.23.2`, `PUBLIC_SITE_INDEXABLE=true`. Domini: `softairmilano.it` e `www.softairmilano.it`;
+  - zona DNS `softairmilano.it` (nameserver `evangeline` / `west.ns.cloudflare.com`, cambiati su Aruba alle 12:33, attivi alle 13:06). Tutti i record di posta, PEC, ftp e Aruba sono «DNS only» e identici a quelli di Aruba (export in `~/Documenti/personal-projects/softairmilano/backup-aruba-2026-10-21/`);
+  - Redirect Rule «www verso dominio principale» (301, percorso e parametri conservati); Crawler Hints acceso; Bot Preference Sync spento; bot AI ammessi;
+  - bucket R2 `softairmilano` su `https://media.softairmilano.it/` (i video).
+- **Il record TXT `google-site-verification=…` nei DNS non va mai cancellato**: verifica la proprietà di dominio in Search Console.
+- **Search Console** (proprietà di dominio, account Google del cliente) e **Bing Webmaster Tools** (importato da Search Console): sitemap `https://softairmilano.it/sitemap-index.xml` inviata e riuscita su entrambi; indicizzazione della home richiesta.
+- **GA4:** `G-9JRM4SXCJ7`, proprietà «softairmilano.it» (account ADWORDS_EXPRESS del cliente). Parte solo con il consenso «Statistiche». Revocare «Servizi esterni» cancella anche i `_ga` nostri (cookie condivisi con TicketingHub): scelta tenuta apposta, il costo è solo un client id nuovo.
+- **IndexNow:** `.github/workflows/indexnow.yml` segnala tutte le pagine della sitemap dopo ogni deploy riuscito.
+- **Aruba:** dominio, email, PEC e hosting restano lì. **L'hosting non si disdice**: ospita anche Ranger, Halloween Bambini e Viking Paintball Como. Il vecchio WordPress è intatto in `www.softairmilano.it/` sull'hosting (backup del database in locale; Aruba tiene i suoi backup giornalieri e settimanali).
+- **Ancora aperti:** JSON-LD `geo` e `openingHoursSpecification`; Cache Rule per `media.softairmilano.it` (oggi i video non stanno nella cache di Cloudflare: campodizucche ne ha una); decidere se tenere l'anteprima su GitHub Pages; i 3 controlli del giorno dopo (copertura e 404 in Search Console, posizionamento per 2–4 settimane).

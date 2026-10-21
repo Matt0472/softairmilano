@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Qual è la miglior arma per il Softair?"
+slug: quale-la-miglior-arma-per-il-softair
 description: "Qual è la miglior arma per il softair? Pistole, fucili d'assalto, a pompa e di precisione, a molla, elettrici o a gas: la scelta dipende dal campo."
 date: 2021-12-23
 image: /uploads/blog-quale-la-miglior-arma-per-il-softair.jpg

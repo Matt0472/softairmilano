@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Fucili a pompa da softair: vantaggi e svantaggi"
+slug: fucili-a-pompa-da-softair-vantaggi-e-svantaggi
 description: "Fucili a pompa da softair: gittata, colpi per bossolo, caricamento a mano, peso e prezzi. Vantaggi e svantaggi di una replica per gli scontri ravvicinati."
 date: 2023-04-04
 image: /uploads/blog-fucili-a-pompa-da-softair-vantaggi-e-svantaggi.jpg

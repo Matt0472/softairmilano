@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Sniper nel Softair? Non è quello che sembra"
+slug: sniper-nel-softair-non-e-quello-che-sembra
 description: "Fare lo sniper nel softair non è come nei film: in Italia le repliche restano sotto 1 joule, e il cecchino fa soprattutto ricognizione per la squadra."
 date: 2022-01-26
 image: /uploads/blog-sniper-nel-softair-non-e-quello-che-sembra.jpg

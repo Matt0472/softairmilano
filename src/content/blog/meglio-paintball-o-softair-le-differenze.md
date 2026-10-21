@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Meglio Paintball o Softair? Ecco le differenze"
+slug: meglio-paintball-o-softair-le-differenze
 description: "Meglio paintball o softair? Le differenze tra armi, proiettili, protezioni per il viso e abbigliamento, per scegliere quale dei due prenotare."
 date: 2021-12-23
 image: /uploads/blog-meglio-paintball-o-softair-le-differenze.jpg

@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Protezioni viso per il Softair: tutto quello che c'è da sapere!"
+slug: protezioni-viso-per-il-softair-tutto-quello-che-da-sapere
 description: "Protezioni viso per il softair: maschera integrale a griglia o con visore, oppure in due pezzi per occhi e bocca. Pro e contro di ogni soluzione."
 date: 2021-12-23
 image: /uploads/blog-protezioni-viso-per-il-softair-tutto-quello-che-da-sapere.jpg

@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Fa più male giocare a Paintball o Softair?"
+slug: fa-piu-male-giocare-a-paintball-o-softair
 description: "Paintball o softair: quale fa più male quando si viene colpiti? Peso e velocità dei proiettili, fattori che cambiano il dolore e protezioni a confronto."
 date: 2025-12-19
 image: /uploads/blog-fa-piu-male-giocare-a-paintball-o-softair.jpg

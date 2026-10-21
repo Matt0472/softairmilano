@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Cose divertenti da fare a Milano: 6 esperienze originali e indimenticabili"
+slug: cose-divertenti-da-fare-a-milano
 description: "6 cose divertenti da fare a Milano: softair, escape game in città, escape room, horror con attori, aperitivo nel bosco e un campo di zucche."
 date: 2025-10-01
 image: /uploads/blog-cose-divertenti-da-fare-a-milano.jpg

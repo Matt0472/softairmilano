@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Normativa Softair: cosa è legale e cosa non lo è in Italia?"
+slug: normativa-softair-cosa-e-legale-e-cosa-non-lo-e-in-italia
 description: "La normativa softair in Italia: limite di 1 joule per le repliche, trasporto, età minima e cosa è vietato. Le regole per giocare in modo legale e sicuro."
 date: 2025-11-01
 image: /uploads/blog-normativa-softair-cosa-e-legale-e-cosa-non-lo-e-in-italia.jpg

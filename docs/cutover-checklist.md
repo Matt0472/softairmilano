@@ -1,5 +1,9 @@
 # Checklist di cutover — softairmilano.it
 
+> **Eseguita il 21 ottobre 2026**: il sito è online su Cloudflare Pages dalle 14:07. Lo stato finale,
+> con le impostazioni di Cloudflare, Search Console, Bing e GA4, è in `docs/in-development/HANDOFF.md`
+> («Go-live»). Questa pagina resta come procedura di riferimento e per il rollback.
+
 **Migrazione: WordPress (Aruba) → Astro su Cloudflare Pages**
 Ultimo aggiornamento: 13 settembre 2026
 
@@ -34,7 +38,7 @@ Sostituire il vecchio sito WordPress con il nuovo sito Astro, **senza**:
 ## FASE 0 — Preparazione e informazioni da confermare
 
 - [ ] Confermato con il cliente: casella email `@softairmilano.it` in uso (**sì**).
-- [ ] Verificare su Aruba se **email e hosting web sono nello stesso pacchetto** (se sì, il pacchetto NON si disdice: si dismette solo lo spazio web).
+- [x] Verificato il 21/10/2026: l'«Hosting Advanced Linux» di softairmilano.it ospita anche **www.rangersoftairmilano.it, www.halloweenbambinimilano.it, www.vikingpaintballcomo.it** (più due `staging.…` e i backup automatici di Aruba, cartelle `…_Backup_Giornaliero` e `…_Backup_Settimanale`). **Il pacchetto non si disdice mai**: spegnerebbe gli altri siti.
 - [ ] Recuperare dal pannello DNS di Aruba il record **DKIM** (`<selettore>._domainkey.softairmilano.it`) — non rilevabile da fuori senza il nome del selettore.
 - [ ] Accesso a: pannello Aruba (DNS + hosting), account Cloudflare, account TicketingHub, Google Search Console / Analytics.
 - [ ] Elenco definitivo delle pagine e dei contenuti reali da migrare (vedi struttura ~11 pagine + collezioni).
@@ -147,7 +151,7 @@ Esempio `_redirects`:
 - [ ] Aspettare **2-4 settimane** di funzionamento stabile del sito nuovo.
 - [ ] Confermato che il backup (Fase 1) è completo e conservato.
 - [ ] Verificato che l'email **non** dipende dallo spazio web che si vuole dismettere.
-- [ ] Dismettere solo lo **spazio hosting WordPress** su Aruba (mantenere dominio + email).
+- [ ] **Non disdire l'hosting** (ospita altri tre siti del cliente). Al massimo si toglie la sola cartella `www.softairmilano.it` via FTP, dopo aver verificato che il backup sia completo. Dominio, email e hosting restano su Aruba.
 - [ ] Rialzare i TTL DNS a valori normali (3600s) su Cloudflare.
 
 ---

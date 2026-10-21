@@ -1,6 +1,7 @@
 ---
 published: true
 title: "Team Building Softair: rafforza la tua squadra"
+slug: team-bulding-softair-rafforza-la-tua-squadra
 description: "Il team building softair rafforza la squadra: sfide e modalità di gioco per le aziende nell'arena CQB indoor di Softair Milano, con qualsiasi meteo."
 date: 2022-01-12
 image: /uploads/blog-team-bulding-softair-rafforza-la-tua-squadra.jpg

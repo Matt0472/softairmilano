@@ -1,6 +1,7 @@
 ---
 published: false
 title: "Squadra Ufficiale: conosciamo l'head coach!"
+slug: squadra-ufficiale-conosciamo-lhead-coach
 description: "Elvio è l'head coach della Squadra Ufficiale di Softair Milano: lo abbiamo intervistato su chi può partecipare, come ci si allena e quali sono gli obiettivi."
 date: 2024-10-10
 image: /uploads/blog-squadra-ufficiale-conosciamo-lhead-coach.jpg

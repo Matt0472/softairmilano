@@ -31,8 +31,8 @@ sono le regole; lì il dettaglio operativo.
 
 ## Gate di indicizzazione (regola critica)
 
-- **SEO-10** — **Fino allo switch su `softairmilano.it` il sito NON è indicizzabile**: `robots.txt`
-  `Disallow: /` + `<meta name="robots" content="noindex, nofollow">` su ogni pagina. Lo decide un solo
-  flag di build, `PUBLIC_SITE_INDEXABLE` (`CODE-15`). Il `noindex` si toglie **solo il giorno dello
-  switch**, mai prima, e l'anteprima di staging non è mai indicizzabile.
+- **SEO-10** — **Solo la produzione è indicizzabile**: lo decide un solo flag di build,
+  `PUBLIC_SITE_INDEXABLE` (`CODE-15`), impostato a `true` solo nel progetto Cloudflare Pages dallo
+  switch del 21 ott 2026. Ogni altra build (l'anteprima su GitHub Pages, le build locali) ha `robots.txt`
+  `Disallow: /` e `<meta name="robots" content="noindex, nofollow">` su ogni pagina, e non lo perde mai.
 - **SEO-11** — Il percorso del manuale cliente **non compare mai** in `robots.txt` (`CMS-13`).

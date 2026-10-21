@@ -1,6 +1,7 @@
 ---
 published: true
 title: "La leadership nel softair: è importante avere un caposquadra in un team?"
+slug: importante-avere-un-leader-nel-team
 description: "I ruoli in una squadra di softair e perché serve un caposquadra: guidare il gruppo, decidere in fretta, conoscere i compagni e coordinare le radio."
 date: 2021-12-23
 image: /uploads/blog-importante-avere-un-leader-nel-team.jpg

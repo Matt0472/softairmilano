@@ -28,8 +28,10 @@ Foto, immagini AI, video, logo e favicon. Il procedimento (prompt, script, param
 - **MEDIA-06** — I sorgenti (JPEG/PNG) stanno in `public/uploads`; il **WebP lo genera la pipeline**
   (`npm run immagini`, già dentro `dev` e `build`). Ogni `<img>` ha `width`/`height` o `aspect-ratio`.
 - **MEDIA-07** — I **video sono self-hosted** su Cloudflare R2, compressi (H.264, CRF ~23,
-  `+faststart`), con poster; niente embed YouTube. Prima del go-live, R2 passa da `r2.dev` a un
-  **dominio proprio**.
+  `+faststart`), con poster; niente embed YouTube. Stanno nel bucket R2 `softairmilano`
+  (account Cloudflare del cliente) e si linkano **sempre da `https://media.softairmilano.it/`**,
+  mai dall'indirizzo `pub-….r2.dev` (limitato, senza cache). Un video che ne sostituisce un altro
+  si carica con un **nome nuovo**.
 
 ## Identità
 
