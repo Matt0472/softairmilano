@@ -21,9 +21,8 @@ Aggiornato: **8 ott 2026, ore 11:00**. Riscritto da capo. Rispetto alla versione
 
 ## Stato attuale
 
-### Repo e anteprima
-- **Repo:** `Matt0472/softairmilano` (pubblico), branch `main`.
-- **Online sull'anteprima** https://softairmilano-anteprima.mapped-dev.it: commit **`791651b`** dell'8 ott (blog, pagine legali, banner, interruttori, manuale), deploy verificato. Il sito è `noindex` (`SEO-10`).
+### Repo e produzione
+- **Repo:** `Matt0472/softairmilano` (pubblico), branch `main` = **produzione** su https://softairmilano.it (sezione «Go-live» in fondo). L'anteprima GitHub Pages è stata spenta il 21 ott 2026: per far vedere un lavoro prima, un branch → `<branch>.softairmilano.pages.dev`.
 - **Solo in locale:** niente, a parte questo handoff. **Mai commit né push senza l'ok esplicito dell'utente** (`GIT-01`).
 
 ### Pagine (tutte su `BaseLayout`, con `FinalCta` `#prenota` in fondo)
@@ -237,4 +236,4 @@ Il sito è online su **https://softairmilano.it** dalle 14:07 del 21 ott 2026. P
 - **IndexNow:** `.github/workflows/indexnow.yml` segnala tutte le pagine della sitemap dopo ogni deploy riuscito.
 - **Aruba:** dominio, email, PEC e hosting restano lì. **L'hosting non si disdice**: ospita anche Ranger, Halloween Bambini e Viking Paintball Como. Il vecchio WordPress è intatto in `www.softairmilano.it/` sull'hosting (backup del database in locale; Aruba tiene i suoi backup giornalieri e settimanali).
 - **Cloudflare Pages tiene i file tolti fino a una settimana** per data center («asset retention»: la pulizia della cache non li toglie, provato il 21/10). Per questo una pagina o un articolo spento non viene tolto dalla build: al suo indirizzo `astro.config.mjs` scrive la pagina «non trovata» (`noindex`), e nel CMS attività e articoli non si possono cancellare né rinominare (`operations`). Se un tecnico cancella un file, la copia vecchia può restare visibile (con `noindex`) fino a una settimana; `/blog/articolo-di-prova/` (prova del 21/10) è in questo stato.
-- **Ancora aperti:** JSON-LD `geo` e `openingHoursSpecification`; Cache Rule per `media.softairmilano.it` (oggi i video non stanno nella cache di Cloudflare: campodizucche ne ha una); decidere se tenere l'anteprima su GitHub Pages; i 3 controlli del giorno dopo (copertura e 404 in Search Console, posizionamento per 2–4 settimane).
+- **Ancora aperti:** JSON-LD `geo` e `openingHoursSpecification`; Cache Rule per `media.softairmilano.it` (oggi i video non stanno nella cache di Cloudflare: campodizucche ne ha una); i 3 controlli del giorno dopo (copertura e 404 in Search Console, posizionamento per 2–4 settimane).

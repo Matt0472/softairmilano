@@ -33,6 +33,6 @@ sono le regole; lì il dettaglio operativo.
 
 - **SEO-10** — **Solo la produzione è indicizzabile**: lo decide un solo flag di build,
   `PUBLIC_SITE_INDEXABLE` (`CODE-15`), impostato a `true` solo nel progetto Cloudflare Pages dallo
-  switch del 21 ott 2026. Ogni altra build (l'anteprima su GitHub Pages, le build locali) ha `robots.txt`
+  switch del 21 ott 2026. Ogni altra build (le anteprime dei branch su Cloudflare, le build locali) ha `robots.txt`
   `Disallow: /` e `<meta name="robots" content="noindex, nofollow">` su ogni pagina, e non lo perde mai.
 - **SEO-11** — Il percorso del manuale cliente **non compare mai** in `robots.txt` (`CMS-13`).

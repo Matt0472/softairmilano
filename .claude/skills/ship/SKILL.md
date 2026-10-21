@@ -117,9 +117,10 @@ an ok on this one.
 
 1. Commit in Italian, in the style of the existing messages (`GIT-03`), without working artifacts
    (`.playwright-mcp/`, `dist/`, scratch files — `GIT-05`).
-2. Push to `main`, follow the run with `gh run watch`, and check the change on
-   **https://softairmilano-anteprima.mapped-dev.it** (`GIT-02`). Report what you checked, not "it's
-   deployed".
+2. Push to `main` — that is **production** — wait for the "Cloudflare Pages" check on the commit to
+   pass, and check the change on **https://softairmilano.it** (`GIT-02`). Work the user wants to see
+   online before it goes live goes on a branch first: Cloudflare previews it, `noindex`, at
+   `<branch>.softairmilano.pages.dev`. Report what you checked, not "it's deployed".
 3. Clean `.playwright-mcp/`, and offer `/handoff` if the session is ending.
 
 ### Delicate changes
@@ -132,9 +133,9 @@ Write a runbook and **label every step with who performs it — [TU] or [CLAUDE]
 ambiguous gets skipped or done twice.
 
 ```markdown
-### Anteprima
-1. **[CLAUDE]** Build con il flag di produzione in locale e verifica di robots.txt e meta robots
-2. **[TU]** Controlla <il flusso specifico> sull'anteprima
+### Anteprima (branch)
+1. **[CLAUDE]** Build in locale e verifica di <il controllo specifico>
+2. **[TU]** Controlla <il flusso specifico> su `<branch>.softairmilano.pages.dev`
 
 ### Produzione
 3. **[TU]** <l'interruttore: DNS / dashboard Cloudflare / PUBLIC_SITE_INDEXABLE>

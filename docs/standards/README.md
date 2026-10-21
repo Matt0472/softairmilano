@@ -38,7 +38,7 @@ sposta qui.
 | [`performance.md`](performance.md) | Lighthouse, Core Web Vitals, peso di immagini/font/JS — `PERF-` |
 | [`responsive.md`](responsive.md) | Mobile-first, breakpoint, overflow, tap target — `RESP-` |
 | [`seo.md`](seo.md) | SEO tecnica e on-page, JSON-LD, GEO, **gate di indicizzazione** — `SEO-` |
-| [`git.md`](git.md) | Commit, push, produzione e anteprima, segreti, modifiche delicate — `GIT-` |
+| [`git.md`](git.md) | Commit, push, produzione e anteprime dei branch, segreti, modifiche delicate — `GIT-` |
 
 ## Non negoziabili
 
@@ -46,7 +46,7 @@ Le poche regole che, se violate, fanno danni difficili da vedere nel momento in 
 
 - **Ogni contenuto è modificabile dal cliente via Pages CMS**, mai scritto nel componente (`CMS-01`).
 - **Mai commit o push senza un ok esplicito** dopo aver mostrato le modifiche (`GIT-01`).
-- **Solo la produzione su `softairmilano.it` è indicizzabile**; anteprima e build locali restano `noindex` (`SEO-10`).
+- **Solo la produzione su `softairmilano.it` è indicizzabile**; anteprime dei branch e build locali restano `noindex` (`SEO-10`).
 - **WCAG 2.2 AA è bloccante** per il lancio (`A11Y-01`).
 - **Le immagini AI non documentano l'arena reale** (`MEDIA-02`).
 - **Le decisioni del cliente non si ripropongono** (`DES-10`).

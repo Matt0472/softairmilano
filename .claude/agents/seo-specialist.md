@@ -50,9 +50,8 @@ Astro components can look right and still render wrong. Verify against **`dist/`
 ## The indexing gate
 
 A leak here cannot be undone quickly: once a staging page is indexed it lingers. The only switch is
-`PUBLIC_SITE_INDEXABLE` (`CODE-15`); the staging workflow (`.github/workflows/pages.yml`) must never set
-it. Flipping it to `true` happens **only on switch day**, by the user, following
-`docs/cutover-checklist.md` (`GIT-08`). If anything in a change touches `robots.txt`, the robots meta or
+`PUBLIC_SITE_INDEXABLE` (`CODE-15`): `true` only in the Cloudflare Pages **production** environment
+(set by the user at the 21 Oct 2026 switch, `GIT-08`); branch previews and local builds never set it. If anything in a change touches `robots.txt`, the robots meta or
 that flag, treat it as delicate and say so first.
 
 ## Local search and GEO

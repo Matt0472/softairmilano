@@ -1,4 +1,4 @@
-# Git, produzione e anteprima — `GIT-`
+# Git, produzione e anteprime — `GIT-`
 
 Si lavora su **`main`**: dal 21 ott 2026 ogni push su `main` va **in produzione** su
 **https://softairmilano.it**, e lo stesso ogni salvataggio del cliente in Pages CMS.
@@ -11,10 +11,12 @@ Si lavora su **`main`**: dal 21 ott 2026 ogni push su `main` va **in produzione*
 - **GIT-02** — Ogni push su `main` pubblica in circa due minuti la **produzione**: Cloudflare Pages
   (progetto `softairmilano`, account del cliente) costruisce e pubblica da solo, e l'esito è il check
   «Cloudflare Pages» sul commit in GitHub. Dopo il push si controlla quel check e la pagina toccata su
-  **https://softairmilano.it**. Lo stesso push aggiorna anche l'**anteprima** GitHub Pages
-  (`.github/workflows/pages.yml`, https://softairmilano-anteprima.mapped-dev.it, sempre `noindex`) e,
-  a deploy riuscito, segnala le pagine a IndexNow (`.github/workflows/indexnow.yml`). Prima di lavorare
-  in locale si fa `git pull`: il cliente salva su `main` dal CMS.
+  **https://softairmilano.it**; a deploy riuscito le pagine vengono segnalate a IndexNow
+  (`.github/workflows/indexnow.yml`). Prima di lavorare in locale si fa `git pull`: il cliente salva su
+  `main` dal CMS. Un lavoro da far vedere **prima** di pubblicarlo va su un branch: Cloudflare Pages ne
+  pubblica un'anteprima `noindex` su `<branch>.softairmilano.pages.dev`, senza toccare la produzione;
+  con l'ok si unisce a `main`. L'anteprima su GitHub Pages (`softairmilano-anteprima.mapped-dev.it`) è
+  stata spenta il 21 ott 2026.
 - **GIT-03** — Messaggi di commit **in italiano**, nello stile di quelli esistenti: `Area: cosa cambia`
   (es. "Favicon: torna il mirino, in ciano…"), con il trailer di attribuzione in fondo.
 - **GIT-04** — **Il repository è pubblico.** Nessun segreto nei file tracciati: le chiavi stanno in

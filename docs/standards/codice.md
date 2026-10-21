@@ -77,8 +77,9 @@
 
 ## Configurazione in un punto solo
 
-- **CODE-14** — **Dominio**: costante `SITE_URL` in `astro.config.mjs` (override con env `SITE_URL`
-  per l'anteprima) + `siteUrl` in `src/data/settings.json` + riga `Sitemap` in `public/robots.txt`.
+- **CODE-14** — **Dominio**: costante `SITE_URL` in `astro.config.mjs` (override con env `SITE_URL`)
+  + `siteUrl` in `src/data/settings.json` + `SITE` in `.github/workflows/indexnow.yml`; la riga
+  `Sitemap` di `robots.txt` si ricava da `SITE_URL` (`src/pages/robots.txt.ts`).
 - **CODE-15** — **Indicizzabilità**: un solo flag di build, `PUBLIC_SITE_INDEXABLE` (`SEO-10`).
 - **CODE-16** — I **segreti** stanno solo in `.env` (gitignored); il codice li legge, non li contiene
   (`GIT-04`).

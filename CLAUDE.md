@@ -53,8 +53,9 @@ Lo **stato del lavoro** (cosa è fatto, cosa manca, cosa manca dal cliente) è i
 - **@astrojs/sitemap**, **lenis** (smooth scroll globale), **@fontsource** (Inter, Oswald), **sharp** (dev).
 - **Pages CMS** (pagescms.org), config in `.pages.yml`, contenuti in `src/data/*.json`.
 - **Cloudflare Pages** in produzione (progetto `softairmilano`, account Cloudflare del cliente; DNS,
-  `www` → dominio principale e HTTPS nella dashboard, redirect dei vecchi indirizzi in `_redirects`);
-  **anteprima** `noindex` su GitHub Pages: https://softairmilano-anteprima.mapped-dev.it.
+  `www` → dominio principale e HTTPS nella dashboard, redirect dei vecchi indirizzi in `_redirects`).
+  Per far vedere un lavoro prima di pubblicarlo si usa un branch: Cloudflare ne fa un'anteprima
+  `noindex` su `<branch>.softairmilano.pages.dev`.
 - **GitHub** `Matt0472/softairmilano` (pubblico), **TicketingHub** (prenotazioni), **GA4** dopo consenso
   (opzionale: Cloudflare Web Analytics, senza cookie), video su **Cloudflare R2**, immagini AI con
   **Gemini** (`scripts/genera-immagine.mjs`).

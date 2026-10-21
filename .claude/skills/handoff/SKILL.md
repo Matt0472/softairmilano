@@ -46,8 +46,9 @@ Never copy the canon into the handoff: link the rule (`DES-10`, `SEO-10`). Two c
 
 2. **Gather the real state. Do not write from memory:**
    - `git status`, `git log --oneline -10`, unpushed commits (`git log origin/main..HEAD --oneline`);
-   - **what is online**: the last preview deploy (`gh run list --workflow pages.yml --limit 1`) — does
-     https://softairmilano-anteprima.mapped-dev.it match `main`, or is some work only local?
+   - **what is online**: the "Cloudflare Pages" check of the last commit on `main`
+     (`gh api repos/Matt0472/softairmilano/commits/main/check-runs`) — does https://softairmilano.it
+     match `main`, or is some work only local or on a branch?
    - the **last verified** build and Lighthouse, with the date — never claim a pass not seen in this
      session;
    - what the **client** saw in this session, what they approved, and what they rejected, with the
