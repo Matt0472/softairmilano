@@ -5,7 +5,8 @@
 //   the home's activities go (and with them «Provate anche»), any other link keeps its content
 //   and loses its address, and components already hide a link without one (CMS-10);
 // - getStaticPaths skips switched-off activities and articles; a hook in astro.config.mjs removes
-//   the fixed pages' folders from dist/, so the host answers with the real 404; the sitemap skips
+//   the fixed pages' folders from dist/ and writes the «not found» page at every switched-off
+//   address (Cloudflare Pages would otherwise keep serving the old copy for days); the sitemap skips
 //   them all.
 // It reads the files from disk, so it works in astro.config.mjs as in the pages. In `astro dev` a
 // switched-off page still renders and the link pruning stays as it was at start-up (restart to

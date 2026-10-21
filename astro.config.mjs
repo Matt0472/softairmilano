@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import { rm } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { offPaths, isOffHref, pruneOffLinks, LEGAL_PATHS } from './src/lib/pages.ts';
 import { join } from 'node:path';
 import { finishMarkdownPages } from './src/lib/markdown-pages.ts';
@@ -12,8 +12,8 @@ import { finishMarkdownPages } from './src/lib/markdown-pages.ts';
 const SITE_URL = process.env.SITE_URL || 'https://softairmilano.it';
 
 // Pages switched off in the CMS («Pagina online»): see src/lib/pages.ts. The data plugin drops the
-// links to them from every src/data file as it is imported; the hook removes their folders from
-// the build, so the host answers with the real 404.
+// links to them from every src/data file as it is imported; the hook puts the «not found» page at
+// their addresses (see below).
 const off = offPaths();
 const DATA_DIR = join(process.cwd(), 'src', 'data');
 const pruneOffPages = {
@@ -29,7 +29,18 @@ const postBuild = {
   name: 'softair:post-build',
   hooks: {
     'astro:build:done': async (/** @type {{ dir: URL }} */ { dir }) => {
-      for (const path of off) await rm(new URL(`.${path}/`, dir), { recursive: true, force: true });
+      // Cloudflare Pages keeps serving a file that a deploy removed, from each data center, for up to
+      // a week (asset retention: purging the cache does not clear it). So a switched-off page keeps
+      // its address in the build, holding the «not found» page (noindex, no canonical): every
+      // visitor sees it at once. An article deleted outright can still show for up to a week, hence
+      // the manual's «switch it off, do not delete it».
+      const notFound = await readFile(new URL('./404.html', dir));
+      for (const path of off) {
+        const folder = new URL(`.${path}/`, dir);
+        await rm(folder, { recursive: true, force: true });
+        await mkdir(folder, { recursive: true });
+        await writeFile(new URL('index.html', folder), notFound);
+      }
       // Markdown pages: image sizes, lazy loading and WebP; links to switched-off pages unlinked.
       await finishMarkdownPages(dir, ['blog', ...LEGAL_PATHS.map((p) => p.slice(1))], off);
     },

@@ -392,6 +392,9 @@ content:
     type: collection
     path: src/data/activities
     format: json
+    # No delete (an activity is switched off with «Pagina online», which keeps its address answering
+    # «not found» at once: astro.config.mjs) and no rename (the file name is the address).
+    operations: { delete: false, rename: false }
     filename:
       template: "{primary}.json"
       field: create
@@ -1911,7 +1914,7 @@ content:
 
   - name: blogPosts
     label: Blog — articoli
-    description: "Un file per articolo. L'indirizzo di ogni articolo è il suo campo «Indirizzo dell'articolo»: softair-sulla-neve → softairmilano.it/blog/softair-sulla-neve. Cambiarlo con un articolo già online cambia l'indirizzo: i link già condivisi e quelli su Google smettono di funzionare. Per togliere un articolo dal sito senza perderlo, spegni «Articolo online» invece di cancellarlo"
+    description: "Un file per articolo. L'indirizzo di ogni articolo è il suo campo «Indirizzo dell'articolo»: softair-sulla-neve → softairmilano.it/blog/softair-sulla-neve. Cambiarlo con un articolo già online cambia l'indirizzo: i link già condivisi e quelli su Google smettono di funzionare. Gli articoli non si cancellano: per toglierne uno dal sito spegni «Articolo online», resta salvato e si riaccende quando vuoi"
     type: collection
     path: src/content/blog
     format: yaml-frontmatter
@@ -1920,6 +1923,9 @@ content:
     filename:
       template: "{fields.slug}.md"
       field: false
+    # No delete (an article is switched off with «Articolo online», which keeps its address answering
+    # «not found» at once: astro.config.mjs) and no rename («Articolo in evidenza» points at the file).
+    operations: { delete: false, rename: false }
     view:
       primary: title
       fields: [title, date, published]
