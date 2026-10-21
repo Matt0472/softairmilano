@@ -13,6 +13,7 @@ import sharp from 'sharp';
 import { businessId, toLd } from '../lib/jsonld';
 import { toE164 } from '../lib/phone';
 import { siteIndexable } from '../lib/indexing';
+import { has } from '../lib/fields';
 // The display face the hero headline waits for: preloaded so the copy doesn't reflow late (CLS).
 import oswald700 from '@fontsource/oswald/files/oswald-latin-700-normal.woff2?url';
 // The body face (one variable file for every weight), preloaded only where running text fills the
@@ -66,6 +67,14 @@ if (image && !image.endsWith('.svg') && existsSync(publicFile(image))) {
 const address = settings.postalAddress;
 const hasAddress = address && Object.values(address).some(Boolean);
 const social = Object.values(settings.social ?? {}).filter(Boolean);
+// The arena's point on the map and its opening hours, for local search («vicino a me»). Pages CMS
+// drops an emptied field, so each part is checked before it is sent. Google reads midnight as
+// 23:59, not 24:00.
+const geo = settings.geo as { latitude?: number; longitude?: number } | undefined;
+const hasGeo = typeof geo?.latitude === 'number' && typeof geo?.longitude === 'number';
+const hours = settings.openingHoursForGoogle as { days?: string[]; opens?: string; closes?: string } | undefined;
+const hasHours = !!(hours?.days?.length && has(hours.opens) && has(hours.closes));
+const googleTime = (t: string) => (t.trim() === '24:00' ? '23:59' : t.trim());
 const businessLd: Record<string, unknown> = {
   '@context': 'https://schema.org',
   '@type': 'SportsActivityLocation',
@@ -78,6 +87,19 @@ const businessLd: Record<string, unknown> = {
   ...(settings.phone ? { telephone: toE164(settings.phone) } : {}),
   ...(settings.vatNumber ? { vatID: settings.vatNumber } : {}),
   ...(hasAddress ? { address: { '@type': 'PostalAddress', ...address } } : settings.address ? { address: settings.address } : {}),
+  ...(hasGeo ? { geo: { '@type': 'GeoCoordinates', latitude: geo!.latitude, longitude: geo!.longitude } } : {}),
+  ...(hasHours
+    ? {
+        openingHoursSpecification: [
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: hours!.days!.map((day) => `https://schema.org/${day}`),
+            opens: googleTime(hours!.opens!),
+            closes: googleTime(hours!.closes!),
+          },
+        ],
+      }
+    : {}),
   // sameAs = the same business elsewhere: its social profiles. The outdoor arena is a different place.
   ...(social.length ? { sameAs: social } : {}),
 };

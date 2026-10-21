@@ -21,7 +21,24 @@
     "addressRegion": "MI",
     "addressCountry": "IT"
   },
+  "geo": {
+    "latitude": 45.464311,
+    "longitude": 9.072234
+  },
   "openingHours": "Tutti i giorni dalle 14:00 alle 24:00, solo su prenotazione",
+  "openingHoursForGoogle": {
+    "days": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "opens": "14:00",
+    "closes": "24:00"
+  },
   "directions": "Parcheggio facile · Bus 433 dalla metro M1 Bisceglie",
   "rangerUrl": "https://www.rangersoftairmilano.it/",
   "wear": {
@@ -58,9 +75,18 @@
     "contacts": "Contatti"
   },
   "footerLegal": [
-    { "label": "Privacy", "href": "/privacy" },
-    { "label": "Cookie", "href": "/cookie" },
-    { "label": "Termini", "href": "/termini" }
+    {
+      "label": "Privacy",
+      "href": "/privacy"
+    },
+    {
+      "label": "Cookie",
+      "href": "/cookie"
+    },
+    {
+      "label": "Termini",
+      "href": "/termini"
+    }
   ],
   "ticketinghubId": "",
   "gaMeasurementId": "G-9JRM4SXCJ7",

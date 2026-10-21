@@ -47,7 +47,34 @@ content:
           - { name: addressLocality, label: Comune, type: string }
           - { name: addressRegion, label: "Provincia (sigla)", type: string }
           - { name: addressCountry, label: "Paese (sigla, es. IT)", type: string }
+      - name: geo
+        label: Posizione per Google (Google Maps)
+        description: "Il punto esatto dell'arena, per Google Maps e le ricerche «vicino a me». Si legge nell'indirizzo della scheda su Google Maps: il numero dopo !3d è la latitudine, quello dopo !4d la longitudine. Se uno dei due è vuoto, non si invia"
+        type: object
+        fields:
+          - { name: latitude, label: "Latitudine (es. 45.464311)", type: number, options: { step: 0.000001 } }
+          - { name: longitude, label: "Longitudine (es. 9.072234)", type: number, options: { step: 0.000001 } }
       - { name: openingHours, label: Orari, type: string, description: "Es. Tutti i giorni dalle 14:00 alle 24:00, solo su prenotazione" }
+      - name: openingHoursForGoogle
+        label: Orari per Google
+        description: "Gli stessi orari della riga qui sopra, in forma che Google capisce: i giorni di apertura e l'orario. Se cambiano gli orari, cambia tutti e due. Se mancano i giorni o un orario, non si inviano"
+        type: object
+        fields:
+          - name: days
+            label: Giorni di apertura
+            type: select
+            options:
+              multiple: true
+              values:
+                - { name: Monday, label: Lunedì }
+                - { name: Tuesday, label: Martedì }
+                - { name: Wednesday, label: Mercoledì }
+                - { name: Thursday, label: Giovedì }
+                - { name: Friday, label: Venerdì }
+                - { name: Saturday, label: Sabato }
+                - { name: Sunday, label: Domenica }
+          - { name: opens, label: "Apertura (es. 14:00)", type: string }
+          - { name: closes, label: "Chiusura (es. 24:00 per mezzanotte)", type: string }
       - { name: directions, label: Come arrivare, type: string, description: "Parcheggio, mezzi pubblici: una riga breve" }
       - { name: rangerUrl, label: "Link arena outdoor (Ranger Softair)", type: string }
       - name: wear
