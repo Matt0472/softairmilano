@@ -94,7 +94,7 @@ più specialisti, in parallelo.
 - **A pagina finita** si fa `/audit` come quality-gate, con i quattro specialisti di qualità
   (accessibilità, performance, responsive, SEO) più design, CMS e codice. **Non a ogni componente**: in
   itinere bastano build, browser vero e la revisione qui sopra. L'esito dell'accessibilità è
-  **bloccante**, e prima del lancio si fa `/audit lancio`.
+  **bloccante**.
 - Si salta la revisione solo per modifiche banali e meccaniche (un refuso, un valore, una riga senza
   effetti).
 

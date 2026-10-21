@@ -37,7 +37,7 @@ AI crawler da ammettere: **GPTBot, OAI-SearchBot, ChatGPT-User** (OpenAI), **Cla
 
 ## IndexNow (indicizzazione rapida)
 
-- File chiave IndexNow in `public/<chiave>.txt` (come campo-di-zucche, es. `c02bb187…txt`). **Generare una chiave nuova** per softairmilano.
+- File chiave IndexNow in `public/<chiave>.txt` (come campo-di-zucche): per softairmilano è `public/3490f3c455fee11b2c0fb4492715e1fd.txt`.
 - **Cloudflare → "Crawler Hints"**: ON → invia in automatico le notifiche IndexNow ai motori quando il contenuto cambia.
 
 ---
@@ -54,7 +54,7 @@ AI crawler da ammettere: **GPTBot, OAI-SearchBot, ChatGPT-User** (OpenAI), **Cla
 ## Checklist go-live (giorno dello switch)
 
 1. Deploy in **produzione** e dominio `softairmilano.it` che punta al sito nuovo.
-2. **Rimuovere il noindex** e pubblicare il `robots.txt` di produzione (allow + AI crawler + sitemap).
+2. **Rimuovere il noindex**: `PUBLIC_SITE_INDEXABLE=true` nel progetto Cloudflare Pages e nuova build. Lo stesso interruttore apre il meta robots e genera il `robots.txt` di produzione (allow + AI crawler + sitemap) da `src/pages/robots.txt.ts`.
 3. **Google Search Console**: verifica proprietà + invia sitemap.
 4. **Bing Webmaster Tools**: verifica proprietà + invia sitemap (Bing alimenta Copilot e parte delle risposte AI).
 5. **IndexNow**: chiave attiva + Cloudflare Crawler Hints ON.

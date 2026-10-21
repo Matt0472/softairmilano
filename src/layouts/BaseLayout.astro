@@ -12,6 +12,7 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 import { businessId, toLd } from '../lib/jsonld';
 import { toE164 } from '../lib/phone';
+import { siteIndexable } from '../lib/indexing';
 // The display face the hero headline waits for: preloaded so the copy doesn't reflow late (CLS).
 import oswald700 from '@fontsource/oswald/files/oswald-latin-700-normal.woff2?url';
 // The body face (one variable file for every weight), preloaded only where running text fills the
@@ -44,10 +45,8 @@ const image = props.image || settings.defaultOgImage;
 const imageAlt = props.imageAlt || settings.siteName;
 const jsonLd = props.jsonLd ?? [];
 
-// Indexing gate: the whole site stays noindex until go-live. The production
-// build sets PUBLIC_SITE_INDEXABLE=true to allow indexing. See
-// docs/geo-e-indicizzazione.md.
-const indexable = import.meta.env.PUBLIC_SITE_INDEXABLE === 'true' && !props.noindex;
+// Indexing gate (src/lib/indexing.ts): the whole site stays noindex until go-live.
+const indexable = siteIndexable && !props.noindex;
 const canonical = props.noCanonical ? undefined : new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? new URL(image, Astro.site).toString() : undefined;
 const imageTypes: Record<string, string> = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', svg: 'image/svg+xml' };

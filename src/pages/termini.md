@@ -2,7 +2,7 @@
 layout: ../layouts/LegalLayout.astro
 title: Termini e condizioni
 description: Le condizioni per prenotare le attività di SoftAir Milano e per acquistare e usare i voucher regalo.
-updated: 14 ottobre 2026
+updated: 21 ottobre 2026
 ---
 
 Questi termini valgono per le prenotazioni delle attività di SoftAir Milano (softair, arcotag, tiro dinamico, Nerf, feste e team building) e per l'acquisto e l'uso dei voucher regalo, fatti dal sito, al telefono, via email o con il servizio di prenotazione online.
@@ -13,7 +13,7 @@ L'arena SoftAir Milano è gestita da Special Force S.S.D. a R.L., Via Melegnano 
 
 ## Prenotazioni
 
-- Si gioca solo su prenotazione. Si prenota tutti i giorni; il tiro dinamico si gioca dal lunedì al venerdì, e il sabato e la domenica su richiesta.
+- Si gioca solo su prenotazione. Si prenota tutti i giorni, e le disponibilità dipendono dall'attività scelta.
 - Le prenotazioni fatte a meno di 4 ore dalla partita vanno confermate dallo staff.
 - Annullando la prenotazione almeno una settimana prima dell'attività si recupera la caparra; dopo, la caparra non viene restituita.
 - I prezzi sono quelli indicati sul sito al momento della prenotazione, a persona salvo dove è scritto diversamente.
@@ -46,7 +46,11 @@ La festa si organizza insieme alla partita. La sala feste e il catering si preno
 - Il voucher vale 6 mesi dall'acquisto: entro questa data chi lo riceve prenota il giorno e l'ora che preferisce.
 - Il giorno della partita il voucher va portato stampato in arena.
 - Il voucher non è rimborsabile né convertibile in denaro, salvo i casi previsti dalla legge.
-- Valgono le stesse regole delle prenotazioni: età minime, modulo di partecipazione e regole di sicurezza.
+- Valgono le stesse regole delle prenotazioni: numero di partecipanti, età minime, modulo di partecipazione e regole di sicurezza.
+
+## Newsletter
+
+Chi prenota o ci scrive dal modulo del sito riceve la nostra newsletter via email. Puoi disiscriverti in ogni momento con il link in fondo a ogni newsletter; come trattiamo i tuoi dati è spiegato nella [privacy policy](/privacy).
 
 ## Diritto di recesso
 

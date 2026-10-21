@@ -17,8 +17,7 @@ Aggiornato: **8 ott 2026, ore 11:00**. Riscritto da capo. Rispetto alla versione
 
 **Focus adesso:**
 1. chiudere il giro dell'8 ott: copertine del blog, correzioni dalle revisioni, commit con l'ok dell'utente;
-2. TicketingHub, appena l'utente porta gli snippet;
-3. audit completo del sito (`/audit sito`) prima del lancio.
+2. il go-live su Cloudflare Pages (`docs/cutover-checklist.md`, «Da chiudere prima del go-live» qui sotto).
 
 ## Stato attuale
 
@@ -205,11 +204,8 @@ npm run manuale      # rigenera solo il manuale
    - cannibalizzazione con /softair-vs-paintball: fondere «Meglio paintball o softair?» nel «9 motivi» con un 301;
    - togliere dal «9 motivi» le FAQ doppie;
    - un blocco «Approfondimenti» sulla pagina paintball verso gli articoli.
-4. **TicketingHub:**
-   - widget nelle sezioni `#prenota`, con il consenso «Servizi esterni», sullo schema già fatto per il voucher (`voucher-regalo.astro`: caricamento dopo il consenso, `color-scheme: normal` sull'iframe, focus e `inert` attorno al checkout);
-   - `settings.ticketinghubId` oggi non è letto da nessun componente.
-5. **`/audit sito`**, pagina per pagina. Poi la rifinitura.
-6. **Seguiti tecnici:**
+4. **TicketingHub solo per i voucher** (decisione dell'utente del 21 ott 2026): le attività si prenotano al telefono, nessun widget nelle sezioni `#prenota`. `settings.ticketinghubId` non è letto da nessun componente: il campo in `.pages.yml` si può togliere (`CMS-09`).
+5. **Seguiti tecnici:**
    - migrare modulistica, 404 e contatti su `TextHero` (sui telefoni il breadcrumb tocca l'angolo HUD);
    - interlinea dei titoli: 1.16 nelle card del blog, 1.12 in TextHero e global.css. Allinearle dopo una prova a occhio;
    - `ScrollToTop`: `transition-colors` viene sovrascritto dalla transizione locale, quindi l'hover cambia colore di colpo;
@@ -222,7 +218,7 @@ npm run manuale      # rigenera solo il manuale
    - lo sticky dei prezzi sui portatili bassi (circa 768 px di altezza): verifica dello specialista responsive;
    - `lastmod` nella sitemap dalla data degli articoli; `dateModified` facoltativo negli articoli;
    - un campo facoltativo «Titolo per Google» negli articoli: oggi oltre i 65 caratteri cade solo il suffisso;
-   - `/la-montagna-della-morte/` e `/la-montagna-della-morte-pagamento/` del vecchio sito, un evento esterno: decidere se mandarle a Ranger o a /softair;
+   - `/la-montagna-della-morte/` e `/la-montagna-della-morte-pagamento/` del vecchio sito restano senza redirect e rispondono 404 (decisione dell'utente del 21 ott 2026);
    - la mappa di Contatti si carica solo al click e ignora la categoria «Servizi esterni»: allinearla al voucher;
    - GA di TicketingHub e il nostro GA4 condividono i cookie `_ga`: revocare «Servizi esterni» cancella anche il client id del nostro GA4 (`consent.ts`). Da rivedere quando arriva l'ID GA4;
    - il percorso del manuale (`/manuale-sam-3c9e/`) è leggibile nel repo pubblico: `CMS-13` lo presuppone segreto, quindi valutare di leggerlo da una variabile di CI oppure correggere la regola;
@@ -230,10 +226,7 @@ npm run manuale      # rigenera solo il manuale
 
 ## Da chiudere prima del go-live
 - **JSON-LD:** `geo` e `openingHoursSpecification`.
-- **Indicizzazione:** chiave IndexNow; un solo interruttore per `robots.txt` e `noindex`; `PUBLIC_SITE_INDEXABLE=true` **solo il giorno dello switch** (`SEO-10`, `GIT-08`).
-- **Movimento continuo senza pausa** (WCAG 2.2.2): riga e puntino di `HudFrame`, ora anche su pagine legali e blog. È nel debito noto.
-- **Bordo `--color-border`** sotto 3:1 (WCAG 1.4.11).
-- **Video R2:** da `r2.dev` a un dominio proprio.
-- **GA4:** l'ID del cliente in `settings.gaMeasurementId`; senza, il banner non offre le statistiche.
-- **Testi legali** validati dal consulente del cliente.
+- **Indicizzazione:** chiave IndexNow e `robots.txt` legato all'interruttore fatti (`src/lib/indexing.ts`, `src/pages/robots.txt.ts`); resta `PUBLIC_SITE_INDEXABLE=true` **solo il giorno dello switch** (`SEO-10`, `GIT-08`).
+- **Video R2:** da `r2.dev` a un dominio proprio. Il bucket sta sull'account Cloudflare del cliente (lo stesso di Bosco della Luna): il dominio `softairmilano.it` e il progetto Pages vanno su quell'account.
+- **GA4:** lo configuriamo noi con l'account Google del cliente, poi l'ID in `settings.gaMeasurementId`; senza, il banner non offre le statistiche.
 - **Al go-live:** 301 da `www.` al dominio nudo con una regola Cloudflare; Search Console, Bing Webmaster e Rich Results Test (`docs/geo-e-indicizzazione.md`).

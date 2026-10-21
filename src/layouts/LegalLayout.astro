@@ -45,7 +45,7 @@ const withPreferences = path === '/cookie' && has(cookie.policyButton);
     </TextHero>
 
     <div class="legal__inner shell">
-      <Prose>
+      <Prose class="legal__prose">
         <slot />
       </Prose>
 
@@ -69,6 +69,42 @@ const withPreferences = path === '/cookie' && has(cookie.policyButton);
   .legal__inner {
     padding-block: 0 clamp(4.5rem, 10vw, 8rem);
   }
+  /* Desktop: the document spans the container. Each section is a row, its title on the left and
+     its text on the right at the reading measure, both under the section's hairline; the opening
+     paragraph leads across the top. Placement follows the Markdown as it comes (title, then text
+     until the next title), so the client's file needs no markup of its own. */
+  @media (min-width: 1280px) {
+    .legal { --legal-measure: 48rem; }
+    .legal__prose {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, var(--legal-measure));
+      align-items: start;
+      max-width: none;
+    }
+    .legal__prose > * { grid-column: 2; }
+    .legal__prose > :not(h2, h2 ~ *) {
+      grid-column: 1 / -1;
+      max-width: var(--legal-measure);
+      font-size: 1.1875rem;
+    }
+    .legal__prose > h2 {
+      grid-column: 1;
+      margin-bottom: 0;
+      padding-right: clamp(2.5rem, 5vw, 5rem);
+    }
+    /* The text beside a title starts on the same line and carries the hairline on, unbroken. */
+    .legal__prose > h2 + * {
+      margin-top: 3.75rem;
+      padding-top: 2.25rem;
+      border-top: 1px solid var(--color-border);
+    }
+    .legal__prose > h2:first-child + * { margin-top: 0; }
+    .legal__inner .legal__action {
+      max-width: var(--legal-measure);
+      margin-left: auto;
+    }
+  }
+
   /* The cookie policy's last section ends on its button: the page's one action after the
      header's Prenota, so it is the secondary shape (DES-05). */
   .legal__action { margin: 1.75rem 0 0; }
