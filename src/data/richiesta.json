@@ -28,6 +28,22 @@
       "max": 40,
       "error": "Scrivi quante persone siete, da 1 a 40. Se siete di più, scrivilo nel messaggio."
     },
+    "minors": {
+      "label": "Sono presenti minorenni?",
+      "error": "Dicci se nel gruppo ci sono minorenni."
+    },
+    "minorsCount": {
+      "label": "Quanti minorenni?",
+      "error": "Scrivi quanti minorenni ci sono: almeno 1, e non più delle persone del gruppo."
+    },
+    "ownGear": {
+      "label": "Qualcuno ha la propria attrezzatura?",
+      "error": "Dicci se qualcuno porta la propria attrezzatura."
+    },
+    "ownGearCount": {
+      "label": "Quanti con la propria attrezzatura?",
+      "error": "Scrivi quanti portano la propria attrezzatura: almeno 1, e non più delle persone del gruppo."
+    },
     "message": {
       "label": "Messaggio"
     }

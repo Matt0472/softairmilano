@@ -1051,6 +1051,34 @@ content:
               - { name: label, label: Nome del campo, type: string, required: true }
               - { name: max, label: Numero massimo di persone, type: number, options: { min: 1, step: 1 }, description: "Se lo cambi, cambia anche il numero scritto nel messaggio di errore. Se vuoto, non c'è un massimo" }
               - { name: error, label: Messaggio di errore, type: string }
+          - name: minors
+            label: Ci sono minorenni (Sì/No)
+            description: "Domanda obbligatoria con le risposte Sì e No, es. «Sono presenti minorenni?». L'errore compare se non si risponde"
+            type: object
+            fields:
+              - { name: label, label: Nome del campo, type: string, required: true }
+              - { name: error, label: Messaggio di errore, type: string }
+          - name: minorsCount
+            label: Quanti minorenni
+            description: "Si compila solo dopo aver risposto Sì alla domanda sopra (con No resta spento e non si invia). L'errore compare se è vuoto o se i minorenni sono più delle persone del gruppo"
+            type: object
+            fields:
+              - { name: label, label: Nome del campo, type: string, required: true }
+              - { name: error, label: Messaggio di errore, type: string }
+          - name: ownGear
+            label: Attrezzatura propria (Sì/No)
+            description: "Domanda obbligatoria con le risposte Sì e No, es. «Qualcuno ha la propria attrezzatura?». L'errore compare se non si risponde"
+            type: object
+            fields:
+              - { name: label, label: Nome del campo, type: string, required: true }
+              - { name: error, label: Messaggio di errore, type: string }
+          - name: ownGearCount
+            label: Quanti con la propria attrezzatura
+            description: "Si compila solo dopo aver risposto Sì alla domanda sopra (con No resta spento e non si invia). L'errore compare se è vuoto o se sono più delle persone del gruppo"
+            type: object
+            fields:
+              - { name: label, label: Nome del campo, type: string, required: true }
+              - { name: error, label: Messaggio di errore, type: string }
           - name: message
             label: Messaggio
             type: object

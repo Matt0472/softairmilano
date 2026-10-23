@@ -9,7 +9,9 @@
 // constraints; with JS it posts JSON with fetch, flags errors inline under a summary that takes
 // focus, and answers in place (A11Y-12). Against spam: a honeypot, and hCaptcha, which the
 // Web3Forms account requires; its script arrives only at the first touch on the form.
-// The heading stays beside the form on wide screens; below 1024px it sits above it.
+// Two Sì/No questions (minors in the group, own equipment) each unlock the count beside them: off
+// until «Sì», and a disabled field is neither checked nor sent. Without JS the counts stay open and
+// optional. The heading stays beside the form on wide screens; below 1024px it sits above it.
 
 import Button from '../atoms/Button.astro';
 import Icon from '../atoms/Icon.astro';
@@ -30,12 +32,16 @@ interface Props {
 }
 
 interface FieldCopy { label?: string; error?: string }
-type Key = 'name' | 'phone' | 'email' | 'activity' | 'date' | 'people' | 'message';
+type Key = 'name' | 'phone' | 'email' | 'activity' | 'date' | 'people' | 'minors' | 'minorsCount' | 'ownGear' | 'ownGearCount' | 'message';
 interface Field {
   key: Key;
-  kind: 'input' | 'select' | 'textarea';
+  kind: 'input' | 'select' | 'textarea' | 'choice';
   required?: boolean;
   wide?: boolean;
+  /** A Sì/No question: the field its «Sì» unlocks. */
+  unlocks?: Key;
+  /** Unlocked by a «Sì»: required then, never «optional». */
+  gated?: boolean;
   attrs?: Record<string, string | number | undefined>;
 }
 
@@ -85,6 +91,9 @@ const pagePath = Astro.url.pathname.replace(/(.)\/+$/, '$1');
 // Today in the arena's calendar; the script moves it to the visitor's today, as a build ages.
 const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(new Date());
 const maxPeople = Number(fields.people.max) > 0 ? Number(fields.people.max) : undefined;
+const count = { type: 'number', min: 1, max: maxPeople, step: 1, inputmode: 'numeric' };
+// Interface microcopy (CMS-02): the two answers of a yes/no question, also the values in the email.
+const YES_NO = ['Sì', 'No'];
 
 const list: Field[] = [
   { key: 'name', kind: 'input', required: true, attrs: { type: 'text', autocomplete: 'name', autocapitalize: 'words', maxlength: 80 } },
@@ -92,7 +101,11 @@ const list: Field[] = [
   { key: 'email', kind: 'input', required: true, attrs: { type: 'email', autocomplete: 'email', pattern: MAIL_PATTERN, maxlength: 120, spellcheck: 'false' } },
   { key: 'activity', kind: 'select' },
   { key: 'date', kind: 'input', attrs: { type: 'date', min: today } },
-  { key: 'people', kind: 'input', attrs: { type: 'number', min: 1, max: maxPeople, step: 1, inputmode: 'numeric' } },
+  { key: 'people', kind: 'input', required: true, attrs: count },
+  { key: 'minors', kind: 'choice', required: true, unlocks: 'minorsCount' },
+  { key: 'minorsCount', kind: 'input', gated: true, attrs: count },
+  { key: 'ownGear', kind: 'choice', required: true, unlocks: 'ownGearCount' },
+  { key: 'ownGearCount', kind: 'input', gated: true, attrs: count },
   { key: 'message', kind: 'textarea', wide: true, attrs: { rows: 4, maxlength: 2000 } },
 ];
 
@@ -127,11 +140,37 @@ const tel = telHref(phone);
           {list.map((fd) => {
             const id = `req-${fd.key}`;
             const err = fields[fd.key]?.error?.trim() ?? '';
+            // A Sì/No question is a group: the fieldset's legend names both answers. The first radio
+            // stands for the group in the checks; the count it unlocks follows it.
+            if (fd.kind === 'choice') {
+              return (
+                <fieldset class="req__field req__choice" data-req-unlocks={`req-${fd.unlocks}`}>
+                  <legend class="req__label">{label(fd.key)}</legend>
+                  <div class="req__options">
+                    {YES_NO.map((answer, i) => (
+                      <label class="req__option">
+                        <input
+                          type="radio"
+                          class="req__radio"
+                          id={i === 0 ? id : `${id}-${i}`}
+                          name={nameOf(fd.key)}
+                          value={answer}
+                          required={fd.required}
+                          data-req-field={i === 0 ? '' : undefined}
+                        />
+                        {answer}
+                      </label>
+                    ))}
+                  </div>
+                  <p class="req__error" id={`${id}-error`} hidden>{err}</p>
+                </fieldset>
+              );
+            }
             return (
               <div class:list={['req__field', fd.wide && 'req__field--wide']}>
                 <label class="req__label" for={id}>
                   {label(fd.key)}
-                  {!fd.required && fd.kind !== 'select' && <Fragment>{' '}<span class="req__opt">(facoltativo)</span></Fragment>}
+                  {!fd.required && !fd.gated && fd.kind !== 'select' && <Fragment>{' '}<span class="req__opt">(facoltativo)</span></Fragment>}
                 </label>
                 {fd.kind === 'input' && (
                   <input class="req__control" id={id} name={nameOf(fd.key)} required={fd.required} data-req-field {...fd.attrs} />
@@ -308,6 +347,87 @@ const tel = telHref(phone);
   /* iOS centres the date in its field: start it where the other fields start their text. */
   .req__control::-webkit-date-and-time-value { text-align: start; }
   .req__control::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.75; }
+
+  /* Locked until its question gets a «Sì»: dimmed, and the label with it. */
+  .req__control:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .req__control:disabled:hover { border-color: var(--color-steel); }
+  .req__field:has(.req__control:disabled) .req__label { color: var(--color-muted); }
+
+  /* Sì/No: two boxes the height of a field, the chosen one lit in the accent. The legend floats so
+     the fieldset lays it out like the other fields' labels. */
+  .req__choice {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .req__choice > legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+  }
+  .req__options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .req__option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-steel);
+    border-radius: var(--radius-md);
+    background: var(--lift);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-foreground) 4%, transparent);
+    color: var(--color-foreground);
+    font-size: 1rem;
+    line-height: 1.4;
+    cursor: pointer;
+    transition:
+      border-color var(--duration-fast) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .req__option:hover { border-color: var(--color-muted); }
+  .req__option:has(:checked) {
+    border-color: var(--accent);
+    background: var(--lift-2);
+  }
+  .req__option:has(:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .req__option:has([aria-invalid='true']) { border-color: var(--color-danger); }
+  .req__radio {
+    appearance: none;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+    border: 2px solid var(--color-steel);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .req__radio::before {
+    content: "";
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: scale(0);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .req__radio:checked { border-color: var(--accent); }
+  .req__radio:checked::before { transform: scale(1); }
+  .req__radio:focus-visible { outline: none; }
+  @media (forced-colors: active) {
+    .req__radio::before { background: CanvasText; }
+  }
 
   .req__select { position: relative; }
   .req__select .req__control {
@@ -518,6 +638,7 @@ const tel = telHref(phone);
     const subject = form.querySelector<HTMLInputElement>('input[name="subject"]')!;
     const activity = form.querySelector<HTMLSelectElement>('select');
     const date = form.querySelector<HTMLInputElement>('input[type="date"]');
+    const people = form.querySelector<HTMLInputElement>('#req-people');
     const fromTemplate = (name: string) =>
       root.querySelector<HTMLTemplateElement>(`template[data-req-${name}]`)!.content.cloneNode(true);
 
@@ -555,6 +676,10 @@ const tel = telHref(phone);
     const isValid = (c: Control) =>
       c.checkValidity() && !(c.type === 'tel' && c.value.trim() && c.value.replace(/\D/g, '').length < 6);
     const errorOf = (c: Control) => document.getElementById(`${c.id}-error`);
+    const isRadio = (c: Control): c is HTMLInputElement => c instanceof HTMLInputElement && c.type === 'radio';
+    // A radio stands for its group: every answer carries the group's state.
+    const group = (c: Control): Control[] =>
+      isRadio(c) ? [...form.querySelectorAll<HTMLInputElement>(`input[name="${CSS.escape(c.name)}"]`)] : [c];
 
     // The message is linked only while it shows: a description is read even when its element is hidden.
     const mark = (c: Control, bad: boolean) => {
@@ -562,18 +687,28 @@ const tel = telHref(phone);
       if (!err) return;
       if (bad && !err.textContent?.trim()) err.textContent = c.validationMessage;
       err.hidden = !bad;
-      if (bad) {
-        c.setAttribute('aria-invalid', 'true');
-        c.setAttribute('aria-describedby', err.id);
-      } else {
-        c.removeAttribute('aria-invalid');
-        c.removeAttribute('aria-describedby');
+      for (const el of group(c)) {
+        if (bad) {
+          el.setAttribute('aria-invalid', 'true');
+          el.setAttribute('aria-describedby', err.id);
+        } else {
+          el.removeAttribute('aria-invalid');
+          el.removeAttribute('aria-describedby');
+        }
       }
     };
 
     // A field is judged when the visitor leaves it having written in it, never while they type; a
-    // flagged field clears the moment it is right.
+    // flagged field clears the moment it is right. A Sì/No is judged only when it is answered.
     for (const c of controls) {
+      if (isRadio(c)) {
+        for (const el of group(c)) {
+          el.addEventListener('change', () => {
+            if (c.hasAttribute('aria-invalid') && isValid(c)) mark(c, false);
+          });
+        }
+        continue;
+      }
       c.addEventListener('blur', () => {
         if (c.value.trim() || c.hasAttribute('aria-invalid')) mark(c, !isValid(c));
       });
@@ -581,6 +716,34 @@ const tel = telHref(phone);
         if (c.hasAttribute('aria-invalid') && isValid(c)) mark(c, false);
       });
     }
+
+    // Each Sì/No unlocks its count: on and required with «Sì», off with «No» or no answer (a disabled
+    // field is skipped by the checks and left out of the email). The answer a browser restores on
+    // reload counts too. A count can never be more than the group.
+    const gates = [...form.querySelectorAll<HTMLFieldSetElement>('[data-req-unlocks]')].flatMap((set) => {
+      const target = document.getElementById(set.dataset.reqUnlocks ?? '');
+      const yes = set.querySelector<HTMLInputElement>('input[type="radio"]');
+      return target instanceof HTMLInputElement && yes ? [{ set, target, yes }] : [];
+    });
+    const sync = ({ target, yes }: (typeof gates)[number]) => {
+      target.disabled = !yes.checked;
+      target.required = yes.checked;
+      if (!yes.checked) mark(target, false);
+    };
+    for (const gate of gates) {
+      gate.target.dataset.max = gate.target.max;
+      gate.set.addEventListener('change', () => sync(gate));
+      sync(gate);
+    }
+    const capCounts = () => {
+      const size = people && people.validity.valid && people.value ? people.value : '';
+      for (const { target } of gates) {
+        target.max = size || target.dataset.max || '';
+        if (target.hasAttribute('aria-invalid')) mark(target, !isValid(target));
+      }
+    };
+    people?.addEventListener('input', capCounts);
+    capCounts();
 
     const showSummary = (bad: Control[]) => {
       summaryList.replaceChildren(
