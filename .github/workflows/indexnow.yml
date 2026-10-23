@@ -73,14 +73,16 @@ jobs:
       - name: Ping IndexNow with every page in the sitemap
         if: steps.deploy.outputs.live == 'yes'
         run: |
+          # A network hiccup (connection reset, timeout) is retried before the run gives up.
+          fetch() { curl -sSf --retry 4 --retry-all-errors --retry-delay 10 --max-time 30 "$@"; }
           locs() { grep -o '<loc>[^<]*</loc>' | sed -e 's/<loc>//' -e 's/<\/loc>//'; }
-          urls=$(curl -sSf "$SITE/sitemap-index.xml" | locs | while read -r map; do curl -sSf "$map" | locs; done)
+          urls=$(fetch "$SITE/sitemap-index.xml" | locs | while read -r map; do fetch "$map" | locs; done)
           count=$(printf '%s\n' "$urls" | grep -c .)
           [ "$count" -gt 0 ] || { echo "::error::The sitemap lists no pages"; exit 1; }
           echo "Pages: $count"
           body=$(printf '%s\n' "$urls" | jq -R . | jq -s --arg host "${SITE#https://}" --arg key "$INDEXNOW_KEY" \
             --arg loc "$SITE/$INDEXNOW_KEY.txt" '{host: $host, key: $key, keyLocation: $loc, urlList: .}')
-          status=$(curl -sS -o response.txt -w '%{http_code}' -X POST "https://api.indexnow.org/indexnow" \
+          status=$(curl -sS --retry 4 --retry-all-errors --retry-delay 10 --max-time 30 -o response.txt -w '%{http_code}' -X POST "https://api.indexnow.org/indexnow" \
             -H 'Content-Type: application/json; charset=utf-8' --data "$body")
           cat response.txt; echo
           echo "IndexNow: HTTP $status"

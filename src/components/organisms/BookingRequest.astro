@@ -344,7 +344,14 @@ const tel = telHref(phone);
   .req__control[type='number'] { appearance: textfield; }
   .req__control[type='number']::-webkit-inner-spin-button,
   .req__control[type='number']::-webkit-outer-spin-button { appearance: none; margin: 0; }
-  /* iOS centres the date in its field: start it where the other fields start their text. */
+  /* iOS sizes a date field to its content once a day is chosen, past the column's edge: without its
+     native look it takes the width it is given. It also centres the date: start it where the other
+     fields start their text. */
+  .req__control[type='date'] {
+    -webkit-appearance: none;
+    appearance: none;
+    min-width: 0;
+  }
   .req__control::-webkit-date-and-time-value { text-align: start; }
   .req__control::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.75; }
 
@@ -356,9 +363,11 @@ const tel = telHref(phone);
   .req__control:disabled:hover { border-color: var(--color-steel); }
   .req__field:has(.req__control:disabled) .req__label { color: var(--color-muted); }
 
-  /* Sì/No: two boxes the height of a field, the chosen one lit in the accent. The legend floats so
-     the fieldset lays it out like the other fields' labels. */
-  .req__choice {
+  /* Sì/No: two boxes the height of a field, the chosen one lit in the accent. A fieldset lays out as
+     a flex box differently from one browser to another (Safari keeps the legend apart from the gap):
+     here it is a plain block, the floated legend a label like the others, spaced by margins. */
+  .req__field.req__choice {
+    display: block;
     margin: 0;
     padding: 0;
     border: 0;
@@ -367,8 +376,11 @@ const tel = telHref(phone);
     float: left;
     width: 100%;
     padding: 0;
+    margin-bottom: 0.55rem;
   }
+  .req__choice > .req__error { margin-top: 0.55rem; }
   .req__options {
+    clear: both;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.5rem;
