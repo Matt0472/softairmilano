@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TEMPORARY, for the move of 21 Oct 2026: the old WordPress addresses (www.softairmilano.it), each
+     now redirecting (301) to its new page or answering 404. Submitted only in Search Console, so
+     Google revisits them soon and moves rankings to the new addresses; not listed in robots.txt or
+     sitemap-index.xml. Remove it, and its entry in Search Console, after December 2026. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.softairmilano.it/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/softair-milano-cose/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/home-test-mobile-rossa/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/partite-di-softair/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/partite-di-softair-teambulding/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/teambulding/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/arcotag/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/tiro-dinamico/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/corso-softair/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/squadra-ufficiale/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/festa-di-compleanno/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/eventi/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/modulistica/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/voucher-regalo/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/negozio/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/prodotto/campon-voucher-100/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/categoria-prodotto/voucher-100/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/pagamento/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/mio-account/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/landing-agosto-2024-2/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/terminator/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/la-montagna-della-morte/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/la-montagna-della-morte-pagamento/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/blog/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/category/blog/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/category/news/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/author/01_enigmaroom_01/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/campo-da-softair-meglio-interno-o-esterno/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/team-bulding-softair-rafforza-la-tua-squadra/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/softair-sulla-neve/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/protezioni-viso-per-il-softair-tutto-quello-che-da-sapere/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/importante-avere-un-leader-nel-team/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/quale-la-miglior-arma-per-il-softair/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/meglio-paintball-o-softair-le-differenze/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/pallini-da-softair-guida-per-scegliere-i-piu-adatti/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/sniper-nel-softair-non-e-quello-che-sembra/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/posso-portare-in-giro-un-arma-da-softair/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/come-gestire-un-fucile-da-softair-dopo-che-si-e-giocato/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/la-partita-piu-grande-di-softair-con-800-partecipanti/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/fucili-a-pompa-da-softair-vantaggi-e-svantaggi/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/importanza-calci-pts-nel-mondo-del-softair/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/fondine-da-softair-quali-scegliere-e-dove-metterle/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/softair-quando-piove-come-vestirsi-correttamente/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/squadra-ufficiale-conosciamo-lhead-coach/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/softair-vs-paintball-9-motivi-per-cui-il-softair-e-la-scelta-migliore/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/cose-divertenti-da-fare-a-milano/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/normativa-softair-cosa-e-legale-e-cosa-non-lo-e-in-italia/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/fa-piu-male-giocare-a-paintball-o-softair/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://www.softairmilano.it/caricatori-monofilari-vs-maggiorati-nel-softair-quale-scegliere/</loc><lastmod>2026-10-21</lastmod></url>
+</urlset>
