@@ -138,6 +138,7 @@
       "Un'ora di gioco in più",
       "Catering",
       "Noleggio della sala conferenze",
+      "Business coach",
       "Attestati di partecipazione"
     ],
     "note": "Indicatele nella richiesta di preventivo. Cosa indossare lo trovate segnato",
@@ -269,7 +270,7 @@
       },
       {
         "q": "Cosa si può aggiungere alla giornata?",
-        "a": "Su richiesta: welcome coffee, un corso di softair di 1 ora prima della partita con un formatore esperto, un'ora di gioco in più, catering, noleggio della sala conferenze e attestati di partecipazione. Indicatelo nella richiesta di preventivo."
+        "a": "Su richiesta: welcome coffee, un corso di softair di 1 ora prima della partita con un formatore esperto, un'ora di gioco in più, catering, noleggio della sala conferenze, un business coach e attestati di partecipazione. Indicatelo nella richiesta di preventivo."
       },
       {
         "q": "Si può fare fuori dall'arena?",
