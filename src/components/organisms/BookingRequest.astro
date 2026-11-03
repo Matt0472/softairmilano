@@ -9,8 +9,9 @@
 // constraints; with JS it posts JSON with fetch, flags errors inline under a summary that takes
 // focus, and answers in place (A11Y-12). Against spam: a honeypot, and hCaptcha, which the
 // Web3Forms account requires; its script arrives only at the first touch on the form.
-// Two Sì/No questions (minors in the group, own equipment) each unlock the count beside them: off
-// until «Sì», and a disabled field is neither checked nor sent. Without JS the counts stay open and
+// Two Sì/No questions (minors in the group, own equipment) each unlock what follows them, off until
+// «Sì»: the count beside them and, for minors, whether they are all 12 or older. A disabled field is
+// neither checked nor sent. Without JS the counts stay open and
 // optional. The heading stays beside the form on wide screens; below 1024px it sits above it.
 
 import Button from '../atoms/Button.astro';
@@ -32,14 +33,14 @@ interface Props {
 }
 
 interface FieldCopy { label?: string; error?: string }
-type Key = 'name' | 'phone' | 'email' | 'activity' | 'date' | 'people' | 'minors' | 'minorsCount' | 'ownGear' | 'ownGearCount' | 'message';
+type Key = 'name' | 'phone' | 'email' | 'activity' | 'date' | 'people' | 'minors' | 'minorsCount' | 'minorsOver12' | 'ownGear' | 'ownGearCount' | 'message';
 interface Field {
   key: Key;
   kind: 'input' | 'select' | 'textarea' | 'choice';
   required?: boolean;
   wide?: boolean;
-  /** A Sì/No question: the field its «Sì» unlocks. */
-  unlocks?: Key;
+  /** A Sì/No question: the fields its «Sì» unlocks. */
+  unlocks?: Key[];
   /** Unlocked by a «Sì»: required then, never «optional». */
   gated?: boolean;
   attrs?: Record<string, string | number | undefined>;
@@ -102,9 +103,10 @@ const list: Field[] = [
   { key: 'activity', kind: 'select' },
   { key: 'date', kind: 'input', attrs: { type: 'date', min: today } },
   { key: 'people', kind: 'input', required: true, attrs: count },
-  { key: 'minors', kind: 'choice', required: true, unlocks: 'minorsCount' },
+  { key: 'minors', kind: 'choice', required: true, wide: true, unlocks: ['minorsCount', 'minorsOver12'] },
   { key: 'minorsCount', kind: 'input', gated: true, attrs: count },
-  { key: 'ownGear', kind: 'choice', required: true, unlocks: 'ownGearCount' },
+  { key: 'minorsOver12', kind: 'choice', gated: true },
+  { key: 'ownGear', kind: 'choice', required: true, unlocks: ['ownGearCount'] },
   { key: 'ownGearCount', kind: 'input', gated: true, attrs: count },
   { key: 'message', kind: 'textarea', wide: true, attrs: { rows: 4, maxlength: 2000 } },
 ];
@@ -141,10 +143,13 @@ const tel = telHref(phone);
             const id = `req-${fd.key}`;
             const err = fields[fd.key]?.error?.trim() ?? '';
             // A Sì/No question is a group: the fieldset's legend names both answers. The first radio
-            // stands for the group in the checks; the count it unlocks follows it.
+            // stands for the group in the checks; the fields it unlocks follow it.
             if (fd.kind === 'choice') {
               return (
-                <fieldset class="req__field req__choice" data-req-unlocks={`req-${fd.unlocks}`}>
+                <fieldset
+                  class:list={['req__field req__choice', fd.wide && 'req__field--wide']}
+                  data-req-unlocks={fd.unlocks?.map((k) => `req-${k}`).join(' ')}
+                >
                   <legend class="req__label">{label(fd.key)}</legend>
                   <div class="req__options">
                     {YES_NO.map((answer, i) => (
@@ -270,6 +275,8 @@ const tel = telHref(phone);
   /* Two fields a row once the form is wide enough for a phone number and an email side by side. */
   @container (width >= 34rem) {
     .req__form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    /* A Sì/No across the row splits its boxes on the columns' gap, so each lines up with a column. */
+    .req__choice.req__field--wide .req__options { column-gap: 1.25rem; }
     .req__field--wide,
     .req__summary,
     .req__foot { grid-column: 1 / -1; }
@@ -361,7 +368,8 @@ const tel = telHref(phone);
     cursor: not-allowed;
   }
   .req__control:disabled:hover { border-color: var(--color-steel); }
-  .req__field:has(.req__control:disabled) .req__label { color: var(--color-muted); }
+  .req__field:has(.req__control:disabled) .req__label,
+  .req__choice:has(.req__radio:disabled) > legend { color: var(--color-muted); }
 
   /* Sì/No: two boxes the height of a field, the chosen one lit in the accent. A fieldset lays out as
      a flex box differently from one browser to another (Safari keeps the legend apart from the gap):
@@ -413,6 +421,11 @@ const tel = telHref(phone);
     outline-offset: 2px;
   }
   .req__option:has([aria-invalid='true']) { border-color: var(--color-danger); }
+  .req__option:has(:disabled) {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .req__option:has(:disabled):hover { border-color: var(--color-steel); }
   .req__radio {
     appearance: none;
     flex: none;
@@ -729,27 +742,36 @@ const tel = telHref(phone);
       });
     }
 
-    // Each Sì/No unlocks its count: on and required with «Sì», off with «No» or no answer (a disabled
-    // field is skipped by the checks and left out of the email). The answer a browser restores on
-    // reload counts too. A count can never be more than the group.
+    // Each Sì/No unlocks what follows it: on and required with «Sì», off with «No» or no answer (a
+    // disabled field is skipped by the checks and left out of the email). A Sì/No it unlocks goes on
+    // and off as a whole. The answer a browser restores on reload counts too. A count can never be
+    // more than the group.
     const gates = [...form.querySelectorAll<HTMLFieldSetElement>('[data-req-unlocks]')].flatMap((set) => {
-      const target = document.getElementById(set.dataset.reqUnlocks ?? '');
       const yes = set.querySelector<HTMLInputElement>('input[type="radio"]');
-      return target instanceof HTMLInputElement && yes ? [{ set, target, yes }] : [];
+      const targets = (set.dataset.reqUnlocks ?? '')
+        .split(' ')
+        .map((id) => document.getElementById(id))
+        .filter((t): t is HTMLInputElement => t instanceof HTMLInputElement);
+      return yes && targets.length ? [{ set, targets, yes }] : [];
     });
-    const sync = ({ target, yes }: (typeof gates)[number]) => {
-      target.disabled = !yes.checked;
-      target.required = yes.checked;
-      if (!yes.checked) mark(target, false);
+    const sync = ({ targets, yes }: (typeof gates)[number]) => {
+      for (const target of targets) {
+        for (const el of group(target)) {
+          el.disabled = !yes.checked;
+          el.required = yes.checked;
+        }
+        if (!yes.checked) mark(target, false);
+      }
     };
+    const counts = gates.flatMap((gate) => gate.targets).filter((t) => t.type === 'number');
+    for (const target of counts) target.dataset.max = target.max;
     for (const gate of gates) {
-      gate.target.dataset.max = gate.target.max;
       gate.set.addEventListener('change', () => sync(gate));
       sync(gate);
     }
     const capCounts = () => {
       const size = people && people.validity.valid && people.value ? people.value : '';
-      for (const { target } of gates) {
+      for (const target of counts) {
         target.max = size || target.dataset.max || '';
         if (target.hasAttribute('aria-invalid')) mark(target, !isValid(target));
       }

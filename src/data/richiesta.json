@@ -36,6 +36,10 @@
       "label": "Quanti minorenni?",
       "error": "Scrivi quanti minorenni ci sono: almeno 1, e non più delle persone del gruppo."
     },
+    "minorsOver12": {
+      "label": "Hanno tutti almeno 12 anni?",
+      "error": "Dicci se i minorenni hanno tutti almeno 12 anni."
+    },
     "ownGear": {
       "label": "Qualcuno ha la propria attrezzatura?",
       "error": "Dicci se qualcuno porta la propria attrezzatura."

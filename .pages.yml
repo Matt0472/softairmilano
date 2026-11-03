@@ -1065,6 +1065,13 @@ content:
             fields:
               - { name: label, label: Nome del campo, type: string, required: true }
               - { name: error, label: Messaggio di errore, type: string }
+          - name: minorsOver12
+            label: Minorenni tutti dai 12 anni (Sì/No)
+            description: "Si risponde solo dopo un Sì alla domanda sui minorenni (con No resta spenta e non si invia), es. «Hanno tutti almeno 12 anni?»: breve, perché sta accanto a «Quanti minorenni?» e le due righe restano allineate. L'errore compare se non si risponde"
+            type: object
+            fields:
+              - { name: label, label: Nome del campo, type: string, required: true }
+              - { name: error, label: Messaggio di errore, type: string }
           - name: ownGear
             label: Attrezzatura propria (Sì/No)
             description: "Domanda obbligatoria con le risposte Sì e No, es. «Qualcuno ha la propria attrezzatura?». L'errore compare se non si risponde"
