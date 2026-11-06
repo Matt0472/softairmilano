@@ -6,6 +6,7 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { offPaths, isOffHref, pruneOffLinks, LEGAL_PATHS } from './src/lib/pages.ts';
 import { join } from 'node:path';
 import { finishMarkdownPages } from './src/lib/markdown-pages.ts';
+import { addTrailingSlashes } from './src/lib/trailing-slash.ts';
 
 // Single source of truth for the site URL (CODE-14).
 // Override with the SITE_URL env var for staging previews.
@@ -43,6 +44,8 @@ const postBuild = {
       }
       // Markdown pages: image sizes, lazy loading and WebP; links to switched-off pages unlinked.
       await finishMarkdownPages(dir, ['blog', ...LEGAL_PATHS.map((p) => p.slice(1))], off);
+      // Internal links straight to the page, without the host's redirect to the trailing slash.
+      await addTrailingSlashes(dir);
     },
   },
 };
