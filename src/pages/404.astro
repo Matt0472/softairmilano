@@ -127,7 +127,8 @@ const listId = 'lost-dest-title';
     isolation: isolate;
     overflow: hidden;
     display: flex;
-    min-height: 100svh;
+    /* One screen, less a running promotion's strip above it. */
+    min-height: calc(100svh - var(--promo-offset, 0px));
     background: var(--color-background);
   }
   /* The scan runs under the copy; the corners and the readout sit above it. */

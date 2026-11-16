@@ -107,9 +107,10 @@
     /* The fixed header (Header.astro) is a bar this tall once the page scrolls; at the very top its
        floating pill sits a little lower, still inside the clearance. Anchor jumps, Lenis jumps and
        keyboard focus stop clear of it, and of the WhatsApp and "back to top" buttons in the bottom
-       corners (A11Y-05, WCAG 2.4.11). Sticky aids stand on the same line under the bar. */
+       corners (A11Y-05, WCAG 2.4.11). Sticky aids stand on the same line under the bar. A running
+       promotion's strip (PromoStrip) sits over the bar and adds its height (--promo-offset). */
     --header-h: 4rem;
-    --header-clear: calc(var(--header-h) + 1.5rem);
+    --header-clear: calc(var(--header-h) + 1.5rem + var(--promo-offset, 0px));
     scroll-padding-top: var(--header-clear);
     scroll-padding-bottom: 5rem;
     /* The scrollbar's room is always kept, so a scroll lock (the cookie banner hides the page's

@@ -4,16 +4,19 @@
 // copy; the drawing is the voucher page's (voucher.json), so the voucher's name changes in one
 // place. Desktop sets the voucher left of the copy; smaller screens
 // put it between the heading and the details. The drawing stands still: the section's reveal
-// brings it in with the rest.
+// brings it in with the rest. A running promotion (src/lib/promo.ts) shows its box between the pitch
+// and the link, so its discount and code are seen before going to buy.
 
 import Button from '../atoms/Button.astro';
 import Icon from '../atoms/Icon.astro';
 import SectionHead from '../molecules/SectionHead.astro';
 import VoucherTicket from '../molecules/VoucherTicket.astro';
+import PromoBox from '../molecules/PromoBox.astro';
 import voucherPage from '../../data/voucher.json';
 import settings from '../../data/settings.json';
 import { has } from '../../lib/fields';
 import { keepShortWords } from '../../lib/typography';
+import { promoOf } from '../../lib/promo';
 
 interface Props {
   eyebrow?: string;
@@ -27,7 +30,8 @@ const { eyebrow, title, text, cta, headingId = 'voucher-teaser-title' } = Astro.
 const hasCta = has(cta?.label) && has(cta?.href);
 
 const ticket = voucherPage.hero;
-const hasBody = has(text) || hasCta;
+const promo = promoOf();
+const hasBody = has(text) || hasCta || Boolean(promo);
 ---
 
 {has(title) && (
@@ -46,6 +50,7 @@ const hasBody = has(text) || hasCta;
       {hasBody && (
         <div class="vgift__body" data-reveal style="--i: 2">
           {has(text) && <p class="vgift__text">{keepShortWords(text)}</p>}
+          {promo && <PromoBox promo={promo} class="vgift__promo" />}
           {hasCta && (
             <Button href={cta!.href} variant="secondary" class="vgift__link">
               {cta!.label}
@@ -103,6 +108,10 @@ const hasBody = has(text) || hasCta;
     line-height: 1.6;
     text-wrap: pretty;
   }
+
+  /* The promotion (PromoBox), between the pitch and the link. */
+  .vgift__promo { margin-top: clamp(1.5rem, 3vw, 2rem); }
+  .vgift__promo:first-child { margin-top: 0; }
 
   /* The secondary Button with its arrow, as in the course section; the atom keeps its colours and hover. */
   .vgift__link {

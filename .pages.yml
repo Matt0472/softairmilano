@@ -1844,6 +1844,21 @@ content:
               - { name: href, label: Link, type: string, description: "Es. #scegli" }
           - { name: ticketNote, label: "Scritta in fondo al disegno del voucher", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, es. «Valido 6 mesi · Data a scelta»: ogni parte separata da «·» va su una riga. Compare anche sul disegno in home. Se cambi la validità, aggiornala anche qui e nel testo della sezione «Voucher regalo» della home. Se vuota non compare" }
           - { name: hudTag, label: "Scritta tattica nella cornice (HUD)", type: string, options: { maxlength: 32 }, description: "Breve, in maiuscolo da sola, in alto a destra (non compare sotto i 641 px di larghezza, cioè sui telefoni in verticale), es. «VOUCHER · VALIDO 6 MESI». Se vuota non compare" }
+      - name: promo
+        label: Promozione (striscia in cima al sito)
+        description: "Una striscia in cima a tutte le pagine, che resta in vista mentre si scorre, e un riquadro sopra le schede dei voucher e nella sezione «Voucher regalo» della home, con il nome della promozione, lo sconto, su cosa vale, il testo e il codice sconto da copiare. Il codice va creato prima in TicketingHub: chi compra lo inserisce nel carrello. Per una promozione nuova cambia nome, sconto, testo, codice e date"
+        type: object
+        fields:
+          - { name: active, label: Promozione attiva, type: boolean, default: false, description: "Acceso: la promozione compare nei giorni scelti qui sotto (senza date, subito e finché non la spegni). Spento: non compare mai" }
+          - { name: name, label: "Nome della promozione", type: string, options: { maxlength: 30 }, description: "Breve, es. «Black Friday». Compare in evidenza all'inizio della striscia e dei riquadri" }
+          - { name: discount, label: "Sconto (euro)", type: number, options: { min: 1, step: 1 }, description: "Solo il numero, es. 10: compare come «−10 €». Deve essere lo sconto del codice in TicketingHub. Se vuoto, non compare" }
+          - { name: scope, label: "Su cosa vale lo sconto", type: string, required: true, options: { maxlength: 45 }, description: "In minuscolo, si legge subito dopo lo sconto: «−10 € sul voucher con noleggio attrezzatura». Compare nella striscia su tutti gli schermi, così nessuno pensa che lo sconto valga su tutto. Se vale su tutti i voucher, scrivi «su tutti i voucher»" }
+          - { name: text, label: Testo, type: text, options: { maxlength: 140 }, description: "Una frase per i riquadri (pagina dei voucher e home), es. «Acquista il voucher per una partita con noleggio dell'attrezzatura, per te o da regalare, con 10 € di sconto.». Se lo sconto vale solo su un voucher, scrivi quale. Nella striscia non compare. Se vuoto non compare" }
+          - { name: code, label: Codice sconto, type: string, description: "Esattamente come in TicketingHub, es. BFSOFTAIRMILANO10: si copia con un tocco. Senza codice la promozione non compare" }
+          - { name: codeHint, label: "Istruzioni per il codice", type: string, description: "Nei riquadri (pagina dei voucher e home), sotto la frase, es. «Copia il codice e inseriscilo nel carrello, al pagamento.»" }
+          - { name: linkLabel, label: "Testo del link ai voucher", type: string, description: "Nella striscia, porta alle schede dei voucher, es. «Acquista il voucher». Se lo sconto vale su un voucher solo, non scrivere «Scegli il voucher»: farebbe pensare a tutti. Sul telefono e sul tablet è tutta la striscia a portarci. Se vuoto, lì la striscia mostra il codice al posto del link" }
+          - { name: start, label: "Primo giorno", type: date, options: { format: yyyy-MM-dd }, description: "Facoltativo: la promozione compare da questo giorno, da sola, anche se la accendi prima. Se vuoto, compare da subito" }
+          - { name: end, label: "Ultimo giorno", type: date, options: { format: yyyy-MM-dd }, description: "Facoltativo: la promozione sparisce da sola il giorno dopo. Se vuoto, resta finché non la spegni" }
       - name: types
         label: I voucher (schede con i prezzi)
         description: "Una scheda per voucher, una accanto all'altra. Se il titolo è vuoto o non c'è nessuna scheda con nome e prezzo, la sezione non compare"

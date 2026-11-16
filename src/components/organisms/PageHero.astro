@@ -195,7 +195,8 @@ const isLong = title.length > 28;
   .phero__grid {
     position: relative;
     z-index: 2;
-    min-height: 100svh;
+    /* One screen, less a running promotion's strip above it. */
+    min-height: calc(100svh - var(--promo-offset, 0px));
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr) auto auto;

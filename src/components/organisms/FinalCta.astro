@@ -153,9 +153,10 @@ const wordmark = words.map((w) => [...w].map((ch) => ({ ch, i: n++ })));
     /* The root's scroll-padding (kept clear for the header and the corner buttons) would shrink the
        timeline's viewport by its height: measure against the whole screen, as the content is pinned to it. */
     view-timeline-inset: 0;
-    /* A jump here (#prenota) opens the curtain all the way, to the top of the screen: the header's bar
-       lies over its empty top, as over an opening, rather than over the end of the page before it. */
-    scroll-margin-top: calc(-1 * var(--header-clear));
+    /* A jump here (#prenota) opens the curtain all the way, to the top of the screen (under a running
+       promotion's strip): the header's bar lies over its empty top, as over an opening, rather than
+       over the end of the page before it. */
+    scroll-margin-top: calc(var(--promo-offset, 0px) - var(--header-clear));
   }
   /* Prenota links move focus here: no ring on the whole section, the actions carry their own. */
   .finale:focus { outline: none; }

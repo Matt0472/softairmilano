@@ -1,0 +1,112 @@
+---
+// The running promotion (src/lib/promo.ts) as a box: its name and discount, its line, how to use the
+// code, and the code to copy. On the voucher page over the cards, where the voucher is bought, and in
+// the home's voucher section. It lays itself out by the room it is given (a container query): the
+// code beside the copy where the box is wide, under it where it is narrow. Its days are checked in
+// the browser before the first paint (the inline script after it), so it appears and goes on its own
+// dates without a new deploy.
+
+import Icon from '../atoms/Icon.astro';
+import PromoCode from './PromoCode.astro';
+import type { Promo } from '../../lib/promo';
+
+interface Props {
+  promo: Promo;
+  class?: string;
+}
+
+const { promo, class: className } = Astro.props;
+---
+
+<div
+  class:list={['pbox-wrap', className]}
+  data-promo-box
+  data-promo-start={promo.start}
+  data-promo-end={promo.end}
+  hidden={!promo.liveAtBuild}
+>
+  <div class="pbox">
+    <span class="pbox__icon" aria-hidden="true"><Icon name="tag" size={22} /></span>
+    <div class="pbox__body">
+      <p class="pbox__head">
+        {promo.name && <span class="pbox__name">{promo.name}</span>}
+        {promo.discount && <span class="pbox__off">{promo.discount}</span>}
+      </p>
+      {promo.text && <p class="pbox__text">{promo.text}</p>}
+      {promo.codeHint && <p class="pbox__hint">{promo.codeHint}</p>}
+    </div>
+    <PromoCode code={promo.code} class="pbox__code" />
+  </div>
+</div>
+<script is:inline>
+  (() => {
+    const box = document.currentScript?.previousElementSibling;
+    if (!box?.hasAttribute('data-promo-box')) return;
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(new Date());
+    const { promoStart: start, promoEnd: end } = box.dataset;
+    box.hidden = (!!start && today < start) || (!!end && today > end);
+  })();
+</script>
+
+<style is:global>
+  /* The accent's own box: the tag in cyan, a cyan rule on its leading edge. */
+  .pbox-wrap { container-type: inline-size; }
+  .pbox-wrap[hidden] { display: none; }
+  .pbox {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 0.85rem 1rem;
+    padding: clamp(1rem, 2.5vw, 1.4rem) clamp(1.1rem, 2.5vw, 1.5rem);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--color-accent) 8%, var(--lift, var(--color-surface)));
+    box-shadow: inset 3px 0 0 var(--color-accent);
+  }
+  .pbox__icon {
+    display: grid;
+    place-items: center;
+    height: 1.9rem;
+    color: var(--color-accent);
+  }
+  .pbox__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.2rem, 2vw, 1.45rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+  }
+  .pbox__off { color: var(--color-accent); font-variant-numeric: tabular-nums; }
+  .pbox__text {
+    margin: 0.35rem 0 0;
+    color: var(--color-foreground);
+    font-size: 1rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+  .pbox__hint {
+    margin: 0.35rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .pbox__code {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  /* Wide enough for the code beside the copy: on the right, centred on it. */
+  @container (min-width: 42rem) {
+    .pbox {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+    }
+    .pbox__icon { align-self: start; }
+    .pbox__code { grid-column: auto; }
+  }
+</style>

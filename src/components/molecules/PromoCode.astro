@@ -1,0 +1,129 @@
+---
+// The promotion's discount code as one button: pressing it copies the code, and the label says
+// «Copiato» for a moment (announced to screen readers too). Where the clipboard is not available,
+// the code is selected instead, ready for the visitor's own copy. `tone` follows the surface it
+// sits on: the cyan strip (on-accent) or the page's dark plane.
+
+import Icon from '../atoms/Icon.astro';
+
+interface Props {
+  code: string;
+  tone?: 'on-accent' | 'plane';
+  class?: string;
+}
+
+const { code, tone = 'plane', class: className } = Astro.props;
+---
+
+<button type="button" class:list={['pcode', `pcode--${tone}`, className]} data-promo-copy data-code={code}>
+  {/* Interface microcopy (CMS-02): what the button does, read before the code. */}
+  <span class="sr-only">Copia il codice sconto</span>
+  <code class="pcode__code">{code}</code>
+  <span class="pcode__action" aria-hidden="true">
+    <span class="pcode__idle"><Icon name="copy" size={15} />Copia</span>
+    <span class="pcode__done"><Icon name="check" size={15} />Copiato</span>
+  </span>
+  <span class="sr-only" role="status" data-promo-copy-status></span>
+</button>
+
+<style is:global>
+  .pcode {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.75rem;
+    padding: 0.3rem 0.4rem 0.3rem 0.8rem;
+    border-radius: var(--radius-md);
+    font: inherit;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .pcode__code {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    user-select: all;
+  }
+  .pcode__action {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.55rem;
+    border-radius: calc(var(--radius-md) - 0.15rem);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .pcode__idle,
+  .pcode__done {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .pcode__done { display: none; }
+  .pcode[data-copied] .pcode__idle { display: none; }
+  .pcode[data-copied] .pcode__done { display: inline-flex; }
+
+  /* On the cyan strip: a dark chip, the code in cyan, the action a cyan pill. */
+  .pcode--on-accent {
+    border: 1px solid transparent;
+    background: var(--color-on-accent);
+    color: var(--color-accent);
+  }
+  .pcode--on-accent .pcode__action {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .pcode--on-accent:hover { background: color-mix(in srgb, var(--color-on-accent) 85%, var(--color-foreground)); }
+  .pcode--on-accent:focus-visible { outline: 2px solid var(--color-on-accent); outline-offset: 2px; }
+
+  /* On the page: a raised field outlined in cyan, the action filled. */
+  .pcode--plane {
+    border: 1px dashed var(--color-accent);
+    background: var(--lift, var(--color-surface));
+    color: var(--color-foreground);
+  }
+  .pcode--plane .pcode__action {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .pcode--plane:hover { background: var(--lift-2, var(--color-surface-2)); }
+  .pcode--plane:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+</style>
+
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-promo-copy]')) {
+    const code = button.dataset.code ?? '';
+    const status = button.querySelector<HTMLElement>('[data-promo-copy-status]');
+    let timer: number | undefined;
+    button.addEventListener('click', async () => {
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(code);
+        copied = true;
+      } catch {
+        // No clipboard (an old browser, an insecure context): select the code for a manual copy.
+        const target = button.querySelector('.pcode__code');
+        const selection = window.getSelection();
+        if (target && selection) {
+          const range = document.createRange();
+          range.selectNodeContents(target);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      }
+      if (!copied) return;
+      button.dataset.copied = '';
+      if (status) status.textContent = `Codice ${code} copiato`;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        delete button.dataset.copied;
+        if (status) status.textContent = '';
+      }, 2500);
+    });
+  }
+</script>

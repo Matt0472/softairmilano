@@ -269,6 +269,8 @@ const navIdleClass = 'text-muted hover:bg-foreground/5 hover:text-accent';
     and opacity only (CODE-07); with reduced motion the switch is instant (global.css).
   */
   .site-header {
+    /* Right under a running promotion's strip (PromoStrip), which keeps to the top of the screen. */
+    top: var(--promo-offset, 0px);
     --nav-morph: calc(var(--duration-slow) * 2.25);
     --nav-fade: calc(var(--duration-base) * 1.5);
     --nav-lag: calc(var(--duration-fast) * 1.5);

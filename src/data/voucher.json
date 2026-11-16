@@ -17,6 +17,18 @@
     },
     "ticketNote": "Valido 6 mesi · Data a scelta"
   },
+  "promo": {
+    "active": true,
+    "name": "Black Friday",
+    "discount": 10,
+    "scope": "sul voucher con noleggio attrezzatura",
+    "text": "Acquista il voucher per una partita con noleggio dell'attrezzatura, per te o da regalare, con 10 € di sconto.",
+    "code": "BFSOFTAIRMILANO10",
+    "codeHint": "Copia il codice e inseriscilo nel carrello, al pagamento.",
+    "linkLabel": "Acquista il voucher",
+    "start": "2026-11-23",
+    "end": "2026-11-29"
+  },
   "types": {
     "title": "Scegli il voucher",
     "text": "Il prezzo è a giocatore: puoi regalare la partita a una persona o a tutto il gruppo.",

@@ -1,0 +1,228 @@
+---
+// The voucher promotion on top of every page (src/lib/promo.ts), in the site's cyan: its name, the
+// discount and what it applies to, on every screen, so no one reads a discount on everything. It
+// keeps to the top of the screen as the page scrolls, with the fixed header right under it; the
+// openings start under it, so nothing is covered. On wide screens it also carries the code to copy
+// and the link to the vouchers; below, it is the link itself (the whole strip), to the box with the
+// code over the voucher cards, so the two bars together stay light. The visitor can close it, for
+// this promotion: a new code shows again. Its days are checked here in the browser, before the first
+// paint (inline script), so it appears and goes on its own dates without a new deploy.
+
+import Icon from '../atoms/Icon.astro';
+import PromoCode from '../molecules/PromoCode.astro';
+import { promoOf } from '../../lib/promo';
+
+const promo = promoOf();
+// On the voucher page the link only leads to its box (below wide screens); there, wide screens have
+// the code in the strip and need no link to the page itself.
+const onVoucherPage = Astro.url.pathname.replace(/\/+$/, '') === '/voucher-regalo';
+const href = onVoucherPage ? '#scegli' : '/voucher-regalo/#scegli';
+---
+
+{promo && (
+  <aside
+    class:list={['promo', { 'promo--here': onVoucherPage, 'promo--linked': promo.linkLabel }]}
+    aria-label={promo.name || 'Promozione'}
+    data-promo-strip
+    data-promo-start={promo.start}
+    data-promo-end={promo.end}
+    data-promo-key={promo.key}
+    hidden={!promo.liveAtBuild}
+  >
+    <div class="promo__inner shell">
+      {/* One sentence, wrapping as words do: «Black Friday −10 € sul voucher con noleggio attrezzatura». */}
+      <p class="promo__lead">
+        {promo.name && <span class="promo__name">{promo.name}</span>}
+        {promo.name && ' '}
+        {promo.discount && <span class="promo__off">{promo.discount}</span>}
+        {promo.discount && ' '}
+        {promo.scope && <span class="promo__scope">{promo.scope}</span>}
+      </p>
+      <PromoCode code={promo.code} tone="on-accent" class="promo__code" />
+      {promo.linkLabel && (
+        <a class="promo__link" href={href}>
+          <span class="promo__link-label">{promo.linkLabel}</span>
+          <Icon name="arrowRight" size={18} />
+        </a>
+      )}
+      {/* Interface microcopy (CMS-02): the close button's name. */}
+      <button type="button" class="promo__close" aria-label="Chiudi la promozione" data-promo-close>
+        <Icon name="x" size={18} />
+      </button>
+    </div>
+  </aside>
+)}
+
+{promo && (
+  <script is:inline>
+    // Before the first paint: shown only within its days (the arena's calendar) and unless closed;
+    // the header then starts under it (--promo-offset), so nothing jumps.
+    (() => {
+      const strip = document.querySelector('[data-promo-strip]');
+      if (!strip) return;
+      const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(new Date());
+      const { promoStart: start, promoEnd: end, promoKey: key } = strip.dataset;
+      let closed = false;
+      try { closed = localStorage.getItem('promo-closed') === key; } catch {}
+      strip.hidden = closed || (!!start && today < start) || (!!end && today > end);
+      if (!strip.hidden) document.documentElement.style.setProperty('--promo-offset', strip.offsetHeight + 'px');
+    })();
+  </script>
+)}
+
+<style is:global>
+  /* Under the header's layer (z-50), so the open menu covers it; the two never overlap otherwise. */
+  .promo {
+    position: sticky;
+    top: 0;
+    z-index: 45;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .promo[hidden] { display: none; }
+  .promo__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 1rem;
+    min-height: 3rem;
+    padding-block: 0.35rem;
+    padding-inline-end: 3.25rem;
+  }
+  .promo__lead {
+    min-width: 0;
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .promo__name,
+  .promo__off {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .promo__name { margin-inline-end: 0.3em; }
+  .promo__off { font-variant-numeric: tabular-nums; }
+  .promo__link {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: inherit;
+  }
+  .promo__close {
+    position: absolute;
+    z-index: 1;
+    inset-inline-end: calc(var(--shell-gutter) - 0.75rem);
+    top: 50%;
+    translate: 0 -50%;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .promo__close:hover { background: color-mix(in srgb, var(--color-on-accent) 12%, transparent); }
+  .promo__close:focus-visible { outline: 2px solid var(--color-on-accent); outline-offset: 2px; }
+
+  /* Below wide screens: the sentence and an arrow, the whole strip a link to the box with the code
+     (the label stays its accessible name). Phones start it on the left, by the close. Without a
+     link, the code shows instead, under the sentence. */
+  @media (max-width: 1279px) {
+    .promo__inner { flex-wrap: wrap; }
+    /* The arrow stays beside the sentence, which wraps inside its own room. */
+    .promo--linked .promo__inner { flex-wrap: nowrap; }
+    .promo--linked .promo__code { display: none; }
+    .promo__link-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .promo__link::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    .promo__link svg { transition: translate var(--duration-fast) var(--ease-out-expo); }
+    .promo__link:hover svg { translate: 3px 0; }
+    .promo__link:focus-visible { outline: none; }
+    .promo__link:focus-visible::after { outline: 2px solid var(--color-on-accent); outline-offset: -3px; }
+  }
+  @media (max-width: 767px) {
+    .promo__inner {
+      justify-content: flex-start;
+      gap: 0.25rem 0.6rem;
+    }
+    .promo__lead { font-size: 0.9rem; }
+    .promo__name,
+    .promo__off { font-size: 1rem; }
+  }
+
+  /* Wide screens: one row, the sentence, the code to copy and the link to the vouchers, underlined.
+     A longer sentence ends in an ellipsis rather than doubling the bar. */
+  @media (min-width: 1280px) {
+    .promo__inner { flex-wrap: nowrap; }
+    .promo__lead {
+      flex: 0 1 auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .promo__code { flex: none; }
+    .promo__link {
+      min-height: 2.75rem;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 5px;
+    }
+    .promo__link:hover { text-decoration-color: transparent; }
+    .promo__link:focus-visible { outline: 2px solid var(--color-on-accent); outline-offset: 2px; }
+    /* The voucher page has the code right here and its box below: no link to itself. */
+    .promo--here .promo__link { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .promo__link svg { transition: none; }
+  }
+</style>
+
+<script>
+  // After load: the header stays right under the strip as its height changes (it wraps on narrow
+  // screens), and closing it is remembered for this promotion.
+  const strip = document.querySelector<HTMLElement>('[data-promo-strip]');
+  const root = document.documentElement;
+  if (strip && !strip.hidden) {
+    const place = () => root.style.setProperty('--promo-offset', `${strip.hidden ? 0 : strip.offsetHeight}px`);
+    new ResizeObserver(place).observe(strip);
+
+    strip.querySelector('[data-promo-close]')?.addEventListener('click', () => {
+      try {
+        localStorage.setItem('promo-closed', strip.dataset.promoKey ?? '');
+      } catch {
+        // Private mode: closed for this page only.
+      }
+      strip.hidden = true;
+      place();
+      document.getElementById('main')?.focus({ preventScroll: true });
+    });
+  }
+</script>

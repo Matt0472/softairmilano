@@ -132,7 +132,8 @@ const toWebp = (p: string): string => p.replace(/\.(jpe?g|png)$/i, '.webp');
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    min-height: 100svh;
+    /* One screen, less a running promotion's strip above it, so the actions stay above the fold. */
+    min-height: calc(100svh - var(--promo-offset, 0px));
     display: flex;
     align-items: flex-end;
     background: var(--ink);
